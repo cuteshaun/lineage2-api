@@ -36,6 +36,10 @@ yarn-error.log*
 # vercel
 .vercel
 
+# generated data (rebuild with `pnpm build:data`)
+/data/generated/*
+!/data/generated/.gitkeep
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

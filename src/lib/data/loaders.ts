@@ -1,0 +1,49 @@
+import fs from "node:fs";
+import path from "node:path";
+import { getChronicleDataConfig } from "../chronicle-config";
+import type { Chronicle } from "../chronicles";
+import type { Item, Npc, NpcDrops } from "../types";
+
+interface ChronicleDataset {
+  items: Item[];
+  npcs: Npc[];
+  drops: NpcDrops[];
+}
+
+const datasetCache = new Map<Chronicle, ChronicleDataset>();
+
+function readJson<T>(filePath: string): T {
+  if (!fs.existsSync(filePath)) {
+    throw new Error(
+      `Generated data file missing: ${filePath}. Run \`pnpm build:data\` first.`
+    );
+  }
+  return JSON.parse(fs.readFileSync(filePath, "utf-8")) as T;
+}
+
+export function loadChronicleDataset(chronicle: Chronicle): ChronicleDataset {
+  const cached = datasetCache.get(chronicle);
+  if (cached) return cached;
+
+  const config = getChronicleDataConfig(chronicle);
+  const dataset: ChronicleDataset = {
+    items: readJson<Item[]>(path.join(config.generatedDir, "items.json")),
+    npcs: readJson<Npc[]>(path.join(config.generatedDir, "npcs.json")),
+    drops: readJson<NpcDrops[]>(path.join(config.generatedDir, "drops.json")),
+  };
+
+  datasetCache.set(chronicle, dataset);
+  return dataset;
+}
+
+export function loadItems(chronicle: Chronicle): Item[] {
+  return loadChronicleDataset(chronicle).items;
+}
+
+export function loadNpcs(chronicle: Chronicle): Npc[] {
+  return loadChronicleDataset(chronicle).npcs;
+}
+
+export function loadDrops(chronicle: Chronicle): NpcDrops[] {
+  return loadChronicleDataset(chronicle).drops;
+}

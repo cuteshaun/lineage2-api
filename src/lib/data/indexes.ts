@@ -2,6 +2,17 @@ import type { Chronicle } from "../chronicles";
 import type { Item, Npc, NpcDrops } from "../types";
 import { loadChronicleDataset } from "./loaders";
 
+/** A single reverse-lookup entry: which NPC drops/spoils a given item. */
+export interface ItemSourceEntry {
+  npc: { id: number; name: string; type: string | null; level: number | null };
+  entry: {
+    min: number | null;
+    max: number | null;
+    chance: number | null;
+    category: number | null;
+  };
+}
+
 interface ChronicleIndexes {
   items: Item[];
   npcs: Npc[];
@@ -17,6 +28,10 @@ interface ChronicleIndexes {
   itemTypeSummary: NameCount[];
   /** Sorted introspection list of all item grade values with counts. */
   itemGradeSummary: NameCount[];
+  /** Reverse lookup: itemId → NPCs that drop the item (category != -1). */
+  itemDroppedBy: Map<number, ItemSourceEntry[]>;
+  /** Reverse lookup: itemId → NPCs that spoil the item (category == -1). */
+  itemSpoiledBy: Map<number, ItemSourceEntry[]>;
 }
 
 export interface NpcTypeSummary {
@@ -125,17 +140,59 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
       return a.name.localeCompare(b.name);
     });
 
+  // Build reverse-lookup indexes: itemId → which NPCs drop/spoil the item.
+  // Category -1 = spoil, everything else = normal drop.
+  const npcsById = new Map(dataset.npcs.map((n) => [n.id, n]));
+  const itemDroppedBy = new Map<number, ItemSourceEntry[]>();
+  const itemSpoiledBy = new Map<number, ItemSourceEntry[]>();
+
+  for (const npcDrops of dataset.drops) {
+    const npc = npcsById.get(npcDrops.npcId);
+    if (!npc) continue;
+    const npcSummary = {
+      id: npc.id,
+      name: npc.name,
+      type: npc.npcType,
+      level: npc.level,
+    };
+
+    for (const cat of npcDrops.categories) {
+      const isSpoil = cat.categoryId === -1;
+      const target = isSpoil ? itemSpoiledBy : itemDroppedBy;
+
+      for (const drop of cat.drops) {
+        const entry: ItemSourceEntry = {
+          npc: npcSummary,
+          entry: {
+            min: drop.min,
+            max: drop.max,
+            chance: drop.chance,
+            category: cat.categoryId,
+          },
+        };
+        let list = target.get(drop.itemId);
+        if (!list) {
+          list = [];
+          target.set(drop.itemId, list);
+        }
+        list.push(entry);
+      }
+    }
+  }
+
   return {
     items: dataset.items,
     npcs: dataset.npcs,
     monsters,
     itemsById: new Map(dataset.items.map((i) => [i.id, i])),
-    npcsById: new Map(dataset.npcs.map((n) => [n.id, n])),
+    npcsById,
     dropsByNpcId: new Map(dataset.drops.map((d) => [d.npcId, d])),
     npcTypeMap,
     npcTypeSummary,
     itemTypeSummary,
     itemGradeSummary,
+    itemDroppedBy,
+    itemSpoiledBy,
   };
 }
 
@@ -219,6 +276,28 @@ export function getDropsByNpcId(
   npcId: number
 ): NpcDrops | undefined {
   return getChronicleIndexes(chronicle).dropsByNpcId.get(npcId);
+}
+
+/**
+ * Reverse lookup: which NPCs drop this item (normal drops, category != -1).
+ * Returns an empty array if the item is not in any NPC's drop table.
+ */
+export function getItemDroppedBy(
+  chronicle: Chronicle,
+  itemId: number
+): ItemSourceEntry[] {
+  return getChronicleIndexes(chronicle).itemDroppedBy.get(itemId) ?? [];
+}
+
+/**
+ * Reverse lookup: which NPCs spoil this item (category == -1).
+ * Returns an empty array if the item is not in any NPC's spoil table.
+ */
+export function getItemSpoiledBy(
+  chronicle: Chronicle,
+  itemId: number
+): ItemSourceEntry[] {
+  return getChronicleIndexes(chronicle).itemSpoiledBy.get(itemId) ?? [];
 }
 
 // --- List queries ---

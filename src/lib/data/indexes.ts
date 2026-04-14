@@ -1,6 +1,12 @@
 import type { Chronicle } from "../chronicles";
 import type { Item, Npc, NpcDrops } from "../types";
 import { loadChronicleDataset } from "./loaders";
+import {
+  buildCanonicalMonsters,
+  type CanonicalMonster,
+} from "./canonical-monsters";
+
+export type { CanonicalMonster } from "./canonical-monsters";
 
 /** A single reverse-lookup entry: which NPC drops/spoils a given item. */
 export interface ItemSourceEntry {
@@ -32,6 +38,12 @@ interface ChronicleIndexes {
   itemDroppedBy: Map<number, ItemSourceEntry[]>;
   /** Reverse lookup: itemId → NPCs that spoil the item (category == -1). */
   itemSpoiledBy: Map<number, ItemSourceEntry[]>;
+  /** Canonical (template-deduped) monsters. See `canonical-monsters.ts`. */
+  canonicalMonsters: CanonicalMonster[];
+  /** Lookup by canonical id (= lowest raw id in the template group). */
+  canonicalMonstersById: Map<number, CanonicalMonster>;
+  /** Map every raw monster id to its canonical id. */
+  rawMonsterIdToCanonicalId: Map<number, number>;
 }
 
 export interface NpcTypeSummary {
@@ -180,19 +192,28 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
     }
   }
 
+  // Build the canonical monster layer (template-grouped raw monsters).
+  // The raw layer above is unchanged — every raw monster remains reachable
+  // via `monsters`, `npcsById`, and the existing `getMonsterById()`.
+  const dropsByNpcId = new Map(dataset.drops.map((d) => [d.npcId, d]));
+  const canonical = buildCanonicalMonsters(monsters, dropsByNpcId);
+
   return {
     items: dataset.items,
     npcs: dataset.npcs,
     monsters,
     itemsById: new Map(dataset.items.map((i) => [i.id, i])),
     npcsById,
-    dropsByNpcId: new Map(dataset.drops.map((d) => [d.npcId, d])),
+    dropsByNpcId,
     npcTypeMap,
     npcTypeSummary,
     itemTypeSummary,
     itemGradeSummary,
     itemDroppedBy,
     itemSpoiledBy,
+    canonicalMonsters: canonical.canonicalMonsters,
+    canonicalMonstersById: canonical.canonicalMonstersById,
+    rawMonsterIdToCanonicalId: canonical.rawIdToCanonicalId,
   };
 }
 
@@ -276,6 +297,60 @@ export function getDropsByNpcId(
   npcId: number
 ): NpcDrops | undefined {
   return getChronicleIndexes(chronicle).dropsByNpcId.get(npcId);
+}
+
+// --- Canonical monster lookups (template-deduped view over raw monsters) ---
+
+/**
+ * Returns the full canonical monster list for the chronicle, sorted by
+ * canonicalId. Each entry groups raw monsters that share an identical
+ * template — see `canonical-monsters.ts` for the exact equivalence rules.
+ */
+export function getCanonicalMonsters(chronicle: Chronicle): CanonicalMonster[] {
+  return getChronicleIndexes(chronicle).canonicalMonsters;
+}
+
+/**
+ * Look up a canonical monster by its canonical id. The canonical id equals
+ * the lowest raw id in the template group. Returns `undefined` if the id is
+ * unknown OR if the id refers to a raw monster that is *not* the chosen
+ * canonical for its group (use `getCanonicalIdForRawMonsterId` first).
+ */
+export function getCanonicalMonsterById(
+  chronicle: Chronicle,
+  canonicalId: number
+): CanonicalMonster | undefined {
+  return getChronicleIndexes(chronicle).canonicalMonstersById.get(canonicalId);
+}
+
+/**
+ * Map a raw monster id to its canonical id. Returns `undefined` if the raw
+ * id does not refer to a monster (i.e. not in the monster npcType subset).
+ */
+export function getCanonicalIdForRawMonsterId(
+  chronicle: Chronicle,
+  rawId: number
+): number | undefined {
+  return getChronicleIndexes(chronicle).rawMonsterIdToCanonicalId.get(rawId);
+}
+
+/**
+ * Forgiving lookup used by the public canonical `/monsters/[id]` endpoint.
+ * Accepts either:
+ *   - a canonical id (lowest raw id in a template group), or
+ *   - any raw monster id belonging to a template group.
+ *
+ * Both resolve to the same `CanonicalMonster`. Returns `undefined` if `id`
+ * is not any known monster id (e.g. a Folk NPC id, or unknown).
+ */
+export function getCanonicalMonsterByAnyId(
+  chronicle: Chronicle,
+  id: number
+): CanonicalMonster | undefined {
+  const indexes = getChronicleIndexes(chronicle);
+  const canonicalId = indexes.rawMonsterIdToCanonicalId.get(id);
+  if (canonicalId === undefined) return undefined;
+  return indexes.canonicalMonstersById.get(canonicalId);
 }
 
 /**
@@ -498,4 +573,81 @@ export function getMonsters(
   options: NpcListOptions
 ): ListResult<Npc> {
   return listNpcsFrom(getChronicleIndexes(chronicle).monsters, options);
+}
+
+// --- Canonical monster list (filter / sort / paginate over the template-deduped view) ---
+
+/**
+ * Canonical equivalent of `getMonsters`. Accepts the same `NpcListOptions`
+ * shape (q, levelMin, levelMax, npcType, sort, limit, offset) so the public
+ * canonical list endpoint preserves the existing filter/sort contract —
+ * predicates simply run against each canonical's `representative` (its
+ * template fields). `id` sort uses `canonicalId`.
+ */
+export function getCanonicalMonstersList(
+  chronicle: Chronicle,
+  options: NpcListOptions
+): ListResult<CanonicalMonster> {
+  const all = getChronicleIndexes(chronicle).canonicalMonsters;
+  const q = options.q?.trim().toLowerCase() || null;
+  const filtered = filterCanonicalMonsters(
+    all,
+    q,
+    options.levelMin ?? null,
+    options.levelMax ?? null,
+    options.npcType ?? null
+  );
+  const sorted = options.sort
+    ? [...filtered].sort(canonicalMonsterComparator(options.sort))
+    : filtered;
+  return {
+    data: paginate(sorted, options.limit, options.offset),
+    total: sorted.length,
+  };
+}
+
+function filterCanonicalMonsters(
+  source: CanonicalMonster[],
+  q: string | null,
+  levelMin: number | null,
+  levelMax: number | null,
+  npcType: string | null
+): CanonicalMonster[] {
+  if (!q && levelMin === null && levelMax === null && !npcType) return source;
+  return source.filter((c) => {
+    const r = c.representative;
+    if (q && !matchesQuery(r.name, q)) return false;
+    if (levelMin !== null && (r.level === null || r.level < levelMin))
+      return false;
+    if (levelMax !== null && (r.level === null || r.level > levelMax))
+      return false;
+    if (npcType && r.npcType !== npcType) return false;
+    return true;
+  });
+}
+
+function canonicalMonsterComparator(
+  spec: SortSpec<NpcSortField>
+): (a: CanonicalMonster, b: CanonicalMonster) => number {
+  const sign = spec.direction === "asc" ? 1 : -1;
+  switch (spec.field) {
+    case "id":
+      return (a, b) => sign * (a.canonicalId - b.canonicalId);
+    case "name":
+      return (a, b) => {
+        const cmp = ASCII(a.representative.name, b.representative.name);
+        if (cmp !== 0) return sign * cmp;
+        return a.canonicalId - b.canonicalId;
+      };
+    case "level":
+      return (a, b) => {
+        const cmp = compareNullableNumber(
+          a.representative.level,
+          b.representative.level,
+          spec.direction
+        );
+        if (cmp !== 0) return cmp;
+        return a.canonicalId - b.canonicalId;
+      };
+  }
 }

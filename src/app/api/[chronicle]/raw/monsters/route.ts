@@ -1,9 +1,8 @@
 import {
-  getCanonicalMonstersList,
+  getMonsters,
   MONSTER_NPC_TYPE_MAP,
   type NpcSortField,
 } from "@/lib/data/indexes";
-import { toCanonicalMonsterView } from "@/lib/api/monsters";
 import {
   jsonError,
   jsonList,
@@ -14,15 +13,9 @@ import {
   parseSortParam,
 } from "@/lib/api/responses";
 
-// Public canonical monster list. Returns template-deduped entries —
-// monsters whose name + template fields are identical are merged under one
-// canonical id. For the source-faithful list (every raw entry preserved),
-// see `/api/[chronicle]/raw/monsters`.
-//
-// Filters and sort options match the raw endpoint so callers can migrate
-// between the two without changing their query strings. Predicates run
-// against the template (`q` on name, `npcType`, `levelMin`/`levelMax`);
-// `sort=id` sorts by `canonicalId`.
+// Raw monster list — source-faithful, preserves every raw entry even when
+// multiple entries share a template. The public canonical list lives at
+// `/api/[chronicle]/monsters` and dedupes by template.
 
 const NPC_SORT_FIELDS = ["id", "name", "level"] as const satisfies readonly NpcSortField[];
 
@@ -50,6 +43,7 @@ export async function GET(
     return jsonError("Invalid range: levelMin > levelMax", 400);
   }
 
+  // For /monsters, npcType is restricted to the monster subset.
   const npcType = parseEnumParam(
     url.searchParams,
     "npcType",
@@ -60,7 +54,7 @@ export async function GET(
   const sort = parseSortParam(url.searchParams, NPC_SORT_FIELDS);
   if (!sort.ok) return sort.response;
 
-  const result = getCanonicalMonstersList(parsed.chronicle, {
+  const result = getMonsters(parsed.chronicle, {
     ...pagination.pagination,
     q: url.searchParams.get("q"),
     levelMin: levelMin.value,
@@ -69,7 +63,7 @@ export async function GET(
     sort: sort.value,
   });
 
-  return jsonList(result.data.map(toCanonicalMonsterView), {
+  return jsonList(result.data, {
     total: result.total,
     limit: pagination.pagination.limit,
     offset: pagination.pagination.offset,

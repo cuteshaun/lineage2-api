@@ -6,37 +6,58 @@ import type { Spawn } from "../src/lib/types";
 import { getChronicleSources } from "./chronicle-sources";
 
 /**
- * First-iteration spawn parser.
+ * Spawn parser.
  *
- * Source: `<datapack>/sql/spawnlist.sql` — a single `INSERT INTO spawnlist
- * VALUES (...),(...),...;` statement. The upstream schema is:
+ * Two sources are merged into a single flat `Spawn[]` written to
+ * `data/generated/<chronicle>/spawns.json`:
  *
- *   npc_templateid, locx, locy, locz, heading,
- *   respawn_delay, respawn_rand, periodOfDay
+ *   1. `spawnlist.sql`           — regular NPC/monster spawns
+ *   2. `raidboss_spawnlist.sql`  — raid boss spawns
  *
- * Every value in every tuple is a single-quoted integer, e.g.:
- *   ('18001', '178814', '8022', '-2728', '0', '25', '0', '0'),
+ * Grand bosses (Antharas, Valakas, Baium, Sailren, Queen Ant, …) are
+ * NOT in either file — aCis handles them via a hardcoded GrandBoss system
+ * and a separate `grandboss_data` table which is runtime state, not static
+ * spawn spec. Those remain returning `[]` from the spawn endpoints.
  *
- * We preserve one row per source row — no dedup, no grouping, no NPC-id
- * aggregation. Output is a flat `Spawn[]` written to
- * `data/generated/<chronicle>/spawns.json`, intentionally kept separate
- * from items/npcs/drops so this first iteration stays internal (not yet
- * exposed via any public API route).
+ * Sibling files `spawnlist_4s.sql` and `random_spawn*.sql` are
+ * intentionally left for later iterations — each needs distinct parsing
+ * + join semantics that don't fit the current flat shape.
  *
- * Sibling spawn files (`raidboss_spawnlist.sql`, `spawnlist_4s.sql`,
- * `random_spawn*.sql`) are deliberately NOT parsed here — each has a
- * different schema and different semantics. See the task summary for
- * follow-up notes.
+ * --- Normalization decisions (raidboss_spawnlist.sql) ---
+ *
+ * The raid boss schema is:
+ *   boss_id, loc_x, loc_y, loc_z, heading,
+ *   spawn_time, random_time, respawn_time, currentHp, currentMp
+ *
+ * Mapped into the existing `Spawn` shape as:
+ *   - boss_id     → npcId
+ *   - loc_{x,y,z} → x, y, z
+ *   - heading     → heading
+ *   - spawn_time  → respawnDelay   (× 3600: source is in HOURS, we normalize to seconds)
+ *   - random_time → respawnRandom  (× 3600: same unit conversion)
+ *   - periodOfDay is absent in the source → default 0 ("Any")
+ *   - respawn_time / currentHp / currentMp are runtime server state, dropped
+ *
+ * The unit conversion is the one real contract decision: `respawnDelay`
+ * and `respawnRandom` are already in seconds everywhere else, so raid
+ * boss rows are converted at parse time to keep the same semantics.
+ * Without it, consumers seeing `respawnDelay: 36` would assume 36 seconds
+ * when the source means 36 hours.
  */
 
-// A complete spawn row: 8 single-quoted integers inside parens, terminated
-// by `,` or `);`. Using a strict regex because the source format is uniform
-// across all 40k+ rows; any malformed line falls through to the "skipped"
-// counter and is logged.
-const TUPLE_RE =
+/** Regular spawnlist.sql tuple: 8 single-quoted integers. */
+const SPAWNLIST_TUPLE_RE =
   /^\(\s*'(-?\d+)'\s*,\s*'(-?\d+)'\s*,\s*'(-?\d+)'\s*,\s*'(-?\d+)'\s*,\s*'(-?\d+)'\s*,\s*'(-?\d+)'\s*,\s*'(-?\d+)'\s*,\s*'(-?\d+)'\s*\)\s*[,;]?\s*$/;
 
-function parseSpawnFile(absPath: string): {
+/**
+ * raidboss_spawnlist.sql tuple: 10 UNQUOTED integers, optionally followed
+ * by a trailing `-- name (level)` SQL comment. Anchored loosely so a
+ * trailing comment is tolerated.
+ */
+const RAIDBOSS_TUPLE_RE =
+  /^\(\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(?:-?\d+|NULL)\s*,\s*(?:-?\d+|NULL)\s*\)\s*[,;]?\s*(?:--.*)?$/i;
+
+function parseSpawnlistFile(absPath: string): {
   spawns: Spawn[];
   skipped: number;
 } {
@@ -46,13 +67,10 @@ function parseSpawnFile(absPath: string): {
   }
 
   const raw = fs.readFileSync(absPath, "utf-8");
-
-  // Find the VALUES keyword once; everything before it is DDL (DROP/CREATE).
-  // `INSERT INTO \`spawnlist\` VALUES\n(...),(...);`
   const valuesIdx = raw.search(/\bVALUES\b/i);
   if (valuesIdx < 0) {
     console.error(
-      `[parse-spawns] No VALUES keyword in ${absPath} — is this the right file?`
+      `[parse-spawns] No VALUES keyword in ${absPath} — wrong file?`
     );
     process.exit(1);
   }
@@ -64,16 +82,14 @@ function parseSpawnFile(absPath: string): {
   for (const rawLine of body.split("\n")) {
     const line = rawLine.trim();
     if (line.length === 0) continue;
-    // Tuples always start with `(`. Skip the leading `VALUES` word and any
-    // SQL comments (-- ...).
     if (!line.startsWith("(")) continue;
     if (line.startsWith("--")) continue;
 
-    const m = TUPLE_RE.exec(line);
+    const m = SPAWNLIST_TUPLE_RE.exec(line);
     if (!m) {
       skipped++;
       console.warn(
-        `[parse-spawns] Skipping malformed tuple: ${line.slice(0, 120)}`
+        `[parse-spawns] Skipping malformed spawnlist tuple: ${line.slice(0, 120)}`
       );
       continue;
     }
@@ -93,16 +109,77 @@ function parseSpawnFile(absPath: string): {
   return { spawns, skipped };
 }
 
+function parseRaidbossSpawnlistFile(absPath: string): {
+  spawns: Spawn[];
+  skipped: number;
+} {
+  if (!fs.existsSync(absPath)) {
+    console.error(`[parse-spawns] SQL file not found: ${absPath}`);
+    process.exit(1);
+  }
+
+  const raw = fs.readFileSync(absPath, "utf-8");
+  const valuesIdx = raw.search(/\bVALUES\b/i);
+  if (valuesIdx < 0) {
+    console.error(
+      `[parse-spawns] No VALUES keyword in ${absPath} — wrong file?`
+    );
+    process.exit(1);
+  }
+
+  const body = raw.slice(valuesIdx);
+  const spawns: Spawn[] = [];
+  let skipped = 0;
+
+  for (const rawLine of body.split("\n")) {
+    const line = rawLine.trim();
+    if (line.length === 0) continue;
+    // Commented-out tuples (`-- (25517, ...)`) and section-header comments
+    // (`-- Following mobs ...`) both start with `--` — skip either.
+    if (!line.startsWith("(")) continue;
+
+    const m = RAIDBOSS_TUPLE_RE.exec(line);
+    if (!m) {
+      skipped++;
+      console.warn(
+        `[parse-spawns] Skipping malformed raidboss tuple: ${line.slice(0, 120)}`
+      );
+      continue;
+    }
+
+    // Normalize to the existing Spawn shape. See file-header comment for
+    // the mapping rationale, especially the hours→seconds conversion on
+    // respawnDelay and respawnRandom.
+    const spawnTimeHours = Number(m[6]);
+    const randomTimeHours = Number(m[7]);
+    spawns.push({
+      npcId: Number(m[1]),
+      x: Number(m[2]),
+      y: Number(m[3]),
+      z: Number(m[4]),
+      heading: Number(m[5]),
+      respawnDelay: spawnTimeHours * 3600,
+      respawnRandom: randomTimeHours * 3600,
+      periodOfDay: 0,
+    });
+  }
+
+  return { spawns, skipped };
+}
+
 export async function parseSpawns(
   chronicle: Chronicle = "interlude"
 ): Promise<Spawn[]> {
   const dataConfig = getChronicleDataConfig(chronicle);
   const sources = getChronicleSources(chronicle);
 
-  const { spawns, skipped } = parseSpawnFile(sources.spawnlistSqlFile);
+  const regular = parseSpawnlistFile(sources.spawnlistSqlFile);
+  const raidboss = parseRaidbossSpawnlistFile(sources.raidbossSpawnlistSqlFile);
 
-  // Count distinct npcIds for the summary — useful context, and the first
-  // step toward the future "attach spawns[] to NPC" feature.
+  // Merge: regular spawns first (preserves existing order for any
+  // downstream consumer that cared), raid-boss spawns appended after.
+  const spawns: Spawn[] = [...regular.spawns, ...raidboss.spawns];
+
   const byNpc = new Set<number>();
   for (const s of spawns) byNpc.add(s.npcId);
 
@@ -113,10 +190,16 @@ export async function parseSpawns(
   );
 
   console.log(`[parse-spawns] Done. (chronicle=${chronicle})`);
-  console.log(`  File:             ${path.basename(sources.spawnlistSqlFile)}`);
-  console.log(`  Spawn rows:       ${spawns.length}`);
-  console.log(`  Distinct npcIds:  ${byNpc.size}`);
-  console.log(`  Skipped:          ${skipped}`);
+  console.log(`  spawnlist.sql rows:           ${regular.spawns.length}`);
+  console.log(`  raidboss_spawnlist.sql rows:  ${raidboss.spawns.length}`);
+  console.log(`  Total spawn rows:             ${spawns.length}`);
+  console.log(`  Distinct npcIds:              ${byNpc.size}`);
+  console.log(
+    `  Skipped:                      ${regular.skipped + raidboss.skipped}` +
+      (regular.skipped || raidboss.skipped
+        ? ` (spawnlist: ${regular.skipped}, raidboss: ${raidboss.skipped})`
+        : "")
+  );
 
   return spawns;
 }

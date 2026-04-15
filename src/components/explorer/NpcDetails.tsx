@@ -1,7 +1,9 @@
 import { FieldList } from "./FieldList";
 import { DropsTable, type EnrichedDrop } from "./DropsTable";
+import { SpawnsTable } from "./SpawnsTable";
+import { SpawnMap } from "./SpawnMap";
 import type { Chronicle } from "@/lib/chronicles";
-import type { Npc } from "@/lib/types";
+import type { Npc, Spawn } from "@/lib/types";
 
 export interface EnrichedNpcDrops {
   npcId: number;
@@ -18,11 +20,14 @@ export function NpcDetails({
   chronicle,
   npc,
   drops,
+  spawns,
   kind,
 }: {
   chronicle: Chronicle;
   npc: Npc;
   drops: EnrichedNpcDrops | null;
+  /** Raw spawn rows for this NPC, or `null` if the fetch failed / wasn't run. */
+  spawns: Spawn[] | null;
   kind: "npc" | "monster";
 }) {
   const identity = [
@@ -134,6 +139,21 @@ export function NpcDetails({
       <Section title="Drops">
         <DropsTable chronicle={chronicle} drops={drops?.drops ?? []} />
       </Section>
+
+      {spawns !== null && (
+        <Section title={`Spawns (${spawns.length})`}>
+          <SpawnsTable spawns={spawns} />
+        </Section>
+      )}
+
+      {/* Spike-quality spawn map. Conditional on having at least one
+          spawn — no map section for NPCs with zero spawn data, only the
+          table's empty state above. */}
+      {spawns !== null && spawns.length > 0 && (
+        <Section title="Spawn map">
+          <SpawnMap spawns={spawns} />
+        </Section>
+      )}
 
       {npc.properties && Object.keys(npc.properties).length > 0 && (
         <Section title="Extra properties">

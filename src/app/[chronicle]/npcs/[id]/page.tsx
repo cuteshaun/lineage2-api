@@ -6,7 +6,7 @@ import {
   NpcDetails,
   type EnrichedNpcDrops,
 } from "@/components/explorer/NpcDetails";
-import type { Npc } from "@/lib/types";
+import type { Npc, Spawn } from "@/lib/types";
 
 export default async function NpcDetailsPage({
   params,
@@ -19,9 +19,12 @@ export default async function NpcDetailsPage({
   const numericId = Number(id);
   if (!Number.isInteger(numericId) || numericId <= 0) notFound();
 
-  const [npcResult, dropsResult] = await Promise.all([
+  // Fetch NPC detail, drops, and raw spawns in parallel. All three share
+  // the same numeric id, so parallel fetching is safe.
+  const [npcResult, dropsResult, spawnsResult] = await Promise.all([
     apiFetch<Npc>(`/api/${chronicle}/npcs/${numericId}`),
     apiFetch<EnrichedNpcDrops>(`/api/${chronicle}/npcs/${numericId}/drops`),
+    apiFetch<Spawn[]>(`/api/${chronicle}/npcs/${numericId}/spawns`),
   ]);
 
   if (!npcResult.ok) {
@@ -36,6 +39,12 @@ export default async function NpcDetailsPage({
   // A 404 from the drops endpoint just means "no drops table" — not fatal.
   const drops = dropsResult.ok ? dropsResult.data : null;
 
+  // The spawns endpoint is `200 + []` when the NPC has zero spawns and 404
+  // only if the id is unknown (which we already ruled out above). Treat an
+  // unexpected failure as "no data available" (null) rather than blocking
+  // the whole page. The `SpawnsTable` component renders an empty state.
+  const spawns = spawnsResult.ok ? spawnsResult.data : null;
+
   return (
     <div className="flex flex-col gap-6">
       <Link
@@ -48,6 +57,7 @@ export default async function NpcDetailsPage({
         chronicle={chronicle}
         npc={npcResult.data}
         drops={drops}
+        spawns={spawns}
         kind="npc"
       />
     </div>

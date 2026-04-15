@@ -1,5 +1,5 @@
 import type { Chronicle } from "../chronicles";
-import type { Item, Npc, NpcDrops } from "../types";
+import type { Item, Npc, NpcDrops, Spawn } from "../types";
 import { loadChronicleDataset } from "./loaders";
 import {
   buildCanonicalMonsters,
@@ -55,6 +55,8 @@ interface ChronicleIndexes {
   monsterGroupsById: Map<number, MonsterGroup>;
   /** Map every canonical monster id to its containing group id. */
   canonicalIdToGroupId: Map<number, number>;
+  /** Raw spawns grouped by npcId. Missing npcIds simply have no spawns. */
+  spawnsByNpcId: Map<number, Spawn[]>;
 }
 
 export interface NpcTypeSummary {
@@ -214,6 +216,19 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
   // /monsters now serves these groups instead of canonicals directly.
   const groups = buildMonsterGroups(canonical.canonicalMonsters);
 
+  // Group raw spawns by npcId — one pass. A missing npcId means "no spawns",
+  // which the query helper returns as an empty array (not undefined), so
+  // callers don't need special-casing.
+  const spawnsByNpcId = new Map<number, Spawn[]>();
+  for (const spawn of dataset.spawns) {
+    let list = spawnsByNpcId.get(spawn.npcId);
+    if (!list) {
+      list = [];
+      spawnsByNpcId.set(spawn.npcId, list);
+    }
+    list.push(spawn);
+  }
+
   return {
     items: dataset.items,
     npcs: dataset.npcs,
@@ -233,6 +248,7 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
     monsterGroups: groups.groups,
     monsterGroupsById: groups.groupsById,
     canonicalIdToGroupId: groups.canonicalIdToGroupId,
+    spawnsByNpcId,
   };
 }
 
@@ -316,6 +332,16 @@ export function getDropsByNpcId(
   npcId: number
 ): NpcDrops | undefined {
   return getChronicleIndexes(chronicle).dropsByNpcId.get(npcId);
+}
+
+/**
+ * Raw spawn points for a given npc id. Returns an empty array when the
+ * npc id has no entries in `spawnlist.sql` — which is NOT the same as the
+ * npc id being unknown. Existence-of-npc checks belong at the route layer
+ * (via `getNpcById` / `getMonsterById`).
+ */
+export function getNpcSpawns(chronicle: Chronicle, npcId: number): Spawn[] {
+  return getChronicleIndexes(chronicle).spawnsByNpcId.get(npcId) ?? [];
 }
 
 // --- Canonical monster lookups (template-deduped view over raw monsters) ---

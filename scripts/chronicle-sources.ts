@@ -17,6 +17,8 @@ export interface ChronicleSources {
   spawnlistSqlFile: string;
   /** Absolute path to `raidboss_spawnlist.sql` in the upstream datapack. */
   raidbossSpawnlistSqlFile: string;
+  /** Absolute path to `grandboss_data.sql` in the upstream datapack. */
+  grandbossDataSqlFile: string;
 }
 
 interface SourceSpec {
@@ -24,6 +26,7 @@ interface SourceSpec {
   npcsXmlDir: string[];
   spawnlistSqlFile: string[];
   raidbossSpawnlistSqlFile: string[];
+  grandbossDataSqlFile: string[];
 }
 
 const SOURCE_SPECS: Record<Chronicle, SourceSpec> = {
@@ -58,6 +61,13 @@ const SOURCE_SPECS: Record<Chronicle, SourceSpec> = {
       "sql",
       "raidboss_spawnlist.sql",
     ],
+    grandbossDataSqlFile: [
+      "..",
+      "aCis_382_LATEST_STABLE",
+      "aCis_datapack",
+      "sql",
+      "grandboss_data.sql",
+    ],
   },
 };
 
@@ -75,5 +85,6 @@ export function getChronicleSources(chronicle: Chronicle): ChronicleSources {
       root,
       ...spec.raidbossSpawnlistSqlFile
     ),
+    grandbossDataSqlFile: path.join(root, ...spec.grandbossDataSqlFile),
   };
 }

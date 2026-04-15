@@ -13,9 +13,17 @@ import type { Chronicle } from "../src/lib/chronicles";
 export interface ChronicleSources {
   itemsXmlDir: string;
   npcsXmlDir: string;
+  /** Absolute path to `spawnlist.sql` in the upstream datapack. */
+  spawnlistSqlFile: string;
 }
 
-const SOURCE_SPECS: Record<Chronicle, { itemsXmlDir: string[]; npcsXmlDir: string[] }> = {
+interface SourceSpec {
+  itemsXmlDir: string[];
+  npcsXmlDir: string[];
+  spawnlistSqlFile: string[];
+}
+
+const SOURCE_SPECS: Record<Chronicle, SourceSpec> = {
   interlude: {
     itemsXmlDir: [
       "..",
@@ -33,6 +41,13 @@ const SOURCE_SPECS: Record<Chronicle, { itemsXmlDir: string[]; npcsXmlDir: strin
       "xml",
       "npcs",
     ],
+    spawnlistSqlFile: [
+      "..",
+      "aCis_382_LATEST_STABLE",
+      "aCis_datapack",
+      "sql",
+      "spawnlist.sql",
+    ],
   },
 };
 
@@ -45,5 +60,6 @@ export function getChronicleSources(chronicle: Chronicle): ChronicleSources {
   return {
     itemsXmlDir: path.join(root, ...spec.itemsXmlDir),
     npcsXmlDir: path.join(root, ...spec.npcsXmlDir),
+    spawnlistSqlFile: path.join(root, ...spec.spawnlistSqlFile),
   };
 }

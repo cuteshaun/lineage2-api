@@ -1,6 +1,7 @@
 import { parseItems } from "./parse-items";
 import { parseNpcs } from "./parse-npcs";
 import { parseDrops } from "./parse-drops";
+import { parseSpawns } from "./parse-spawns";
 import {
   isChronicle,
   SUPPORTED_CHRONICLES,
@@ -34,6 +35,12 @@ async function main() {
   console.log();
 
   const drops = await parseDrops(chronicle);
+  console.log();
+
+  // Spawns are generated alongside the other datasets but are NOT yet
+  // wired into any public API route or runtime index. First iteration is
+  // foundation-only — see `parse-spawns.ts`.
+  const spawns = await parseSpawns(chronicle);
 
   let totalCategories = 0;
   let totalDropEntries = 0;
@@ -43,15 +50,18 @@ async function main() {
       totalDropEntries += cat.drops.length;
     }
   }
+  const distinctSpawnNpcIds = new Set(spawns.map((s) => s.npcId)).size;
 
   const elapsed = ((Date.now() - start) / 1000).toFixed(1);
 
   console.log(`\n[build-data] Summary (chronicle=${chronicle})`);
-  console.log(`  Items:           ${items.length}`);
-  console.log(`  NPCs:            ${npcs.length}`);
-  console.log(`  NPCs with drops: ${drops.length}`);
-  console.log(`  Drop categories: ${totalCategories}`);
-  console.log(`  Drop entries:    ${totalDropEntries}`);
+  console.log(`  Items:                ${items.length}`);
+  console.log(`  NPCs:                 ${npcs.length}`);
+  console.log(`  NPCs with drops:      ${drops.length}`);
+  console.log(`  Drop categories:      ${totalCategories}`);
+  console.log(`  Drop entries:         ${totalDropEntries}`);
+  console.log(`  Spawn rows:           ${spawns.length}`);
+  console.log(`  Distinct spawn npcs:  ${distinctSpawnNpcIds}`);
   console.log(`  Completed in ${elapsed}s`);
 }
 

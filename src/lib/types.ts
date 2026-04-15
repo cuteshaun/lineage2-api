@@ -156,6 +156,24 @@ export interface NpcDrops {
   source: DataSource;
 }
 
+/**
+ * Raw spawn point from the upstream `spawnlist.sql` dataset. One record
+ * per row in that table — no grouping, no dedup, no location enrichment.
+ * Intended to be attached to a raw NPC id later (each `npcId` can have
+ * many spawns). `periodOfDay` kept numeric (0/1/2 in the source) for now;
+ * semantic naming is a future iteration.
+ */
+export interface Spawn {
+  npcId: number;
+  x: number;
+  y: number;
+  z: number;
+  heading: number;
+  respawnDelay: number;
+  respawnRandom: number;
+  periodOfDay: number;
+}
+
 export interface ManualFixes {
   items: Record<string, Partial<Item>>;
   npcs: Record<string, Partial<Npc>>;

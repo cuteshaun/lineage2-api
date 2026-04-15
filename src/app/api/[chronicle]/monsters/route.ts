@@ -1,9 +1,9 @@
 import {
-  getCanonicalMonstersList,
+  getMonsterGroupsList,
   MONSTER_NPC_TYPE_MAP,
   type NpcSortField,
 } from "@/lib/data/indexes";
-import { toCanonicalMonsterView } from "@/lib/api/monsters";
+import { toMonsterGroupSummary } from "@/lib/api/monster-groups";
 import {
   jsonError,
   jsonList,
@@ -14,15 +14,18 @@ import {
   parseSortParam,
 } from "@/lib/api/responses";
 
-// Public canonical monster list. Returns template-deduped entries —
-// monsters whose name + template fields are identical are merged under one
-// canonical id. For the source-faithful list (every raw entry preserved),
-// see `/api/[chronicle]/raw/monsters`.
+// Public monster list — returns one entry per exact monster name (a
+// "monster group"). Each group aggregates the canonical templates that
+// share the name. For the source-faithful view of every raw monster
+// preserved as separate rows, see `/api/[chronicle]/raw/monsters`.
 //
-// Filters and sort options match the raw endpoint so callers can migrate
-// between the two without changing their query strings. Predicates run
-// against the template (`q` on name, `npcType`, `levelMin`/`levelMax`);
-// `sort=id` sorts by `canonicalId`.
+// Existing query params are preserved; their semantics adapt to the
+// grouped model (see `getMonsterGroupsList` in lib/data/indexes.ts):
+//   - q              : substring on group name
+//   - npcType        : group matches if any variant has this type
+//   - levelMin/Max   : group matches if any variant's level is in range
+//   - sort=level asc → by min variant level; desc → by max variant level
+//   - sort=id        → by groupId
 
 const NPC_SORT_FIELDS = ["id", "name", "level"] as const satisfies readonly NpcSortField[];
 
@@ -60,7 +63,7 @@ export async function GET(
   const sort = parseSortParam(url.searchParams, NPC_SORT_FIELDS);
   if (!sort.ok) return sort.response;
 
-  const result = getCanonicalMonstersList(parsed.chronicle, {
+  const result = getMonsterGroupsList(parsed.chronicle, {
     ...pagination.pagination,
     q: url.searchParams.get("q"),
     levelMin: levelMin.value,
@@ -69,7 +72,7 @@ export async function GET(
     sort: sort.value,
   });
 
-  return jsonList(result.data.map(toCanonicalMonsterView), {
+  return jsonList(result.data.map(toMonsterGroupSummary), {
     total: result.total,
     limit: pagination.pagination.limit,
     offset: pagination.pagination.offset,

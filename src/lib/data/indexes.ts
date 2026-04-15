@@ -5,8 +5,13 @@ import {
   buildCanonicalMonsters,
   type CanonicalMonster,
 } from "./canonical-monsters";
+import {
+  buildMonsterGroups,
+  type MonsterGroup,
+} from "./monster-groups";
 
 export type { CanonicalMonster } from "./canonical-monsters";
+export type { MonsterGroup } from "./monster-groups";
 
 /** A single reverse-lookup entry: which NPC drops/spoils a given item. */
 export interface ItemSourceEntry {
@@ -44,6 +49,12 @@ interface ChronicleIndexes {
   canonicalMonstersById: Map<number, CanonicalMonster>;
   /** Map every raw monster id to its canonical id. */
   rawMonsterIdToCanonicalId: Map<number, number>;
+  /** Public monster groups — one entry per exact name. See `monster-groups.ts`. */
+  monsterGroups: MonsterGroup[];
+  /** Lookup by group id (= lowest canonical id among the group's variants). */
+  monsterGroupsById: Map<number, MonsterGroup>;
+  /** Map every canonical monster id to its containing group id. */
+  canonicalIdToGroupId: Map<number, number>;
 }
 
 export interface NpcTypeSummary {
@@ -198,6 +209,11 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
   const dropsByNpcId = new Map(dataset.drops.map((d) => [d.npcId, d]));
   const canonical = buildCanonicalMonsters(monsters, dropsByNpcId);
 
+  // Build the public monster group layer on top of canonical. Groups by
+  // exact name. The canonical layer remains internal foundation — public
+  // /monsters now serves these groups instead of canonicals directly.
+  const groups = buildMonsterGroups(canonical.canonicalMonsters);
+
   return {
     items: dataset.items,
     npcs: dataset.npcs,
@@ -214,6 +230,9 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
     canonicalMonsters: canonical.canonicalMonsters,
     canonicalMonstersById: canonical.canonicalMonstersById,
     rawMonsterIdToCanonicalId: canonical.rawIdToCanonicalId,
+    monsterGroups: groups.groups,
+    monsterGroupsById: groups.groupsById,
+    canonicalIdToGroupId: groups.canonicalIdToGroupId,
   };
 }
 
@@ -351,6 +370,51 @@ export function getCanonicalMonsterByAnyId(
   const canonicalId = indexes.rawMonsterIdToCanonicalId.get(id);
   if (canonicalId === undefined) return undefined;
   return indexes.canonicalMonstersById.get(canonicalId);
+}
+
+// --- Monster group lookups (public name-grouped layer over canonical) ---
+
+/**
+ * Returns the full monster group list for the chronicle, sorted by groupId.
+ * One entry per exact monster name. See `monster-groups.ts`.
+ */
+export function getMonsterGroups(chronicle: Chronicle): MonsterGroup[] {
+  return getChronicleIndexes(chronicle).monsterGroups;
+}
+
+/**
+ * Look up a monster group by its group id (= lowest canonicalId among
+ * variants). Returns `undefined` if the id is not a known group id.
+ */
+export function getMonsterGroupById(
+  chronicle: Chronicle,
+  groupId: number
+): MonsterGroup | undefined {
+  return getChronicleIndexes(chronicle).monsterGroupsById.get(groupId);
+}
+
+/**
+ * Forgiving lookup used by the public `/monsters/[id]` endpoint. Accepts:
+ *   - a monster group id, or
+ *   - any canonical monster id (resolves to the containing group), or
+ *   - any raw monster id (resolves raw → canonical → group).
+ *
+ * Returns `undefined` if `id` is not any known monster id.
+ */
+export function getMonsterGroupByAnyId(
+  chronicle: Chronicle,
+  id: number
+): MonsterGroup | undefined {
+  const indexes = getChronicleIndexes(chronicle);
+  // Direct group lookup first (fast path when caller already has the groupId).
+  const direct = indexes.monsterGroupsById.get(id);
+  if (direct) return direct;
+  // Otherwise treat `id` as raw → canonical → group.
+  const canonicalId = indexes.rawMonsterIdToCanonicalId.get(id);
+  if (canonicalId === undefined) return undefined;
+  const groupId = indexes.canonicalIdToGroupId.get(canonicalId);
+  if (groupId === undefined) return undefined;
+  return indexes.monsterGroupsById.get(groupId);
 }
 
 /**
@@ -648,6 +712,119 @@ function canonicalMonsterComparator(
         );
         if (cmp !== 0) return cmp;
         return a.canonicalId - b.canonicalId;
+      };
+  }
+}
+
+// --- Public monster group list (filter / sort / paginate, existential semantics) ---
+
+/**
+ * Filter / sort / paginate over monster groups for the public `/monsters`
+ * list endpoint. Accepts the same `NpcListOptions` shape as the existing
+ * monster endpoints so callers don't need a new query-param vocabulary.
+ *
+ * Filter semantics ("a group matches if any variant matches"):
+ *   - `q`        : case-insensitive substring match on group name
+ *   - `npcType`  : matches if any variant has this canonical npcType
+ *   - `levelMin` : matches if any variant's level is >= levelMin
+ *   - `levelMax` : matches if any variant's level is <= levelMax
+ *   (variants whose level is null never match level filters)
+ *
+ * Sort semantics (deterministic; tie-break by groupId):
+ *   - `id`     : by groupId
+ *   - `name`   : alphabetical, case-insensitive
+ *   - `level`  asc → by MIN variant level (groups with all-null levels last)
+ *   - `level`  desc → by MAX variant level (groups with all-null levels last)
+ * The asc-min / desc-max rule keeps "show me low-level monsters first"
+ * intuitive even when a group's variants span multiple levels.
+ */
+export function getMonsterGroupsList(
+  chronicle: Chronicle,
+  options: NpcListOptions
+): ListResult<MonsterGroup> {
+  const all = getChronicleIndexes(chronicle).monsterGroups;
+  const q = options.q?.trim().toLowerCase() || null;
+  const filtered = filterMonsterGroups(
+    all,
+    q,
+    options.levelMin ?? null,
+    options.levelMax ?? null,
+    options.npcType ?? null
+  );
+  const sorted = options.sort
+    ? [...filtered].sort(monsterGroupComparator(options.sort))
+    : filtered;
+  return {
+    data: paginate(sorted, options.limit, options.offset),
+    total: sorted.length,
+  };
+}
+
+function filterMonsterGroups(
+  source: MonsterGroup[],
+  q: string | null,
+  levelMin: number | null,
+  levelMax: number | null,
+  npcType: string | null
+): MonsterGroup[] {
+  if (!q && levelMin === null && levelMax === null && !npcType) return source;
+  return source.filter((g) => {
+    if (q && !matchesQuery(g.name, q)) return false;
+    if (levelMin === null && levelMax === null && !npcType) return true;
+    // Existential check across variants for level/npcType filters.
+    return g.variants.some((v) => {
+      const r = v.representative;
+      if (npcType && r.npcType !== npcType) return false;
+      if (levelMin !== null && (r.level === null || r.level < levelMin))
+        return false;
+      if (levelMax !== null && (r.level === null || r.level > levelMax))
+        return false;
+      return true;
+    });
+  });
+}
+
+function groupLevelExtreme(
+  group: MonsterGroup,
+  pick: "min" | "max"
+): number | null {
+  let acc: number | null = null;
+  for (const v of group.variants) {
+    const lv = v.representative.level;
+    if (lv === null) continue;
+    if (acc === null) acc = lv;
+    else if (pick === "min" && lv < acc) acc = lv;
+    else if (pick === "max" && lv > acc) acc = lv;
+  }
+  return acc;
+}
+
+function monsterGroupComparator(
+  spec: SortSpec<NpcSortField>
+): (a: MonsterGroup, b: MonsterGroup) => number {
+  const sign = spec.direction === "asc" ? 1 : -1;
+  switch (spec.field) {
+    case "id":
+      return (a, b) => sign * (a.groupId - b.groupId);
+    case "name":
+      return (a, b) => {
+        const cmp = ASCII(a.name, b.name);
+        if (cmp !== 0) return sign * cmp;
+        return a.groupId - b.groupId;
+      };
+    case "level":
+      // asc → use MIN variant level; desc → use MAX variant level.
+      // Either way, groups with all-null levels sort last (predictable
+      // pagination), tie-broken by groupId.
+      return (a, b) => {
+        const pick = spec.direction === "asc" ? "min" : "max";
+        const cmp = compareNullableNumber(
+          groupLevelExtreme(a, pick),
+          groupLevelExtreme(b, pick),
+          spec.direction
+        );
+        if (cmp !== 0) return cmp;
+        return a.groupId - b.groupId;
       };
   }
 }

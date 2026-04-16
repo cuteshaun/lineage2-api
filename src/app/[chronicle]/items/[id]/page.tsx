@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { isChronicle } from "@/lib/chronicles";
 import { apiFetch } from "@/lib/api/client";
 import { FieldList } from "@/components/explorer/FieldList";
+import { ItemIcon } from "@/components/explorer/ItemIcon";
 import { ItemSourceTable } from "@/components/explorer/ItemSourceTable";
 import type { Item } from "@/lib/types";
 import type { ItemSourceEntry } from "@/lib/data/indexes";
@@ -101,13 +102,16 @@ export default async function ItemDetailsPage({
         ← All items
       </Link>
 
-      <header className="flex flex-col gap-1">
-        <p className="font-mono text-xs uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
-          item · #{item.id}
-        </p>
-        <h1 className="text-3xl font-semibold text-zinc-900 dark:text-zinc-100">
-          {item.name}
-        </h1>
+      <header className="flex items-center gap-4">
+        <ItemIcon iconFile={item.iconFile} name={item.name} size={32} />
+        <div className="flex flex-col gap-1">
+          <p className="font-mono text-xs uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
+            item · #{item.id}
+          </p>
+          <h1 className="text-3xl font-semibold text-zinc-900 dark:text-zinc-100">
+            {item.name}
+          </h1>
+        </div>
       </header>
 
       <Section title="Identity">

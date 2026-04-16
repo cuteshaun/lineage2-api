@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { isChronicle } from "@/lib/chronicles";
 import { apiFetchList } from "@/lib/api/client";
 import { ItemFilters } from "@/components/explorer/ItemFilters";
+import { ItemIcon } from "@/components/explorer/ItemIcon";
 import { Pagination } from "@/components/explorer/Pagination";
 import type { Item } from "@/lib/types";
 import type { NameCount } from "@/lib/data/indexes";
@@ -99,7 +100,7 @@ export default async function ItemsPage({
               {items.data.map((item) => (
                 <tr
                   key={item.id}
-                  className="border-t border-zinc-100 dark:border-zinc-800"
+                  className="border-t border-zinc-100 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-900"
                 >
                   <td className="px-3 py-2 text-right font-mono text-xs text-zinc-500 dark:text-zinc-400">
                     {item.id}
@@ -107,9 +108,11 @@ export default async function ItemsPage({
                   <td className="px-3 py-2">
                     <Link
                       href={`${basePath}/${item.id}`}
-                      className="text-zinc-900 hover:underline dark:text-zinc-100"
+                      title={item.name}
+                      className="flex items-center gap-3 text-zinc-900 hover:underline dark:text-zinc-100"
                     >
-                      {item.name}
+                      <ItemIcon iconFile={item.iconFile} name={item.name} />
+                      <span>{item.name}</span>
                     </Link>
                   </td>
                   <td className="px-3 py-2 font-mono text-xs text-zinc-600 dark:text-zinc-400">

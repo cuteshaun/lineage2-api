@@ -43,6 +43,18 @@ export interface Item {
   accCombat: number | null;
   rEvas: number | null;
   source: DataSource;
+  /**
+   * Client-side icon key from the L2 Interlude `*grp.dat` tables (e.g.
+   * `"etc_adena_i00"`, `"weapon_small_sword_i00"`). `null` when no record
+   * was found for this itemId in any grp file. Not guessed or fuzzy-matched.
+   */
+  iconName: string | null;
+  /**
+   * Resolved PNG basename inside `public/icons/` (e.g. `"etc_adena_i00.png"`).
+   * `null` when `iconName` is null, or when no matching file exists on disk.
+   * Consumers build URLs as `/icons/${iconFile}`.
+   */
+  iconFile: string | null;
   properties?: Record<string, string | number | boolean>;
   stats?: Record<string, number>;
 }

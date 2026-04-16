@@ -5,6 +5,11 @@ import type { Item, ManualFixes } from "../src/lib/types";
 import { getChronicleDataConfig } from "../src/lib/chronicle-config";
 import type { Chronicle } from "../src/lib/chronicles";
 import { getChronicleSources } from "./chronicle-sources";
+import {
+  parseIconMappings,
+  buildIconFileIndex,
+  resolveIconFile,
+} from "./parse-icon-mappings";
 
 // --- XML Parser ---
 const parser = new XMLParser({
@@ -223,6 +228,11 @@ function transformItem(
       chronicle: "interlude",
       file: path.basename(sourceFile),
     },
+    // Icons are attached in a second pass once all items are known — see
+    // `attachIcons()` at the end of `parseItems()`. Manual fixes may set
+    // these up-front and will take precedence over the grp-derived values.
+    iconName: null,
+    iconFile: null,
     ...(Object.keys(properties).length > 0 ? { properties } : {}),
     ...(Object.keys(extraStats).length > 0 ? { stats: extraStats } : {}),
   };
@@ -330,6 +340,8 @@ export async function parseItems(
 
   const items = Array.from(itemMap.values()).sort((a, b) => a.id - b.id);
 
+  const iconStats = await attachIcons(items, chronicle);
+
   fs.mkdirSync(dataConfig.generatedDir, { recursive: true });
   fs.writeFileSync(
     path.join(dataConfig.generatedDir, "items.json"),
@@ -337,13 +349,55 @@ export async function parseItems(
   );
 
   console.log(`[parse-items] Done. (chronicle=${chronicle})`);
-  console.log(`  Files processed: ${filesProcessed}`);
-  console.log(`  Items parsed:    ${items.length}`);
-  console.log(`  Skipped:         ${skipped}`);
-  console.log(`  Warnings:        ${warnings}`);
-  console.log(`  Duplicates:      ${duplicates}`);
+  console.log(`  Files processed:      ${filesProcessed}`);
+  console.log(`  Items parsed:         ${items.length}`);
+  console.log(`  Skipped:              ${skipped}`);
+  console.log(`  Warnings:             ${warnings}`);
+  console.log(`  Duplicates:           ${duplicates}`);
+  console.log(`  Items w/ iconName:    ${iconStats.withIconName}`);
+  console.log(`  Items w/ iconFile:    ${iconStats.withIconFile}`);
+  console.log(`  Missing iconName:     ${iconStats.missingIconName}`);
+  console.log(`  Missing iconFile:     ${iconStats.missingIconFile}`);
 
   return items;
+}
+
+/**
+ * Second-pass enrichment: for every item without an `iconName` already set
+ * by manual fixes, look up the authoritative mapping from the chronicle's
+ * grp tables. Then resolve each `iconName` to a concrete PNG basename that
+ * actually exists under the chronicle's icons directory. Unresolved entries
+ * stay `null` — no guessing.
+ */
+async function attachIcons(
+  items: Item[],
+  chronicle: Chronicle
+): Promise<{
+  withIconName: number;
+  withIconFile: number;
+  missingIconName: number;
+  missingIconFile: number;
+}> {
+  const sources = getChronicleSources(chronicle);
+  const grpMap = await parseIconMappings(chronicle, items);
+  const iconsIndex = buildIconFileIndex(sources.iconsDir);
+
+  let withIconName = 0;
+  let withIconFile = 0;
+  for (const item of items) {
+    if (item.iconName == null) {
+      item.iconName = grpMap.get(item.id) ?? null;
+    }
+    item.iconFile = resolveIconFile(item.iconName, iconsIndex);
+    if (item.iconName != null) withIconName++;
+    if (item.iconFile != null) withIconFile++;
+  }
+  return {
+    withIconName,
+    withIconFile,
+    missingIconName: items.length - withIconName,
+    missingIconFile: items.length - withIconFile,
+  };
 }
 
 // Run directly

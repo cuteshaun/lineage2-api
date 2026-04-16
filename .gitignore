@@ -43,3 +43,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+/data/datapack/*/*.decoded.bin
+/data/datapack/*/*.decoded.txt
+/data/datapack/*/item-icons-grp.audit.json

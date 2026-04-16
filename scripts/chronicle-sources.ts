@@ -19,6 +19,21 @@ export interface ChronicleSources {
   raidbossSpawnlistSqlFile: string;
   /** Absolute path to `grandboss_data.sql` in the upstream datapack. */
   grandbossDataSqlFile: string;
+  /**
+   * Absolute paths to the three encrypted L2 client `*grp.dat` tables
+   * (etcitem / weapon / armor). Source of truth for itemId → iconName.
+   */
+  clientGrpFiles: {
+    etcitem: string;
+    weapon: string;
+    armor: string;
+  };
+  /**
+   * Absolute path to the directory holding exported icon PNGs that the
+   * public site serves under `/icons/`. Used at build time to resolve a
+   * `iconName` to a concrete file that actually exists on disk.
+   */
+  iconsDir: string;
 }
 
 interface SourceSpec {
@@ -27,6 +42,12 @@ interface SourceSpec {
   spawnlistSqlFile: string[];
   raidbossSpawnlistSqlFile: string[];
   grandbossDataSqlFile: string[];
+  clientGrpFiles: {
+    etcitem: string[];
+    weapon: string[];
+    armor: string[];
+  };
+  iconsDir: string[];
 }
 
 const SOURCE_SPECS: Record<Chronicle, SourceSpec> = {
@@ -68,6 +89,12 @@ const SOURCE_SPECS: Record<Chronicle, SourceSpec> = {
       "sql",
       "grandboss_data.sql",
     ],
+    clientGrpFiles: {
+      etcitem: ["data", "datapack", "interlude", "etcitemgrp.dat"],
+      weapon: ["data", "datapack", "interlude", "weapongrp.dat"],
+      armor: ["data", "datapack", "interlude", "armorgrp.dat"],
+    },
+    iconsDir: ["public", "icons"],
   },
 };
 
@@ -86,5 +113,11 @@ export function getChronicleSources(chronicle: Chronicle): ChronicleSources {
       ...spec.raidbossSpawnlistSqlFile
     ),
     grandbossDataSqlFile: path.join(root, ...spec.grandbossDataSqlFile),
+    clientGrpFiles: {
+      etcitem: path.join(root, ...spec.clientGrpFiles.etcitem),
+      weapon: path.join(root, ...spec.clientGrpFiles.weapon),
+      armor: path.join(root, ...spec.clientGrpFiles.armor),
+    },
+    iconsDir: path.join(root, ...spec.iconsDir),
   };
 }

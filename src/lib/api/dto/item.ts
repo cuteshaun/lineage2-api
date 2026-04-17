@@ -46,6 +46,31 @@ export interface ItemDetailDto {
   iconFile: string | null;
 }
 
+const BODYPART_LABELS: Record<string, string> = {
+  rhand: "One-handed",
+  lrhand: "Two-handed",
+  lhand: "Off-hand",
+  chest: "Chest",
+  fullarmor: "Full Armor",
+  legs: "Legs",
+  head: "Helmet",
+  gloves: "Gloves",
+  feet: "Boots",
+  neck: "Necklace",
+  "rear;lear": "Earring",
+  "rfinger;lfinger": "Ring",
+  underwear: "Underwear",
+  hair: "Hair Accessory",
+  hairall: "Hair Accessory",
+  face: "Face Accessory",
+  alldress: "Full Dress",
+};
+
+function normalizeBodypart(raw: string | null): string | null {
+  if (raw == null) return null;
+  return BODYPART_LABELS[raw] ?? raw;
+}
+
 export function toItemListDto(item: Item): ItemListDto {
   return {
     id: item.id,
@@ -67,7 +92,7 @@ export function toItemDetailDto(item: Item): ItemDetailDto {
     weight: item.weight,
     price: item.price,
     material: item.material,
-    bodypart: item.bodypart,
+    bodypart: normalizeBodypart(item.bodypart),
     weaponType: item.weaponType,
     armorType: item.armorType,
     etcItemType: item.etcItemType,

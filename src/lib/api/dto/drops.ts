@@ -18,8 +18,11 @@ export interface NpcDropsDto {
 function formatChance(raw: number | null): string | null {
   if (raw == null) return null;
   const pct = raw / 10000;
-  if (pct >= 1 && pct === Math.floor(pct)) return `${pct}%`;
-  return `${parseFloat(pct.toFixed(2))}%`;
+  if (pct >= 10) return `${parseFloat(pct.toFixed(1))}%`;
+  if (pct >= 1) return `${parseFloat(pct.toFixed(2))}%`;
+  const formatted = parseFloat(pct.toFixed(3));
+  if (formatted === 0 && raw > 0) return "<0.001%";
+  return `${formatted}%`;
 }
 
 function formatQty(min: number | null, max: number | null): string {

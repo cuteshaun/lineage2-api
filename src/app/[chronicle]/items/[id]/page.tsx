@@ -5,12 +5,7 @@ import { apiFetch } from "@/lib/api/client";
 import { ItemIcon } from "@/components/explorer/ItemIcon";
 import { ItemSourceTable } from "@/components/explorer/ItemSourceTable";
 import type { ItemDetailDto } from "@/lib/api/dto/item";
-import type { ItemSourceEntry } from "@/lib/data/indexes";
-
-interface SourceResponse {
-  sources: ItemSourceEntry[];
-  meta: { itemId: number; total: number };
-}
+import type { ItemSourcesResponseDto } from "@/lib/api/dto/drops";
 
 export default async function ItemDetailsPage({
   params,
@@ -25,10 +20,10 @@ export default async function ItemDetailsPage({
 
   const [itemResult, droppedByResult, spoiledByResult] = await Promise.all([
     apiFetch<ItemDetailDto>(`/api/${chronicle}/items/${numericId}`),
-    apiFetch<SourceResponse>(
+    apiFetch<ItemSourcesResponseDto>(
       `/api/${chronicle}/items/${numericId}/dropped-by`
     ),
-    apiFetch<SourceResponse>(
+    apiFetch<ItemSourcesResponseDto>(
       `/api/${chronicle}/items/${numericId}/spoiled-by`
     ),
   ]);

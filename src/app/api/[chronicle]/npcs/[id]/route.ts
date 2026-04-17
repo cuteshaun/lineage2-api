@@ -1,4 +1,5 @@
 import { getNpcById } from "@/lib/data/indexes";
+import { toNpcDetailDto } from "@/lib/api/dto/npc";
 import { jsonError, jsonOk, parseEntityParams } from "@/lib/api/responses";
 
 export async function GET(
@@ -13,5 +14,5 @@ export async function GET(
     return jsonError(`NPC ${parsed.id} not found`, 404);
   }
 
-  return jsonOk(npc);
+  return jsonOk(toNpcDetailDto(npc));
 }

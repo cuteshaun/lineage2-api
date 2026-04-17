@@ -3,6 +3,7 @@ import {
   getNpcs,
   type NpcSortField,
 } from "@/lib/data/indexes";
+import { toNpcListDto } from "@/lib/api/dto/npc";
 import {
   jsonError,
   jsonList,
@@ -58,7 +59,7 @@ export async function GET(
     sort: sort.value,
   });
 
-  return jsonList(result.data, {
+  return jsonList(result.data.map(toNpcListDto), {
     total: result.total,
     limit: pagination.pagination.limit,
     offset: pagination.pagination.offset,

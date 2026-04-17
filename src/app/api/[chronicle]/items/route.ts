@@ -1,4 +1,5 @@
 import { getItems, type ItemSortField } from "@/lib/data/indexes";
+import { toItemListDto } from "@/lib/api/dto/item";
 import {
   jsonError,
   jsonList,
@@ -49,7 +50,7 @@ export async function GET(
     sort: sort.value,
   });
 
-  return jsonList(result.data, {
+  return jsonList(result.data.map(toItemListDto), {
     total: result.total,
     limit: pagination.pagination.limit,
     offset: pagination.pagination.offset,

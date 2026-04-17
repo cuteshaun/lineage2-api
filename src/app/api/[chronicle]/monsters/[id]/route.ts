@@ -1,4 +1,5 @@
 import { getMonsterById } from "@/lib/data/indexes";
+import { toNpcDetailDto } from "@/lib/api/dto/npc";
 import { jsonError, jsonOk, parseEntityParams } from "@/lib/api/responses";
 
 // Public monster detail — cleaned view. The `[id]` parameter accepts either:
@@ -20,5 +21,5 @@ export async function GET(
     return jsonError(`Monster ${parsed.id} not found`, 404);
   }
 
-  return jsonOk(monster);
+  return jsonOk(toNpcDetailDto(monster));
 }

@@ -1,4 +1,5 @@
 import { getItemById } from "@/lib/data/indexes";
+import { toItemDetailDto } from "@/lib/api/dto/item";
 import { jsonError, jsonOk, parseEntityParams } from "@/lib/api/responses";
 
 export async function GET(
@@ -13,5 +14,5 @@ export async function GET(
     return jsonError(`Item ${parsed.id} not found`, 404);
   }
 
-  return jsonOk(item);
+  return jsonOk(toItemDetailDto(item));
 }

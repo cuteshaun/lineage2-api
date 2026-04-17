@@ -2,7 +2,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isChronicle } from "@/lib/chronicles";
 import { apiFetch } from "@/lib/api/client";
-import { FieldList } from "@/components/explorer/FieldList";
 import { ItemIcon } from "@/components/explorer/ItemIcon";
 import { ItemSourceTable } from "@/components/explorer/ItemSourceTable";
 import type { ItemDetailDto } from "@/lib/api/dto/item";
@@ -47,49 +46,52 @@ export default async function ItemDetailsPage({
   const droppedBy = droppedByResult.ok ? droppedByResult.data.sources : [];
   const spoiledBy = spoiledByResult.ok ? spoiledByResult.data.sources : [];
 
-  const identity = [
-    { label: "ID", value: item.id },
-    { label: "Name", value: item.name },
-    { label: "Type", value: item.type },
-    { label: "Grade", value: item.grade },
-    { label: "Material", value: item.material },
-    { label: "Weight", value: item.weight },
-    { label: "Price", value: item.price },
-  ];
+  const basics = nonNull([
+    stat("Weight", item.weight),
+    stat("Price", item.price),
+    stat("Material", item.material),
+    stat("Body Slot", item.bodypart),
+  ]);
 
-  const combat = [
-    { label: "pAtk", value: item.pAtk },
-    { label: "mAtk", value: item.mAtk },
-    { label: "pDef", value: item.pDef },
-    { label: "mDef", value: item.mDef },
-    { label: "rCrit", value: item.rCrit },
-    { label: "pAtkSpd", value: item.pAtkSpd },
-    { label: "rShld", value: item.rShld },
-    { label: "sDef", value: item.sDef },
-    { label: "accCombat", value: item.accCombat },
-    { label: "rEvas", value: item.rEvas },
-  ];
+  const combat = nonNull([
+    stat("P. Attack", item.pAtk),
+    stat("M. Attack", item.mAtk),
+    stat("P. Defense", item.pDef),
+    stat("M. Defense", item.mDef),
+    stat("Crit Rate", item.rCrit),
+    stat("Atk. Speed", item.pAtkSpd),
+    stat("Shield Rate", item.rShld),
+    stat("Shield Def.", item.sDef),
+    stat("Accuracy", item.accCombat),
+    stat("Evasion", item.rEvas),
+    stat("Soulshots", item.soulshots),
+    stat("Spiritshots", item.spiritshots),
+    stat("MP Consume", item.mpConsume),
+    stat("Reuse Delay", item.reuseDelay),
+  ]);
 
-  const equipment = [
-    { label: "weaponType", value: item.weaponType },
-    { label: "armorType", value: item.armorType },
-    { label: "etcItemType", value: item.etcItemType },
-    { label: "bodypart", value: item.bodypart },
-    { label: "isMagical", value: item.isMagical },
-    { label: "crystalCount", value: item.crystalCount },
-    { label: "itemSkill", value: item.itemSkill },
-  ];
+  const info = nonNull([
+    stat("Weapon Type", item.weaponType),
+    stat("Armor Type", item.armorType),
+    stat("Item Category", item.etcItemType),
+    stat("Crystal Count", item.crystalCount),
+  ]);
 
-  const flags = [
-    { label: "isStackable", value: item.isStackable },
-    { label: "isTradable", value: item.isTradable },
-    { label: "isDropable", value: item.isDropable },
-    { label: "isSellable", value: item.isSellable },
-    { label: "soulshots", value: item.soulshots },
-    { label: "spiritshots", value: item.spiritshots },
-    { label: "mpConsume", value: item.mpConsume },
-    { label: "reuseDelay", value: item.reuseDelay },
-  ];
+  const trade = nonNull([
+    stat("Stackable", item.isStackable),
+    stat("Tradable", item.isTradable),
+    stat("Dropable", item.isDropable),
+    stat("Sellable", item.isSellable),
+  ]);
+
+  const typeBadge =
+    item.type === "weapon"
+      ? "Weapon"
+      : item.type === "armor"
+        ? "Armor"
+        : "Item";
+
+  const gradeLabel = item.grade === "none" ? null : item.grade.toUpperCase();
 
   return (
     <div className="flex flex-col gap-6">
@@ -103,32 +105,45 @@ export default async function ItemDetailsPage({
       <header className="flex items-center gap-4">
         <ItemIcon iconFile={item.iconFile} name={item.name} size={32} />
         <div className="flex flex-col gap-1">
-          <p className="font-mono text-xs uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
-            item · #{item.id}
-          </p>
+          <div className="flex items-center gap-2">
+            <span className="rounded-full bg-zinc-200 px-2.5 py-0.5 text-xs font-medium text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300">
+              {typeBadge}
+            </span>
+            {gradeLabel && (
+              <span className="rounded-full bg-indigo-100 px-2.5 py-0.5 text-xs font-medium text-indigo-800 dark:bg-indigo-900/40 dark:text-indigo-300">
+                Grade {gradeLabel}
+              </span>
+            )}
+          </div>
           <h1 className="text-3xl font-semibold text-zinc-900 dark:text-zinc-100">
             {item.name}
           </h1>
         </div>
       </header>
 
-      <Section title="Identity">
-        <FieldList fields={identity} />
-      </Section>
-
-      {combat.some((f) => f.value !== null) && (
-        <Section title="Combat stats">
-          <FieldList fields={combat} />
+      {basics.length > 0 && (
+        <Section title="Basics">
+          <StatGrid stats={basics} />
         </Section>
       )}
 
-      <Section title="Equipment">
-        <FieldList fields={equipment} />
-      </Section>
+      {combat.length > 0 && (
+        <Section title="Combat">
+          <StatGrid stats={combat} />
+        </Section>
+      )}
 
-      <Section title="Flags & misc">
-        <FieldList fields={flags} />
-      </Section>
+      {info.length > 0 && (
+        <Section title="Item Info">
+          <StatGrid stats={info} />
+        </Section>
+      )}
+
+      {trade.length > 0 && (
+        <Section title="Trade">
+          <StatGrid stats={trade} />
+        </Section>
+      )}
 
       <Section title={`Dropped by (${droppedBy.length})`}>
         <ItemSourceTable
@@ -148,6 +163,36 @@ export default async function ItemDetailsPage({
         </Section>
       )}
     </div>
+  );
+}
+
+type StatEntry = { label: string; display: string };
+
+function stat(
+  label: string,
+  value: string | number | boolean | null | undefined
+): StatEntry | null {
+  if (value == null) return null;
+  if (typeof value === "boolean") return { label, display: value ? "Yes" : "No" };
+  if (typeof value === "number") return { label, display: value.toLocaleString() };
+  if (typeof value === "string" && value === "") return null;
+  return { label, display: String(value) };
+}
+
+function nonNull(entries: (StatEntry | null)[]): StatEntry[] {
+  return entries.filter((e): e is StatEntry => e !== null);
+}
+
+function StatGrid({ stats }: { stats: StatEntry[] }) {
+  return (
+    <dl className="grid grid-cols-2 gap-x-8 gap-y-2 font-mono text-xs sm:grid-cols-3 md:grid-cols-4">
+      {stats.map((s) => (
+        <div key={s.label}>
+          <dt className="text-zinc-500 dark:text-zinc-400">{s.label}</dt>
+          <dd className="text-zinc-900 dark:text-zinc-100">{s.display}</dd>
+        </div>
+      ))}
+    </dl>
   );
 }
 

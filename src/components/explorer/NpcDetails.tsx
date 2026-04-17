@@ -1,7 +1,8 @@
 import { DropsTable, type EnrichedDrop } from "./DropsTable";
 import { SpawnSummary } from "./SpawnSummary";
 import type { Chronicle } from "@/lib/chronicles";
-import type { Npc, Spawn } from "@/lib/types";
+import type { NpcDetailDto } from "@/lib/api/dto/npc";
+import type { Spawn } from "@/lib/types";
 
 export interface EnrichedNpcDrops {
   npcId: number;
@@ -17,13 +18,11 @@ export function NpcDetails({
   kind,
 }: {
   chronicle: Chronicle;
-  npc: Npc;
+  npc: NpcDetailDto;
   drops: EnrichedNpcDrops | null;
   spawns: Spawn[] | null;
   kind: "npc" | "monster";
 }) {
-  const isAggressive = (npc.aiAggro ?? 0) > 0;
-
   return (
     <div className="flex flex-col gap-6">
       <header className="flex flex-col gap-1">
@@ -36,12 +35,12 @@ export function NpcDetails({
           </h1>
           <span
             className={
-              isAggressive
+              npc.isAggressive
                 ? "rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800 dark:bg-red-900/40 dark:text-red-300"
                 : "rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300"
             }
           >
-            {isAggressive ? "Aggressive" : "Passive"}
+            {npc.isAggressive ? "Aggressive" : "Passive"}
           </span>
         </div>
         {npc.title && (
@@ -55,8 +54,8 @@ export function NpcDetails({
         <dl className="grid grid-cols-2 gap-x-8 gap-y-2 font-mono text-xs sm:grid-cols-3 md:grid-cols-4">
           <Stat label="Level" value={npc.level} />
           <Stat label="Type" value={npc.npcType} />
-          <Stat label="HP" value={npc.hp != null ? Math.round(npc.hp) : null} />
-          <Stat label="MP" value={npc.mp != null ? Math.round(npc.mp) : null} />
+          <Stat label="HP" value={npc.hp} />
+          <Stat label="MP" value={npc.mp} />
           <Stat label="EXP" value={npc.exp} />
           <Stat label="SP" value={npc.sp} />
           <Stat label="P.Atk" value={npc.pAtk} />
@@ -82,18 +81,6 @@ export function NpcDetails({
         </Section>
       )}
 
-      {npc.petData && (
-        <Section title={`Pet data (${npc.petData.stats.length} levels)`}>
-          <dl className="grid grid-cols-2 gap-x-8 gap-y-2 font-mono text-xs sm:grid-cols-3">
-            <Stat label="Food 1" value={npc.petData.food1} />
-            <Stat label="Food 2" value={npc.petData.food2} />
-            <Stat label="Auto feed" value={npc.petData.autoFeedLimit} />
-            <Stat label="Hungry" value={npc.petData.hungryLimit} />
-            <Stat label="Unsummon" value={npc.petData.unsummonLimit} />
-          </dl>
-        </Section>
-      )}
-
       <Section title="Drops">
         <DropsTable chronicle={chronicle} drops={drops?.drops ?? []} />
       </Section>
@@ -109,24 +96,6 @@ export function NpcDetails({
           )}
         </Section>
       )}
-
-      {npc.properties && Object.keys(npc.properties).length > 0 && (
-        <Section title="Extra properties">
-          <dl className="grid grid-cols-2 gap-x-8 gap-y-2 font-mono text-xs sm:grid-cols-3">
-            {Object.entries(npc.properties).map(([k, v]) => (
-              <Stat key={k} label={k} value={v} />
-            ))}
-          </dl>
-        </Section>
-      )}
-
-      <Section title="Source">
-        <dl className="grid grid-cols-2 gap-x-8 gap-y-2 font-mono text-xs sm:grid-cols-3">
-          <Stat label="Project" value={npc.source.project} />
-          <Stat label="Chronicle" value={npc.source.chronicle} />
-          <Stat label="File" value={npc.source.file} />
-        </dl>
-      </Section>
     </div>
   );
 }

@@ -5,7 +5,7 @@ import { apiFetchList } from "@/lib/api/client";
 import { ItemFilters } from "@/components/explorer/ItemFilters";
 import { ItemIcon } from "@/components/explorer/ItemIcon";
 import { Pagination } from "@/components/explorer/Pagination";
-import type { Item } from "@/lib/types";
+import type { ItemListDto } from "@/lib/api/dto/item";
 import type { NameCount } from "@/lib/data/indexes";
 
 const DEFAULT_LIMIT = 50;
@@ -53,7 +53,7 @@ export default async function ItemsPage({
   const offset = Math.max(0, parseInt(getOne(sp, "offset", "0"), 10) || 0);
 
   const [items, itemTypes, itemGrades] = await Promise.all([
-    apiFetchList<Item>(buildApiPath(chronicle, sp, limit, offset)),
+    apiFetchList<ItemListDto>(buildApiPath(chronicle, sp, limit, offset)),
     apiFetchList<NameCount>(`/api/${chronicle}/meta/item-types`),
     apiFetchList<NameCount>(`/api/${chronicle}/meta/item-grades`),
   ]);

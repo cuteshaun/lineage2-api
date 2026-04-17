@@ -4,7 +4,7 @@ import { apiFetchList } from "@/lib/api/client";
 import { NpcFilters } from "@/components/explorer/NpcFilters";
 import { NpcsTable } from "@/components/explorer/NpcsTable";
 import { Pagination } from "@/components/explorer/Pagination";
-import type { Npc } from "@/lib/types";
+import type { NpcListDto } from "@/lib/api/dto/npc";
 import type { NpcTypeSummary } from "@/lib/data/indexes";
 
 const DEFAULT_LIMIT = 50;
@@ -52,7 +52,7 @@ export default async function MonstersPage({
   const offset = Math.max(0, parseInt(getOne(sp, "offset", "0"), 10) || 0);
 
   const [monsters, npcTypes] = await Promise.all([
-    apiFetchList<Npc>(buildApiPath(chronicle, sp, limit, offset)),
+    apiFetchList<NpcListDto>(buildApiPath(chronicle, sp, limit, offset)),
     apiFetchList<NpcTypeSummary>(`/api/${chronicle}/meta/npc-types`),
   ]);
 

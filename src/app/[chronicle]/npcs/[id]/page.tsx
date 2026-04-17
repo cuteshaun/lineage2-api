@@ -6,7 +6,8 @@ import {
   NpcDetails,
   type EnrichedNpcDrops,
 } from "@/components/explorer/NpcDetails";
-import type { Npc, Spawn } from "@/lib/types";
+import type { NpcDetailDto } from "@/lib/api/dto/npc";
+import type { Spawn } from "@/lib/types";
 
 export default async function NpcDetailsPage({
   params,
@@ -22,7 +23,7 @@ export default async function NpcDetailsPage({
   // Fetch NPC detail, drops, and raw spawns in parallel. All three share
   // the same numeric id, so parallel fetching is safe.
   const [npcResult, dropsResult, spawnsResult] = await Promise.all([
-    apiFetch<Npc>(`/api/${chronicle}/npcs/${numericId}`),
+    apiFetch<NpcDetailDto>(`/api/${chronicle}/npcs/${numericId}`),
     apiFetch<EnrichedNpcDrops>(`/api/${chronicle}/npcs/${numericId}/drops`),
     apiFetch<Spawn[]>(`/api/${chronicle}/npcs/${numericId}/spawns`),
   ]);

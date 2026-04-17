@@ -5,7 +5,7 @@ import { apiFetch } from "@/lib/api/client";
 import { FieldList } from "@/components/explorer/FieldList";
 import { ItemIcon } from "@/components/explorer/ItemIcon";
 import { ItemSourceTable } from "@/components/explorer/ItemSourceTable";
-import type { Item } from "@/lib/types";
+import type { ItemDetailDto } from "@/lib/api/dto/item";
 import type { ItemSourceEntry } from "@/lib/data/indexes";
 
 interface SourceResponse {
@@ -25,7 +25,7 @@ export default async function ItemDetailsPage({
   if (!Number.isInteger(numericId) || numericId <= 0) notFound();
 
   const [itemResult, droppedByResult, spoiledByResult] = await Promise.all([
-    apiFetch<Item>(`/api/${chronicle}/items/${numericId}`),
+    apiFetch<ItemDetailDto>(`/api/${chronicle}/items/${numericId}`),
     apiFetch<SourceResponse>(
       `/api/${chronicle}/items/${numericId}/dropped-by`
     ),
@@ -75,10 +75,8 @@ export default async function ItemDetailsPage({
     { label: "armorType", value: item.armorType },
     { label: "etcItemType", value: item.etcItemType },
     { label: "bodypart", value: item.bodypart },
-    { label: "defaultAction", value: item.defaultAction },
     { label: "isMagical", value: item.isMagical },
     { label: "crystalCount", value: item.crystalCount },
-    { label: "handler", value: item.handler },
     { label: "itemSkill", value: item.itemSkill },
   ];
 
@@ -149,38 +147,6 @@ export default async function ItemDetailsPage({
           />
         </Section>
       )}
-
-      {item.properties && Object.keys(item.properties).length > 0 && (
-        <Section title="Extra properties">
-          <FieldList
-            fields={Object.entries(item.properties).map(([k, v]) => ({
-              label: k,
-              value: v,
-            }))}
-          />
-        </Section>
-      )}
-
-      {item.stats && Object.keys(item.stats).length > 0 && (
-        <Section title="Extra stats">
-          <FieldList
-            fields={Object.entries(item.stats).map(([k, v]) => ({
-              label: k,
-              value: v,
-            }))}
-          />
-        </Section>
-      )}
-
-      <Section title="Source">
-        <FieldList
-          fields={[
-            { label: "project", value: item.source.project },
-            { label: "chronicle", value: item.source.chronicle },
-            { label: "file", value: item.source.file },
-          ]}
-        />
-      </Section>
     </div>
   );
 }

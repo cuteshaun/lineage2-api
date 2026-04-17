@@ -1,17 +1,12 @@
 import Link from "next/link";
-import type { Npc } from "@/lib/types";
+import type { NpcListDto } from "@/lib/api/dto/npc";
 
-/**
- * Shared NPC list table used by both /[chronicle]/npcs and
- * /[chronicle]/monsters. `basePath` controls which detail route each row
- * links to.
- */
 export function NpcsTable({
   basePath,
   rows,
 }: {
   basePath: string;
-  rows: Npc[];
+  rows: NpcListDto[];
 }) {
   return (
     <div className="overflow-x-auto rounded border border-zinc-200 dark:border-zinc-800">
@@ -22,7 +17,7 @@ export function NpcsTable({
             <th className="px-3 py-2">Name</th>
             <th className="px-3 py-2">Title</th>
             <th className="px-3 py-2">Type</th>
-            <th className="px-3 py-2 text-right">Lv</th>
+            <th className="px-3 py-2 text-right">Lvl</th>
             <th className="px-3 py-2 text-right">HP</th>
           </tr>
         </thead>
@@ -53,7 +48,7 @@ export function NpcsTable({
                 {npc.level ?? "—"}
               </td>
               <td className="px-3 py-2 text-right font-mono text-xs text-zinc-600 dark:text-zinc-400">
-                {npc.hp !== null ? Math.round(npc.hp).toLocaleString() : "—"}
+                {npc.hp?.toLocaleString() ?? "—"}
               </td>
             </tr>
           ))}

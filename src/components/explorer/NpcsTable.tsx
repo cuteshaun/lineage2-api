@@ -30,7 +30,7 @@ export function NpcsTable({
           {rows.map((npc) => (
             <tr
               key={npc.id}
-              className="border-t border-zinc-100 dark:border-zinc-800"
+              className="border-t border-zinc-100 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-900"
             >
               <td className="px-3 py-2 text-right font-mono text-xs text-zinc-500 dark:text-zinc-400">
                 {npc.id}
@@ -42,6 +42,11 @@ export function NpcsTable({
                 >
                   {npc.name}
                 </Link>
+                {npc.mergedCount > 1 && (
+                  <span className="ml-2 inline-block rounded bg-zinc-200 px-1.5 py-0.5 align-middle font-mono text-[10px] text-zinc-600 dark:bg-zinc-700 dark:text-zinc-400">
+                    ×{npc.mergedCount}
+                  </span>
+                )}
               </td>
               <td className="px-3 py-2 text-xs text-zinc-500 dark:text-zinc-400">
                 {npc.title ?? "—"}

@@ -140,13 +140,15 @@ export default async function ItemDetailsPage({
         />
       </Section>
 
-      <Section title={`Spoiled by (${spoiledBy.length})`}>
-        <ItemSourceTable
-          chronicle={chronicle}
-          sources={spoiledBy}
-          emptyMessage="No NPCs spoil this item."
-        />
-      </Section>
+      {spoiledBy.length > 0 && (
+        <Section title={`Spoiled by (${spoiledBy.length})`}>
+          <ItemSourceTable
+            chronicle={chronicle}
+            sources={spoiledBy}
+            emptyMessage="No NPCs spoil this item."
+          />
+        </Section>
+      )}
 
       {item.properties && Object.keys(item.properties).length > 0 && (
         <Section title="Extra properties">

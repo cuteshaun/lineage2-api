@@ -1,7 +1,5 @@
-import { FieldList } from "./FieldList";
 import { DropsTable, type EnrichedDrop } from "./DropsTable";
-import { SpawnsTable } from "./SpawnsTable";
-import { SpawnMap } from "./SpawnMap";
+import { SpawnSummary } from "./SpawnSummary";
 import type { Chronicle } from "@/lib/chronicles";
 import type { Npc, Spawn } from "@/lib/types";
 
@@ -11,11 +9,6 @@ export interface EnrichedNpcDrops {
   drops: EnrichedDrop[];
 }
 
-/**
- * Shared detail view for both `/npcs/[id]` and `/monsters/[id]`. Both
- * routes operate on the same `Npc` shape — monsters are just a filtered
- * subset — so the presentation is identical.
- */
 export function NpcDetails({
   chronicle,
   npc,
@@ -26,55 +19,10 @@ export function NpcDetails({
   chronicle: Chronicle;
   npc: Npc;
   drops: EnrichedNpcDrops | null;
-  /** Raw spawn rows for this NPC, or `null` if the fetch failed / wasn't run. */
   spawns: Spawn[] | null;
   kind: "npc" | "monster";
 }) {
-  const identity = [
-    { label: "ID", value: npc.id },
-    { label: "Name", value: npc.name },
-    { label: "Title", value: npc.title },
-    { label: "Type", value: npc.npcType },
-    { label: "Level", value: npc.level },
-  ];
-
-  const vitals = [
-    { label: "HP", value: npc.hp },
-    { label: "MP", value: npc.mp },
-    { label: "hpRegen", value: npc.hpRegen },
-    { label: "mpRegen", value: npc.mpRegen },
-    { label: "exp", value: npc.exp },
-    { label: "sp", value: npc.sp },
-  ];
-
-  const combat = [
-    { label: "pAtk", value: npc.pAtk },
-    { label: "pDef", value: npc.pDef },
-    { label: "mAtk", value: npc.mAtk },
-    { label: "mDef", value: npc.mDef },
-    { label: "crit", value: npc.crit },
-    { label: "atkSpd", value: npc.atkSpd },
-  ];
-
-  const baseStats = [
-    { label: "STR", value: npc.str },
-    { label: "INT", value: npc.int },
-    { label: "DEX", value: npc.dex },
-    { label: "WIT", value: npc.wit },
-    { label: "CON", value: npc.con },
-    { label: "MEN", value: npc.men },
-  ];
-
-  const ai = [
-    { label: "aiType", value: npc.aiType },
-    { label: "aiAggro", value: npc.aiAggro },
-    { label: "aiCanMove", value: npc.aiCanMove },
-    { label: "aiSeedable", value: npc.aiSeedable },
-    { label: "aiSsCount", value: npc.aiSsCount },
-    { label: "aiSsRate", value: npc.aiSsRate },
-    { label: "aiSpsCount", value: npc.aiSpsCount },
-    { label: "aiSpsRate", value: npc.aiSpsRate },
-  ];
+  const isAggressive = (npc.aiAggro ?? 0) > 0;
 
   return (
     <div className="flex flex-col gap-6">
@@ -82,32 +30,44 @@ export function NpcDetails({
         <p className="font-mono text-xs uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
           {kind} · #{npc.id}
         </p>
-        <h1 className="text-3xl font-semibold text-zinc-900 dark:text-zinc-100">
-          {npc.name}
-        </h1>
+        <div className="flex items-center gap-3">
+          <h1 className="text-3xl font-semibold text-zinc-900 dark:text-zinc-100">
+            {npc.name}
+          </h1>
+          <span
+            className={
+              isAggressive
+                ? "rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800 dark:bg-red-900/40 dark:text-red-300"
+                : "rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300"
+            }
+          >
+            {isAggressive ? "Aggressive" : "Passive"}
+          </span>
+        </div>
         {npc.title && (
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">{npc.title}</p>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">
+            {npc.title}
+          </p>
         )}
       </header>
 
-      <Section title="Identity">
-        <FieldList fields={identity} />
-      </Section>
-
-      <Section title="Vitals">
-        <FieldList fields={vitals} />
-      </Section>
-
-      <Section title="Combat stats">
-        <FieldList fields={combat} />
-      </Section>
-
-      <Section title="Base stats">
-        <FieldList fields={baseStats} />
-      </Section>
-
-      <Section title="AI">
-        <FieldList fields={ai} />
+      <Section title="Stats">
+        <dl className="grid grid-cols-2 gap-x-8 gap-y-2 font-mono text-xs sm:grid-cols-3 md:grid-cols-4">
+          <Stat label="Level" value={npc.level} />
+          <Stat label="Type" value={npc.npcType} />
+          <Stat label="HP" value={npc.hp != null ? Math.round(npc.hp) : null} />
+          <Stat label="MP" value={npc.mp != null ? Math.round(npc.mp) : null} />
+          <Stat label="EXP" value={npc.exp} />
+          <Stat label="SP" value={npc.sp} />
+          <Stat label="P.Atk" value={npc.pAtk} />
+          <Stat label="P.Def" value={npc.pDef} />
+          <Stat label="M.Atk" value={npc.mAtk} />
+          <Stat label="M.Def" value={npc.mDef} />
+          <Stat label="Crit" value={npc.crit} />
+          <Stat label="Atk.Spd" value={npc.atkSpd} />
+          <Stat label="Walk Spd" value={npc.walkSpd} />
+          <Stat label="Run Spd" value={npc.runSpd} />
+        </dl>
       </Section>
 
       {npc.skills.length > 0 && (
@@ -124,15 +84,13 @@ export function NpcDetails({
 
       {npc.petData && (
         <Section title={`Pet data (${npc.petData.stats.length} levels)`}>
-          <FieldList
-            fields={[
-              { label: "food1", value: npc.petData.food1 },
-              { label: "food2", value: npc.petData.food2 },
-              { label: "autoFeedLimit", value: npc.petData.autoFeedLimit },
-              { label: "hungryLimit", value: npc.petData.hungryLimit },
-              { label: "unsummonLimit", value: npc.petData.unsummonLimit },
-            ]}
-          />
+          <dl className="grid grid-cols-2 gap-x-8 gap-y-2 font-mono text-xs sm:grid-cols-3">
+            <Stat label="Food 1" value={npc.petData.food1} />
+            <Stat label="Food 2" value={npc.petData.food2} />
+            <Stat label="Auto feed" value={npc.petData.autoFeedLimit} />
+            <Stat label="Hungry" value={npc.petData.hungryLimit} />
+            <Stat label="Unsummon" value={npc.petData.unsummonLimit} />
+          </dl>
         </Section>
       )}
 
@@ -141,40 +99,59 @@ export function NpcDetails({
       </Section>
 
       {spawns !== null && (
-        <Section title={`Spawns (${spawns.length})`}>
-          <SpawnsTable spawns={spawns} />
-        </Section>
-      )}
-
-      {/* Spike-quality spawn map. Conditional on having at least one
-          spawn — no map section for NPCs with zero spawn data, only the
-          table's empty state above. */}
-      {spawns !== null && spawns.length > 0 && (
-        <Section title="Spawn map">
-          <SpawnMap spawns={spawns} />
+        <Section title="Spawns">
+          {spawns.length === 0 ? (
+            <div className="rounded border border-dashed border-zinc-300 bg-zinc-50 p-4 text-sm text-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-400">
+              No spawn data for this NPC.
+            </div>
+          ) : (
+            <SpawnSummary spawns={spawns} />
+          )}
         </Section>
       )}
 
       {npc.properties && Object.keys(npc.properties).length > 0 && (
         <Section title="Extra properties">
-          <FieldList
-            fields={Object.entries(npc.properties).map(([k, v]) => ({
-              label: k,
-              value: v,
-            }))}
-          />
+          <dl className="grid grid-cols-2 gap-x-8 gap-y-2 font-mono text-xs sm:grid-cols-3">
+            {Object.entries(npc.properties).map(([k, v]) => (
+              <Stat key={k} label={k} value={v} />
+            ))}
+          </dl>
         </Section>
       )}
 
       <Section title="Source">
-        <FieldList
-          fields={[
-            { label: "project", value: npc.source.project },
-            { label: "chronicle", value: npc.source.chronicle },
-            { label: "file", value: npc.source.file },
-          ]}
-        />
+        <dl className="grid grid-cols-2 gap-x-8 gap-y-2 font-mono text-xs sm:grid-cols-3">
+          <Stat label="Project" value={npc.source.project} />
+          <Stat label="Chronicle" value={npc.source.chronicle} />
+          <Stat label="File" value={npc.source.file} />
+        </dl>
       </Section>
+    </div>
+  );
+}
+
+function Stat({
+  label,
+  value,
+}: {
+  label: string;
+  value: string | number | boolean | null | undefined;
+}) {
+  const display =
+    value == null
+      ? "—"
+      : typeof value === "boolean"
+        ? value
+          ? "Yes"
+          : "No"
+        : typeof value === "number"
+          ? value.toLocaleString()
+          : String(value);
+  return (
+    <div>
+      <dt className="text-zinc-500 dark:text-zinc-400">{label}</dt>
+      <dd className="text-zinc-900 dark:text-zinc-100">{display}</dd>
     </div>
   );
 }

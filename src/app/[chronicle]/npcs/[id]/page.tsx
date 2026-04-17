@@ -42,7 +42,7 @@ export default async function NpcDetailsPage({
   // The spawns endpoint is `200 + []` when the NPC has zero spawns and 404
   // only if the id is unknown (which we already ruled out above). Treat an
   // unexpected failure as "no data available" (null) rather than blocking
-  // the whole page. The `SpawnsTable` component renders an empty state.
+  // the whole page.
   const spawns = spawnsResult.ok ? spawnsResult.data : null;
 
   return (

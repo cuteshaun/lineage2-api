@@ -2,10 +2,10 @@ import { notFound } from "next/navigation";
 import { isChronicle } from "@/lib/chronicles";
 import { apiFetchList } from "@/lib/api/client";
 import { NpcFilters } from "@/components/explorer/NpcFilters";
-import { MonsterGroupsTable } from "@/components/explorer/MonsterGroupsTable";
+import { NpcsTable } from "@/components/explorer/NpcsTable";
 import { Pagination } from "@/components/explorer/Pagination";
+import type { Npc } from "@/lib/types";
 import type { NpcTypeSummary } from "@/lib/data/indexes";
-import type { MonsterGroupSummary } from "@/lib/api/monster-groups";
 
 const DEFAULT_LIMIT = 50;
 
@@ -51,17 +51,12 @@ export default async function MonstersPage({
   const limit = DEFAULT_LIMIT;
   const offset = Math.max(0, parseInt(getOne(sp, "offset", "0"), 10) || 0);
 
-  const [groups, npcTypes] = await Promise.all([
-    apiFetchList<MonsterGroupSummary>(
-      buildApiPath(chronicle, sp, limit, offset)
-    ),
+  const [monsters, npcTypes] = await Promise.all([
+    apiFetchList<Npc>(buildApiPath(chronicle, sp, limit, offset)),
     apiFetchList<NpcTypeSummary>(`/api/${chronicle}/meta/npc-types`),
   ]);
 
   const basePath = `/${chronicle}/monsters`;
-  // Only expose monster-compatible npcTypes on this page. The backend
-  // already enforces this; exposing Folk/Merchant/etc here would just
-  // produce a 400 on submit.
   const monsterTypes = npcTypes.ok
     ? npcTypes.data.filter((t) => t.isMonster).map((t) => t.name)
     : [];
@@ -72,37 +67,32 @@ export default async function MonstersPage({
         <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
           Monsters
         </h1>
-        {groups.ok && (
+        {monsters.ok && (
           <span className="font-mono text-xs text-zinc-500 dark:text-zinc-400">
-            {groups.meta.total.toLocaleString()} total
+            {monsters.meta.total.toLocaleString()} total
           </span>
         )}
       </header>
-
-      <p className="text-xs text-zinc-500 dark:text-zinc-400">
-        Grouped by exact monster name. Each row is one public monster group;
-        click through to see all canonical variants under that name.
-      </p>
 
       <div className="rounded border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-950">
         <NpcFilters basePath={basePath} npcTypes={monsterTypes} />
       </div>
 
-      {!groups.ok ? (
-        <ErrorBlock message={groups.error} />
-      ) : groups.data.length === 0 ? (
+      {!monsters.ok ? (
+        <ErrorBlock message={monsters.error} />
+      ) : monsters.data.length === 0 ? (
         <EmptyBlock />
       ) : (
-        <MonsterGroupsTable basePath={basePath} rows={groups.data} />
+        <NpcsTable basePath={basePath} rows={monsters.data} />
       )}
 
-      {groups.ok && (
+      {monsters.ok && (
         <Pagination
           basePath={basePath}
           searchParams={sp}
-          total={groups.meta.total}
-          limit={groups.meta.limit}
-          offset={groups.meta.offset}
+          total={monsters.meta.total}
+          limit={monsters.meta.limit}
+          offset={monsters.meta.offset}
         />
       )}
     </div>

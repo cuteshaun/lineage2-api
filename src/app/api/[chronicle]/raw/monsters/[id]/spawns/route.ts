@@ -1,4 +1,4 @@
-import { getMonsterById, getNpcSpawns } from "@/lib/data/indexes";
+import { getRawMonsterById, getRawNpcSpawns } from "@/lib/data/indexes";
 import { jsonError, jsonOk, parseEntityParams } from "@/lib/api/responses";
 
 // Raw spawn points for a given raw monster id. Same monster-type
@@ -14,11 +14,11 @@ export async function GET(
   const parsed = parseEntityParams(await params);
   if (!parsed.ok) return parsed.response;
 
-  const monster = getMonsterById(parsed.chronicle, parsed.id);
+  const monster = getRawMonsterById(parsed.chronicle, parsed.id);
   if (!monster) {
     return jsonError(`Monster ${parsed.id} not found`, 404);
   }
 
-  const spawns = getNpcSpawns(parsed.chronicle, parsed.id);
+  const spawns = getRawNpcSpawns(parsed.chronicle, parsed.id);
   return jsonOk(spawns);
 }

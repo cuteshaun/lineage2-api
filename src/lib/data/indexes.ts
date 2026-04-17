@@ -1,17 +1,7 @@
 import type { Chronicle } from "../chronicles";
 import type { Item, Npc, NpcDrops, Spawn } from "../types";
 import { loadChronicleDataset } from "./loaders";
-import {
-  buildCanonicalMonsters,
-  type CanonicalMonster,
-} from "./canonical-monsters";
-import {
-  buildMonsterGroups,
-  type MonsterGroup,
-} from "./monster-groups";
-
-export type { CanonicalMonster } from "./canonical-monsters";
-export type { MonsterGroup } from "./monster-groups";
+import { buildCleanedNpcs } from "./cleaned-npcs";
 
 /** A single reverse-lookup entry: which NPC drops/spoils a given item. */
 export interface ItemSourceEntry {
@@ -26,11 +16,32 @@ export interface ItemSourceEntry {
 
 interface ChronicleIndexes {
   items: Item[];
-  npcs: Npc[];
-  monsters: Npc[];
+  /** Raw NPCs, source-faithful (each carries `mergedIds=[id]`, `mergedCount=1`). */
+  rawNpcs: Npc[];
+  /** Raw monsters — `rawNpcs` filtered to monster npcTypes. */
+  rawMonsters: Npc[];
+  /** Cleaned NPCs — one record per unique raw `name`. */
+  cleanedNpcs: Npc[];
+  /** Cleaned monsters — `cleanedNpcs` filtered to monster npcTypes. */
+  cleanedMonsters: Npc[];
   itemsById: Map<number, Item>;
-  npcsById: Map<number, Npc>;
-  dropsByNpcId: Map<number, NpcDrops>;
+  /** Lookup by raw id. Every raw NPC is directly reachable here. */
+  rawNpcsById: Map<number, Npc>;
+  /** Lookup by canonical id (= id of the cleaned NPC serving this name). */
+  cleanedNpcsById: Map<number, Npc>;
+  /**
+   * Any raw id → the canonical id of the cleaned NPC that absorbs it. A
+   * cleaned NPC's own id maps to itself. Used to accept either the canonical
+   * id or any merged raw id on the cleaned routes.
+   */
+  mergedIdToCanonicalId: Map<number, number>;
+  /** Raw drops keyed by raw npcId (source-faithful, unaggregated). */
+  rawDropsByNpcId: Map<number, NpcDrops>;
+  /**
+   * Cleaned drops keyed by canonical npcId. Each entry is the union of drops
+   * from every mergedId, deduped on `(categoryId, itemId, min, max, chance)`.
+   */
+  cleanedDropsById: Map<number, NpcDrops>;
   /** Lowercase npcType → canonical npcType (e.g. "raidboss" → "RaidBoss"). */
   npcTypeMap: Map<string, string>;
   /** Sorted introspection list of all npcType values with counts and monster flag. */
@@ -39,24 +50,17 @@ interface ChronicleIndexes {
   itemTypeSummary: NameCount[];
   /** Sorted introspection list of all item grade values with counts. */
   itemGradeSummary: NameCount[];
-  /** Reverse lookup: itemId → NPCs that drop the item (category != -1). */
+  /** Reverse lookup: itemId → canonical NPCs that drop the item (category != -1). */
   itemDroppedBy: Map<number, ItemSourceEntry[]>;
-  /** Reverse lookup: itemId → NPCs that spoil the item (category == -1). */
+  /** Reverse lookup: itemId → canonical NPCs that spoil the item (category == -1). */
   itemSpoiledBy: Map<number, ItemSourceEntry[]>;
-  /** Canonical (template-deduped) monsters. See `canonical-monsters.ts`. */
-  canonicalMonsters: CanonicalMonster[];
-  /** Lookup by canonical id (= lowest raw id in the template group). */
-  canonicalMonstersById: Map<number, CanonicalMonster>;
-  /** Map every raw monster id to its canonical id. */
-  rawMonsterIdToCanonicalId: Map<number, number>;
-  /** Public monster groups — one entry per exact name. See `monster-groups.ts`. */
-  monsterGroups: MonsterGroup[];
-  /** Lookup by group id (= lowest canonical id among the group's variants). */
-  monsterGroupsById: Map<number, MonsterGroup>;
-  /** Map every canonical monster id to its containing group id. */
-  canonicalIdToGroupId: Map<number, number>;
-  /** Raw spawns grouped by npcId. Missing npcIds simply have no spawns. */
-  spawnsByNpcId: Map<number, Spawn[]>;
+  /** Raw spawns grouped by raw npcId. Source-faithful, unaggregated. */
+  rawSpawnsByNpcId: Map<number, Spawn[]>;
+  /**
+   * Cleaned spawns keyed by canonical npcId — union across mergedIds,
+   * deduped on the full position tuple.
+   */
+  cleanedSpawnsById: Map<number, Spawn[]>;
 }
 
 export interface NpcTypeSummary {
@@ -115,13 +119,37 @@ const indexCache = new Map<Chronicle, ChronicleIndexes>();
 
 function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
   const dataset = loadChronicleDataset(chronicle);
-  const monsters = dataset.npcs.filter(
+
+  // Index raw drops + spawns by raw npcId FIRST — the cleaned layer needs
+  // these maps to rank candidates (has-spawns / has-drops) and to aggregate.
+  const rawDropsByNpcId = new Map(dataset.drops.map((d) => [d.npcId, d]));
+  const rawSpawnsByNpcId = new Map<number, Spawn[]>();
+  for (const spawn of dataset.spawns) {
+    let list = rawSpawnsByNpcId.get(spawn.npcId);
+    if (!list) {
+      list = [];
+      rawSpawnsByNpcId.set(spawn.npcId, list);
+    }
+    list.push(spawn);
+  }
+
+  // Build the cleaned NPC layer: one record per unique name, aggregated
+  // drops + spawns attached by canonical id.
+  const cleanedResult = buildCleanedNpcs(
+    dataset.npcs,
+    rawDropsByNpcId,
+    rawSpawnsByNpcId
+  );
+
+  const rawMonsters = dataset.npcs.filter(
+    (n) => n.npcType !== null && MONSTER_NPC_TYPES.has(n.npcType)
+  );
+  const cleanedMonsters = cleanedResult.cleaned.filter(
     (n) => n.npcType !== null && MONSTER_NPC_TYPES.has(n.npcType)
   );
 
-  // Single pass over npcs: build the lowercase→canonical map AND collect counts
-  // per type. Both feed downstream features (filter validation + introspection)
-  // from one source of truth.
+  // npcType map + counts: computed from raw so every source-faithful type
+  // value is known to callers (validation + introspection).
   const npcTypeMap = new Map<string, string>();
   const npcTypeCounts = new Map<string, number>();
   for (const n of dataset.npcs) {
@@ -140,8 +168,7 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
     }))
     .sort((a, b) => a.name.localeCompare(b.name));
 
-  // Single pass over items: collect counts per type and per grade for the
-  // /meta/item-types and /meta/item-grades introspection endpoints.
+  // Items: counts per type and per grade for the `/meta/*` introspection.
   const itemTypeCounts = new Map<string, number>();
   const itemGradeCounts = new Map<string, number>();
   for (const it of dataset.items) {
@@ -153,9 +180,6 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
     .map(([name, count]) => ({ name, count }))
     .sort((a, b) => a.name.localeCompare(b.name));
 
-  // Item grades follow Lineage rank order (none → d → c → b → a → s).
-  // Unknown grades (if any future dataset introduces them) sort after the
-  // known ones, alphabetically among themselves.
   const itemGradeSummary: NameCount[] = [...itemGradeCounts.entries()]
     .map(([name, count]) => ({ name, count }))
     .sort((a, b) => {
@@ -165,27 +189,43 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
       return a.name.localeCompare(b.name);
     });
 
-  // Build reverse-lookup indexes: itemId → which NPCs drop/spoil the item.
-  // Category -1 = spoil, everything else = normal drop.
-  const npcsById = new Map(dataset.npcs.map((n) => [n.id, n]));
+  // Reverse item lookups point at CLEANED canonical NPCs: every raw drop
+  // entry's `npcId` is remapped to its canonical id, then entries are deduped
+  // on `(canonicalNpcId, category, min, max, chance)`. This matches the
+  // "no user-facing variants" rule — consumers see one row per canonical NPC
+  // per drop parameter tuple even when multiple mergedIds contributed it.
   const itemDroppedBy = new Map<number, ItemSourceEntry[]>();
   const itemSpoiledBy = new Map<number, ItemSourceEntry[]>();
+  const droppedByKeys = new Map<number, Set<string>>();
+  const spoiledByKeys = new Map<number, Set<string>>();
 
   for (const npcDrops of dataset.drops) {
-    const npc = npcsById.get(npcDrops.npcId);
-    if (!npc) continue;
+    const canonicalId = cleanedResult.mergedIdToCanonicalId.get(npcDrops.npcId);
+    if (canonicalId === undefined) continue;
+    const canonicalNpc = cleanedResult.cleanedById.get(canonicalId);
+    if (!canonicalNpc) continue;
     const npcSummary = {
-      id: npc.id,
-      name: npc.name,
-      type: npc.npcType,
-      level: npc.level,
+      id: canonicalNpc.id,
+      name: canonicalNpc.name,
+      type: canonicalNpc.npcType,
+      level: canonicalNpc.level,
     };
 
     for (const cat of npcDrops.categories) {
       const isSpoil = cat.categoryId === -1;
       const target = isSpoil ? itemSpoiledBy : itemDroppedBy;
+      const keys = isSpoil ? spoiledByKeys : droppedByKeys;
 
       for (const drop of cat.drops) {
+        const dedupKey = `${canonicalId}|${cat.categoryId ?? ""}|${drop.min ?? ""}|${drop.max ?? ""}|${drop.chance ?? ""}`;
+        let seen = keys.get(drop.itemId);
+        if (!seen) {
+          seen = new Set<string>();
+          keys.set(drop.itemId, seen);
+        }
+        if (seen.has(dedupKey)) continue;
+        seen.add(dedupKey);
+
         const entry: ItemSourceEntry = {
           npc: npcSummary,
           entry: {
@@ -205,50 +245,26 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
     }
   }
 
-  // Build the canonical monster layer (template-grouped raw monsters).
-  // The raw layer above is unchanged — every raw monster remains reachable
-  // via `monsters`, `npcsById`, and the existing `getMonsterById()`.
-  const dropsByNpcId = new Map(dataset.drops.map((d) => [d.npcId, d]));
-  const canonical = buildCanonicalMonsters(monsters, dropsByNpcId);
-
-  // Build the public monster group layer on top of canonical. Groups by
-  // exact name. The canonical layer remains internal foundation — public
-  // /monsters now serves these groups instead of canonicals directly.
-  const groups = buildMonsterGroups(canonical.canonicalMonsters);
-
-  // Group raw spawns by npcId — one pass. A missing npcId means "no spawns",
-  // which the query helper returns as an empty array (not undefined), so
-  // callers don't need special-casing.
-  const spawnsByNpcId = new Map<number, Spawn[]>();
-  for (const spawn of dataset.spawns) {
-    let list = spawnsByNpcId.get(spawn.npcId);
-    if (!list) {
-      list = [];
-      spawnsByNpcId.set(spawn.npcId, list);
-    }
-    list.push(spawn);
-  }
-
   return {
     items: dataset.items,
-    npcs: dataset.npcs,
-    monsters,
+    rawNpcs: dataset.npcs,
+    rawMonsters,
+    cleanedNpcs: cleanedResult.cleaned,
+    cleanedMonsters,
     itemsById: new Map(dataset.items.map((i) => [i.id, i])),
-    npcsById,
-    dropsByNpcId,
+    rawNpcsById: new Map(dataset.npcs.map((n) => [n.id, n])),
+    cleanedNpcsById: cleanedResult.cleanedById,
+    mergedIdToCanonicalId: cleanedResult.mergedIdToCanonicalId,
+    rawDropsByNpcId,
+    cleanedDropsById: cleanedResult.cleanedDropsById,
     npcTypeMap,
     npcTypeSummary,
     itemTypeSummary,
     itemGradeSummary,
     itemDroppedBy,
     itemSpoiledBy,
-    canonicalMonsters: canonical.canonicalMonsters,
-    canonicalMonstersById: canonical.canonicalMonstersById,
-    rawMonsterIdToCanonicalId: canonical.rawIdToCanonicalId,
-    monsterGroups: groups.groups,
-    monsterGroupsById: groups.groupsById,
-    canonicalIdToGroupId: groups.canonicalIdToGroupId,
-    spawnsByNpcId,
+    rawSpawnsByNpcId,
+    cleanedSpawnsById: cleanedResult.cleanedSpawnsById,
   };
 }
 
@@ -298,7 +314,7 @@ export function getChronicleIndexes(chronicle: Chronicle): ChronicleIndexes {
   return indexes;
 }
 
-// --- ID lookups ---
+// --- ID lookups (cleaned layer — default) ---
 
 export function getItemById(
   chronicle: Chronicle,
@@ -307,145 +323,95 @@ export function getItemById(
   return getChronicleIndexes(chronicle).itemsById.get(id);
 }
 
+/**
+ * Cleaned NPC by any id. Accepts either the canonical id or any merged raw
+ * id of a cleaned NPC — both resolve to the same cleaned record.
+ */
 export function getNpcById(
   chronicle: Chronicle,
   id: number
 ): Npc | undefined {
-  return getChronicleIndexes(chronicle).npcsById.get(id);
+  const idx = getChronicleIndexes(chronicle);
+  const canonicalId = idx.mergedIdToCanonicalId.get(id);
+  if (canonicalId === undefined) return undefined;
+  return idx.cleanedNpcsById.get(canonicalId);
 }
 
 /**
- * Look up an NPC by id and return it only if it qualifies as a monster.
- * Returns `undefined` if the id is unknown OR the NPC is not a monster type.
+ * Cleaned monster by any id — same forgiving resolution as {@link getNpcById},
+ * additionally gated on the resolved NPC having a monster-type `npcType`. An
+ * id that resolves to a non-monster NPC (e.g. a Folk merchant) returns
+ * `undefined`.
  */
 export function getMonsterById(
   chronicle: Chronicle,
   id: number
 ): Npc | undefined {
-  const npc = getChronicleIndexes(chronicle).npcsById.get(id);
+  const npc = getNpcById(chronicle, id);
   if (!npc || npc.npcType === null) return undefined;
   return MONSTER_NPC_TYPES.has(npc.npcType) ? npc : undefined;
 }
 
+// --- ID lookups (raw layer — source-faithful) ---
+
+/** Raw NPC by its source-faithful id. Every raw row is directly reachable. */
+export function getRawNpcById(
+  chronicle: Chronicle,
+  id: number
+): Npc | undefined {
+  return getChronicleIndexes(chronicle).rawNpcsById.get(id);
+}
+
+/**
+ * Raw monster by its source-faithful id. Same monster-type gate as
+ * {@link getMonsterById}; returns `undefined` for non-monster NPC ids.
+ */
+export function getRawMonsterById(
+  chronicle: Chronicle,
+  id: number
+): Npc | undefined {
+  const npc = getRawNpcById(chronicle, id);
+  if (!npc || npc.npcType === null) return undefined;
+  return MONSTER_NPC_TYPES.has(npc.npcType) ? npc : undefined;
+}
+
+// --- Drops & spawns ---
+
+/**
+ * Cleaned drops for a given id. Accepts canonical id or any merged raw id;
+ * the response is the union of drops across every mergedId, deduped on
+ * `(categoryId, itemId, min, max, chance)`.
+ */
 export function getDropsByNpcId(
   chronicle: Chronicle,
   npcId: number
 ): NpcDrops | undefined {
-  return getChronicleIndexes(chronicle).dropsByNpcId.get(npcId);
+  const idx = getChronicleIndexes(chronicle);
+  const canonicalId = idx.mergedIdToCanonicalId.get(npcId);
+  if (canonicalId === undefined) return undefined;
+  return idx.cleanedDropsById.get(canonicalId);
 }
 
 /**
- * Raw spawn points for a given npc id. Returns an empty array when the
- * npc id has no entries in `spawnlist.sql` — which is NOT the same as the
- * npc id being unknown. Existence-of-npc checks belong at the route layer
- * (via `getNpcById` / `getMonsterById`).
+ * Cleaned spawns for a given id. Accepts canonical id or any merged raw id;
+ * returns the union across mergedIds, deduped on the full position tuple.
+ * Returns an empty array when the NPC exists but has no spawns.
  */
 export function getNpcSpawns(chronicle: Chronicle, npcId: number): Spawn[] {
-  return getChronicleIndexes(chronicle).spawnsByNpcId.get(npcId) ?? [];
+  const idx = getChronicleIndexes(chronicle);
+  const canonicalId = idx.mergedIdToCanonicalId.get(npcId);
+  if (canonicalId === undefined) return [];
+  return idx.cleanedSpawnsById.get(canonicalId) ?? [];
 }
 
-// --- Canonical monster lookups (template-deduped view over raw monsters) ---
-
-/**
- * Returns the full canonical monster list for the chronicle, sorted by
- * canonicalId. Each entry groups raw monsters that share an identical
- * template — see `canonical-monsters.ts` for the exact equivalence rules.
- */
-export function getCanonicalMonsters(chronicle: Chronicle): CanonicalMonster[] {
-  return getChronicleIndexes(chronicle).canonicalMonsters;
+/** Raw spawns for a specific raw npcId. No aggregation, no resolution. */
+export function getRawNpcSpawns(chronicle: Chronicle, npcId: number): Spawn[] {
+  return getChronicleIndexes(chronicle).rawSpawnsByNpcId.get(npcId) ?? [];
 }
 
 /**
- * Look up a canonical monster by its canonical id. The canonical id equals
- * the lowest raw id in the template group. Returns `undefined` if the id is
- * unknown OR if the id refers to a raw monster that is *not* the chosen
- * canonical for its group (use `getCanonicalIdForRawMonsterId` first).
- */
-export function getCanonicalMonsterById(
-  chronicle: Chronicle,
-  canonicalId: number
-): CanonicalMonster | undefined {
-  return getChronicleIndexes(chronicle).canonicalMonstersById.get(canonicalId);
-}
-
-/**
- * Map a raw monster id to its canonical id. Returns `undefined` if the raw
- * id does not refer to a monster (i.e. not in the monster npcType subset).
- */
-export function getCanonicalIdForRawMonsterId(
-  chronicle: Chronicle,
-  rawId: number
-): number | undefined {
-  return getChronicleIndexes(chronicle).rawMonsterIdToCanonicalId.get(rawId);
-}
-
-/**
- * Forgiving lookup used by the public canonical `/monsters/[id]` endpoint.
- * Accepts either:
- *   - a canonical id (lowest raw id in a template group), or
- *   - any raw monster id belonging to a template group.
- *
- * Both resolve to the same `CanonicalMonster`. Returns `undefined` if `id`
- * is not any known monster id (e.g. a Folk NPC id, or unknown).
- */
-export function getCanonicalMonsterByAnyId(
-  chronicle: Chronicle,
-  id: number
-): CanonicalMonster | undefined {
-  const indexes = getChronicleIndexes(chronicle);
-  const canonicalId = indexes.rawMonsterIdToCanonicalId.get(id);
-  if (canonicalId === undefined) return undefined;
-  return indexes.canonicalMonstersById.get(canonicalId);
-}
-
-// --- Monster group lookups (public name-grouped layer over canonical) ---
-
-/**
- * Returns the full monster group list for the chronicle, sorted by groupId.
- * One entry per exact monster name. See `monster-groups.ts`.
- */
-export function getMonsterGroups(chronicle: Chronicle): MonsterGroup[] {
-  return getChronicleIndexes(chronicle).monsterGroups;
-}
-
-/**
- * Look up a monster group by its group id (= lowest canonicalId among
- * variants). Returns `undefined` if the id is not a known group id.
- */
-export function getMonsterGroupById(
-  chronicle: Chronicle,
-  groupId: number
-): MonsterGroup | undefined {
-  return getChronicleIndexes(chronicle).monsterGroupsById.get(groupId);
-}
-
-/**
- * Forgiving lookup used by the public `/monsters/[id]` endpoint. Accepts:
- *   - a monster group id, or
- *   - any canonical monster id (resolves to the containing group), or
- *   - any raw monster id (resolves raw → canonical → group).
- *
- * Returns `undefined` if `id` is not any known monster id.
- */
-export function getMonsterGroupByAnyId(
-  chronicle: Chronicle,
-  id: number
-): MonsterGroup | undefined {
-  const indexes = getChronicleIndexes(chronicle);
-  // Direct group lookup first (fast path when caller already has the groupId).
-  const direct = indexes.monsterGroupsById.get(id);
-  if (direct) return direct;
-  // Otherwise treat `id` as raw → canonical → group.
-  const canonicalId = indexes.rawMonsterIdToCanonicalId.get(id);
-  if (canonicalId === undefined) return undefined;
-  const groupId = indexes.canonicalIdToGroupId.get(canonicalId);
-  if (groupId === undefined) return undefined;
-  return indexes.monsterGroupsById.get(groupId);
-}
-
-/**
- * Reverse lookup: which NPCs drop this item (normal drops, category != -1).
- * Returns an empty array if the item is not in any NPC's drop table.
+ * Reverse lookup: which cleaned NPCs drop this item (normal drops,
+ * category != -1). Every entry's `npc.id` is a canonical id.
  */
 export function getItemDroppedBy(
   chronicle: Chronicle,
@@ -455,8 +421,8 @@ export function getItemDroppedBy(
 }
 
 /**
- * Reverse lookup: which NPCs spoil this item (category == -1).
- * Returns an empty array if the item is not in any NPC's spoil table.
+ * Reverse lookup: which cleaned NPCs spoil this item (category == -1).
+ * Every entry's `npc.id` is a canonical id.
  */
 export function getItemSpoiledBy(
   chronicle: Chronicle,
@@ -651,206 +617,34 @@ function listNpcsFrom(
   };
 }
 
+/** Cleaned NPC list — one entry per unique name. Default for `/api/.../npcs`. */
 export function getNpcs(
   chronicle: Chronicle,
   options: NpcListOptions
 ): ListResult<Npc> {
-  return listNpcsFrom(getChronicleIndexes(chronicle).npcs, options);
+  return listNpcsFrom(getChronicleIndexes(chronicle).cleanedNpcs, options);
 }
 
+/** Cleaned monster list — `getNpcs` filtered to monster npcTypes. */
 export function getMonsters(
   chronicle: Chronicle,
   options: NpcListOptions
 ): ListResult<Npc> {
-  return listNpcsFrom(getChronicleIndexes(chronicle).monsters, options);
+  return listNpcsFrom(getChronicleIndexes(chronicle).cleanedMonsters, options);
 }
 
-// --- Canonical monster list (filter / sort / paginate over the template-deduped view) ---
-
-/**
- * Canonical equivalent of `getMonsters`. Accepts the same `NpcListOptions`
- * shape (q, levelMin, levelMax, npcType, sort, limit, offset) so the public
- * canonical list endpoint preserves the existing filter/sort contract —
- * predicates simply run against each canonical's `representative` (its
- * template fields). `id` sort uses `canonicalId`.
- */
-export function getCanonicalMonstersList(
+/** Raw NPC list — source-faithful, every raw row preserved. */
+export function getRawNpcs(
   chronicle: Chronicle,
   options: NpcListOptions
-): ListResult<CanonicalMonster> {
-  const all = getChronicleIndexes(chronicle).canonicalMonsters;
-  const q = options.q?.trim().toLowerCase() || null;
-  const filtered = filterCanonicalMonsters(
-    all,
-    q,
-    options.levelMin ?? null,
-    options.levelMax ?? null,
-    options.npcType ?? null
-  );
-  const sorted = options.sort
-    ? [...filtered].sort(canonicalMonsterComparator(options.sort))
-    : filtered;
-  return {
-    data: paginate(sorted, options.limit, options.offset),
-    total: sorted.length,
-  };
+): ListResult<Npc> {
+  return listNpcsFrom(getChronicleIndexes(chronicle).rawNpcs, options);
 }
 
-function filterCanonicalMonsters(
-  source: CanonicalMonster[],
-  q: string | null,
-  levelMin: number | null,
-  levelMax: number | null,
-  npcType: string | null
-): CanonicalMonster[] {
-  if (!q && levelMin === null && levelMax === null && !npcType) return source;
-  return source.filter((c) => {
-    const r = c.representative;
-    if (q && !matchesQuery(r.name, q)) return false;
-    if (levelMin !== null && (r.level === null || r.level < levelMin))
-      return false;
-    if (levelMax !== null && (r.level === null || r.level > levelMax))
-      return false;
-    if (npcType && r.npcType !== npcType) return false;
-    return true;
-  });
-}
-
-function canonicalMonsterComparator(
-  spec: SortSpec<NpcSortField>
-): (a: CanonicalMonster, b: CanonicalMonster) => number {
-  const sign = spec.direction === "asc" ? 1 : -1;
-  switch (spec.field) {
-    case "id":
-      return (a, b) => sign * (a.canonicalId - b.canonicalId);
-    case "name":
-      return (a, b) => {
-        const cmp = ASCII(a.representative.name, b.representative.name);
-        if (cmp !== 0) return sign * cmp;
-        return a.canonicalId - b.canonicalId;
-      };
-    case "level":
-      return (a, b) => {
-        const cmp = compareNullableNumber(
-          a.representative.level,
-          b.representative.level,
-          spec.direction
-        );
-        if (cmp !== 0) return cmp;
-        return a.canonicalId - b.canonicalId;
-      };
-  }
-}
-
-// --- Public monster group list (filter / sort / paginate, existential semantics) ---
-
-/**
- * Filter / sort / paginate over monster groups for the public `/monsters`
- * list endpoint. Accepts the same `NpcListOptions` shape as the existing
- * monster endpoints so callers don't need a new query-param vocabulary.
- *
- * Filter semantics ("a group matches if any variant matches"):
- *   - `q`        : case-insensitive substring match on group name
- *   - `npcType`  : matches if any variant has this canonical npcType
- *   - `levelMin` : matches if any variant's level is >= levelMin
- *   - `levelMax` : matches if any variant's level is <= levelMax
- *   (variants whose level is null never match level filters)
- *
- * Sort semantics (deterministic; tie-break by groupId):
- *   - `id`     : by groupId
- *   - `name`   : alphabetical, case-insensitive
- *   - `level`  asc → by MIN variant level (groups with all-null levels last)
- *   - `level`  desc → by MAX variant level (groups with all-null levels last)
- * The asc-min / desc-max rule keeps "show me low-level monsters first"
- * intuitive even when a group's variants span multiple levels.
- */
-export function getMonsterGroupsList(
+/** Raw monster list — `getRawNpcs` filtered to monster npcTypes. */
+export function getRawMonsters(
   chronicle: Chronicle,
   options: NpcListOptions
-): ListResult<MonsterGroup> {
-  const all = getChronicleIndexes(chronicle).monsterGroups;
-  const q = options.q?.trim().toLowerCase() || null;
-  const filtered = filterMonsterGroups(
-    all,
-    q,
-    options.levelMin ?? null,
-    options.levelMax ?? null,
-    options.npcType ?? null
-  );
-  const sorted = options.sort
-    ? [...filtered].sort(monsterGroupComparator(options.sort))
-    : filtered;
-  return {
-    data: paginate(sorted, options.limit, options.offset),
-    total: sorted.length,
-  };
-}
-
-function filterMonsterGroups(
-  source: MonsterGroup[],
-  q: string | null,
-  levelMin: number | null,
-  levelMax: number | null,
-  npcType: string | null
-): MonsterGroup[] {
-  if (!q && levelMin === null && levelMax === null && !npcType) return source;
-  return source.filter((g) => {
-    if (q && !matchesQuery(g.name, q)) return false;
-    if (levelMin === null && levelMax === null && !npcType) return true;
-    // Existential check across variants for level/npcType filters.
-    return g.variants.some((v) => {
-      const r = v.representative;
-      if (npcType && r.npcType !== npcType) return false;
-      if (levelMin !== null && (r.level === null || r.level < levelMin))
-        return false;
-      if (levelMax !== null && (r.level === null || r.level > levelMax))
-        return false;
-      return true;
-    });
-  });
-}
-
-function groupLevelExtreme(
-  group: MonsterGroup,
-  pick: "min" | "max"
-): number | null {
-  let acc: number | null = null;
-  for (const v of group.variants) {
-    const lv = v.representative.level;
-    if (lv === null) continue;
-    if (acc === null) acc = lv;
-    else if (pick === "min" && lv < acc) acc = lv;
-    else if (pick === "max" && lv > acc) acc = lv;
-  }
-  return acc;
-}
-
-function monsterGroupComparator(
-  spec: SortSpec<NpcSortField>
-): (a: MonsterGroup, b: MonsterGroup) => number {
-  const sign = spec.direction === "asc" ? 1 : -1;
-  switch (spec.field) {
-    case "id":
-      return (a, b) => sign * (a.groupId - b.groupId);
-    case "name":
-      return (a, b) => {
-        const cmp = ASCII(a.name, b.name);
-        if (cmp !== 0) return sign * cmp;
-        return a.groupId - b.groupId;
-      };
-    case "level":
-      // asc → use MIN variant level; desc → use MAX variant level.
-      // Either way, groups with all-null levels sort last (predictable
-      // pagination), tie-broken by groupId.
-      return (a, b) => {
-        const pick = spec.direction === "asc" ? "min" : "max";
-        const cmp = compareNullableNumber(
-          groupLevelExtreme(a, pick),
-          groupLevelExtreme(b, pick),
-          spec.direction
-        );
-        if (cmp !== 0) return cmp;
-        return a.groupId - b.groupId;
-      };
-  }
+): ListResult<Npc> {
+  return listNpcsFrom(getChronicleIndexes(chronicle).rawMonsters, options);
 }

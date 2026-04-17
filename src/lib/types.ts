@@ -94,6 +94,15 @@ export interface PetData {
 
 export interface Npc {
   id: number;
+  /**
+   * Raw NPC ids folded into this record by the cleaned layer (includes `id`).
+   * Always sorted ascending, length >= 1. For a raw `Npc` it is always `[id]`;
+   * for a cleaned `Npc` it is the full set of same-name raw ids. Kept on every
+   * `Npc` so every consumer sees a uniform shape regardless of layer.
+   */
+  mergedIds: number[];
+  /** `mergedIds.length`. Cheap `>1` check without touching the array. */
+  mergedCount: number;
   name: string;
   title: string | null;
 

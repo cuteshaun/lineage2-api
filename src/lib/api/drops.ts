@@ -26,8 +26,10 @@ function categoryType(categoryId: number | null): DropType {
 }
 
 /**
- * Look up an NPC's drops and join each entry with the item name from the
- * items index. Returns `null` if the NPC has no drops table.
+ * Look up a cleaned NPC's drops and join each entry with the item name from
+ * the items index. Accepts either the canonical id or any merged raw id —
+ * both resolve to the same cleaned drop set (union across mergedIds, deduped).
+ * Returns `null` if the NPC has no drops at all.
  *
  * Used by both `/api/[chronicle]/drops/npc/[id]` and the REST-style alias
  * `/api/[chronicle]/npcs/[id]/drops`.

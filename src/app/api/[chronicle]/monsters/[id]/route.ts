@@ -1,20 +1,12 @@
-import { getMonsterGroupByAnyId } from "@/lib/data/indexes";
-import { toMonsterGroupDetail } from "@/lib/api/monster-groups";
+import { getMonsterById } from "@/lib/data/indexes";
 import { jsonError, jsonOk, parseEntityParams } from "@/lib/api/responses";
 
-// Public monster detail — returns a monster group (one per exact name).
-// The `[id]` may be:
-//   - a group id (= lowest canonicalId among variants), or
-//   - any canonical monster id (resolves to the containing group), or
-//   - any raw monster id (resolves raw → canonical → group)
-// All three resolve to the same group. Callers who need a single raw
-// source-faithful entry should use `/api/[chronicle]/raw/monsters/[id]`.
-//
-// The response wraps the existing canonical detail per variant — each
-// variant carries the same template fields the canonical layer already
-// served (including `sameTemplateEntries`). The `otherVariants` array is
-// no longer needed at the variant level: variants are now siblings under
-// one group and visible together inline.
+// Public monster detail — cleaned view. The `[id]` parameter accepts either:
+//   - the canonical id (= the cleaned NPC's `id`), or
+//   - any merged raw id from `mergedIds`.
+// Both resolve to the same cleaned record. Non-monster NPCs return 404 so
+// this endpoint mirrors the monster-type gate applied in the list handler.
+// For the source-faithful single raw entry use `/api/[chronicle]/raw/monsters/[id]`.
 
 export async function GET(
   _request: Request,
@@ -23,10 +15,10 @@ export async function GET(
   const parsed = parseEntityParams(await params);
   if (!parsed.ok) return parsed.response;
 
-  const group = getMonsterGroupByAnyId(parsed.chronicle, parsed.id);
-  if (!group) {
+  const monster = getMonsterById(parsed.chronicle, parsed.id);
+  if (!monster) {
     return jsonError(`Monster ${parsed.id} not found`, 404);
   }
 
-  return jsonOk(toMonsterGroupDetail(group));
+  return jsonOk(monster);
 }

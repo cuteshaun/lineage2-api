@@ -1,6 +1,6 @@
 import {
-  getMonsters,
-  MONSTER_NPC_TYPE_MAP,
+  getKnownNpcTypeMap,
+  getRawNpcs,
   type NpcSortField,
 } from "@/lib/data/indexes";
 import {
@@ -13,11 +13,9 @@ import {
   parseSortParam,
 } from "@/lib/api/responses";
 
-// Public monster list — cleaned view, one record per unique NPC name. Every
-// record is a plain `Npc` carrying `mergedIds` + `mergedCount` so consumers
-// can tell at a glance when multiple raw records were collapsed. For the
-// source-faithful list preserving every raw entry see
-// `/api/[chronicle]/raw/monsters`.
+// Raw NPC list — source-faithful, preserves every raw entry. The public
+// cleaned list lives at `/api/[chronicle]/npcs` and dedupes by name. Every
+// raw row carries `mergedIds=[id]` and `mergedCount=1` for uniform shape.
 
 const NPC_SORT_FIELDS = ["id", "name", "level"] as const satisfies readonly NpcSortField[];
 
@@ -48,14 +46,14 @@ export async function GET(
   const npcType = parseEnumParam(
     url.searchParams,
     "npcType",
-    MONSTER_NPC_TYPE_MAP
+    getKnownNpcTypeMap(parsed.chronicle)
   );
   if (!npcType.ok) return npcType.response;
 
   const sort = parseSortParam(url.searchParams, NPC_SORT_FIELDS);
   if (!sort.ok) return sort.response;
 
-  const result = getMonsters(parsed.chronicle, {
+  const result = getRawNpcs(parsed.chronicle, {
     ...pagination.pagination,
     q: url.searchParams.get("q"),
     levelMin: levelMin.value,

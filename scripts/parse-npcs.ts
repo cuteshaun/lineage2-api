@@ -239,6 +239,11 @@ function transformNpc(raw: XmlNode, sourceFile: string): Npc | null {
 
   return {
     id,
+    // Every raw NPC is a single-record "merge" of itself. The cleaned layer
+    // in `src/lib/data/cleaned-npcs.ts` overwrites these fields on records
+    // that absorb same-name siblings; raw records always see [id] / 1.
+    mergedIds: [id],
+    mergedCount: 1,
     name,
     title,
 

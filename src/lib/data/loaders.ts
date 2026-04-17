@@ -27,9 +27,18 @@ export function loadChronicleDataset(chronicle: Chronicle): ChronicleDataset {
   if (cached) return cached;
 
   const config = getChronicleDataConfig(chronicle);
+  // `npcs.json` on disk is raw and does not carry merge metadata. Decorate
+  // every raw NPC with `mergedIds=[id]` / `mergedCount=1` so the `Npc` shape
+  // is uniform across raw and cleaned layers (the cleaned layer in
+  // `cleaned-npcs.ts` will overwrite both fields on its own records).
+  const rawNpcs = readJson<Npc[]>(path.join(config.generatedDir, "npcs.json"));
+  for (const n of rawNpcs) {
+    n.mergedIds = [n.id];
+    n.mergedCount = 1;
+  }
   const dataset: ChronicleDataset = {
     items: readJson<Item[]>(path.join(config.generatedDir, "items.json")),
-    npcs: readJson<Npc[]>(path.join(config.generatedDir, "npcs.json")),
+    npcs: rawNpcs,
     drops: readJson<NpcDrops[]>(path.join(config.generatedDir, "drops.json")),
     spawns: readJson<Spawn[]>(path.join(config.generatedDir, "spawns.json")),
   };

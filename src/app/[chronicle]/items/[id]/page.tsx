@@ -140,6 +140,43 @@ export default async function ItemDetailsPage({
         </Section>
       )}
 
+      {item.baseWeaponId != null && (
+        <Section title="Base weapon">
+          <Link
+            href={`/${chronicle}/items/${item.baseWeaponId}`}
+            className="inline-flex items-center gap-2 font-mono text-sm text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-200"
+          >
+            ← View base weapon
+          </Link>
+        </Section>
+      )}
+
+      {item.specialAbilityOptions && item.specialAbilityOptions.length > 0 && (
+        <Section
+          title={`Special Ability Options (${item.specialAbilityOptions.length})`}
+        >
+          <div className="flex flex-col gap-2">
+            {item.specialAbilityOptions.map((sa) => (
+              <Link
+                key={sa.itemId}
+                href={`/${chronicle}/items/${sa.itemId}`}
+                className="flex items-center gap-3 rounded border border-zinc-100 p-2.5 transition-colors hover:border-zinc-300 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:border-zinc-600 dark:hover:bg-zinc-900"
+              >
+                <ItemIcon iconFile={sa.iconFile} name={sa.name} size={28} />
+                <div className="flex flex-col gap-0.5">
+                  <span className="font-mono text-xs text-zinc-900 dark:text-zinc-100">
+                    {sa.name}
+                  </span>
+                  <span className="font-mono text-[10px] text-zinc-500 dark:text-zinc-400">
+                    {sa.saName}
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </Section>
+      )}
+
       <Section title={`Dropped by (${droppedBy.length})`}>
         <ItemSourceTable
           chronicle={chronicle}

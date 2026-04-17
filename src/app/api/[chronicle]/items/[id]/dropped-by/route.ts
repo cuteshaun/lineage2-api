@@ -1,4 +1,5 @@
 import { getItemDroppedBy } from "@/lib/data/indexes";
+import { toItemSourcesResponseDto } from "@/lib/api/dto/drops";
 import { jsonOk, parseEntityParams } from "@/lib/api/responses";
 
 export async function GET(
@@ -10,8 +11,5 @@ export async function GET(
 
   const sources = getItemDroppedBy(parsed.chronicle, parsed.id);
 
-  return jsonOk({
-    sources,
-    meta: { itemId: parsed.id, total: sources.length },
-  });
+  return jsonOk(toItemSourcesResponseDto(sources, parsed.id));
 }

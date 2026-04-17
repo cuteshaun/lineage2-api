@@ -153,7 +153,7 @@ export default async function ItemDetailsPage({
 
       {item.specialAbilityOptions && item.specialAbilityOptions.length > 0 && (
         <Section
-          title={`Special Ability Options (${item.specialAbilityOptions.length})`}
+          title={'Special Ability'}
         >
           <div className="flex flex-col gap-2">
             {item.specialAbilityOptions.map((sa) => (
@@ -162,15 +162,10 @@ export default async function ItemDetailsPage({
                 href={`/${chronicle}/items/${sa.itemId}`}
                 className="flex items-center gap-3 rounded border border-zinc-100 p-2.5 transition-colors hover:border-zinc-300 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:border-zinc-600 dark:hover:bg-zinc-900"
               >
-                <ItemIcon iconFile={sa.iconFile} name={sa.name} size={28} />
-                <div className="flex flex-col gap-0.5">
-                  <span className="font-mono text-xs text-zinc-900 dark:text-zinc-100">
-                    {sa.name}
-                  </span>
-                  <span className="font-mono text-[10px] text-zinc-500 dark:text-zinc-400">
-                    {sa.saName}
-                  </span>
-                </div>
+                <ItemIcon iconFile={sa.iconFile} name={sa.saName} size={28} />
+                <span className="font-mono text-xs text-zinc-900 dark:text-zinc-100">
+                  {sa.saName}
+                </span>
               </Link>
             ))}
           </div>

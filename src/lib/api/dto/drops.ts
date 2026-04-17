@@ -5,7 +5,8 @@ export interface DropDto {
   itemId: number;
   itemName: string | null;
   qty: string;
-  chance: string | null;
+  chance: number | null;
+  chanceDisplay: string | null;
   type: "spoil" | "adena" | "regular";
 }
 
@@ -15,14 +16,24 @@ export interface NpcDropsDto {
   drops: DropDto[];
 }
 
-function formatChance(raw: number | null): string | null {
+function rawToPercent(raw: number | null): number | null {
   if (raw == null) return null;
-  const pct = raw / 10000;
-  if (pct >= 10) return `${parseFloat(pct.toFixed(1))}%`;
-  if (pct >= 1) return `${parseFloat(pct.toFixed(2))}%`;
-  const formatted = parseFloat(pct.toFixed(3));
-  if (formatted === 0 && raw > 0) return "<0.001%";
-  return `${formatted}%`;
+  return raw / 10000;
+}
+
+function formatChanceDisplay(pct: number | null): string | null {
+  if (pct == null) return null;
+  if (pct >= 0.01) {
+    // Percent display: strip trailing zeros but keep meaningful precision.
+    // toFixed(4) covers the max precision from L2 integer source (raw / 10000),
+    // then parseFloat strips unnecessary trailing zeros.
+    if (pct >= 10) return `${parseFloat(pct.toFixed(1))}%`;
+    if (pct >= 1) return `${parseFloat(pct.toFixed(2))}%`;
+    return `${parseFloat(pct.toFixed(4))}%`;
+  }
+  // "1 in X" display for very rare drops.
+  const oneIn = Math.round(100 / pct);
+  return `1/${oneIn.toLocaleString("en-US")}`;
 }
 
 function formatQty(min: number | null, max: number | null): string {
@@ -34,11 +45,13 @@ function formatQty(min: number | null, max: number | null): string {
 }
 
 function toDropDto(drop: EnrichedDrop): DropDto {
+  const chance = rawToPercent(drop.chance);
   return {
     itemId: drop.itemId,
     itemName: drop.itemName,
     qty: formatQty(drop.min, drop.max),
-    chance: formatChance(drop.chance),
+    chance,
+    chanceDisplay: formatChanceDisplay(chance),
     type: drop.type,
   };
 }
@@ -63,7 +76,8 @@ export interface ItemSourceNpcDto {
 export interface ItemSourceEntryDto {
   npc: ItemSourceNpcDto;
   qty: string;
-  chance: string | null;
+  chance: number | null;
+  chanceDisplay: string | null;
 }
 
 export interface ItemSourcesResponseDto {
@@ -72,10 +86,12 @@ export interface ItemSourcesResponseDto {
 }
 
 function toItemSourceEntryDto(entry: ItemSourceEntry): ItemSourceEntryDto {
+  const chance = rawToPercent(entry.entry.chance);
   return {
     npc: entry.npc,
     qty: formatQty(entry.entry.min, entry.entry.max),
-    chance: formatChance(entry.entry.chance),
+    chance,
+    chanceDisplay: formatChanceDisplay(chance),
   };
 }
 

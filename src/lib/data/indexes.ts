@@ -272,7 +272,7 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
     }
   }
   for (const it of dataset.items) {
-    if (it.type !== "weapon" || it.itemSkill === null) continue;
+    if (it.type !== "weapon") continue;
     const dashIdx = it.name.indexOf(" - ");
     if (dashIdx < 0) continue;
     const baseName = it.name.slice(0, dashIdx);

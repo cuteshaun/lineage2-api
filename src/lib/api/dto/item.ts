@@ -12,7 +12,7 @@ export interface SaVariantDto {
   itemId: number;
   name: string;
   saName: string;
-  itemSkill: string;
+  itemSkill: string | null;
   iconFile: string | null;
 }
 
@@ -173,7 +173,7 @@ export function toItemDetailDto(
     dto.specialAbilityOptions = variantIds
       .map((vid) => {
         const v = getItemById(chronicle, vid);
-        if (!v || !v.itemSkill) return null;
+        if (!v) return null;
         const dashIdx = v.name.indexOf(" - ");
         return {
           itemId: v.id,

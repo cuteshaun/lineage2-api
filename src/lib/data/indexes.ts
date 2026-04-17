@@ -65,6 +65,8 @@ interface ChronicleIndexes {
   saVariantsByBaseId: Map<number, number[]>;
   /** SA weapon variant → its base weapon id. */
   saBaseByVariantId: Map<number, number>;
+  /** Items minus SA variants — used by the public list endpoint. */
+  publicItems: Item[];
 }
 
 export interface NpcTypeSummary {
@@ -279,6 +281,10 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
     list.push(it.id);
   }
 
+  const publicItems = dataset.items.filter(
+    (it) => !saBaseByVariantId.has(it.id)
+  );
+
   return {
     items: dataset.items,
     rawNpcs: dataset.npcs,
@@ -301,6 +307,7 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
     cleanedSpawnsById: cleanedResult.cleanedSpawnsById,
     saVariantsByBaseId,
     saBaseByVariantId,
+    publicItems,
   };
 }
 
@@ -586,7 +593,7 @@ export function getItems(
   chronicle: Chronicle,
   options: ItemListOptions
 ): ListResult<Item> {
-  const all = getChronicleIndexes(chronicle).items;
+  const all = getChronicleIndexes(chronicle).publicItems;
   const q = options.q?.trim().toLowerCase() || null;
   const type = options.type?.trim().toLowerCase() || null;
   const grade = options.grade?.trim().toLowerCase() || null;

@@ -140,6 +140,93 @@ export default async function ItemDetailsPage({
         </Section>
       )}
 
+      {item.crafting && (
+        <Section title="Crafting">
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-2">
+              <span className="font-mono text-[10px] uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+                Product
+              </span>
+              <Link
+                href={`/${chronicle}/items/${item.crafting.productItemId}`}
+                className="flex items-center gap-3 rounded border border-zinc-100 p-2.5 transition-colors hover:border-zinc-300 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:border-zinc-600 dark:hover:bg-zinc-900"
+              >
+                <ItemIcon
+                  iconFile={item.crafting.productIconFile}
+                  name={item.crafting.productName}
+                  size={28}
+                />
+                <span className="font-mono text-xs text-zinc-900 dark:text-zinc-100">
+                  {item.crafting.productName}
+                  {item.crafting.productCount > 1 && (
+                    <span className="text-zinc-500 dark:text-zinc-400">
+                      {" "}
+                      ×{item.crafting.productCount}
+                    </span>
+                  )}
+                </span>
+              </Link>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <span className="font-mono text-[10px] uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+                Ingredients
+              </span>
+              {item.crafting.ingredients.map((ing) => (
+                <Link
+                  key={ing.itemId}
+                  href={`/${chronicle}/items/${ing.itemId}`}
+                  className="flex items-center gap-3 rounded border border-zinc-100 p-2.5 transition-colors hover:border-zinc-300 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:border-zinc-600 dark:hover:bg-zinc-900"
+                >
+                  <ItemIcon
+                    iconFile={ing.iconFile}
+                    name={ing.name}
+                    size={28}
+                  />
+                  <span className="font-mono text-xs text-zinc-900 dark:text-zinc-100">
+                    {ing.name}
+                    <span className="text-zinc-500 dark:text-zinc-400">
+                      {" "}
+                      ×{ing.count}
+                    </span>
+                  </span>
+                </Link>
+              ))}
+            </div>
+
+            <StatGrid
+              stats={nonNull([
+                stat("Success Rate", `${item.crafting.successRate}%`),
+                stat("Craft Level", item.crafting.level),
+                stat("MP Cost", item.crafting.mpConsume),
+                stat("Dwarven", item.crafting.isDwarven),
+              ])}
+            />
+          </div>
+        </Section>
+      )}
+
+      {item.craftedBy && item.craftedBy.length > 0 && (
+        <Section title="Crafted By">
+          <div className="flex flex-col gap-2">
+            {item.craftedBy.map((r) => (
+              <Link
+                key={r.recipeItemId}
+                href={`/${chronicle}/items/${r.recipeItemId}`}
+                className="flex items-center justify-between rounded border border-zinc-100 p-2.5 transition-colors hover:border-zinc-300 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:border-zinc-600 dark:hover:bg-zinc-900"
+              >
+                <span className="font-mono text-xs text-zinc-900 dark:text-zinc-100">
+                  {r.recipeName}
+                </span>
+                <span className="font-mono text-xs text-zinc-500 dark:text-zinc-400">
+                  {r.successRate}%
+                </span>
+              </Link>
+            ))}
+          </div>
+        </Section>
+      )}
+
       {item.baseWeaponId != null && (
         <Section title="Base weapon">
           <Link

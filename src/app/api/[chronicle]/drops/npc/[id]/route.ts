@@ -1,4 +1,5 @@
 import { getEnrichedNpcDrops } from "@/lib/api/drops";
+import { toNpcDropsDto } from "@/lib/api/dto/drops";
 import { jsonError, jsonOk, parseEntityParams } from "@/lib/api/responses";
 
 export async function GET(
@@ -13,5 +14,5 @@ export async function GET(
     return jsonError(`No drops found for NPC ${parsed.id}`, 404);
   }
 
-  return jsonOk(enriched);
+  return jsonOk(toNpcDropsDto(enriched));
 }

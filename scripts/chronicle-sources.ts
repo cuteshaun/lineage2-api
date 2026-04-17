@@ -34,6 +34,8 @@ export interface ChronicleSources {
    * `iconName` to a concrete file that actually exists on disk.
    */
   iconsDir: string;
+  /** Absolute path to `recipes.xml` in the upstream datapack. */
+  recipesXmlFile: string;
 }
 
 interface SourceSpec {
@@ -48,6 +50,7 @@ interface SourceSpec {
     armor: string[];
   };
   iconsDir: string[];
+  recipesXmlFile: string[];
 }
 
 const SOURCE_SPECS: Record<Chronicle, SourceSpec> = {
@@ -95,6 +98,14 @@ const SOURCE_SPECS: Record<Chronicle, SourceSpec> = {
       armor: ["data", "datapack", "interlude", "armorgrp.dat"],
     },
     iconsDir: ["public", "icons"],
+    recipesXmlFile: [
+      "..",
+      "aCis_382_LATEST_STABLE",
+      "aCis_datapack",
+      "data",
+      "xml",
+      "recipes.xml",
+    ],
   },
 };
 
@@ -119,5 +130,6 @@ export function getChronicleSources(chronicle: Chronicle): ChronicleSources {
       armor: path.join(root, ...spec.clientGrpFiles.armor),
     },
     iconsDir: path.join(root, ...spec.iconsDir),
+    recipesXmlFile: path.join(root, ...spec.recipesXmlFile),
   };
 }

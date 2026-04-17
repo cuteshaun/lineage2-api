@@ -1,5 +1,5 @@
 import type { Chronicle } from "../chronicles";
-import type { Item, Npc, NpcDrops, Spawn } from "../types";
+import type { Item, Npc, NpcDrops, Recipe, Spawn } from "../types";
 import { loadChronicleDataset } from "./loaders";
 import { buildCleanedNpcs } from "./cleaned-npcs";
 
@@ -67,6 +67,12 @@ interface ChronicleIndexes {
   saBaseByVariantId: Map<number, number>;
   /** Items minus SA variants — used by the public list endpoint. */
   publicItems: Item[];
+  /** All parsed recipes. */
+  recipes: Recipe[];
+  /** Recipe lookup by recipe item id (the "scroll" item). */
+  recipeByRecipeItemId: Map<number, Recipe>;
+  /** Recipes that produce a given product item id. */
+  recipesByProductItemId: Map<number, Recipe[]>;
 }
 
 export interface NpcTypeSummary {
@@ -285,6 +291,19 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
     (it) => !saBaseByVariantId.has(it.id)
   );
 
+  // Recipe indexes
+  const recipeByRecipeItemId = new Map<number, Recipe>();
+  const recipesByProductItemId = new Map<number, Recipe[]>();
+  for (const r of dataset.recipes) {
+    recipeByRecipeItemId.set(r.recipeItemId, r);
+    let list = recipesByProductItemId.get(r.productItemId);
+    if (!list) {
+      list = [];
+      recipesByProductItemId.set(r.productItemId, list);
+    }
+    list.push(r);
+  }
+
   return {
     items: dataset.items,
     rawNpcs: dataset.npcs,
@@ -308,6 +327,9 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
     saVariantsByBaseId,
     saBaseByVariantId,
     publicItems,
+    recipes: dataset.recipes,
+    recipeByRecipeItemId,
+    recipesByProductItemId,
   };
 }
 
@@ -708,4 +730,25 @@ export function getSaBaseWeaponId(
   variantItemId: number
 ): number | undefined {
   return getChronicleIndexes(chronicle).saBaseByVariantId.get(variantItemId);
+}
+
+// --- Recipe lookups ---
+
+/** Returns the recipe for a given recipe item id (the "scroll"). */
+export function getRecipeByItemId(
+  chronicle: Chronicle,
+  recipeItemId: number
+): Recipe | undefined {
+  return getChronicleIndexes(chronicle).recipeByRecipeItemId.get(recipeItemId);
+}
+
+/** Returns recipes that produce the given product item id. */
+export function getRecipesByProductId(
+  chronicle: Chronicle,
+  productItemId: number
+): Recipe[] {
+  return (
+    getChronicleIndexes(chronicle).recipesByProductItemId.get(productItemId) ??
+    []
+  );
 }

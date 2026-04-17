@@ -195,6 +195,23 @@ export interface Spawn {
   periodOfDay: number;
 }
 
+export interface RecipeIngredient {
+  itemId: number;
+  count: number;
+}
+
+export interface Recipe {
+  id: number;
+  recipeItemId: number;
+  productItemId: number;
+  productCount: number;
+  ingredients: RecipeIngredient[];
+  successRate: number;
+  level: number;
+  mpConsume: number;
+  isDwarven: boolean;
+}
+
 export interface ManualFixes {
   items: Record<string, Partial<Item>>;
   npcs: Record<string, Partial<Npc>>;

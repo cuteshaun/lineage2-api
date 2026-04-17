@@ -2,6 +2,7 @@ import { parseItems } from "./parse-items";
 import { parseNpcs } from "./parse-npcs";
 import { parseDrops } from "./parse-drops";
 import { parseSpawns } from "./parse-spawns";
+import { parseRecipes } from "./parse-recipes";
 import {
   isChronicle,
   SUPPORTED_CHRONICLES,
@@ -41,6 +42,9 @@ async function main() {
   // wired into any public API route or runtime index. First iteration is
   // foundation-only — see `parse-spawns.ts`.
   const spawns = await parseSpawns(chronicle);
+  console.log();
+
+  const recipes = await parseRecipes(chronicle);
 
   let totalCategories = 0;
   let totalDropEntries = 0;
@@ -62,6 +66,7 @@ async function main() {
   console.log(`  Drop entries:         ${totalDropEntries}`);
   console.log(`  Spawn rows:           ${spawns.length}`);
   console.log(`  Distinct spawn npcs:  ${distinctSpawnNpcIds}`);
+  console.log(`  Recipes:              ${recipes.length}`);
   console.log(`  Completed in ${elapsed}s`);
 }
 

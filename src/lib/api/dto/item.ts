@@ -4,6 +4,8 @@ import {
   getItemById,
   getSaVariants,
   getSaBaseWeaponId,
+  getRecipeByItemId,
+  getRecipesByProductId,
 } from "../../data/indexes";
 
 export interface SaVariantDto {
@@ -12,6 +14,31 @@ export interface SaVariantDto {
   saName: string;
   itemSkill: string;
   iconFile: string | null;
+}
+
+export interface CraftingIngredientDto {
+  itemId: number;
+  name: string;
+  count: number;
+  iconFile: string | null;
+}
+
+export interface CraftingInfoDto {
+  productItemId: number;
+  productName: string;
+  productCount: number;
+  productIconFile: string | null;
+  ingredients: CraftingIngredientDto[];
+  successRate: number;
+  level: number;
+  mpConsume: number;
+  isDwarven: boolean;
+}
+
+export interface CraftedByDto {
+  recipeItemId: number;
+  recipeName: string;
+  successRate: number;
 }
 
 export interface ItemListDto {
@@ -60,6 +87,8 @@ export interface ItemDetailDto {
   iconFile: string | null;
   specialAbilityOptions?: SaVariantDto[];
   baseWeaponId?: number;
+  crafting?: CraftingInfoDto;
+  craftedBy?: CraftedByDto[];
 }
 
 const BODYPART_LABELS: Record<string, string> = {
@@ -160,6 +189,52 @@ export function toItemDetailDto(
   const baseId = getSaBaseWeaponId(chronicle, item.id);
   if (baseId !== undefined) {
     dto.baseWeaponId = baseId;
+  }
+
+  // Recipe: this item IS a recipe scroll → attach what it crafts
+  const recipe = getRecipeByItemId(chronicle, item.id);
+  if (recipe) {
+    const product = getItemById(chronicle, recipe.productItemId);
+    dto.crafting = {
+      productItemId: recipe.productItemId,
+      productName: product?.name ?? `#${recipe.productItemId}`,
+      productCount: recipe.productCount,
+      productIconFile: product?.iconFile ?? null,
+      ingredients: recipe.ingredients.map((ing) => {
+        const ingItem = getItemById(chronicle, ing.itemId);
+        return {
+          itemId: ing.itemId,
+          name: ingItem?.name ?? `#${ing.itemId}`,
+          count: ing.count,
+          iconFile: ingItem?.iconFile ?? null,
+        };
+      }),
+      successRate: recipe.successRate,
+      level: recipe.level,
+      mpConsume: recipe.mpConsume,
+      isDwarven: recipe.isDwarven,
+    };
+  }
+
+  // Crafted-by: this item is produced by one or more recipes.
+  // Dedup by recipeItemId — the source XML sometimes carries duplicate
+  // entries (same scroll, same product, different internal recipe id)
+  // for dwarven vs common skill variants.
+  const producedBy = getRecipesByProductId(chronicle, item.id);
+  if (producedBy.length > 0) {
+    const seen = new Set<number>();
+    const entries: CraftedByDto[] = [];
+    for (const r of producedBy) {
+      if (seen.has(r.recipeItemId)) continue;
+      seen.add(r.recipeItemId);
+      const recipeItem = getItemById(chronicle, r.recipeItemId);
+      entries.push({
+        recipeItemId: r.recipeItemId,
+        recipeName: recipeItem?.name ?? `#${r.recipeItemId}`,
+        successRate: r.successRate,
+      });
+    }
+    dto.craftedBy = entries;
   }
 
   return dto;

@@ -2,13 +2,14 @@ import fs from "node:fs";
 import path from "node:path";
 import { getChronicleDataConfig } from "../chronicle-config";
 import type { Chronicle } from "../chronicles";
-import type { Item, Npc, NpcDrops, Spawn } from "../types";
+import type { Item, Npc, NpcDrops, Recipe, Spawn } from "../types";
 
 interface ChronicleDataset {
   items: Item[];
   npcs: Npc[];
   drops: NpcDrops[];
   spawns: Spawn[];
+  recipes: Recipe[];
 }
 
 const datasetCache = new Map<Chronicle, ChronicleDataset>();
@@ -41,6 +42,7 @@ export function loadChronicleDataset(chronicle: Chronicle): ChronicleDataset {
     npcs: rawNpcs,
     drops: readJson<NpcDrops[]>(path.join(config.generatedDir, "drops.json")),
     spawns: readJson<Spawn[]>(path.join(config.generatedDir, "spawns.json")),
+    recipes: readJson<Recipe[]>(path.join(config.generatedDir, "recipes.json")),
   };
 
   datasetCache.set(chronicle, dataset);

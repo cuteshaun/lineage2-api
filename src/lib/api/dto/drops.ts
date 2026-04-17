@@ -24,12 +24,7 @@ function rawToPercent(raw: number | null): number | null {
 function formatChanceDisplay(pct: number | null): string | null {
   if (pct == null) return null;
   if (pct >= 0.01) {
-    // Percent display: strip trailing zeros but keep meaningful precision.
-    // toFixed(4) covers the max precision from L2 integer source (raw / 10000),
-    // then parseFloat strips unnecessary trailing zeros.
-    if (pct >= 10) return `${parseFloat(pct.toFixed(1))}%`;
-    if (pct >= 1) return `${parseFloat(pct.toFixed(2))}%`;
-    return `${parseFloat(pct.toFixed(4))}%`;
+    return `${parseFloat(pct.toFixed(2))}%`;
   }
   // "1 in X" display for very rare drops.
   const oneIn = Math.round(100 / pct);

@@ -54,7 +54,7 @@ export function ItemSourceTable({
                 {s.qty}
               </td>
               <td className="px-3 py-2 text-right font-mono text-xs text-zinc-700 dark:text-zinc-300">
-                {s.chance ?? "—"}
+                {s.chanceDisplay ?? "—"}
               </td>
             </tr>
           ))}

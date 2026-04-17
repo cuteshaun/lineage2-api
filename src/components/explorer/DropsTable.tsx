@@ -71,7 +71,7 @@ export function DropsTable({
                 {drop.qty}
               </td>
               <td className="px-3 py-2 text-right font-mono text-zinc-700 dark:text-zinc-300">
-                {drop.chance ?? "—"}
+                {drop.chanceDisplay ?? "—"}
               </td>
             </tr>
           ))}

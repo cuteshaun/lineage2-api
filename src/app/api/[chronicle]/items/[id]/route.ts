@@ -14,5 +14,5 @@ export async function GET(
     return jsonError(`Item ${parsed.id} not found`, 404);
   }
 
-  return jsonOk(toItemDetailDto(item));
+  return jsonOk(toItemDetailDto(item, parsed.chronicle));
 }

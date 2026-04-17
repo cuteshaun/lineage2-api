@@ -1,4 +1,18 @@
+import type { Chronicle } from "../../chronicles";
 import type { Item } from "../../types";
+import {
+  getItemById,
+  getSaVariants,
+  getSaBaseWeaponId,
+} from "../../data/indexes";
+
+export interface SaVariantDto {
+  itemId: number;
+  name: string;
+  saName: string;
+  itemSkill: string;
+  iconFile: string | null;
+}
 
 export interface ItemListDto {
   id: number;
@@ -44,6 +58,8 @@ export interface ItemDetailDto {
   accCombat: number | null;
   rEvas: number | null;
   iconFile: string | null;
+  specialAbilityOptions?: SaVariantDto[];
+  baseWeaponId?: number;
 }
 
 const BODYPART_LABELS: Record<string, string> = {
@@ -83,8 +99,11 @@ export function toItemListDto(item: Item): ItemListDto {
   };
 }
 
-export function toItemDetailDto(item: Item): ItemDetailDto {
-  return {
+export function toItemDetailDto(
+  item: Item,
+  chronicle: Chronicle
+): ItemDetailDto {
+  const dto: ItemDetailDto = {
     id: item.id,
     name: item.name,
     type: item.type,
@@ -119,4 +138,29 @@ export function toItemDetailDto(item: Item): ItemDetailDto {
     rEvas: item.rEvas,
     iconFile: item.iconFile,
   };
+
+  const variantIds = getSaVariants(chronicle, item.id);
+  if (variantIds) {
+    dto.specialAbilityOptions = variantIds
+      .map((vid) => {
+        const v = getItemById(chronicle, vid);
+        if (!v || !v.itemSkill) return null;
+        const dashIdx = v.name.indexOf(" - ");
+        return {
+          itemId: v.id,
+          name: v.name,
+          saName: dashIdx >= 0 ? v.name.slice(dashIdx + 3) : v.name,
+          itemSkill: v.itemSkill,
+          iconFile: v.iconFile,
+        };
+      })
+      .filter((x): x is SaVariantDto => x !== null);
+  }
+
+  const baseId = getSaBaseWeaponId(chronicle, item.id);
+  if (baseId !== undefined) {
+    dto.baseWeaponId = baseId;
+  }
+
+  return dto;
 }

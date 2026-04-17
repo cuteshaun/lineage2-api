@@ -61,6 +61,10 @@ interface ChronicleIndexes {
    * deduped on the full position tuple.
    */
   cleanedSpawnsById: Map<number, Spawn[]>;
+  /** SA (Special Ability) weapon variants: base weapon id → variant item ids. */
+  saVariantsByBaseId: Map<number, number[]>;
+  /** SA weapon variant → its base weapon id. */
+  saBaseByVariantId: Map<number, number>;
 }
 
 export interface NpcTypeSummary {
@@ -245,6 +249,36 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
     }
   }
 
+  // SA (Special Ability) weapon variant index. SA variants are named
+  // "{Base Name} - {SA Suffix}" and carry a non-null `itemSkill`. We
+  // split on " - ", look up the base weapon by exact name match, and
+  // build bidirectional maps.
+  const saVariantsByBaseId = new Map<number, number[]>();
+  const saBaseByVariantId = new Map<number, number>();
+  const itemsByName = new Map<number, Item>();
+  const weaponNameIndex = new Map<string, Item>();
+  for (const it of dataset.items) {
+    itemsByName.set(it.id, it);
+    if (it.type === "weapon" && it.itemSkill === null) {
+      weaponNameIndex.set(it.name, it);
+    }
+  }
+  for (const it of dataset.items) {
+    if (it.type !== "weapon" || it.itemSkill === null) continue;
+    const dashIdx = it.name.indexOf(" - ");
+    if (dashIdx < 0) continue;
+    const baseName = it.name.slice(0, dashIdx);
+    const base = weaponNameIndex.get(baseName);
+    if (!base) continue;
+    saBaseByVariantId.set(it.id, base.id);
+    let list = saVariantsByBaseId.get(base.id);
+    if (!list) {
+      list = [];
+      saVariantsByBaseId.set(base.id, list);
+    }
+    list.push(it.id);
+  }
+
   return {
     items: dataset.items,
     rawNpcs: dataset.npcs,
@@ -265,6 +299,8 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
     itemSpoiledBy,
     rawSpawnsByNpcId,
     cleanedSpawnsById: cleanedResult.cleanedSpawnsById,
+    saVariantsByBaseId,
+    saBaseByVariantId,
   };
 }
 
@@ -647,4 +683,22 @@ export function getRawMonsters(
   options: NpcListOptions
 ): ListResult<Npc> {
   return listNpcsFrom(getChronicleIndexes(chronicle).rawMonsters, options);
+}
+
+// --- SA (Special Ability) weapon variant lookups ---
+
+/** Returns the SA variant item ids for a base weapon, or `undefined` if none. */
+export function getSaVariants(
+  chronicle: Chronicle,
+  baseItemId: number
+): number[] | undefined {
+  return getChronicleIndexes(chronicle).saVariantsByBaseId.get(baseItemId);
+}
+
+/** Returns the base weapon id for an SA variant, or `undefined` if not a variant. */
+export function getSaBaseWeaponId(
+  chronicle: Chronicle,
+  variantItemId: number
+): number | undefined {
+  return getChronicleIndexes(chronicle).saBaseByVariantId.get(variantItemId);
 }

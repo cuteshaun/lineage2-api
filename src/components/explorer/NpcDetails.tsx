@@ -1,14 +1,9 @@
-import { DropsTable, type EnrichedDrop } from "./DropsTable";
+import { DropsTable } from "./DropsTable";
 import { SpawnSummary } from "./SpawnSummary";
 import type { Chronicle } from "@/lib/chronicles";
 import type { NpcDetailDto } from "@/lib/api/dto/npc";
+import type { NpcDropsDto } from "@/lib/api/dto/drops";
 import type { Spawn } from "@/lib/types";
-
-export interface EnrichedNpcDrops {
-  npcId: number;
-  npcName: string;
-  drops: EnrichedDrop[];
-}
 
 export function NpcDetails({
   chronicle,
@@ -19,7 +14,7 @@ export function NpcDetails({
 }: {
   chronicle: Chronicle;
   npc: NpcDetailDto;
-  drops: EnrichedNpcDrops | null;
+  drops: NpcDropsDto | null;
   spawns: Spawn[] | null;
   kind: "npc" | "monster";
 }) {

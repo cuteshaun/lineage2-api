@@ -2,10 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isChronicle } from "@/lib/chronicles";
 import { apiFetch } from "@/lib/api/client";
-import {
-  NpcDetails,
-  type EnrichedNpcDrops,
-} from "@/components/explorer/NpcDetails";
+import { NpcDetails } from "@/components/explorer/NpcDetails";
+import type { NpcDropsDto } from "@/lib/api/dto/drops";
 import type { NpcDetailDto } from "@/lib/api/dto/npc";
 import type { Spawn } from "@/lib/types";
 
@@ -22,7 +20,7 @@ export default async function MonsterDetailsPage({
 
   const [monsterResult, dropsResult, spawnsResult] = await Promise.all([
     apiFetch<NpcDetailDto>(`/api/${chronicle}/monsters/${numericId}`),
-    apiFetch<EnrichedNpcDrops>(`/api/${chronicle}/npcs/${numericId}/drops`),
+    apiFetch<NpcDropsDto>(`/api/${chronicle}/npcs/${numericId}/drops`),
     apiFetch<Spawn[]>(`/api/${chronicle}/npcs/${numericId}/spawns`),
   ]);
 

@@ -1,23 +1,14 @@
 import Link from "next/link";
 import type { Chronicle } from "@/lib/chronicles";
+import type { DropDto } from "@/lib/api/dto/drops";
 
-export interface EnrichedDrop {
-  itemId: number;
-  itemName: string | null;
-  min: number | null;
-  max: number | null;
-  chance: number | null;
-  category: number | null;
-  type: "spoil" | "adena" | "regular";
-}
-
-const typeLabel: Record<EnrichedDrop["type"], string> = {
+const typeLabel: Record<DropDto["type"], string> = {
   spoil: "spoil",
   adena: "adena",
   regular: "regular",
 };
 
-const typeStyle: Record<EnrichedDrop["type"], string> = {
+const typeStyle: Record<DropDto["type"], string> = {
   spoil:
     "bg-amber-100 text-amber-900 dark:bg-amber-900/40 dark:text-amber-200",
   adena:
@@ -31,7 +22,7 @@ export function DropsTable({
   drops,
 }: {
   chronicle: Chronicle;
-  drops: EnrichedDrop[];
+  drops: DropDto[];
 }) {
   if (drops.length === 0) {
     return (
@@ -48,16 +39,14 @@ export function DropsTable({
           <tr>
             <th className="px-3 py-2">Item</th>
             <th className="px-3 py-2">Type</th>
-            <th className="px-3 py-2 text-right">Min</th>
-            <th className="px-3 py-2 text-right">Max</th>
+            <th className="px-3 py-2 text-right">Qty</th>
             <th className="px-3 py-2 text-right">Chance</th>
-            <th className="px-3 py-2 text-right">Cat</th>
           </tr>
         </thead>
         <tbody>
           {drops.map((drop, idx) => (
             <tr
-              key={`${drop.category ?? "?"}-${drop.itemId}-${idx}`}
+              key={`${drop.itemId}-${idx}`}
               className="border-t border-zinc-100 dark:border-zinc-800"
             >
               <td className="px-3 py-2">
@@ -79,16 +68,10 @@ export function DropsTable({
                 </span>
               </td>
               <td className="px-3 py-2 text-right font-mono text-zinc-700 dark:text-zinc-300">
-                {drop.min ?? "—"}
+                {drop.qty}
               </td>
               <td className="px-3 py-2 text-right font-mono text-zinc-700 dark:text-zinc-300">
-                {drop.max ?? "—"}
-              </td>
-              <td className="px-3 py-2 text-right font-mono text-zinc-700 dark:text-zinc-300">
-                {drop.chance?.toLocaleString() ?? "—"}
-              </td>
-              <td className="px-3 py-2 text-right font-mono text-xs text-zinc-500 dark:text-zinc-400">
-                {drop.category ?? "—"}
+                {drop.chance ?? "—"}
               </td>
             </tr>
           ))}

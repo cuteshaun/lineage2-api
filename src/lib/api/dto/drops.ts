@@ -99,3 +99,40 @@ export function toItemSourcesResponseDto(
     meta: { itemId, total: sources.length },
   };
 }
+
+function compareItemSources(a: ItemSourceEntry, b: ItemSourceEntry): number {
+  // chance desc (null last)
+  const ca = a.entry.chance;
+  const cb = b.entry.chance;
+  if (ca !== cb) {
+    if (ca === null) return 1;
+    if (cb === null) return -1;
+    if (cb !== ca) return cb - ca;
+  }
+  // level asc (null last)
+  const la = a.npc.level;
+  const lb = b.npc.level;
+  if (la !== lb) {
+    if (la === null) return 1;
+    if (lb === null) return -1;
+    if (la !== lb) return la - lb;
+  }
+  // name asc
+  const nc = a.npc.name.localeCompare(b.npc.name);
+  if (nc !== 0) return nc;
+  // id asc
+  return a.npc.id - b.npc.id;
+}
+
+export function toItemSourcesPageDto(
+  sources: ItemSourceEntry[],
+  limit: number,
+  offset: number
+): { data: ItemSourceEntryDto[]; total: number } {
+  const sorted = [...sources].sort(compareItemSources);
+  const page = sorted.slice(offset, offset + limit);
+  return {
+    data: page.map(toItemSourceEntryDto),
+    total: sources.length,
+  };
+}

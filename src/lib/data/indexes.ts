@@ -12,6 +12,7 @@ export interface ItemSourceEntry {
     chance: number | null;
     category: number | null;
   };
+  rollCount: number;
 }
 
 interface ChronicleIndexes {
@@ -208,8 +209,11 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
   // per drop parameter tuple even when multiple mergedIds contributed it.
   const itemDroppedBy = new Map<number, ItemSourceEntry[]>();
   const itemSpoiledBy = new Map<number, ItemSourceEntry[]>();
-  const droppedByKeys = new Map<number, Set<string>>();
-  const spoiledByKeys = new Map<number, Set<string>>();
+  // Track seen entries by (npcId, min, max, chance) ignoring categoryId.
+  // When the same visible tuple repeats across categories, we increment
+  // the existing entry's rollCount instead of adding a duplicate row.
+  const droppedByIndex = new Map<number, Map<string, ItemSourceEntry>>();
+  const spoiledByIndex = new Map<number, Map<string, ItemSourceEntry>>();
 
   for (const npcDrops of dataset.drops) {
     const canonicalId = cleanedResult.mergedIdToCanonicalId.get(npcDrops.npcId);
@@ -226,17 +230,20 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
     for (const cat of npcDrops.categories) {
       const isSpoil = cat.categoryId === -1;
       const target = isSpoil ? itemSpoiledBy : itemDroppedBy;
-      const keys = isSpoil ? spoiledByKeys : droppedByKeys;
 
       for (const drop of cat.drops) {
-        const dedupKey = `${canonicalId}|${cat.categoryId ?? ""}|${drop.min ?? ""}|${drop.max ?? ""}|${drop.chance ?? ""}`;
-        let seen = keys.get(drop.itemId);
-        if (!seen) {
-          seen = new Set<string>();
-          keys.set(drop.itemId, seen);
+        const dedupKey = `${canonicalId}|${drop.min ?? ""}|${drop.max ?? ""}|${drop.chance ?? ""}`;
+        const index = isSpoil ? spoiledByIndex : droppedByIndex;
+        let seenMap = index.get(drop.itemId);
+        if (!seenMap) {
+          seenMap = new Map();
+          index.set(drop.itemId, seenMap);
         }
-        if (seen.has(dedupKey)) continue;
-        seen.add(dedupKey);
+        const existing = seenMap.get(dedupKey);
+        if (existing) {
+          existing.rollCount++;
+          continue;
+        }
 
         const entry: ItemSourceEntry = {
           npc: npcSummary,
@@ -246,7 +253,9 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
             chance: drop.chance,
             category: cat.categoryId,
           },
+          rollCount: 1,
         };
+        seenMap.set(dedupKey, entry);
         let list = target.get(drop.itemId);
         if (!list) {
           list = [];

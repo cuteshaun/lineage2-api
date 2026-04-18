@@ -8,6 +8,7 @@ export interface DropDto {
   chance: number | null;
   chanceDisplay: string | null;
   type: "spoil" | "adena" | "regular";
+  rollCount?: number;
 }
 
 export interface NpcDropsDto {
@@ -39,9 +40,9 @@ function formatQty(min: number | null, max: number | null): string {
   return `${min}–${max}`;
 }
 
-function toDropDto(drop: EnrichedDrop): DropDto {
+function toDropDto(drop: EnrichedDrop, rollCount: number): DropDto {
   const chance = rawToPercent(drop.chance);
-  return {
+  const dto: DropDto = {
     itemId: drop.itemId,
     itemName: drop.itemName,
     qty: formatQty(drop.min, drop.max),
@@ -49,13 +50,29 @@ function toDropDto(drop: EnrichedDrop): DropDto {
     chanceDisplay: formatChanceDisplay(chance),
     type: drop.type,
   };
+  if (rollCount > 1) dto.rollCount = rollCount;
+  return dto;
 }
 
 export function toNpcDropsDto(drops: EnrichedNpcDrops): NpcDropsDto {
+  const collapsed: DropDto[] = [];
+  const seen = new Map<string, { drop: EnrichedDrop; count: number }>();
+  for (const drop of drops.drops) {
+    const key = `${drop.itemId}|${drop.min ?? ""}|${drop.max ?? ""}|${drop.chance ?? ""}`;
+    const existing = seen.get(key);
+    if (existing) {
+      existing.count++;
+    } else {
+      seen.set(key, { drop, count: 1 });
+    }
+  }
+  for (const { drop, count } of seen.values()) {
+    collapsed.push(toDropDto(drop, count));
+  }
   return {
     npcId: drops.npcId,
     npcName: drops.npcName,
-    drops: drops.drops.map(toDropDto),
+    drops: collapsed,
   };
 }
 
@@ -73,6 +90,7 @@ export interface ItemSourceEntryDto {
   qty: string;
   chance: number | null;
   chanceDisplay: string | null;
+  rollCount?: number;
 }
 
 export interface ItemSourcesResponseDto {
@@ -82,12 +100,14 @@ export interface ItemSourcesResponseDto {
 
 function toItemSourceEntryDto(entry: ItemSourceEntry): ItemSourceEntryDto {
   const chance = rawToPercent(entry.entry.chance);
-  return {
+  const dto: ItemSourceEntryDto = {
     npc: entry.npc,
     qty: formatQty(entry.entry.min, entry.entry.max),
     chance,
     chanceDisplay: formatChanceDisplay(chance),
   };
+  if (entry.rollCount > 1) dto.rollCount = entry.rollCount;
+  return dto;
 }
 
 export function toItemSourcesResponseDto(

@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isChronicle } from "@/lib/chronicles";
-import { apiFetch } from "@/lib/api/client";
+import { apiFetch, apiFetchList } from "@/lib/api/client";
 import { ItemIcon } from "@/components/explorer/ItemIcon";
-import { ItemSourceTable } from "@/components/explorer/ItemSourceTable";
+import { PaginatedItemSourceTable } from "@/components/explorer/PaginatedItemSourceTable";
 import type { ItemDetailDto } from "@/lib/api/dto/item";
-import type { ItemSourcesResponseDto } from "@/lib/api/dto/drops";
+import type { ItemSourceEntryDto } from "@/lib/api/dto/drops";
 
 export default async function ItemDetailsPage({
   params,
@@ -18,13 +18,15 @@ export default async function ItemDetailsPage({
   const numericId = Number(id);
   if (!Number.isInteger(numericId) || numericId <= 0) notFound();
 
+  const PAGE_SIZE = 25;
+
   const [itemResult, droppedByResult, spoiledByResult] = await Promise.all([
     apiFetch<ItemDetailDto>(`/api/${chronicle}/items/${numericId}`),
-    apiFetch<ItemSourcesResponseDto>(
-      `/api/${chronicle}/items/${numericId}/dropped-by`
+    apiFetchList<ItemSourceEntryDto>(
+      `/api/${chronicle}/items/${numericId}/dropped-by?limit=${PAGE_SIZE}`
     ),
-    apiFetch<ItemSourcesResponseDto>(
-      `/api/${chronicle}/items/${numericId}/spoiled-by`
+    apiFetchList<ItemSourceEntryDto>(
+      `/api/${chronicle}/items/${numericId}/spoiled-by?limit=${PAGE_SIZE}`
     ),
   ]);
 
@@ -38,8 +40,10 @@ export default async function ItemDetailsPage({
   }
 
   const item = itemResult.data;
-  const droppedBy = droppedByResult.ok ? droppedByResult.data.sources : [];
-  const spoiledBy = spoiledByResult.ok ? spoiledByResult.data.sources : [];
+  const droppedBy = droppedByResult.ok ? droppedByResult.data : [];
+  const droppedByTotal = droppedByResult.ok ? droppedByResult.meta.total : 0;
+  const spoiledBy = spoiledByResult.ok ? spoiledByResult.data : [];
+  const spoiledByTotal = spoiledByResult.ok ? spoiledByResult.meta.total : 0;
 
   const basics = nonNull([
     stat("Weight", item.weight),
@@ -259,19 +263,25 @@ export default async function ItemDetailsPage({
         </Section>
       )}
 
-      <Section title={`Dropped by (${droppedBy.length})`}>
-        <ItemSourceTable
+      <Section title={`Dropped by (${droppedByTotal})`}>
+        <PaginatedItemSourceTable
           chronicle={chronicle}
-          sources={droppedBy}
+          initialSources={droppedBy}
+          total={droppedByTotal}
+          limit={PAGE_SIZE}
+          fetchUrl={`/api/${chronicle}/items/${numericId}/dropped-by`}
           emptyMessage="No NPCs drop this item."
         />
       </Section>
 
-      {spoiledBy.length > 0 && (
-        <Section title={`Spoiled by (${spoiledBy.length})`}>
-          <ItemSourceTable
+      {spoiledByTotal > 0 && (
+        <Section title={`Spoiled by (${spoiledByTotal})`}>
+          <PaginatedItemSourceTable
             chronicle={chronicle}
-            sources={spoiledBy}
+            initialSources={spoiledBy}
+            total={spoiledByTotal}
+            limit={PAGE_SIZE}
+            fetchUrl={`/api/${chronicle}/items/${numericId}/spoiled-by`}
             emptyMessage="No NPCs spoil this item."
           />
         </Section>

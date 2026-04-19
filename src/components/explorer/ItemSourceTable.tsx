@@ -52,6 +52,11 @@ export function ItemSourceTable({
               </td>
               <td className="px-3 py-2 text-right font-mono text-xs text-zinc-700 dark:text-zinc-300">
                 {s.qty}
+                {s.rollCount && s.rollCount > 1 && (
+                  <span className="ml-1.5 text-zinc-400 dark:text-zinc-500">
+                    ×{s.rollCount}
+                  </span>
+                )}
               </td>
               <td className="px-3 py-2 text-right font-mono text-xs text-zinc-700 dark:text-zinc-300">
                 {s.chanceDisplay ?? "—"}

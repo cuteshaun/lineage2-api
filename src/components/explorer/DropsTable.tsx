@@ -69,6 +69,11 @@ export function DropsTable({
               </td>
               <td className="px-3 py-2 text-right font-mono text-zinc-700 dark:text-zinc-300">
                 {drop.qty}
+                {drop.rollCount && drop.rollCount > 1 && (
+                  <span className="ml-1.5 text-zinc-400 dark:text-zinc-500">
+                    ×{drop.rollCount}
+                  </span>
+                )}
               </td>
               <td className="px-3 py-2 text-right font-mono text-zinc-700 dark:text-zinc-300">
                 {drop.chanceDisplay ?? "—"}

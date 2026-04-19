@@ -266,6 +266,8 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
     }
   }
 
+
+
   // SA (Special Ability) weapon variant index. SA variants are named
   // "{Base Name} - {SA Suffix}" and carry a non-null `itemSkill`. We
   // split on " - ", look up the base weapon by exact name match, and

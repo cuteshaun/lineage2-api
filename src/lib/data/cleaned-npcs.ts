@@ -75,13 +75,15 @@ export function buildCleanedNpcs(
   dropsByNpcId: Map<number, NpcDrops>,
   spawnsByNpcId: Map<number, Spawn[]>
 ): BuildCleanedNpcsResult {
-  // Step 1 — bucket raw NPCs by exact name.
-  const byName = new Map<string, Npc[]>();
+  // Step 1 — bucket raw NPCs by (name, level). Same-name NPCs at
+  // different levels are distinct entities with different drops/stats.
+  const byKey = new Map<string, Npc[]>();
   for (const n of rawNpcs) {
-    let bucket = byName.get(n.name);
+    const key = `${n.name}|${n.level ?? ""}`;
+    let bucket = byKey.get(key);
     if (!bucket) {
       bucket = [];
-      byName.set(n.name, bucket);
+      byKey.set(key, bucket);
     }
     bucket.push(n);
   }
@@ -91,7 +93,7 @@ export function buildCleanedNpcs(
   const cleanedDropsById = new Map<number, NpcDrops>();
   const cleanedSpawnsById = new Map<number, Spawn[]>();
 
-  for (const bucket of byName.values()) {
+  for (const bucket of byKey.values()) {
     // Step 2 — pick the canonical raw record using the priority chain.
     const canonical = pickCanonical(bucket, dropsByNpcId, spawnsByNpcId);
     const mergedIds = bucket.map((n) => n.id).sort((a, b) => a - b);

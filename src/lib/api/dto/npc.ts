@@ -98,9 +98,9 @@ const RACE_ICON_BY_LEVEL: Record<number, string> = {
 const RACE_ICON_FALLBACK = "skill4416_etc.png";
 
 const SKILL_ID_RACES = 4416;
-const GRANDBOSS_SELF_SKILL_IDS = new Set([4021, 4062, 4122, 4679]);
 const SKILL_ICON_FALLBACK = "skill0000.png";
 const SKILL_ICON_BOSS = "skillboss.png";
+const BOSS_NPC_TYPES = new Set(["GrandBoss", "RaidBoss"]);
 const SUPPRESSED_SKILL_IDS = new Set([
   4408, // HP Modifiers
   4410, // P. Atk. Modifiers
@@ -155,8 +155,10 @@ export function toNpcDetailDto(npc: Npc, chronicle: Chronicle): NpcDetailDto {
       .filter((s) => !SUPPRESSED_SKILL_IDS.has(s.id))
       .map((s) => {
         const resolved = getSkillByKey(chronicle, `${s.id}-${s.level}`);
+        const isBossSelfSkill = BOSS_NPC_TYPES.has(npc.npcType ?? "") &&
+          (resolved?.name ?? null) === npc.name;
         const iconFile = resolved?.iconFile
-          ?? (GRANDBOSS_SELF_SKILL_IDS.has(s.id) ? SKILL_ICON_BOSS : SKILL_ICON_FALLBACK);
+          ?? (isBossSelfSkill ? SKILL_ICON_BOSS : SKILL_ICON_FALLBACK);
         return {
           id: s.id,
           level: s.level,

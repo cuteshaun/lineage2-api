@@ -74,6 +74,10 @@ export default async function ItemDetailsPage({
     stat("Armor Type", item.armorType),
     stat("Item Category", item.etcItemType),
     stat("Crystal Count", item.crystalCount),
+    stat(
+      "Skill",
+      item.skill?.name?.replace("Special Ability: ", "SA: ") ?? null
+    ),
   ]);
 
   const trade = nonNull([

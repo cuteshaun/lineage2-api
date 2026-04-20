@@ -19,6 +19,7 @@ export interface NpcDetailDto {
   level: number | null;
   npcType: string | null;
   isAggressive: boolean;
+  race: string | null;
   hp: number | null;
   mp: number | null;
   exp: number | null;
@@ -41,6 +42,44 @@ export interface NpcSkillDto {
   iconFile: string | null;
 }
 
+const RACE_BY_LEVEL: Record<number, string> = {
+  1: "Undead",
+  2: "Magic Creature",
+  3: "Beast",
+  4: "Animal",
+  5: "Plant",
+  6: "Humanoid",
+  7: "Spirit",
+  8: "Angel",
+  9: "Demon",
+  10: "Dragon",
+  11: "Giant",
+  12: "Bug",
+  13: "Fairy",
+  14: "Human",
+  15: "Elf",
+  16: "Dark Elf",
+  17: "Orc",
+  18: "Dwarf",
+  19: "Other",
+  20: "Non-race",
+  21: "Siege",
+  22: "Castle Guard",
+  23: "Mercenary",
+  24: "Unknown",
+};
+
+const SKILL_ID_RACES = 4416;
+const SUPPRESSED_SKILL_IDS = new Set([
+  4408, // HP Modifiers
+  4410, // P. Atk. Modifiers
+  4411, // M. Atk. Modifiers
+  4412, // P. Def. Modifiers
+  4413, // M. Def. Modifiers
+  4414, // Armor Type
+  4416, // Races (consumed into `race`)
+]);
+
 export function toNpcListDto(npc: Npc): NpcListDto {
   return {
     id: npc.id,
@@ -54,6 +93,9 @@ export function toNpcListDto(npc: Npc): NpcListDto {
 }
 
 export function toNpcDetailDto(npc: Npc, chronicle: Chronicle): NpcDetailDto {
+  const raceSkill = npc.skills.find((s) => s.id === SKILL_ID_RACES);
+  const race = raceSkill ? (RACE_BY_LEVEL[raceSkill.level] ?? null) : null;
+
   return {
     id: npc.id,
     name: npc.name,
@@ -61,6 +103,7 @@ export function toNpcDetailDto(npc: Npc, chronicle: Chronicle): NpcDetailDto {
     level: npc.level,
     npcType: npc.npcType,
     isAggressive: (npc.aiAggro ?? 0) > 0,
+    race,
     hp: npc.hp != null ? Math.round(npc.hp) : null,
     mp: npc.mp != null ? Math.round(npc.mp) : null,
     exp: npc.exp,
@@ -73,14 +116,16 @@ export function toNpcDetailDto(npc: Npc, chronicle: Chronicle): NpcDetailDto {
     atkSpd: npc.atkSpd,
     walkSpd: npc.walkSpd,
     runSpd: npc.runSpd,
-    skills: npc.skills.map((s) => {
-      const resolved = getSkillByKey(chronicle, `${s.id}-${s.level}`);
-      return {
-        id: s.id,
-        level: s.level,
-        name: resolved?.name ?? null,
-        iconFile: resolved?.iconFile ?? null,
-      };
-    }),
+    skills: npc.skills
+      .filter((s) => !SUPPRESSED_SKILL_IDS.has(s.id))
+      .map((s) => {
+        const resolved = getSkillByKey(chronicle, `${s.id}-${s.level}`);
+        return {
+          id: s.id,
+          level: s.level,
+          name: resolved?.name ?? null,
+          iconFile: resolved?.iconFile ?? null,
+        };
+      }),
   };
 }

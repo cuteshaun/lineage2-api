@@ -224,6 +224,7 @@ export interface Skill {
   reuseDelay: number | null;
   isMagic: boolean | null;
   target: string | null;
+  iconFile: string | null;
 }
 
 export interface ManualFixes {

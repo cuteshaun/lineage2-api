@@ -38,6 +38,7 @@ export interface NpcSkillDto {
   id: number;
   level: number;
   name: string | null;
+  iconFile: string | null;
 }
 
 export function toNpcListDto(npc: Npc): NpcListDto {
@@ -72,10 +73,14 @@ export function toNpcDetailDto(npc: Npc, chronicle: Chronicle): NpcDetailDto {
     atkSpd: npc.atkSpd,
     walkSpd: npc.walkSpd,
     runSpd: npc.runSpd,
-    skills: npc.skills.map((s) => ({
-      id: s.id,
-      level: s.level,
-      name: getSkillByKey(chronicle, `${s.id}-${s.level}`)?.name ?? null,
-    })),
+    skills: npc.skills.map((s) => {
+      const resolved = getSkillByKey(chronicle, `${s.id}-${s.level}`);
+      return {
+        id: s.id,
+        level: s.level,
+        name: resolved?.name ?? null,
+        iconFile: resolved?.iconFile ?? null,
+      };
+    }),
   };
 }

@@ -15,6 +15,7 @@ export interface SkillSummaryDto {
   name: string;
   operateType: string | null;
   target: string | null;
+  iconFile: string | null;
 }
 
 export interface SaVariantDto {
@@ -152,6 +153,7 @@ function resolveSkill(
     name: skill.name,
     operateType: skill.operateType,
     target: skill.target,
+    iconFile: skill.iconFile,
   };
 }
 

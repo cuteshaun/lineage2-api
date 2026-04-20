@@ -137,11 +137,28 @@ function parseSkillFile(absPath: string): Skill[] {
           return null;
         })(),
         target: resolve("target") ?? null,
+        iconFile: null, // resolved after parsing, per skill id
       });
     }
   }
 
   return skills;
+}
+
+function buildSkillIconIndex(iconsDir: string): Set<string> {
+  const index = new Set<string>();
+  if (!fs.existsSync(iconsDir)) return index;
+  for (const entry of fs.readdirSync(iconsDir)) {
+    if (entry.startsWith("skill") && entry.endsWith(".png")) {
+      index.add(entry);
+    }
+  }
+  return index;
+}
+
+function resolveSkillIcon(id: number, iconIndex: Set<string>): string | null {
+  const candidate = `skill${String(id).padStart(4, "0")}.png`;
+  return iconIndex.has(candidate) ? candidate : null;
 }
 
 export async function parseSkills(
@@ -161,13 +178,25 @@ export async function parseSkills(
     .filter((f) => f.endsWith(".xml"))
     .sort();
 
+  const iconIndex = buildSkillIconIndex(
+    path.join(process.cwd(), "public", "icons")
+  );
+
   const allSkills: Skill[] = [];
   for (const file of files) {
     const skills = parseSkillFile(path.join(dir, file));
     allSkills.push(...skills);
   }
 
+  // Resolve icon per skill (shared across levels of the same skill id)
+  for (const skill of allSkills) {
+    skill.iconFile = resolveSkillIcon(skill.id, iconIndex);
+  }
+
   const distinctIds = new Set(allSkills.map((s) => s.id));
+  const withIcon = new Set(
+    allSkills.filter((s) => s.iconFile).map((s) => s.id)
+  );
 
   fs.mkdirSync(dataConfig.generatedDir, { recursive: true });
   fs.writeFileSync(
@@ -179,6 +208,7 @@ export async function parseSkills(
   console.log(`  Files processed: ${files.length}`);
   console.log(`  Skills parsed:   ${allSkills.length} (id×level entries)`);
   console.log(`  Distinct IDs:    ${distinctIds.size}`);
+  console.log(`  With icon:       ${withIcon.size} distinct IDs`);
 
   return allSkills;
 }

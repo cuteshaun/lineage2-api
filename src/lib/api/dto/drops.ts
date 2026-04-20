@@ -40,15 +40,24 @@ function formatQty(min: number | null, max: number | null): string {
   return `${min}–${max}`;
 }
 
+const ADENA_ITEM_ID = 57;
+
+const DROP_TYPE_ORDER: Record<DropDto["type"], number> = {
+  adena: 0,
+  regular: 1,
+  spoil: 2,
+};
+
 function toDropDto(drop: EnrichedDrop, rollCount: number): DropDto {
   const chance = rawToPercent(drop.chance);
+  const type = drop.itemId === ADENA_ITEM_ID ? "adena" : drop.type;
   const dto: DropDto = {
     itemId: drop.itemId,
     itemName: drop.itemName,
     qty: formatQty(drop.min, drop.max),
     chance,
     chanceDisplay: formatChanceDisplay(chance),
-    type: drop.type,
+    type,
   };
   if (rollCount > 1) dto.rollCount = rollCount;
   return dto;
@@ -69,6 +78,19 @@ export function toNpcDropsDto(drops: EnrichedNpcDrops): NpcDropsDto {
   for (const { drop, count } of seen.values()) {
     collapsed.push(toDropDto(drop, count));
   }
+  collapsed.sort((a, b) => {
+    const ta = DROP_TYPE_ORDER[a.type] ?? 1;
+    const tb = DROP_TYPE_ORDER[b.type] ?? 1;
+    if (ta !== tb) return ta - tb;
+    if (a.chance !== b.chance) {
+      if (a.chance === null) return 1;
+      if (b.chance === null) return -1;
+      return b.chance - a.chance;
+    }
+    const na = (a.itemName ?? "").localeCompare(b.itemName ?? "");
+    if (na !== 0) return na;
+    return a.itemId - b.itemId;
+  });
   return {
     npcId: drops.npcId,
     npcName: drops.npcName,

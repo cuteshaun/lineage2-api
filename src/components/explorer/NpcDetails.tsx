@@ -38,7 +38,16 @@ export function NpcDetails({
             {npc.isAggressive ? "Aggressive" : "Passive"}
           </span>
           {npc.race && (
-            <span className="rounded-full bg-zinc-200 px-2.5 py-0.5 text-xs font-medium text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-zinc-200 py-0.5 pl-1 pr-2.5 text-xs font-medium text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300">
+              {npc.raceIconFile && (
+                <img
+                  src={`/icons/${npc.raceIconFile}`}
+                  alt={npc.race}
+                  width={18}
+                  height={18}
+                  className="rounded-full"
+                />
+              )}
               {npc.race}
             </span>
           )}

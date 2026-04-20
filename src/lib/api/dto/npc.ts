@@ -20,6 +20,7 @@ export interface NpcDetailDto {
   npcType: string | null;
   isAggressive: boolean;
   race: string | null;
+  raceIconFile: string | null;
   hp: number | null;
   mp: number | null;
   exp: number | null;
@@ -69,6 +70,33 @@ const RACE_BY_LEVEL: Record<number, string> = {
   24: "Unknown",
 };
 
+const RACE_ICON_BY_LEVEL: Record<number, string> = {
+  1: "skill4290.png",              // Undead
+  2: "skill4291.png",              // Magic Creature
+  3: "skill4292.png",              // Beast
+  4: "skill4293.png",              // Animal
+  5: "skill4294.png",              // Plant
+  6: "skill4295.png",              // Humanoid
+  7: "skill4296.png",              // Spirit
+  8: "skill4297.png",              // Angel
+  9: "skill4298.png",              // Demon
+  10: "skill4299.png",             // Dragon
+  11: "skill4300.png",             // Giant
+  12: "skill4301.png",             // Bug
+  13: "skill4302.png",             // Fairy
+  14: "skill4416_human.png",       // Human
+  15: "skill4416_elf.png",         // Elf
+  16: "skill4416_darkelf.png",     // Dark Elf
+  17: "skill4416_orc.png",         // Orc
+  18: "skill4416_dwarf.png",       // Dwarf
+  19: "skill4416_etc.png",         // Other
+  20: "skill4416_none.png",        // Non-race
+  21: "skill4416_siegeweapon.png",  // Siege
+  22: "skill4416_castleguard.png", // Castle Guard
+  23: "skill4416_mercenary.png",   // Mercenary
+};
+const RACE_ICON_FALLBACK = "skill4416_etc.png";
+
 const SKILL_ID_RACES = 4416;
 const GRANDBOSS_SELF_SKILL_IDS = new Set([4021, 4062, 4122, 4679]);
 const SKILL_ICON_FALLBACK = "skill0000.png";
@@ -98,6 +126,9 @@ export function toNpcListDto(npc: Npc): NpcListDto {
 export function toNpcDetailDto(npc: Npc, chronicle: Chronicle): NpcDetailDto {
   const raceSkill = npc.skills.find((s) => s.id === SKILL_ID_RACES);
   const race = raceSkill ? (RACE_BY_LEVEL[raceSkill.level] ?? null) : null;
+  const raceIconFile = raceSkill
+    ? (RACE_ICON_BY_LEVEL[raceSkill.level] ?? RACE_ICON_FALLBACK)
+    : null;
 
   return {
     id: npc.id,
@@ -107,6 +138,7 @@ export function toNpcDetailDto(npc: Npc, chronicle: Chronicle): NpcDetailDto {
     npcType: npc.npcType,
     isAggressive: (npc.aiAggro ?? 0) > 0,
     race,
+    raceIconFile,
     hp: npc.hp != null ? Math.round(npc.hp) : null,
     mp: npc.mp != null ? Math.round(npc.mp) : null,
     exp: npc.exp,

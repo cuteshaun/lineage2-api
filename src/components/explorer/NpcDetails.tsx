@@ -37,6 +37,11 @@ export function NpcDetails({
           >
             {npc.isAggressive ? "Aggressive" : "Passive"}
           </span>
+          {npc.race && (
+            <span className="rounded-full bg-zinc-200 px-2.5 py-0.5 text-xs font-medium text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300">
+              {npc.race}
+            </span>
+          )}
         </div>
         {npc.title && (
           <p className="text-sm text-zinc-500 dark:text-zinc-400">

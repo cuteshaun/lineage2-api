@@ -66,10 +66,27 @@ export function NpcDetails({
 
       {npc.skills.length > 0 && (
         <Section title={`Skills (${npc.skills.length})`}>
-          <ul className="grid grid-cols-1 gap-1 font-mono text-xs text-zinc-700 sm:grid-cols-2 md:grid-cols-3 dark:text-zinc-300">
+          <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3">
             {npc.skills.map((s) => (
-              <li key={`${s.id}-${s.level}`}>
-                #{s.id} · level {s.level}
+              <li
+                key={`${s.id}-${s.level}`}
+                className="flex items-center gap-2"
+              >
+                {s.iconFile ? (
+                  <img
+                    src={`/icons/${s.iconFile}`}
+                    alt={s.name ?? `Skill ${s.id}`}
+                    width={24}
+                    height={24}
+                    loading="lazy"
+                    className="flex-none rounded border border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900"
+                  />
+                ) : (
+                  <span className="flex-none h-6 w-6 rounded border border-zinc-200 bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900" />
+                )}
+                <span className="font-mono text-xs text-zinc-700 dark:text-zinc-300">
+                  {s.name ?? `#${s.id}`} · Lv {s.level}
+                </span>
               </li>
             ))}
           </ul>

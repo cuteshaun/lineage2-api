@@ -3,6 +3,7 @@ import { parseNpcs } from "./parse-npcs";
 import { parseDrops } from "./parse-drops";
 import { parseSpawns } from "./parse-spawns";
 import { parseRecipes } from "./parse-recipes";
+import { parseSkills } from "./parse-skills";
 import {
   isChronicle,
   SUPPORTED_CHRONICLES,
@@ -45,6 +46,9 @@ async function main() {
   console.log();
 
   const recipes = await parseRecipes(chronicle);
+  console.log();
+
+  const skills = await parseSkills(chronicle);
 
   let totalCategories = 0;
   let totalDropEntries = 0;
@@ -67,6 +71,7 @@ async function main() {
   console.log(`  Spawn rows:           ${spawns.length}`);
   console.log(`  Distinct spawn npcs:  ${distinctSpawnNpcIds}`);
   console.log(`  Recipes:              ${recipes.length}`);
+  console.log(`  Skills:               ${skills.length}`);
   console.log(`  Completed in ${elapsed}s`);
 }
 

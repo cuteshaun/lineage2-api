@@ -212,6 +212,20 @@ export interface Recipe {
   isDwarven: boolean;
 }
 
+export interface Skill {
+  id: number;
+  level: number;
+  name: string;
+  operateType: string | null;
+  magicLevel: number | null;
+  mpConsume: number | null;
+  castRange: number | null;
+  hitTime: number | null;
+  reuseDelay: number | null;
+  isMagic: boolean | null;
+  target: string | null;
+}
+
 export interface ManualFixes {
   items: Record<string, Partial<Item>>;
   npcs: Record<string, Partial<Npc>>;

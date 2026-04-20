@@ -6,13 +6,23 @@ import {
   getSaBaseWeaponId,
   getRecipeByItemId,
   getRecipesByProductId,
+  getSkillByKey,
 } from "../../data/indexes";
+
+export interface SkillSummaryDto {
+  id: number;
+  level: number;
+  name: string;
+  operateType: string | null;
+  target: string | null;
+}
 
 export interface SaVariantDto {
   itemId: number;
   name: string;
   saName: string;
   itemSkill: string | null;
+  skill?: SkillSummaryDto;
   iconFile: string | null;
 }
 
@@ -85,6 +95,7 @@ export interface ItemDetailDto {
   accCombat: number | null;
   rEvas: number | null;
   iconFile: string | null;
+  skill?: SkillSummaryDto;
   specialAbilityOptions?: SaVariantDto[];
   baseWeaponId?: number;
   crafting?: CraftingInfoDto;
@@ -128,6 +139,22 @@ export function toItemListDto(item: Item): ItemListDto {
   };
 }
 
+function resolveSkill(
+  chronicle: Chronicle,
+  itemSkill: string | null
+): SkillSummaryDto | undefined {
+  if (!itemSkill) return undefined;
+  const skill = getSkillByKey(chronicle, itemSkill);
+  if (!skill) return undefined;
+  return {
+    id: skill.id,
+    level: skill.level,
+    name: skill.name,
+    operateType: skill.operateType,
+    target: skill.target,
+  };
+}
+
 export function toItemDetailDto(
   item: Item,
   chronicle: Chronicle
@@ -168,6 +195,9 @@ export function toItemDetailDto(
     iconFile: item.iconFile,
   };
 
+  const skillSummary = resolveSkill(chronicle, item.itemSkill);
+  if (skillSummary) dto.skill = skillSummary;
+
   const variantIds = getSaVariants(chronicle, item.id);
   if (variantIds) {
     dto.specialAbilityOptions = variantIds
@@ -175,13 +205,16 @@ export function toItemDetailDto(
         const v = getItemById(chronicle, vid);
         if (!v) return null;
         const dashIdx = v.name.indexOf(" - ");
-        return {
+        const saDto: SaVariantDto = {
           itemId: v.id,
           name: v.name,
           saName: dashIdx >= 0 ? v.name.slice(dashIdx + 3) : v.name,
           itemSkill: v.itemSkill,
           iconFile: v.iconFile,
         };
+        const saSkill = resolveSkill(chronicle, v.itemSkill);
+        if (saSkill) saDto.skill = saSkill;
+        return saDto;
       })
       .filter((x): x is SaVariantDto => x !== null);
   }

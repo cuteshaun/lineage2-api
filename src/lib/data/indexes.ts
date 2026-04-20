@@ -1,5 +1,5 @@
 import type { Chronicle } from "../chronicles";
-import type { Item, Npc, NpcDrops, Recipe, Spawn } from "../types";
+import type { Item, Npc, NpcDrops, Recipe, Skill, Spawn } from "../types";
 import { loadChronicleDataset } from "./loaders";
 import { buildCleanedNpcs } from "./cleaned-npcs";
 
@@ -74,6 +74,8 @@ interface ChronicleIndexes {
   recipeByRecipeItemId: Map<number, Recipe>;
   /** Recipes that produce a given product item id. */
   recipesByProductItemId: Map<number, Recipe[]>;
+  /** Skill lookup by `"${id}-${level}"` key (matches `itemSkill` format). */
+  skillByKey: Map<string, Skill>;
 }
 
 export interface NpcTypeSummary {
@@ -315,6 +317,12 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
     list.push(r);
   }
 
+  // Skill index
+  const skillByKey = new Map<string, Skill>();
+  for (const s of dataset.skills) {
+    skillByKey.set(`${s.id}-${s.level}`, s);
+  }
+
   return {
     items: dataset.items,
     rawNpcs: dataset.npcs,
@@ -341,6 +349,7 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
     recipes: dataset.recipes,
     recipeByRecipeItemId,
     recipesByProductItemId,
+    skillByKey,
   };
 }
 
@@ -762,4 +771,14 @@ export function getRecipesByProductId(
     getChronicleIndexes(chronicle).recipesByProductItemId.get(productItemId) ??
     []
   );
+}
+
+// --- Skill lookups ---
+
+/** Returns a skill by its `"id-level"` key (matches `itemSkill` format). */
+export function getSkillByKey(
+  chronicle: Chronicle,
+  key: string
+): Skill | undefined {
+  return getChronicleIndexes(chronicle).skillByKey.get(key);
 }

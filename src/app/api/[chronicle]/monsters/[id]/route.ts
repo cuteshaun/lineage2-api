@@ -21,5 +21,5 @@ export async function GET(
     return jsonError(`Monster ${parsed.id} not found`, 404);
   }
 
-  return jsonOk(toNpcDetailDto(monster));
+  return jsonOk(toNpcDetailDto(monster, parsed.chronicle));
 }

@@ -1,4 +1,6 @@
 import type { Npc } from "../../types";
+import type { Chronicle } from "../../chronicles";
+import { getSkillByKey } from "../../data/indexes";
 
 export interface NpcListDto {
   id: number;
@@ -29,7 +31,13 @@ export interface NpcDetailDto {
   atkSpd: number | null;
   walkSpd: number | null;
   runSpd: number | null;
-  skills: { id: number; level: number }[];
+  skills: NpcSkillDto[];
+}
+
+export interface NpcSkillDto {
+  id: number;
+  level: number;
+  name: string | null;
 }
 
 export function toNpcListDto(npc: Npc): NpcListDto {
@@ -44,7 +52,7 @@ export function toNpcListDto(npc: Npc): NpcListDto {
   };
 }
 
-export function toNpcDetailDto(npc: Npc): NpcDetailDto {
+export function toNpcDetailDto(npc: Npc, chronicle: Chronicle): NpcDetailDto {
   return {
     id: npc.id,
     name: npc.name,
@@ -64,6 +72,10 @@ export function toNpcDetailDto(npc: Npc): NpcDetailDto {
     atkSpd: npc.atkSpd,
     walkSpd: npc.walkSpd,
     runSpd: npc.runSpd,
-    skills: npc.skills,
+    skills: npc.skills.map((s) => ({
+      id: s.id,
+      level: s.level,
+      name: getSkillByKey(chronicle, `${s.id}-${s.level}`)?.name ?? null,
+    })),
   };
 }

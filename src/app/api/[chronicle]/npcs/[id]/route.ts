@@ -14,5 +14,5 @@ export async function GET(
     return jsonError(`NPC ${parsed.id} not found`, 404);
   }
 
-  return jsonOk(toNpcDetailDto(npc));
+  return jsonOk(toNpcDetailDto(npc, parsed.chronicle));
 }

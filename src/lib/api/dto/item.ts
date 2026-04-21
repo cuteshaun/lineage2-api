@@ -161,6 +161,16 @@ function parseSaveMechanic(
   return undefined;
 }
 
+const PVP_STUB_SENTENCE = "Increases damage inflicted during PvP.";
+const PVP_TRAILING_CLAUSE = /\s+(?:Increases damage inflicted|Inflicts additional damage) during PvP\.\s*$/;
+
+function normalizeDescription(raw: string | null): string | null {
+  if (!raw || raw === "none") return null;
+  if (raw === PVP_STUB_SENTENCE) return null;
+  const stripped = raw.replace(PVP_TRAILING_CLAUSE, "").trimEnd();
+  return stripped.length > 0 ? stripped : null;
+}
+
 function resolveSkill(
   chronicle: Chronicle,
   itemSkill: string | null
@@ -168,8 +178,7 @@ function resolveSkill(
   if (!itemSkill) return undefined;
   const skill = getSkillByKey(chronicle, itemSkill);
   if (!skill) return undefined;
-  const description =
-    skill.description && skill.description !== "none" ? skill.description : null;
+  const description = normalizeDescription(skill.description);
   return {
     id: skill.id,
     level: skill.level,

@@ -280,7 +280,7 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
   const weaponNameIndex = new Map<string, Item>();
   for (const it of dataset.items) {
     itemsByName.set(it.id, it);
-    if (it.type === "weapon" && it.itemSkill === null) {
+    if (it.type === "weapon" && !it.name.includes(" - ")) {
       weaponNameIndex.set(it.name, it);
     }
   }

@@ -339,6 +339,17 @@ export default async function ItemDetailsPage({
                         {effectSummary.join(", ")}
                       </span>
                     )}
+                    {sa.saveMechanic && (
+                      <span className="text-[11px] leading-relaxed text-zinc-600 dark:text-zinc-300">
+                        {sa.saveMechanic.chance}% chance to save{" "}
+                        {sa.saveMechanic.amount}{" "}
+                        {sa.saveMechanic.kind === "soulshot"
+                          ? sa.saveMechanic.amount === 1
+                            ? "soulshot"
+                            : "soulshots"
+                          : "MP"}
+                      </span>
+                    )}
                   </div>
                 </Link>
               );

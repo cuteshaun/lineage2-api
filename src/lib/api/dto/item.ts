@@ -1,5 +1,5 @@
 import type { Chronicle } from "../../chronicles";
-import type { Item } from "../../types";
+import type { Item, SkillEffect } from "../../types";
 import {
   getItemById,
   getSaVariants,
@@ -17,6 +17,7 @@ export interface SkillSummaryDto {
   target: string | null;
   iconFile: string | null;
   description: string | null;
+  effects?: SkillEffect[];
 }
 
 export interface SaVariantDto {
@@ -158,6 +159,9 @@ function resolveSkill(
     target: skill.target,
     iconFile: skill.iconFile,
     description,
+    ...(skill.effects && skill.effects.length > 0
+      ? { effects: skill.effects }
+      : {}),
   };
 }
 

@@ -57,6 +57,11 @@ export function NpcDetails({
             {npc.title}
           </p>
         )}
+        {npc.raceDescription && (
+          <p className="max-w-prose text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
+            {npc.raceDescription}
+          </p>
+        )}
       </header>
 
       <Section title="Stats">
@@ -80,11 +85,11 @@ export function NpcDetails({
 
       {npc.skills.length > 0 && (
         <Section title={`Skills (${npc.skills.length})`}>
-          <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3">
+          <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
             {npc.skills.map((s) => (
               <li
                 key={`${s.id}-${s.level}`}
-                className="flex items-center gap-2"
+                className="flex items-start gap-2"
               >
                 {s.iconFile ? (
                   <img
@@ -98,9 +103,16 @@ export function NpcDetails({
                 ) : (
                   <span className="flex-none h-6 w-6 rounded border border-zinc-200 bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900" />
                 )}
-                <span className="font-mono text-xs text-zinc-700 dark:text-zinc-300">
-                  {s.name ?? `#${s.id}`} · Lv {s.level}
-                </span>
+                <div className="flex min-w-0 flex-col gap-0.5">
+                  <span className="font-mono text-xs text-zinc-700 dark:text-zinc-300">
+                    {s.name ?? `#${s.id}`} · Lv {s.level}
+                  </span>
+                  {s.description && (
+                    <span className="text-[11px] leading-relaxed text-zinc-500 dark:text-zinc-400">
+                      {s.description}
+                    </span>
+                  )}
+                </div>
               </li>
             ))}
           </ul>

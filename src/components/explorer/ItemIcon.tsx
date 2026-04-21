@@ -11,16 +11,19 @@ export function ItemIcon({
   iconFile,
   name,
   size = 28,
+  decorative = false,
 }: {
   iconFile: string | null;
   name: string;
   size?: number;
+  decorative?: boolean;
 }) {
   const src = iconFile ? `/icons/${iconFile}` : "/icons/NOIMAGE.png";
   return (
     <img
       src={src}
-      alt={name}
+      alt={decorative ? "" : name}
+      role={decorative ? "presentation" : undefined}
       width={size}
       height={size}
       loading="lazy"

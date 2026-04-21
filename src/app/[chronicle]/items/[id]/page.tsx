@@ -251,18 +251,47 @@ export default async function ItemDetailsPage({
           title={'Special Ability'}
         >
           <div className="flex flex-col gap-2">
-            {item.specialAbilityOptions.map((sa) => (
-              <Link
-                key={sa.itemId}
-                href={`/${chronicle}/items/${sa.itemId}`}
-                className="flex items-center gap-3 rounded border border-zinc-100 p-2.5 transition-colors hover:border-zinc-300 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:border-zinc-600 dark:hover:bg-zinc-900"
-              >
-                <ItemIcon iconFile={sa.iconFile} name={sa.saName} size={28} />
-                <span className="font-mono text-xs text-zinc-900 dark:text-zinc-100">
-                  {sa.saName}
-                </span>
-              </Link>
-            ))}
+            {item.specialAbilityOptions.map((sa) => {
+              const descriptions = Array.from(
+                new Set(
+                  sa.skills
+                    .map((s) => s.description)
+                    .filter((d): d is string => !!d)
+                )
+              );
+              return (
+                <Link
+                  key={sa.itemId}
+                  href={`/${chronicle}/items/${sa.itemId}`}
+                  className="flex items-start gap-3 rounded border border-zinc-100 p-2.5 transition-colors hover:border-zinc-300 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:border-zinc-600 dark:hover:bg-zinc-900"
+                >
+                  <ItemIcon
+                    iconFile={sa.iconFile}
+                    name={sa.saName}
+                    size={28}
+                    decorative
+                  />
+                  <div className="flex min-w-0 flex-col gap-0.5">
+                    <span className="font-mono text-xs text-zinc-900 dark:text-zinc-100">
+                      {sa.saName}
+                    </span>
+                    {sa.effectChance != null && (
+                      <span className="text-[11px] text-zinc-500 dark:text-zinc-400">
+                        Chance: {sa.effectChance}%
+                      </span>
+                    )}
+                    {descriptions.map((d, i) => (
+                      <span
+                        key={i}
+                        className="text-[11px] leading-relaxed text-zinc-500 dark:text-zinc-400"
+                      >
+                        {d}
+                      </span>
+                    ))}
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </Section>
       )}

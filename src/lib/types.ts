@@ -212,6 +212,12 @@ export interface Recipe {
   isDwarven: boolean;
 }
 
+export interface SkillEffect {
+  stat: string;
+  op: "mul" | "add";
+  value: number;
+}
+
 export interface Skill {
   id: number;
   level: number;
@@ -226,6 +232,7 @@ export interface Skill {
   target: string | null;
   iconFile: string | null;
   description: string | null;
+  effects?: SkillEffect[];
 }
 
 export interface ManualFixes {

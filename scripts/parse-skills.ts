@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import zlib from "node:zlib";
 import { XMLParser } from "fast-xml-parser";
-import type { Skill } from "../src/lib/types";
+import type { Skill, SkillEffect } from "../src/lib/types";
 import { getChronicleDataConfig } from "../src/lib/chronicle-config";
 import type { Chronicle } from "../src/lib/chronicles";
 import { getChronicleSources } from "./chronicle-sources";
@@ -85,6 +85,30 @@ function resolveVal(
 }
 
 /**
+ * Extract passive stat effects from a skill's `<for>` block.
+ * Minimal support: only literal-numeric `<mul>` / `<add>` entries.
+ * Table refs (`val="#name"`), `<basemul>`, `<effect>`, etc. are skipped.
+ */
+function parseEffects(skillNode: XmlNode): SkillEffect[] {
+  const forNode = skillNode.for;
+  if (!forNode || typeof forNode !== "object") return [];
+  const forObj = forNode as XmlNode;
+  const effects: SkillEffect[] = [];
+  for (const op of ["mul", "add"] as const) {
+    for (const entry of toArray(forObj[op])) {
+      const stat = getStr(entry, "@_stat");
+      const rawVal = entry["@_val"];
+      if (stat == null || rawVal == null) continue;
+      if (typeof rawVal === "string" && rawVal.startsWith("#")) continue;
+      const n = Number(rawVal);
+      if (!Number.isFinite(n)) continue;
+      effects.push({ stat, op, value: n });
+    }
+  }
+  return effects;
+}
+
+/**
  * Build a map of set-name → raw val from all `<set>` children.
  */
 function parseSets(skillNode: XmlNode): Map<string, unknown> {
@@ -111,6 +135,7 @@ function parseSkillFile(absPath: string): Skill[] {
 
     const tables = parseTables(node);
     const sets = parseSets(node);
+    const effects = parseEffects(node);
 
     for (let lvl = 0; lvl < levels; lvl++) {
       const resolve = (key: string) => resolveVal(sets.get(key), lvl, tables);
@@ -140,6 +165,7 @@ function parseSkillFile(absPath: string): Skill[] {
         target: resolve("target") ?? null,
         iconFile: null, // resolved after parsing, per skill id
         description: null, // merged from skillname-e.dat after parsing
+        ...(effects.length > 0 ? { effects } : {}),
       });
     }
   }

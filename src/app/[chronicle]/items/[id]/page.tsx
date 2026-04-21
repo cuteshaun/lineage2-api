@@ -6,6 +6,44 @@ import { ItemIcon } from "@/components/explorer/ItemIcon";
 import { PaginatedItemSourceTable } from "@/components/explorer/PaginatedItemSourceTable";
 import type { ItemDetailDto } from "@/lib/api/dto/item";
 import type { ItemSourceEntryDto } from "@/lib/api/dto/drops";
+import type { SkillEffect } from "@/lib/types";
+
+const SA_STAT_LABELS: Record<string, string> = {
+  pAtkSpd: "Atk. Spd.",
+  mAtkSpd: "Casting Spd.",
+  cAtkAdd: "Crit Damage",
+  absorbDam: "HP Drain",
+  maxHp: "Max HP",
+  maxMp: "Max MP",
+  maxCp: "Max CP",
+  rCrit: "Crit Rate",
+  rEvas: "Evasion",
+  accCombat: "Accuracy",
+  regHp: "HP Regen",
+  regMp: "MP Regen",
+  atkCountMax: "Attack Count",
+  sDef: "Shield Def.",
+  reflectDam: "Reflect Dmg.",
+};
+
+const SA_HIDDEN_STATS = new Set([
+  "pvpPhysDmg",
+  "pvpPhysSkillsDmg",
+  "pvpMagicalDmg",
+]);
+
+function formatSaEffect(e: SkillEffect): string | null {
+  if (SA_HIDDEN_STATS.has(e.stat)) return null;
+  const label = SA_STAT_LABELS[e.stat];
+  if (!label) return null;
+  if (e.op === "mul") {
+    const pct = Math.round((e.value - 1) * 100);
+    if (pct === 0) return null;
+    return `${pct > 0 ? "+" : ""}${pct}% ${label}`;
+  }
+  if (e.value === 0) return null;
+  return `${e.value > 0 ? "+" : ""}${e.value} ${label}`;
+}
 
 export default async function ItemDetailsPage({
   params,
@@ -259,6 +297,14 @@ export default async function ItemDetailsPage({
                     .filter((d): d is string => !!d)
                 )
               );
+              const effectSummary = Array.from(
+                new Set(
+                  sa.skills
+                    .flatMap((s) => s.effects ?? [])
+                    .map(formatSaEffect)
+                    .filter((s): s is string => !!s)
+                )
+              );
               return (
                 <Link
                   key={sa.itemId}
@@ -288,6 +334,11 @@ export default async function ItemDetailsPage({
                         {d}
                       </span>
                     ))}
+                    {effectSummary.length > 0 && (
+                      <span className="text-[11px] leading-relaxed text-zinc-600 dark:text-zinc-300">
+                        {effectSummary.join(", ")}
+                      </span>
+                    )}
                   </div>
                 </Link>
               );

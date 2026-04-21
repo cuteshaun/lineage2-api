@@ -16,6 +16,7 @@ export interface SkillSummaryDto {
   operateType: string | null;
   target: string | null;
   iconFile: string | null;
+  description: string | null;
 }
 
 export interface SaVariantDto {
@@ -147,6 +148,8 @@ function resolveSkill(
   if (!itemSkill) return undefined;
   const skill = getSkillByKey(chronicle, itemSkill);
   if (!skill) return undefined;
+  const description =
+    skill.description && skill.description !== "none" ? skill.description : null;
   return {
     id: skill.id,
     level: skill.level,
@@ -154,6 +157,7 @@ function resolveSkill(
     operateType: skill.operateType,
     target: skill.target,
     iconFile: skill.iconFile,
+    description,
   };
 }
 

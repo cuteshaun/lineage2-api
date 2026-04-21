@@ -27,6 +27,7 @@ export interface SaVariantDto {
   iconFile: string | null;
   effectChance: number | null;
   skills: SkillSummaryDto[];
+  saveMechanic?: { kind: "mp" | "soulshot"; chance: number; amount: number };
 }
 
 export interface CraftingIngredientDto {
@@ -142,6 +143,24 @@ export function toItemListDto(item: Item): ItemListDto {
   };
 }
 
+function parseSaveMechanic(
+  props: Record<string, string | number | boolean>
+): SaVariantDto["saveMechanic"] {
+  for (const [prop, kind] of [
+    ["mp_consume_reduce", "mp"],
+    ["reduced_soulshot", "soulshot"],
+  ] as const) {
+    const raw = props[prop];
+    if (typeof raw !== "string") continue;
+    const [c, a] = raw.split(",");
+    const chance = Number(c);
+    const amount = Number(a);
+    if (!Number.isFinite(chance) || !Number.isFinite(amount)) continue;
+    return { kind, chance, amount };
+  }
+  return undefined;
+}
+
 function resolveSkill(
   chronicle: Chronicle,
   itemSkill: string | null
@@ -218,12 +237,18 @@ export function toItemDetailDto(
         const props = v.properties ?? {};
         const oncritSkillRef =
           typeof props.oncrit_skill === "string" ? props.oncrit_skill : null;
+        const oncastSkillRef =
+          typeof props.oncast_skill === "string" ? props.oncast_skill : null;
         const effectChance =
-          typeof props.oncrit_chance === "number" ? props.oncrit_chance : null;
+          typeof props.oncrit_chance === "number"
+            ? props.oncrit_chance
+            : typeof props.oncast_chance === "number"
+              ? props.oncast_chance
+              : null;
 
         const skills: SkillSummaryDto[] = [];
         const seen = new Set<string>();
-        for (const ref of [v.itemSkill, oncritSkillRef]) {
+        for (const ref of [v.itemSkill, oncritSkillRef, oncastSkillRef]) {
           const resolved = resolveSkill(chronicle, ref);
           if (!resolved) continue;
           const key = `${resolved.id}-${resolved.level}`;
@@ -232,6 +257,8 @@ export function toItemDetailDto(
           skills.push(resolved);
         }
 
+        const saveMechanic = parseSaveMechanic(props);
+
         return {
           itemId: v.id,
           name: v.name,
@@ -239,6 +266,7 @@ export function toItemDetailDto(
           iconFile: v.iconFile,
           effectChance,
           skills,
+          ...(saveMechanic ? { saveMechanic } : {}),
         };
       })
       .filter((x): x is SaVariantDto => x !== null);

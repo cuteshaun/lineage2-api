@@ -85,22 +85,30 @@ function resolveVal(
 }
 
 /**
- * Extract passive stat effects from a skill's `<for>` block.
- * Minimal support: only literal-numeric `<mul>` / `<add>` entries.
- * Table refs (`val="#name"`), `<basemul>`, `<effect>`, etc. are skipped.
+ * Extract passive stat effects from a skill's `<for>` block for one level.
+ * Supports literal-numeric `<mul>` / `<add>` entries and `val="#table"`
+ * references resolved via sibling `<table>` rows. Skips `<basemul>`,
+ * `<effect>`, and entries gated on a `<player>` condition (the latter to
+ * avoid surfacing conditional bonuses as if they applied unconditionally).
  */
-function parseEffects(skillNode: XmlNode): SkillEffect[] {
+function parseEffects(
+  skillNode: XmlNode,
+  level: number,
+  tables: Map<string, number[]>
+): SkillEffect[] {
   const forNode = skillNode.for;
   if (!forNode || typeof forNode !== "object") return [];
   const forObj = forNode as XmlNode;
   const effects: SkillEffect[] = [];
   for (const op of ["mul", "add"] as const) {
     for (const entry of toArray(forObj[op])) {
+      if (entry.player != null) continue; // conditional effect — skip
       const stat = getStr(entry, "@_stat");
       const rawVal = entry["@_val"];
       if (stat == null || rawVal == null) continue;
-      if (typeof rawVal === "string" && rawVal.startsWith("#")) continue;
-      const n = Number(rawVal);
+      const resolved = resolveVal(rawVal, level, tables);
+      if (resolved == null) continue;
+      const n = Number(resolved);
       if (!Number.isFinite(n)) continue;
       effects.push({ stat, op, value: n });
     }
@@ -135,10 +143,10 @@ function parseSkillFile(absPath: string): Skill[] {
 
     const tables = parseTables(node);
     const sets = parseSets(node);
-    const effects = parseEffects(node);
 
     for (let lvl = 0; lvl < levels; lvl++) {
       const resolve = (key: string) => resolveVal(sets.get(key), lvl, tables);
+      const effects = parseEffects(node, lvl, tables);
       const resolveNum = (key: string): number | null => {
         const v = resolve(key);
         if (v == null) return null;

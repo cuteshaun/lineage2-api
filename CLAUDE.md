@@ -129,7 +129,7 @@ When making changes:
 ---
 
 ## Out of Scope (for now)
-- No deep parsing of skill effect blocks (`<for>`)
+- Limited parsing of skill `<for>` blocks: literal-numeric and `<table>`-referenced `<mul>`/`<add>` entries are parsed into `Skill.effects`. `<effect>` blocks, `<basemul>`, and entries gated on `<player>` conditions remain out of scope.
 - No broad or speculative client-side DAT parsing
 - No runtime DAT parsing
 - No premature support for other chronicles

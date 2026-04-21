@@ -15,10 +15,11 @@ The API will be hosted on Vercel.
 
 ## Data Source & Build Model
 - Data is parsed from aCis datapack XML files
-- Data is generated during build (scripts/build-data.ts)
+- Selected client DAT metadata may be parsed at build time when it adds clear public value
+- Data is generated during build (`scripts/build-data.ts`)
 - Output is stored as JSON under `data/generated/{chronicle}`
 - The API reads from generated JSON at runtime
-- No direct XML parsing in production
+- No direct XML or DAT parsing in production
 
 ---
 
@@ -47,6 +48,7 @@ The API currently supports:
 - NPCs / Monsters
 - Drops and Spoil (both directions)
 - Recipes
+- Skills
 
 ### Key Decisions
 
@@ -59,9 +61,16 @@ The API currently supports:
   - sorted for readability (not raw category order)
 
 - Skills:
-  - parsed from XML
+  - primarily parsed from aCis XML
   - indexed by `"id-level"`
+  - enriched at build time with selected client metadata when useful
+  - may include `description: string | null` when available
   - `itemSkill` is resolved into DTO summaries
+
+- NPC skill presentation:
+  - public responses may separate clearly derived fields from raw engine-like entries
+  - race may be exposed as a first-class field when reliably derivable
+  - UI/DTO cleanup is preferred before changing core generated data
 
 ---
 
@@ -71,6 +80,7 @@ The API currently supports:
   - deduplicate
   - normalize
   - reshape data
+  - enrich with already-generated metadata
 
 - Raw data must remain unchanged unless explicitly requested
 
@@ -87,6 +97,7 @@ before changing core data models
 - Avoid speculative abstractions
 - Validate using real Lineage 2 examples
 - Preserve existing response shapes and pagination
+- Prefer build-time enrichment over runtime filesystem work
 
 ---
 
@@ -110,11 +121,17 @@ When making changes:
 - Before adding a new endpoint:
   - check if the data is already exposed elsewhere
 
+- Before parsing a new client DAT source:
+  - confirm it provides clear public value
+  - keep parsing at build time only
+  - avoid broad speculative extraction
+
 ---
 
 ## Out of Scope (for now)
 - No deep parsing of skill effect blocks (`<for>`)
-- No client-side DAT parsing (descriptions/icons)
+- No broad or speculative client-side DAT parsing
+- No runtime DAT parsing
 - No premature support for other chronicles
 - No unnecessary endpoints
 

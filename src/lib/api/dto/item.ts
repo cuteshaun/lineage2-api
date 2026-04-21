@@ -22,9 +22,9 @@ export interface SaVariantDto {
   itemId: number;
   name: string;
   saName: string;
-  itemSkill: string | null;
-  skill?: SkillSummaryDto;
   iconFile: string | null;
+  effectChance: number | null;
+  skills: SkillSummaryDto[];
 }
 
 export interface CraftingIngredientDto {
@@ -207,16 +207,31 @@ export function toItemDetailDto(
         const v = getItemById(chronicle, vid);
         if (!v) return null;
         const dashIdx = v.name.indexOf(" - ");
-        const saDto: SaVariantDto = {
+        const props = v.properties ?? {};
+        const oncritSkillRef =
+          typeof props.oncrit_skill === "string" ? props.oncrit_skill : null;
+        const effectChance =
+          typeof props.oncrit_chance === "number" ? props.oncrit_chance : null;
+
+        const skills: SkillSummaryDto[] = [];
+        const seen = new Set<string>();
+        for (const ref of [v.itemSkill, oncritSkillRef]) {
+          const resolved = resolveSkill(chronicle, ref);
+          if (!resolved) continue;
+          const key = `${resolved.id}-${resolved.level}`;
+          if (seen.has(key)) continue;
+          seen.add(key);
+          skills.push(resolved);
+        }
+
+        return {
           itemId: v.id,
           name: v.name,
           saName: dashIdx >= 0 ? v.name.slice(dashIdx + 3) : v.name,
-          itemSkill: v.itemSkill,
           iconFile: v.iconFile,
+          effectChance,
+          skills,
         };
-        const saSkill = resolveSkill(chronicle, v.itemSkill);
-        if (saSkill) saDto.skill = saSkill;
-        return saDto;
       })
       .filter((x): x is SaVariantDto => x !== null);
   }

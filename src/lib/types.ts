@@ -225,6 +225,7 @@ export interface Skill {
   isMagic: boolean | null;
   target: string | null;
   iconFile: string | null;
+  description: string | null;
 }
 
 export interface ManualFixes {

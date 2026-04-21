@@ -21,6 +21,7 @@ export interface NpcDetailDto {
   isAggressive: boolean;
   race: string | null;
   raceIconFile: string | null;
+  raceDescription: string | null;
   hp: number | null;
   mp: number | null;
   exp: number | null;
@@ -129,6 +130,9 @@ export function toNpcDetailDto(npc: Npc, chronicle: Chronicle): NpcDetailDto {
   const raceIconFile = raceSkill
     ? (RACE_ICON_BY_LEVEL[raceSkill.level] ?? RACE_ICON_FALLBACK)
     : null;
+  const raceDescription = raceSkill
+    ? (getSkillByKey(chronicle, `${SKILL_ID_RACES}-${raceSkill.level}`)?.description ?? null)
+    : null;
 
   return {
     id: npc.id,
@@ -139,6 +143,7 @@ export function toNpcDetailDto(npc: Npc, chronicle: Chronicle): NpcDetailDto {
     isAggressive: (npc.aiAggro ?? 0) > 0,
     race,
     raceIconFile,
+    raceDescription,
     hp: npc.hp != null ? Math.round(npc.hp) : null,
     mp: npc.mp != null ? Math.round(npc.mp) : null,
     exp: npc.exp,

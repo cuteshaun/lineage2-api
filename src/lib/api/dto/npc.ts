@@ -42,6 +42,7 @@ export interface NpcSkillDto {
   level: number;
   name: string | null;
   iconFile: string | null;
+  description: string | null;
 }
 
 const RACE_BY_LEVEL: Record<number, string> = {
@@ -169,6 +170,7 @@ export function toNpcDetailDto(npc: Npc, chronicle: Chronicle): NpcDetailDto {
           level: s.level,
           name: resolved?.name ?? null,
           iconFile,
+          description: resolved?.description ?? null,
         };
       }),
   };

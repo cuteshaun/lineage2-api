@@ -9,6 +9,10 @@ import type { ItemSourceEntryDto } from "@/lib/api/dto/drops";
 import type { SkillEffect } from "@/lib/types";
 
 const SA_STAT_LABELS: Record<string, string> = {
+  pAtk: "P. Atk.",
+  mAtk: "M. Atk.",
+  pDef: "P. Def.",
+  mDef: "M. Def.",
   pAtkSpd: "Atk. Spd.",
   mAtkSpd: "Casting Spd.",
   cAtkAdd: "Crit Damage",
@@ -43,6 +47,52 @@ function formatSaEffect(e: SkillEffect): string | null {
   }
   if (e.value === 0) return null;
   return `${e.value > 0 ? "+" : ""}${e.value} ${label}`;
+}
+
+const PVP_STATS = ["pvpPhysDmg", "pvpPhysSkillsDmg", "pvpMagicalDmg"] as const;
+
+function effectKey(e: SkillEffect): string {
+  return `${e.stat}|${e.op}|${e.value}`;
+}
+
+function dedupEffects(effects: SkillEffect[]): SkillEffect[] {
+  const seen = new Map<string, SkillEffect>();
+  for (const e of effects) {
+    const k = effectKey(e);
+    if (!seen.has(k)) seen.set(k, e);
+  }
+  return [...seen.values()];
+}
+
+function computeSharedEffects(variantEffects: SkillEffect[][]): SkillEffect[] {
+  if (variantEffects.length <= 1) return [];
+  const [first, ...rest] = variantEffects;
+  return first.filter((e) => {
+    const k = effectKey(e);
+    return rest.every((set) => set.some((x) => effectKey(x) === k));
+  });
+}
+
+function formatSharedEffects(shared: SkillEffect[]): string[] {
+  // PvP damage is surfaced via `item.pvpBonus` (engine-rule field at the
+  // DTO layer). Here we only format non-PvP shared stats like polearm
+  // atkCountMax. The per-variant `SA_HIDDEN_STATS` filter still hides PvP
+  // entries in individual SA lines.
+  const out: string[] = [];
+  for (const e of shared) {
+    if (PVP_STATS.includes(e.stat as (typeof PVP_STATS)[number])) continue;
+    const label = SA_STAT_LABELS[e.stat];
+    if (!label) continue;
+    if (e.op === "mul") {
+      const pct = Math.round((e.value - 1) * 100);
+      if (pct === 0) continue;
+      out.push(`${pct > 0 ? "+" : ""}${pct}% ${label}`);
+    } else {
+      if (e.value === 0) continue;
+      out.push(`${e.value > 0 ? "+" : ""}${e.value} ${label}`);
+    }
+  }
+  return Array.from(new Set(out));
 }
 
 export default async function ItemDetailsPage({
@@ -288,8 +338,24 @@ export default async function ItemDetailsPage({
         <Section
           title={'Special Ability'}
         >
+          {(() => {
+            const variantEffects = item.specialAbilityOptions.map((sa) =>
+              dedupEffects(sa.skills.flatMap((s) => s.effects ?? []))
+            );
+            const sharedEffects = computeSharedEffects(variantEffects);
+            const sharedKeys = new Set(sharedEffects.map(effectKey));
+            const sharedLabels = [
+              ...(item.pvpBonus ? [item.pvpBonus.display] : []),
+              ...formatSharedEffects(sharedEffects),
+            ];
+            return (
           <div className="flex flex-col gap-2">
-            {item.specialAbilityOptions.map((sa) => {
+            {sharedLabels.length > 0 && (
+              <span className="text-[11px] leading-relaxed text-zinc-500 dark:text-zinc-400">
+                Shared: {sharedLabels.join(", ")}
+              </span>
+            )}
+            {item.specialAbilityOptions.map((sa, idx) => {
               const descriptions = Array.from(
                 new Set(
                   sa.skills
@@ -299,8 +365,8 @@ export default async function ItemDetailsPage({
               );
               const effectSummary = Array.from(
                 new Set(
-                  sa.skills
-                    .flatMap((s) => s.effects ?? [])
+                  variantEffects[idx]
+                    .filter((e) => !sharedKeys.has(effectKey(e)))
                     .map(formatSaEffect)
                     .filter((s): s is string => !!s)
                 )
@@ -355,6 +421,8 @@ export default async function ItemDetailsPage({
               );
             })}
           </div>
+            );
+          })()}
         </Section>
       )}
 

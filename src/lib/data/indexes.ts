@@ -271,33 +271,71 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
 
 
   // SA (Special Ability) weapon variant index. SA variants are named
-  // "{Base Name} - {SA Suffix}" and carry a non-null `itemSkill`. We
-  // split on " - ", look up the base weapon by exact name match, and
-  // build bidirectional maps.
+  // "{Base Name} - {SA Suffix}". We split on " - ", look up the base
+  // weapon by exact name (with an apostrophe-stripped fallback for
+  // Heaven's Divider / Heavens Divider-style source-data inconsistency),
+  // and dedup variants by name per base — some SAs have both a C4
+  // legacy (4xxx id) and an Interlude augment (5xxx id) record; we keep
+  // the richer one so the UI renders each SA once.
   const saVariantsByBaseId = new Map<number, number[]>();
   const saBaseByVariantId = new Map<number, number>();
   const itemsByName = new Map<number, Item>();
   const weaponNameIndex = new Map<string, Item>();
+  const weaponNormalizedIndex = new Map<string, Item>();
+  const normalizeName = (s: string): string =>
+    s.toLowerCase().replace(/['`’]/g, "");
   for (const it of dataset.items) {
     itemsByName.set(it.id, it);
     if (it.type === "weapon" && !it.name.includes(" - ")) {
       weaponNameIndex.set(it.name, it);
+      const norm = normalizeName(it.name);
+      if (!weaponNormalizedIndex.has(norm)) weaponNormalizedIndex.set(norm, it);
     }
   }
+  const variantSignalCount = (it: Item): number => {
+    let n = 0;
+    if (it.itemSkill) n++;
+    const p = it.properties;
+    if (p) {
+      if (typeof p.oncrit_skill === "string") n++;
+      if (typeof p.oncast_skill === "string") n++;
+      if (typeof p.mp_consume_reduce === "string") n++;
+      if (typeof p.reduced_soulshot === "string") n++;
+    }
+    return n;
+  };
+  const bestVariantPerBase = new Map<number, Map<string, Item>>();
   for (const it of dataset.items) {
     if (it.type !== "weapon") continue;
     const dashIdx = it.name.indexOf(" - ");
     if (dashIdx < 0) continue;
     const baseName = it.name.slice(0, dashIdx);
-    const base = weaponNameIndex.get(baseName);
+    const base =
+      weaponNameIndex.get(baseName) ??
+      weaponNormalizedIndex.get(normalizeName(baseName));
     if (!base) continue;
     saBaseByVariantId.set(it.id, base.id);
-    let list = saVariantsByBaseId.get(base.id);
-    if (!list) {
-      list = [];
-      saVariantsByBaseId.set(base.id, list);
+    let perBase = bestVariantPerBase.get(base.id);
+    if (!perBase) {
+      perBase = new Map<string, Item>();
+      bestVariantPerBase.set(base.id, perBase);
     }
-    list.push(it.id);
+    const prev = perBase.get(it.name);
+    if (!prev) {
+      perBase.set(it.name, it);
+    } else {
+      const prevScore = variantSignalCount(prev);
+      const curScore = variantSignalCount(it);
+      if (curScore > prevScore || (curScore === prevScore && it.id > prev.id)) {
+        perBase.set(it.name, it);
+      }
+    }
+  }
+  for (const [baseId, perBase] of bestVariantPerBase) {
+    saVariantsByBaseId.set(
+      baseId,
+      [...perBase.values()].map((v) => v.id)
+    );
   }
 
   const publicItems = dataset.items.filter(

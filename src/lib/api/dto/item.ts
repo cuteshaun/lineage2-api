@@ -101,6 +101,14 @@ export interface ItemDetailDto {
   iconFile: string | null;
   skill?: SkillSummaryDto;
   specialAbilityOptions?: SaVariantDto[];
+  /**
+   * Shared PvP damage bonus conferred by any soul-crystal augmentation on
+   * A/S-grade weapons. Present whenever `specialAbilityOptions` is non-empty
+   * and the base weapon is A- or S-grade. Surfaced at the DTO layer because
+   * it's an engine rule (applies weapon-wide) rather than per-skill data,
+   * which some legacy SA slots fail to carry due to stub/placeholder entries.
+   */
+  pvpBonus?: { damageMultiplier: number; display: string };
   baseWeaponId?: number;
   crafting?: CraftingInfoDto;
   craftedBy?: CraftedByDto[];
@@ -162,13 +170,23 @@ function parseSaveMechanic(
 }
 
 const PVP_STUB_SENTENCE = "Increases damage inflicted during PvP.";
-const PVP_TRAILING_CLAUSE = /\s+(?:Increases damage inflicted|Inflicts additional damage) during PvP\.\s*$/;
+// Strips a trailing clause about PvP damage, whether it's a separate sentence
+// ("…HP. Inflicts additional damage during PvP.") or conjunctive
+// ("…rate and damage inflicted during PvP." / "…Speed and enhances damage
+// to target during PvP."). The clause must open with a specific verb (or
+// literal "damage") so we don't swallow preceding unrelated conjunctions
+// like "…Accuracy, and enables the character to attack multiple opponents and
+// inflicts additional damage during PvP." — only the rightmost " and inflicts
+// …" clause is stripped there, keeping the multi-target phrase intact.
+const PVP_TRAILING_CLAUSE =
+  /\s*(?:\.\s+|,\s+|\s+and\s+)(?:Inflicts|Increases|Enhances|inflicts|increases|enhances|damage)[^.,]*\s+during PvP\.\s*$/;
 
 function normalizeDescription(raw: string | null): string | null {
   if (!raw || raw === "none") return null;
   if (raw === PVP_STUB_SENTENCE) return null;
   const stripped = raw.replace(PVP_TRAILING_CLAUSE, "").trimEnd();
-  return stripped.length > 0 ? stripped : null;
+  if (stripped.length === 0) return null;
+  return /[.!?]$/.test(stripped) ? stripped : stripped + ".";
 }
 
 function resolveSkill(
@@ -257,7 +275,10 @@ export function toItemDetailDto(
 
         const skills: SkillSummaryDto[] = [];
         const seen = new Set<string>();
-        for (const ref of [v.itemSkill, oncritSkillRef, oncastSkillRef]) {
+        const itemSkillRefs = v.itemSkill
+          ? v.itemSkill.split(";").map((s) => s.trim()).filter(Boolean)
+          : [];
+        for (const ref of [...itemSkillRefs, oncritSkillRef, oncastSkillRef]) {
           const resolved = resolveSkill(chronicle, ref);
           if (!resolved) continue;
           const key = `${resolved.id}-${resolved.level}`;
@@ -279,6 +300,20 @@ export function toItemDetailDto(
         };
       })
       .filter((x): x is SaVariantDto => x !== null);
+  }
+
+  // Soul-crystal augmentation always confers a +5% PvP damage bonus on
+  // A- and S-grade weapons, regardless of which SA slot is attached.
+  // Surfaced as an engine-rule DTO field so the UI doesn't need to rely on
+  // every per-skill effects array containing the triple — some legacy/stub
+  // SA entries (e.g. Carnage Bow's Quick Recovery) don't carry it in data.
+  if (
+    item.type === "weapon" &&
+    (item.grade === "s" || item.grade === "a") &&
+    dto.specialAbilityOptions &&
+    dto.specialAbilityOptions.length > 0
+  ) {
+    dto.pvpBonus = { damageMultiplier: 1.05, display: "+5% PvP Damage" };
   }
 
   const baseId = getSaBaseWeaponId(chronicle, item.id);

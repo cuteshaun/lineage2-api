@@ -28,6 +28,24 @@ export interface SaVariantDto {
   effectChance: number | null;
   skills: SkillSummaryDto[];
   saveMechanic?: { kind: "mp" | "soulshot"; chance: number; amount: number };
+  /**
+   * Editorial description used only when no entry in `skills[]` provides
+   * a description (e.g. Critical Drain skills carry `"none"` in source,
+   * beginner-gear stubs have no skill at all). Populated from a small
+   * saName-keyed map in the DTO layer; raw data is untouched.
+   */
+  fallbackDescription?: string;
+  /**
+   * Stat delta derived from comparing the variant item to its base weapon.
+   * Used for SAs whose effect is baked into the item's own stats rather
+   * than a runtime skill — Light (reduces weight), Quick Recovery
+   * (reduces reuse delay). The `deltaPercent` is signed (negative = reduction).
+   */
+  statDelta?: {
+    stat: "weight" | "reuseDelay";
+    deltaPercent: number;
+    display: string;
+  };
 }
 
 export interface CraftingIngredientDto {
@@ -148,6 +166,55 @@ export function toItemListDto(item: Item): ItemListDto {
     weight: item.weight,
     price: item.price,
     iconFile: item.iconFile,
+  };
+}
+
+/**
+ * Editorial descriptions for SA variants whose skills carry `"none"` in
+ * source (active-trigger mechanics live in `<effect>` blocks the parser
+ * doesn't traverse) or have no skill reference at all (beginner-gear
+ * stubs). Only used as a last-resort fallback — real skill descriptions
+ * always take precedence. Keyed by the saName suffix extracted from the
+ * variant's item name.
+ */
+const SA_FALLBACK_DESCRIPTIONS: Record<string, string> = {
+  "Critical Drain": "Restores HP proportional to damage dealt on critical hit.",
+  "Magic Damage": "Chance to boost magic damage on cast.",
+  "for Beginners": "Beginner weapon — no special ability.",
+};
+
+/**
+ * Derive a stat delta for SAs whose mechanic is encoded directly on the
+ * variant item's own stats (rather than via a runtime skill effect).
+ * Compares the variant to its base weapon and reports the signed percent
+ * change of the relevant stat. Returns `undefined` if the SA isn't one
+ * of the known stat-delta flavors or if the comparison isn't possible.
+ */
+function deriveStatDelta(
+  variant: Item,
+  base: Item,
+  saName: string
+): SaVariantDto["statDelta"] {
+  let stat: "weight" | "reuseDelay" | null = null;
+  let label: string;
+  if (saName === "Light") {
+    stat = "weight";
+    label = "Weight";
+  } else if (saName === "Quick Recovery") {
+    stat = "reuseDelay";
+    label = "Reuse Delay";
+  } else {
+    return undefined;
+  }
+  const variantVal = variant[stat];
+  const baseVal = base[stat];
+  if (variantVal == null || baseVal == null || baseVal === 0) return undefined;
+  const deltaPercent = Math.round((variantVal / baseVal - 1) * 100);
+  if (deltaPercent === 0) return undefined;
+  return {
+    stat,
+    deltaPercent,
+    display: `${deltaPercent > 0 ? "+" : ""}${deltaPercent}% ${label}`,
   };
 }
 
@@ -288,15 +355,23 @@ export function toItemDetailDto(
         }
 
         const saveMechanic = parseSaveMechanic(props);
+        const saName = dashIdx >= 0 ? v.name.slice(dashIdx + 3) : v.name;
+        const hasAnyDescription = skills.some((s) => s.description);
+        const fallbackDescription = hasAnyDescription
+          ? undefined
+          : SA_FALLBACK_DESCRIPTIONS[saName];
+        const statDelta = deriveStatDelta(v, item, saName);
 
         return {
           itemId: v.id,
           name: v.name,
-          saName: dashIdx >= 0 ? v.name.slice(dashIdx + 3) : v.name,
+          saName,
           iconFile: v.iconFile,
           effectChance,
           skills,
           ...(saveMechanic ? { saveMechanic } : {}),
+          ...(fallbackDescription ? { fallbackDescription } : {}),
+          ...(statDelta ? { statDelta } : {}),
         };
       })
       .filter((x): x is SaVariantDto => x !== null);

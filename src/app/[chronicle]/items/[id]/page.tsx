@@ -356,20 +356,27 @@ export default async function ItemDetailsPage({
               </span>
             )}
             {item.specialAbilityOptions.map((sa, idx) => {
-              const descriptions = Array.from(
+              const skillDescriptions = Array.from(
                 new Set(
                   sa.skills
                     .map((s) => s.description)
                     .filter((d): d is string => !!d)
                 )
               );
+              const descriptions =
+                skillDescriptions.length > 0
+                  ? skillDescriptions
+                  : sa.fallbackDescription
+                    ? [sa.fallbackDescription]
+                    : [];
               const effectSummary = Array.from(
-                new Set(
-                  variantEffects[idx]
+                new Set([
+                  ...variantEffects[idx]
                     .filter((e) => !sharedKeys.has(effectKey(e)))
                     .map(formatSaEffect)
-                    .filter((s): s is string => !!s)
-                )
+                    .filter((s): s is string => !!s),
+                  ...(sa.statDelta ? [sa.statDelta.display] : []),
+                ])
               );
               return (
                 <Link

@@ -173,6 +173,8 @@ function parseSkillFile(absPath: string): Skill[] {
         target: resolve("target") ?? null,
         iconFile: null, // resolved after parsing, per skill id
         description: null, // merged from skillname-e.dat after parsing
+        power: resolveNum("power"),
+        skillType: resolve("skillType") ?? null,
         ...(effects.length > 0 ? { effects } : {}),
       });
     }

@@ -232,6 +232,19 @@ export interface Skill {
   target: string | null;
   iconFile: string | null;
   description: string | null;
+  /**
+   * Raw `power` value resolved from the skill's `<set name="power">` entry
+   * (literal or `#table`-referenced per level). Semantic meaning depends
+   * on `skillType`: for DRAIN it's HP absorbed per crit, for MDAM it's a
+   * magic-damage multiplier, etc. Nullable when the XML omits the field.
+   */
+  power: number | null;
+  /**
+   * Raw `skillType` attribute (DRAIN / MDAM / BUFF / DEBUFF / …). Used at
+   * the DTO layer to compose player-facing descriptions for trigger skills
+   * whose `skillname-e.dat` description is `"none"`.
+   */
+  skillType: string | null;
   effects?: SkillEffect[];
 }
 

@@ -17,6 +17,18 @@ export interface SkillSummaryDto {
   target: string | null;
   iconFile: string | null;
   description: string | null;
+  /**
+   * Raw `power` value from the skill XML. Semantics depend on `skillType`.
+   * Exposed so consumers can format their own text; the DTO already uses
+   * it internally to derive a `fallbackDescription` for SA variants whose
+   * skills carry `"none"` as their canned description.
+   */
+  power: number | null;
+  /**
+   * Raw `skillType` (DRAIN / MDAM / …). Exposed for the same reason as
+   * `power` — lets consumers decide formatting.
+   */
+  skillType: string | null;
   effects?: SkillEffect[];
 }
 
@@ -28,13 +40,6 @@ export interface SaVariantDto {
   effectChance: number | null;
   skills: SkillSummaryDto[];
   saveMechanic?: { kind: "mp" | "soulshot"; chance: number; amount: number };
-  /**
-   * Editorial description used only when no entry in `skills[]` provides
-   * a description (e.g. Critical Drain skills carry `"none"` in source,
-   * beginner-gear stubs have no skill at all). Populated from a small
-   * saName-keyed map in the DTO layer; raw data is untouched.
-   */
-  fallbackDescription?: string;
   /**
    * Stat delta derived from comparing the variant item to its base weapon.
    * Used for SAs whose effect is baked into the item's own stats rather
@@ -170,18 +175,31 @@ export function toItemListDto(item: Item): ItemListDto {
 }
 
 /**
- * Editorial descriptions for SA variants whose skills carry `"none"` in
- * source (active-trigger mechanics live in `<effect>` blocks the parser
- * doesn't traverse) or have no skill reference at all (beginner-gear
- * stubs). Only used as a last-resort fallback — real skill descriptions
- * always take precedence. Keyed by the saName suffix extracted from the
- * variant's item name.
+ * Generic, source-derived description for a skill whose canonical
+ * description is `"none"` in `skillname-e.dat`. Uses the skill's
+ * `skillType` + `power` fields as provably-true inputs — no editorial
+ * text, no invented mechanics. Returns `null` when the skill's
+ * structured data doesn't support a faithful sentence; callers should
+ * leave such cases unresolved.
+ *
+ * Currently covers DRAIN skills (Critical Drain family: 10 skill ids,
+ * 13 SA variants across A/B/C grades). Other skill types (MDAM, BUFF,
+ * DamOverTime, etc.) are deliberately not covered here because either
+ * the `power` semantics are ambiguous (MDAM's 8.39 isn't a clean
+ * player-facing magnitude) or the magnitude lives in `<effect>` blocks
+ * the parser doesn't traverse.
  */
-const SA_FALLBACK_DESCRIPTIONS: Record<string, string> = {
-  "Critical Drain": "Restores HP proportional to damage dealt on critical hit.",
-  "Magic Damage": "Chance to boost magic damage on cast.",
-  "for Beginners": "Beginner weapon — no special ability.",
-};
+function deriveSkillDescription(
+  skillType: string | null,
+  power: number | null
+): string | null {
+  if (skillType === "DRAIN" && power != null) {
+    const rounded =
+      Math.abs(power) >= 1 ? Math.round(power) : Number(power.toFixed(1));
+    return `During a critical attack, absorbs ${rounded} HP from target.`;
+  }
+  return null;
+}
 
 /**
  * Derive a stat delta for SAs whose mechanic is encoded directly on the
@@ -256,6 +274,23 @@ function normalizeDescription(raw: string | null): string | null {
   return /[.!?]$/.test(stripped) ? stripped : stripped + ".";
 }
 
+/**
+ * Round a raw `<for>`-block effect value into a clean, consumer-friendly
+ * number. Only applies to `add` entries (mul is rendered as a percent
+ * delta elsewhere). Values ≥ 1 round to integers (32.05 → 32); values
+ * below 1 keep one decimal so tiny magnitudes like MP regen 0.54 don't
+ * collapse to 1. Done here so every API consumer — not just the UI —
+ * gets normalized numbers in `SkillSummaryDto.effects`.
+ */
+function roundEffectValue(
+  op: "mul" | "add",
+  value: number
+): number {
+  if (op === "mul") return value;
+  if (Math.abs(value) >= 1) return Math.round(value);
+  return Number(value.toFixed(1));
+}
+
 function resolveSkill(
   chronicle: Chronicle,
   itemSkill: string | null
@@ -263,7 +298,13 @@ function resolveSkill(
   if (!itemSkill) return undefined;
   const skill = getSkillByKey(chronicle, itemSkill);
   if (!skill) return undefined;
-  const description = normalizeDescription(skill.description);
+  const description =
+    normalizeDescription(skill.description) ??
+    deriveSkillDescription(skill.skillType, skill.power);
+  const roundedEffects = skill.effects?.map((e) => ({
+    ...e,
+    value: roundEffectValue(e.op, e.value),
+  }));
   return {
     id: skill.id,
     level: skill.level,
@@ -272,8 +313,10 @@ function resolveSkill(
     target: skill.target,
     iconFile: skill.iconFile,
     description,
-    ...(skill.effects && skill.effects.length > 0
-      ? { effects: skill.effects }
+    power: skill.power,
+    skillType: skill.skillType,
+    ...(roundedEffects && roundedEffects.length > 0
+      ? { effects: roundedEffects }
       : {}),
   };
 }
@@ -356,10 +399,6 @@ export function toItemDetailDto(
 
         const saveMechanic = parseSaveMechanic(props);
         const saName = dashIdx >= 0 ? v.name.slice(dashIdx + 3) : v.name;
-        const hasAnyDescription = skills.some((s) => s.description);
-        const fallbackDescription = hasAnyDescription
-          ? undefined
-          : SA_FALLBACK_DESCRIPTIONS[saName];
         const statDelta = deriveStatDelta(v, item, saName);
 
         return {
@@ -370,7 +409,6 @@ export function toItemDetailDto(
           effectChance,
           skills,
           ...(saveMechanic ? { saveMechanic } : {}),
-          ...(fallbackDescription ? { fallbackDescription } : {}),
           ...(statDelta ? { statDelta } : {}),
         };
       })

@@ -356,19 +356,13 @@ export default async function ItemDetailsPage({
               </span>
             )}
             {item.specialAbilityOptions.map((sa, idx) => {
-              const skillDescriptions = Array.from(
+              const descriptions = Array.from(
                 new Set(
                   sa.skills
                     .map((s) => s.description)
                     .filter((d): d is string => !!d)
                 )
               );
-              const descriptions =
-                skillDescriptions.length > 0
-                  ? skillDescriptions
-                  : sa.fallbackDescription
-                    ? [sa.fallbackDescription]
-                    : [];
               const effectSummary = Array.from(
                 new Set([
                   ...variantEffects[idx]

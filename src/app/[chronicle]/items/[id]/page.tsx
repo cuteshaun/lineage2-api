@@ -349,10 +349,10 @@ export default async function ItemDetailsPage({
               ...formatSharedEffects(sharedEffects),
             ];
             return (
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-3">
             {sharedLabels.length > 0 && (
-              <span className="text-[11px] leading-relaxed text-zinc-500 dark:text-zinc-400">
-                Shared: {sharedLabels.join(", ")}
+              <span className="text-sm text-amber-600 dark:text-amber-400">
+                Shared Bonus: {sharedLabels.join(", ")}
               </span>
             )}
             {item.specialAbilityOptions.map((sa, idx) => {
@@ -376,38 +376,55 @@ export default async function ItemDetailsPage({
                 <Link
                   key={sa.itemId}
                   href={`/${chronicle}/items/${sa.itemId}`}
-                  className="flex items-start gap-3 rounded border border-zinc-100 p-2.5 transition-colors hover:border-zinc-300 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:border-zinc-600 dark:hover:bg-zinc-900"
+                  className="flex items-start gap-4 rounded-lg border border-zinc-200 bg-white p-4 transition-colors hover:border-zinc-300 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:border-zinc-700 dark:hover:bg-zinc-900"
                 >
                   <ItemIcon
                     iconFile={sa.iconFile}
                     name={sa.saName}
-                    size={28}
+                    size={44}
                     decorative
                   />
-                  <div className="flex min-w-0 flex-col gap-0.5">
-                    <span className="font-mono text-xs text-zinc-900 dark:text-zinc-100">
+                  <div className="flex min-w-0 flex-col gap-1">
+                    <span className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
                       {sa.saName}
                     </span>
                     {sa.effectChance != null && (
-                      <span className="text-[11px] text-zinc-500 dark:text-zinc-400">
+                      <span className="text-sm text-zinc-500 dark:text-zinc-400">
                         Chance: {sa.effectChance}%
                       </span>
                     )}
                     {descriptions.map((d, i) => (
                       <span
                         key={i}
-                        className="text-[11px] leading-relaxed text-zinc-500 dark:text-zinc-400"
+                        className="text-sm leading-relaxed text-zinc-500 dark:text-zinc-400"
                       >
                         {d}
                       </span>
                     ))}
                     {effectSummary.length > 0 && (
-                      <span className="text-[11px] leading-relaxed text-zinc-600 dark:text-zinc-300">
-                        {effectSummary.join(", ")}
+                      <span className="text-sm">
+                        {effectSummary.map((s, i) => (
+                          <span key={i}>
+                            {i > 0 && (
+                              <span className="text-zinc-400 dark:text-zinc-500">{", "}</span>
+                            )}
+                            <span
+                              className={
+                                s.startsWith("+")
+                                  ? "text-emerald-600 dark:text-emerald-400"
+                                  : s.startsWith("-")
+                                    ? "text-red-500 dark:text-red-400"
+                                    : "text-zinc-700 dark:text-zinc-300"
+                              }
+                            >
+                              {s}
+                            </span>
+                          </span>
+                        ))}
                       </span>
                     )}
                     {sa.saveMechanic && (
-                      <span className="text-[11px] leading-relaxed text-zinc-600 dark:text-zinc-300">
+                      <span className="text-sm text-emerald-600 dark:text-emerald-400">
                         {sa.saveMechanic.chance}% chance to save{" "}
                         {sa.saveMechanic.amount}{" "}
                         {sa.saveMechanic.kind === "soulshot"

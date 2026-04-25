@@ -75,6 +75,7 @@ The API currently supports:
 ---
 
 ## API Design Principles
+- Public API contract is documented in [docs/api-contract.md](docs/api-contract.md) and mechanically locked by the snapshot suite at `tests/items.snapshot.test.ts`. Any change to a stable DTO field must update both.
 - Public API ≠ raw engine data
 - DTO layer is allowed to:
   - deduplicate

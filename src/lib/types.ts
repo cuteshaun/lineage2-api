@@ -212,6 +212,60 @@ export interface Recipe {
   isDwarven: boolean;
 }
 
+/**
+ * An aCis armor-set definition (e.g. "Tallum Heavy Set").
+ *
+ * The source XML (`data/xml/armorSets.xml`) carries no explicit set id —
+ * sets are identified only by name, with one known name collision
+ * ("Mithril Robe Set" appears twice). At parse time we synthesize a
+ * stable position-based id (1..N over the file).
+ *
+ * Bonuses are entirely **skill references** (`"id-level"` strings
+ * matching the convention used by `Item.itemSkill`). The actual
+ * description text and numeric magnitudes live on the resolved skill
+ * record, so DTO-time resolution reuses the existing `resolveSkill`
+ * machinery — no parallel infrastructure.
+ *
+ * Slots whose XML attribute is `0` (meaning "no piece in this slot is
+ * required for the set bonus") are dropped at parse time rather than
+ * stored as `0` sentinels.
+ */
+export interface ArmorSet {
+  /** Synthetic, position-based id assigned at parse time (1..N). */
+  id: number;
+  /** Set name from the XML, e.g. `"Tallum Heavy Set"`. May collide. */
+  name: string;
+  /**
+   * Required item ids per equipment slot. `chest` is always present
+   * (every entry in the source XML has a non-zero chest). Other slots
+   * are present only when the source has a non-zero value for that slot.
+   */
+  pieces: {
+    chest: number;
+    legs?: number;
+    head?: number;
+    gloves?: number;
+    feet?: number;
+  };
+  /** Main set bonus, always present. `"id-level"` reference. */
+  bonusSkill: string;
+  /**
+   * Shield piece + the extra skill granted when the shield is also
+   * equipped. Present only when the source has both `shield != 0` and
+   * `shieldSkillId != 0`.
+   */
+  shield?: {
+    itemId: number;
+    bonusSkill: string;
+  };
+  /**
+   * Extra skill granted when any piece in the set reaches +6 enchant.
+   * `"id-level"` reference. Present only when the source has a non-zero
+   * `enchant6Skill` attribute.
+   */
+  enchant6BonusSkill?: string;
+}
+
 export interface SkillEffect {
   stat: string;
   op: "mul" | "add";

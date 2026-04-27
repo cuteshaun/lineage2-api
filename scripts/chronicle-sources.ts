@@ -36,6 +36,8 @@ export interface ChronicleSources {
   iconsDir: string;
   /** Absolute path to `recipes.xml` in the upstream datapack. */
   recipesXmlFile: string;
+  /** Absolute path to `armorSets.xml` in the upstream datapack. */
+  armorSetsXmlFile: string;
   /** Absolute path to the `skills/` XML directory in the upstream datapack. */
   skillsXmlDir: string;
 }
@@ -53,6 +55,7 @@ interface SourceSpec {
   };
   iconsDir: string[];
   recipesXmlFile: string[];
+  armorSetsXmlFile: string[];
   skillsXmlDir: string[];
 }
 
@@ -109,6 +112,14 @@ const SOURCE_SPECS: Record<Chronicle, SourceSpec> = {
       "xml",
       "recipes.xml",
     ],
+    armorSetsXmlFile: [
+      "..",
+      "aCis_382_LATEST_STABLE",
+      "aCis_datapack",
+      "data",
+      "xml",
+      "armorSets.xml",
+    ],
     skillsXmlDir: [
       "..",
       "aCis_382_LATEST_STABLE",
@@ -142,6 +153,7 @@ export function getChronicleSources(chronicle: Chronicle): ChronicleSources {
     },
     iconsDir: path.join(root, ...spec.iconsDir),
     recipesXmlFile: path.join(root, ...spec.recipesXmlFile),
+    armorSetsXmlFile: path.join(root, ...spec.armorSetsXmlFile),
     skillsXmlDir: path.join(root, ...spec.skillsXmlDir),
   };
 }

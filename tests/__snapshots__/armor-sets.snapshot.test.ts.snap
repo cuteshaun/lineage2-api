@@ -1,0 +1,86 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`armor set "Avadon Heavy Set" matches snapshot 1`] = `
+{
+  "bonusSkill": "3519-1",
+  "enchant6BonusSkill": "3617-1",
+  "id": 22,
+  "name": "Avadon Heavy Set",
+  "pieces": {
+    "chest": 2376,
+    "feet": 5730,
+    "gloves": 5714,
+    "head": 2415,
+    "legs": 2379,
+  },
+  "shield": {
+    "bonusSkill": "3548-1",
+    "itemId": 673,
+  },
+}
+`;
+
+exports[`armor set "Imperial Crusader Set" matches snapshot 1`] = `
+{
+  "bonusSkill": "3553-1",
+  "enchant6BonusSkill": "3623-1",
+  "id": 43,
+  "name": "Imperial Crusader Set",
+  "pieces": {
+    "chest": 6373,
+    "feet": 6376,
+    "gloves": 6375,
+    "head": 6378,
+    "legs": 6374,
+  },
+  "shield": {
+    "bonusSkill": "3554-1",
+    "itemId": 6377,
+  },
+}
+`;
+
+exports[`armor set "Major Arcana Set" matches snapshot 1`] = `
+{
+  "bonusSkill": "3556-1",
+  "enchant6BonusSkill": "3625-1",
+  "id": 45,
+  "name": "Major Arcana Set",
+  "pieces": {
+    "chest": 6383,
+    "feet": 6385,
+    "gloves": 6384,
+    "head": 6386,
+  },
+}
+`;
+
+exports[`armor set "Tallum Heavy Set" matches snapshot 1`] = `
+{
+  "bonusSkill": "3531-1",
+  "enchant6BonusSkill": "3620-1",
+  "id": 34,
+  "name": "Tallum Heavy Set",
+  "pieces": {
+    "chest": 2382,
+    "feet": 5780,
+    "gloves": 5768,
+    "head": 547,
+  },
+}
+`;
+
+exports[`armor set "Wooden Set" matches snapshot 1`] = `
+{
+  "bonusSkill": "3500-1",
+  "id": 1,
+  "name": "Wooden Set",
+  "pieces": {
+    "chest": 23,
+    "head": 43,
+    "legs": 2386,
+  },
+}
+`;
+
+exports[`total armor set count is stable 1`] = `51`;

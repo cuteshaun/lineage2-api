@@ -3,6 +3,7 @@ import { parseNpcs } from "./parse-npcs";
 import { parseDrops } from "./parse-drops";
 import { parseSpawns } from "./parse-spawns";
 import { parseRecipes } from "./parse-recipes";
+import { parseArmorSets } from "./parse-armorsets";
 import { parseSkills } from "./parse-skills";
 import {
   isChronicle,
@@ -48,6 +49,9 @@ async function main() {
   const recipes = await parseRecipes(chronicle);
   console.log();
 
+  const armorSets = await parseArmorSets(chronicle);
+  console.log();
+
   const skills = await parseSkills(chronicle);
 
   let totalCategories = 0;
@@ -71,6 +75,7 @@ async function main() {
   console.log(`  Spawn rows:           ${spawns.length}`);
   console.log(`  Distinct spawn npcs:  ${distinctSpawnNpcIds}`);
   console.log(`  Recipes:              ${recipes.length}`);
+  console.log(`  Armor sets:           ${armorSets.length}`);
   console.log(`  Skills:               ${skills.length}`);
   console.log(`  Completed in ${elapsed}s`);
 }

@@ -46,6 +46,7 @@ Requesting an unknown chronicle returns **404**.
 | GET | `/api/[chronicle]/monsters` | List monsters (filtered NPC subset) |
 | GET | `/api/[chronicle]/monsters/[id]` | Single monster by id |
 | GET | `/api/[chronicle]/drops/npc/[id]` | Enriched drops for an NPC (alternate path) |
+| GET | `/api/[chronicle]/armor-sets` | Full armor-set catalog (rich, single-shot) |
 | GET | `/api/[chronicle]/meta/npc-types` | Known npcType values + counts |
 | GET | `/api/[chronicle]/meta/item-types` | Known item type values + counts |
 | GET | `/api/[chronicle]/meta/item-grades` | Known item grade values + counts |
@@ -217,6 +218,57 @@ the referenced item id has been removed from the chronicle.
 
 If the requested NPC has no drops table at all, both endpoints return **404**.
 
+## Armor sets
+
+`GET /api/[chronicle]/armor-sets` returns the full armor-set catalog in
+one response — every set with its pieces, set bonus skill, and any
+shield / enchant-6 bonuses, all resolved up front so consumers don't
+need a second round-trip.
+
+There is no `/armor-sets/[id]` detail endpoint by design. Each set is
+also reachable from any of its pieces via `ItemDetailDto.partOfSets[]`
+— the embedded shape is identical to one entry of `data[]` here.
+
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "name": "Wooden Set",
+      "pieces": {
+        "chest": { "itemId": 23,   "name": "Wooden Breastplate", "iconFile": "armor_t06_u_i00.png" },
+        "legs":  { "itemId": 2386, "name": "Wooden Gaiters",     "iconFile": "armor_t06_l_i00.png" },
+        "head":  { "itemId": 43,   "name": "Wooden Helmet",      "iconFile": "armor_leather_helmet_i00.png" }
+      },
+      "bonusSkill": {
+        "id": 3500, "level": 1, "name": "Wooden Set",
+        "description": "Increases P. Def. and Max HP.",
+        "effects": [
+          { "op": "mul", "stat": "pDef",  "value": 1.02 },
+          { "op": "add", "stat": "maxHp", "value": 41 }
+        ],
+        "...": "..."
+      }
+    },
+    "..."
+  ],
+  "meta": { "total": 51, "limit": 51, "offset": 0 }
+}
+```
+
+| Field | Type | Notes |
+|---|---|---|
+| `id` | int | Synthetic position-based id (1..N over `armorSets.xml`). Stable while the source XML ordering is stable. |
+| `name` | string | Set name. **Not unique** — `"Mithril Robe Set"` collides; use `id` to disambiguate. |
+| `pieces` | object | `{ chest, legs?, head?, gloves?, feet? }`. `chest` is always present; other slots only when required. |
+| `bonusSkill` | object \| null | Main set bonus, fully resolved with `description` + parsed `effects[]`. |
+| `shield` | object | Present only when the set has a shield slot. Carries the shield piece + its own bonus skill. |
+| `enchant6BonusSkill` | object \| null | Present only when the set carries an enchant-6 bonus. |
+
+**No query params today.** Pagination, search, and sort are deferred until
+a consistent design lands across all list endpoints. The full catalog
+(51 sets on Interlude) ships in a single response.
+
 ## Meta endpoints
 
 Meta endpoints are introspection helpers for building filter UIs. All values
@@ -290,6 +342,9 @@ GET /api/interlude/npcs/22001/drops
 
 # Drops for an NPC (alternate path, identical response)
 GET /api/interlude/drops/npc/22001
+
+# Full armor-set catalog (rich, all 51 sets in one response)
+GET /api/interlude/armor-sets
 
 # Filter dropdowns: known npc types
 GET /api/interlude/meta/npc-types

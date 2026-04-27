@@ -1,7 +1,7 @@
 # Lineage 2 API
 
 A read-only HTTP API over Lineage 2 datapack content (items, NPCs, drop
-tables), built with Next.js (App Router) and served from generated JSON.
+tables, armor sets), built with Next.js (App Router) and served from generated JSON.
 Chronicle is part of every URL path so additional chronicles can be added in
 the future without endpoint changes.
 
@@ -20,7 +20,8 @@ the future without endpoint changes.
 
 ## What's in the box
 
-- Items, NPCs, and NPC drop tables exposed as JSON
+- Items, NPCs, NPC drop tables, and armor sets exposed as JSON
+- Armor-set context embedded into item-detail responses (every piece carries the full sets it belongs to)
 - Filtering, sorting, pagination
 - Introspection endpoints for filter dropdowns (npc types, item types, item grades)
 - Single in-memory cache per chronicle, built on first request
@@ -86,6 +87,7 @@ curl http://localhost:3000/api/interlude/items/57
 curl 'http://localhost:3000/api/interlude/items?type=weapon&grade=a&sort=name&limit=10'
 curl 'http://localhost:3000/api/interlude/monsters?npcType=GrandBoss&sort=-level'
 curl http://localhost:3000/api/interlude/npcs/22001/drops
+curl http://localhost:3000/api/interlude/armor-sets
 curl http://localhost:3000/api/interlude/meta/npc-types
 ```
 

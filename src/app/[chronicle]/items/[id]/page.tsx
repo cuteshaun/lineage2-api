@@ -350,7 +350,6 @@ export default async function ItemDetailsPage({
                 chronicle={chronicle}
                 set={set}
                 currentItemId={item.id}
-                linkToFullSet
               />
             ))}
           </div>

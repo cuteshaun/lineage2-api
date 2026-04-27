@@ -88,20 +88,16 @@ function splitNameAndBracket(rawName: string): {
  *
  * No internal labeled sub-headers ("Pieces (4)", "Set Bonus", …); the
  * structure carries the meaning. When `currentItemId` matches a piece,
- * that piece is amber-tinted with a "(this item)" marker. When
- * `linkToFullSet` is true, the set name is a link to the standalone
- * /armor-sets/[id] page.
+ * that piece is amber-tinted with a "(this item)" marker.
  */
 export function ArmorSetCard({
   chronicle,
   set,
   currentItemId,
-  linkToFullSet = false,
 }: {
   chronicle: string;
   set: ArmorSetDetailDto;
   currentItemId?: number;
-  linkToFullSet?: boolean;
 }) {
   const slotOrder: Array<keyof ArmorSetDetailDto["pieces"]> = [
     "head",
@@ -129,18 +125,9 @@ export function ArmorSetCard({
           decorative
         />
         <div className="flex min-w-0 flex-col gap-1">
-          {linkToFullSet ? (
-            <Link
-              href={`/${chronicle}/armor-sets/${set.id}`}
-              className="text-sm font-semibold text-zinc-900 hover:underline dark:text-zinc-100"
-            >
-              {set.name}
-            </Link>
-          ) : (
-            <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-              {set.name}
-            </span>
-          )}
+          <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+            {set.name}
+          </span>
           {set.bonusSkill?.description && (
             <span className="text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
               {set.bonusSkill.description}

@@ -4,6 +4,7 @@ import { isChronicle } from "@/lib/chronicles";
 import { apiFetch, apiFetchList } from "@/lib/api/client";
 import { ItemIcon } from "@/components/explorer/ItemIcon";
 import { ArmorSetCard } from "@/components/explorer/ArmorSetCard";
+import { ExchangeCard } from "@/components/explorer/ExchangeCard";
 import { PaginatedItemSourceTable } from "@/components/explorer/PaginatedItemSourceTable";
 import type { ItemDetailDto } from "@/lib/api/dto/item";
 import type { ItemSourceEntryDto } from "@/lib/api/dto/drops";
@@ -319,6 +320,48 @@ export default async function ItemDetailsPage({
                   {r.successRate}%
                 </span>
               </Link>
+            ))}
+          </div>
+        </Section>
+      )}
+
+      {item.exchangeFrom && item.exchangeFrom.length > 0 && (
+        <Section
+          title={
+            item.exchangeFrom.length === 1
+              ? "Exchange From"
+              : `Exchange From (${item.exchangeFrom.length})`
+          }
+        >
+          <div className="flex flex-col gap-3">
+            {item.exchangeFrom.map((ex, i) => (
+              <ExchangeCard
+                key={`from-${ex.multisellId}-${i}`}
+                chronicle={chronicle}
+                exchange={ex}
+                currentItemId={item.id}
+              />
+            ))}
+          </div>
+        </Section>
+      )}
+
+      {item.exchangeFor && item.exchangeFor.length > 0 && (
+        <Section
+          title={
+            item.exchangeFor.length === 1
+              ? "Exchange For"
+              : `Exchange For (${item.exchangeFor.length})`
+          }
+        >
+          <div className="flex flex-col gap-3">
+            {item.exchangeFor.map((ex, i) => (
+              <ExchangeCard
+                key={`for-${ex.multisellId}-${i}`}
+                chronicle={chronicle}
+                exchange={ex}
+                currentItemId={item.id}
+              />
             ))}
           </div>
         </Section>

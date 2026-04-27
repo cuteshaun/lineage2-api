@@ -7,6 +7,13 @@ import { resolveSkill, type SkillSummaryDto } from "./skill";
  * A piece reference inside an armor set — item id plus enough display
  * fields that consumers don't need a second round-trip to render the
  * piece. Mirrors the shape of `CraftingIngredientDto.{itemId,name,iconFile}`.
+ *
+ * Note on disambiguation: items that exist in multiple armor-type
+ * variants (e.g. "Tallum Boots") carry the variant in the `name`
+ * itself in source data, e.g. `"Tallum Boots - Heavy Armor"` /
+ * `"Tallum Boots - Light Armor"` / `"Tallum Boots - Robe"`. The DTO
+ * preserves the raw name; UIs typically parse the trailing
+ * ` - {Heavy Armor|Light Armor|Robe}` suffix into a bracket tag.
  */
 export interface ArmorSetPieceDto {
   itemId: number;

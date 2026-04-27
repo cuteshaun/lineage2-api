@@ -59,7 +59,7 @@ be `null` per type; the field itself is always emitted.
 | `baseWeaponId?: number` | Item is itself an SA variant; reverse link to its base |
 | `crafting?: CraftingInfoDto` | Item is a recipe scroll |
 | `craftedBy?: CraftedByDto[]` | Item is produced by one or more recipes |
-| `partOfSets?: ArmorSetListDto[]` | Item is listed as a piece in one or more armor sets. **Plural** — one item (Tallum Helmet 547) can belong to several sets (Heavy / Light / Robe). Order is the natural set-id order. Same shape as the list endpoint, so consumers can navigate to `/api/[chronicle]/armor-sets/{id}` for full detail. |
+| `partOfSets?: ArmorSetDetailDto[]` | Item is listed as a piece in one or more armor sets. **Plural** — one item (Tallum Helmet 547) can belong to several sets (Heavy / Light / Robe). Order is the natural set-id order. Each entry is the **full** armor-set detail (same shape as `GET /api/[chronicle]/armor-sets/{id}`) — pieces with icons, bonus skill resolved, optional shield + enchant6 bonuses — so consumers can render the set in place without a second round-trip. |
 | `specialAbilityOptions[].saveMechanic?` | Variant has `mp_consume_reduce` or `reduced_soulshot` in its raw `properties` |
 | `specialAbilityOptions[].statDelta?` | Variant is a Light (weight delta) or Quick Recovery (reuseDelay delta) SA |
 
@@ -145,7 +145,7 @@ Reference fixtures (`tests/__snapshots__/armor-sets.dto.snapshot.test.ts.snap`):
 
 ### Cross-link from `ItemDetailDto`
 
-Reverse direction is supported via `ItemDetailDto.partOfSets?: ArmorSetListDto[]`. Given an item id, you can read which sets it belongs to without scanning the full armor-sets list. See the `partOfSets` row in the optional-sections table above. Reference fixture: Tallum Helmet (id 547) renders three entries (Tallum Heavy / Light / Robe Sets).
+Reverse direction is supported via `ItemDetailDto.partOfSets?: ArmorSetDetailDto[]`. Given an item id, the response embeds the **full** detail of every set the item is a piece of — not a compact reference, the same shape returned by the standalone `/armor-sets/{id}` endpoint. UIs can render set bonuses + piece lists in place. Reference fixture: Tallum Helmet (id 547) renders three full set details (Tallum Heavy / Light / Robe Sets).
 
 ## Engine-rule fields (not derived from a single skill / item)
 

@@ -1126,19 +1126,240 @@ exports[`item 547 (Tallum Helmet) DTO matches snapshot 1`] = `
   "pDef": 69,
   "partOfSets": [
     {
+      "bonusSkill": {
+        "description": "Increases resistance to poison/bleeding attacks. Atk. Spd. and maximum weight limit are also increased. STR+2, CON-2.",
+        "effects": [
+          {
+            "op": "mul",
+            "stat": "pAtkSpd",
+            "value": 1.08,
+          },
+          {
+            "op": "add",
+            "stat": "maxLoad",
+            "value": 5759,
+          },
+          {
+            "op": "add",
+            "stat": "STR",
+            "value": 2,
+          },
+        ],
+        "iconFile": null,
+        "id": 3531,
+        "level": 1,
+        "name": "Tallum Heavy Armor Set",
+        "operateType": "OP_PASSIVE",
+        "power": null,
+        "skillType": "BUFF",
+        "target": "TARGET_SELF",
+      },
+      "enchant6BonusSkill": {
+        "description": "Increases P. Def. and MP regeneration by enchanting set items.",
+        "effects": [
+          {
+            "op": "add",
+            "stat": "pDef",
+            "value": 50,
+          },
+          {
+            "op": "add",
+            "stat": "regMp",
+            "value": 2,
+          },
+        ],
+        "iconFile": null,
+        "id": 3620,
+        "level": 1,
+        "name": "Enchant Heavy Armor (Grade A)",
+        "operateType": "OP_PASSIVE",
+        "power": null,
+        "skillType": "BUFF",
+        "target": "TARGET_SELF",
+      },
       "id": 34,
       "name": "Tallum Heavy Set",
-      "pieceCount": 4,
+      "pieces": {
+        "chest": {
+          "iconFile": "armor_t77_ul_i00.png",
+          "itemId": 2382,
+          "name": "Tallum Plate Armor",
+        },
+        "feet": {
+          "iconFile": "armor_t77_b_i00.png",
+          "itemId": 5780,
+          "name": "Tallum Boots - Heavy Armor",
+        },
+        "gloves": {
+          "iconFile": "armor_t77_g_i00.png",
+          "itemId": 5768,
+          "name": "Tallum Gloves - Heavy Armor",
+        },
+        "head": {
+          "iconFile": "armor_helmet_i00.png",
+          "itemId": 547,
+          "name": "Tallum Helm",
+        },
+      },
     },
     {
+      "bonusSkill": {
+        "description": "Increases resistance to poison/bleeding attacks. MP recovery rate and Max MP are also increased. MEN+2, WIT-2.",
+        "effects": [
+          {
+            "op": "mul",
+            "stat": "regMp",
+            "value": 1.08,
+          },
+          {
+            "op": "add",
+            "stat": "maxMp",
+            "value": 222,
+          },
+          {
+            "op": "add",
+            "stat": "MEN",
+            "value": 2,
+          },
+        ],
+        "iconFile": null,
+        "id": 3533,
+        "level": 1,
+        "name": "Tallum Light Armor Set",
+        "operateType": "OP_PASSIVE",
+        "power": null,
+        "skillType": "BUFF",
+        "target": "TARGET_SELF",
+      },
+      "enchant6BonusSkill": {
+        "description": "Increases M. Def. and Evasion by enchanting set items.",
+        "effects": [
+          {
+            "op": "add",
+            "stat": "rEvas",
+            "value": 2,
+          },
+          {
+            "op": "add",
+            "stat": "mDef",
+            "value": 28,
+          },
+        ],
+        "iconFile": null,
+        "id": 3621,
+        "level": 1,
+        "name": "Enchant Light Armor (Grade A)",
+        "operateType": "OP_PASSIVE",
+        "power": null,
+        "skillType": "BUFF",
+        "target": "TARGET_SELF",
+      },
       "id": 35,
       "name": "Tallum Light Set",
-      "pieceCount": 4,
+      "pieces": {
+        "chest": {
+          "iconFile": "armor_t78_ul_i00.png",
+          "itemId": 2393,
+          "name": "Tallum Leather Armor",
+        },
+        "feet": {
+          "iconFile": "armor_t78_b_i00.png",
+          "itemId": 5781,
+          "name": "Tallum Boots - Light Armor",
+        },
+        "gloves": {
+          "iconFile": "armor_t78_g_i00.png",
+          "itemId": 5769,
+          "name": "Tallum Gloves - Light Armor",
+        },
+        "head": {
+          "iconFile": "armor_helmet_i00.png",
+          "itemId": 547,
+          "name": "Tallum Helm",
+        },
+      },
     },
     {
+      "bonusSkill": {
+        "description": "Increases resistance to poison/bleeding attacks. Casting Spd. and M. Def. are also increased. INT-2, WIT+2.",
+        "effects": [
+          {
+            "op": "mul",
+            "stat": "mAtkSpd",
+            "value": 1.15,
+          },
+          {
+            "op": "mul",
+            "stat": "mDef",
+            "value": 1.08,
+          },
+          {
+            "op": "add",
+            "stat": "WIT",
+            "value": 2,
+          },
+        ],
+        "iconFile": null,
+        "id": 3534,
+        "level": 1,
+        "name": "Tallum Robe Set",
+        "operateType": "OP_PASSIVE",
+        "power": null,
+        "skillType": "BUFF",
+        "target": "TARGET_SELF",
+      },
+      "enchant6BonusSkill": {
+        "description": "Increases P. Def. and weight capacity by enchanting set items.",
+        "effects": [
+          {
+            "op": "mul",
+            "stat": "maxLoad",
+            "value": 1.3,
+          },
+          {
+            "op": "add",
+            "stat": "pDef",
+            "value": 32,
+          },
+        ],
+        "iconFile": null,
+        "id": 3622,
+        "level": 1,
+        "name": "Enchant Robe (Grade A)",
+        "operateType": "OP_PASSIVE",
+        "power": null,
+        "skillType": "BUFF",
+        "target": "TARGET_SELF",
+      },
       "id": 36,
       "name": "Tallum Robe Set",
-      "pieceCount": 5,
+      "pieces": {
+        "chest": {
+          "iconFile": "armor_t79_u_i00.png",
+          "itemId": 2400,
+          "name": "Tallum Tunic",
+        },
+        "feet": {
+          "iconFile": "armor_t79_b_i00.png",
+          "itemId": 5782,
+          "name": "Tallum Boots - Robe",
+        },
+        "gloves": {
+          "iconFile": "armor_t79_g_i00.png",
+          "itemId": 5770,
+          "name": "Tallum Gloves - Robe",
+        },
+        "head": {
+          "iconFile": "armor_helmet_i00.png",
+          "itemId": 547,
+          "name": "Tallum Helm",
+        },
+        "legs": {
+          "iconFile": "armor_t79_l_i00.png",
+          "itemId": 2405,
+          "name": "Tallum Stockings",
+        },
+      },
     },
   ],
   "price": 1740000,

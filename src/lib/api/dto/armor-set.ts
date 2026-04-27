@@ -1,8 +1,7 @@
 import type { Chronicle } from "../../chronicles";
 import type { ArmorSet } from "../../types";
 import { getItemById } from "../../data/indexes";
-import type { SkillSummaryDto } from "./item";
-import { resolveSkill } from "./item";
+import { resolveSkill, type SkillSummaryDto } from "./skill";
 
 /**
  * A piece reference inside an armor set — item id plus enough display

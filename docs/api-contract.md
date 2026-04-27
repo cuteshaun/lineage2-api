@@ -109,6 +109,40 @@ Applied inside `resolveSkill` ([`src/lib/api/dto/item.ts`](../src/lib/api/dto/it
 - **Description text** — `"none"` (engine placeholder) collapses to `null`. Trailing PvP-clause patterns (e.g. `"… Increases damage inflicted during PvP."`) are stripped to keep the player-facing text clean.
 - **DRAIN derivation** — when a skill has `skillType="DRAIN"` and `power != null` and no usable description, we synthesize `"During a critical attack, absorbs {power} HP from target."` (with `power` rounded the same way as `add` effect values). No other skill types are derived; we leave them unresolved per the "no fabrication" rule.
 
+## `ArmorSetListDto` — stable fields (`GET /api/[chronicle]/armor-sets`)
+
+| Field | Type | Notes |
+|---|---|---|
+| `id` | number | Synthetic position-based id assigned at parse time (1..N over `armorSets.xml`). Stable as long as the source XML order is stable. |
+| `name` | string | Set name from XML. **Not unique** — `"Mithril Robe Set"` collides; consumers should use `id`, not `name`, to disambiguate. |
+| `pieceCount` | number | Number of equipment slots required by this set (1..5). `chest` is always present, so always `>= 1`. |
+
+List endpoint accepts `q` (case-insensitive name substring), `limit` (default 50, max 200), `offset`. No sort param yet.
+
+## `ArmorSetDetailDto` — stable fields (`GET /api/[chronicle]/armor-sets/[id]`)
+
+| Field | Type | Notes |
+|---|---|---|
+| `id` | number | Same synthetic id as the list shape. |
+| `name` | string | Same as the list shape. |
+| `pieces` | `{ chest, legs?, head?, gloves?, feet? }` | Each piece is `{ itemId, name, iconFile }` (mirrors `CraftingIngredientDto`). `chest` is always present; other slots are present only when required by the set (XML `0` sentinels are dropped). |
+| `bonusSkill` | `SkillSummaryDto \| null` | Main set bonus, fully resolved with description + effects. `null` only when the skill ref fails to resolve (defensive — not expected in current data). |
+| `shield?` | `{ piece, bonusSkill }` | Present only for sets with a shield slot. `piece` is an `ArmorSetPieceDto`; `bonusSkill` is a `SkillSummaryDto \| null` (same nullability semantics as the main `bonusSkill`). |
+| `enchant6BonusSkill?` | `SkillSummaryDto \| null` | Present only when the set carries an enchant-6 bonus. Same skill-summary shape with description + effects. |
+
+Reference fixtures (`tests/__snapshots__/armor-sets.dto.snapshot.test.ts.snap`):
+- **Wooden Set** — smallest (chest + legs + head only, no shield, no enchant6).
+- **Tallum Heavy Set** — mid-complexity (4 pieces, no shield, with enchant6).
+- **Avadon Heavy Set** — full (5 pieces + shield bonus + enchant6).
+- **Major Arcana Set** — caster (4 pieces, no shield, with enchant6).
+- **Imperial Crusader Set** — largest (5 pieces + shield + enchant6).
+
+### What deliberately is NOT on `ArmorSetDetailDto`
+
+- **`partOfSets[]` reverse link from `ItemDetailDto`** — Phase 3 follow-up. Today, given an item id, you cannot directly look up the sets it belongs to via the API; you'd walk the armor-sets list. This is intentional for the first iteration.
+- **Partial-set tier bonuses** — the engine doesn't carry them in `armorSets.xml`. Bonuses are all-or-nothing.
+- **Player-facing labels for set-specific stats** like `maxLoad`, `STR`, `DEX`, `WIT`, `MEN`, `runSpd` — these are exposed in `bonusSkill.effects[]` with raw stat keys; UI labeling is not part of the API contract.
+
 ## Engine-rule fields (not derived from a single skill / item)
 
 - **`pvpBonus`** — applied to every A/S-grade weapon with SA variants. Encodes the soul-crystal augmentation rule rather than per-variant data. Always `{ damageMultiplier: 1.05, display: "+5% PvP Damage" }` when present.

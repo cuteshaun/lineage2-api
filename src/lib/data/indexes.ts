@@ -1,5 +1,13 @@
 import type { Chronicle } from "../chronicles";
-import type { Item, Npc, NpcDrops, Recipe, Skill, Spawn } from "../types";
+import type {
+  ArmorSet,
+  Item,
+  Npc,
+  NpcDrops,
+  Recipe,
+  Skill,
+  Spawn,
+} from "../types";
 import { loadChronicleDataset } from "./loaders";
 import { buildCleanedNpcs } from "./cleaned-npcs";
 
@@ -74,6 +82,10 @@ interface ChronicleIndexes {
   recipeByRecipeItemId: Map<number, Recipe>;
   /** Recipes that produce a given product item id. */
   recipesByProductItemId: Map<number, Recipe[]>;
+  /** All parsed armor sets (sorted by synthetic id ascending). */
+  armorSets: ArmorSet[];
+  /** Armor-set lookup by synthetic id. */
+  armorSetsById: Map<number, ArmorSet>;
   /** Skill lookup by `"${id}-${level}"` key (matches `itemSkill` format). */
   skillByKey: Map<string, Skill>;
 }
@@ -355,6 +367,12 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
     list.push(r);
   }
 
+  // Armor-set indexes
+  const armorSetsById = new Map<number, ArmorSet>();
+  for (const set of dataset.armorSets) {
+    armorSetsById.set(set.id, set);
+  }
+
   // Skill index
   const skillByKey = new Map<string, Skill>();
   for (const s of dataset.skills) {
@@ -387,6 +405,8 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
     recipes: dataset.recipes,
     recipeByRecipeItemId,
     recipesByProductItemId,
+    armorSets: dataset.armorSets,
+    armorSetsById,
     skillByKey,
   };
 }
@@ -819,4 +839,37 @@ export function getSkillByKey(
   key: string
 ): Skill | undefined {
   return getChronicleIndexes(chronicle).skillByKey.get(key);
+}
+
+// --- Armor-set lookups ---
+
+export interface ArmorSetListOptions {
+  q?: string | null;
+  limit: number;
+  offset: number;
+}
+
+/** Returns an armor set by its synthetic id, or `undefined`. */
+export function getArmorSetById(
+  chronicle: Chronicle,
+  id: number
+): ArmorSet | undefined {
+  return getChronicleIndexes(chronicle).armorSetsById.get(id);
+}
+
+/**
+ * Returns paginated armor sets, optionally filtered by case-insensitive
+ * name substring (`q`). Total reflects the filtered count.
+ */
+export function getArmorSets(
+  chronicle: Chronicle,
+  options: ArmorSetListOptions
+): ListResult<ArmorSet> {
+  const all = getChronicleIndexes(chronicle).armorSets;
+  const q = options.q?.trim().toLowerCase() || null;
+  const filtered = q ? all.filter((s) => matchesQuery(s.name, q)) : all;
+  return {
+    data: paginate(filtered, options.limit, options.offset),
+    total: filtered.length,
+  };
 }

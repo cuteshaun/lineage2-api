@@ -291,7 +291,7 @@ function roundEffectValue(
   return Number(value.toFixed(1));
 }
 
-function resolveSkill(
+export function resolveSkill(
   chronicle: Chronicle,
   itemSkill: string | null
 ): SkillSummaryDto | undefined {

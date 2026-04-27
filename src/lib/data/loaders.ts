@@ -2,7 +2,15 @@ import fs from "node:fs";
 import path from "node:path";
 import { getChronicleDataConfig } from "../chronicle-config";
 import type { Chronicle } from "../chronicles";
-import type { Item, Npc, NpcDrops, Recipe, Skill, Spawn } from "../types";
+import type {
+  ArmorSet,
+  Item,
+  Npc,
+  NpcDrops,
+  Recipe,
+  Skill,
+  Spawn,
+} from "../types";
 
 interface ChronicleDataset {
   items: Item[];
@@ -10,6 +18,7 @@ interface ChronicleDataset {
   drops: NpcDrops[];
   spawns: Spawn[];
   recipes: Recipe[];
+  armorSets: ArmorSet[];
   skills: Skill[];
 }
 
@@ -44,6 +53,9 @@ export function loadChronicleDataset(chronicle: Chronicle): ChronicleDataset {
     drops: readJson<NpcDrops[]>(path.join(config.generatedDir, "drops.json")),
     spawns: readJson<Spawn[]>(path.join(config.generatedDir, "spawns.json")),
     recipes: readJson<Recipe[]>(path.join(config.generatedDir, "recipes.json")),
+    armorSets: readJson<ArmorSet[]>(
+      path.join(config.generatedDir, "armor-sets.json")
+    ),
     skills: readJson<Skill[]>(path.join(config.generatedDir, "skills.json")),
   };
 

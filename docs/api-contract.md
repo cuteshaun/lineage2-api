@@ -59,6 +59,7 @@ be `null` per type; the field itself is always emitted.
 | `baseWeaponId?: number` | Item is itself an SA variant; reverse link to its base |
 | `crafting?: CraftingInfoDto` | Item is a recipe scroll |
 | `craftedBy?: CraftedByDto[]` | Item is produced by one or more recipes |
+| `partOfSets?: ArmorSetListDto[]` | Item is listed as a piece in one or more armor sets. **Plural** — one item (Tallum Helmet 547) can belong to several sets (Heavy / Light / Robe). Order is the natural set-id order. Same shape as the list endpoint, so consumers can navigate to `/api/[chronicle]/armor-sets/{id}` for full detail. |
 | `specialAbilityOptions[].saveMechanic?` | Variant has `mp_consume_reduce` or `reduced_soulshot` in its raw `properties` |
 | `specialAbilityOptions[].statDelta?` | Variant is a Light (weight delta) or Quick Recovery (reuseDelay delta) SA |
 
@@ -139,9 +140,12 @@ Reference fixtures (`tests/__snapshots__/armor-sets.dto.snapshot.test.ts.snap`):
 
 ### What deliberately is NOT on `ArmorSetDetailDto`
 
-- **`partOfSets[]` reverse link from `ItemDetailDto`** — Phase 3 follow-up. Today, given an item id, you cannot directly look up the sets it belongs to via the API; you'd walk the armor-sets list. This is intentional for the first iteration.
 - **Partial-set tier bonuses** — the engine doesn't carry them in `armorSets.xml`. Bonuses are all-or-nothing.
 - **Player-facing labels for set-specific stats** like `maxLoad`, `STR`, `DEX`, `WIT`, `MEN`, `runSpd` — these are exposed in `bonusSkill.effects[]` with raw stat keys; UI labeling is not part of the API contract.
+
+### Cross-link from `ItemDetailDto`
+
+Reverse direction is supported via `ItemDetailDto.partOfSets?: ArmorSetListDto[]`. Given an item id, you can read which sets it belongs to without scanning the full armor-sets list. See the `partOfSets` row in the optional-sections table above. Reference fixture: Tallum Helmet (id 547) renders three entries (Tallum Heavy / Light / Robe Sets).
 
 ## Engine-rule fields (not derived from a single skill / item)
 

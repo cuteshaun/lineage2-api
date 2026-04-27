@@ -1100,6 +1100,61 @@ exports[`item 305 (Tallum Glaive) DTO matches snapshot 1`] = `
 }
 `;
 
+exports[`item 547 (Tallum Helmet) DTO matches snapshot 1`] = `
+{
+  "accCombat": null,
+  "armorType": null,
+  "bodypart": "Helmet",
+  "crystalCount": 139,
+  "etcItemType": null,
+  "grade": "a",
+  "iconFile": "armor_helmet_i00.png",
+  "id": 547,
+  "isDropable": null,
+  "isMagical": null,
+  "isSellable": null,
+  "isStackable": null,
+  "isTradable": null,
+  "itemSkill": null,
+  "mAtk": null,
+  "mDef": null,
+  "material": "CLOTH",
+  "mpConsume": null,
+  "name": "Tallum Helm",
+  "pAtk": null,
+  "pAtkSpd": null,
+  "pDef": 69,
+  "partOfSets": [
+    {
+      "id": 34,
+      "name": "Tallum Heavy Set",
+      "pieceCount": 4,
+    },
+    {
+      "id": 35,
+      "name": "Tallum Light Set",
+      "pieceCount": 4,
+    },
+    {
+      "id": 36,
+      "name": "Tallum Robe Set",
+      "pieceCount": 5,
+    },
+  ],
+  "price": 1740000,
+  "rCrit": null,
+  "rEvas": null,
+  "rShld": null,
+  "reuseDelay": null,
+  "sDef": null,
+  "soulshots": null,
+  "spiritshots": null,
+  "type": "armor",
+  "weaponType": null,
+  "weight": 570,
+}
+`;
+
 exports[`item 6367 (Angel Slayer) DTO matches snapshot 1`] = `
 {
   "accCombat": 3,

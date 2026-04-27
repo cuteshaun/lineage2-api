@@ -86,6 +86,12 @@ interface ChronicleIndexes {
   armorSets: ArmorSet[];
   /** Armor-set lookup by synthetic id. */
   armorSetsById: Map<number, ArmorSet>;
+  /**
+   * Reverse lookup: itemId → every `ArmorSet` that lists the item as a
+   * piece. N:M relationship — a single helmet (e.g. Tallum Helmet `547`)
+   * belongs to all three Tallum sets (Heavy / Light / Robe).
+   */
+  armorSetsByItemId: Map<number, ArmorSet[]>;
   /** Skill lookup by `"${id}-${level}"` key (matches `itemSkill` format). */
   skillByKey: Map<string, Skill>;
 }
@@ -369,8 +375,26 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
 
   // Armor-set indexes
   const armorSetsById = new Map<number, ArmorSet>();
+  const armorSetsByItemId = new Map<number, ArmorSet[]>();
   for (const set of dataset.armorSets) {
     armorSetsById.set(set.id, set);
+    const slotIds = [
+      set.pieces.chest,
+      set.pieces.legs,
+      set.pieces.head,
+      set.pieces.gloves,
+      set.pieces.feet,
+      set.shield?.itemId,
+    ];
+    for (const itemId of slotIds) {
+      if (itemId == null) continue;
+      let list = armorSetsByItemId.get(itemId);
+      if (!list) {
+        list = [];
+        armorSetsByItemId.set(itemId, list);
+      }
+      list.push(set);
+    }
   }
 
   // Skill index
@@ -407,6 +431,7 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
     recipesByProductItemId,
     armorSets: dataset.armorSets,
     armorSetsById,
+    armorSetsByItemId,
     skillByKey,
   };
 }
@@ -872,4 +897,19 @@ export function getArmorSets(
     data: paginate(filtered, options.limit, options.offset),
     total: filtered.length,
   };
+}
+
+/**
+ * Returns every armor set that lists the given item id as a piece (chest /
+ * legs / head / gloves / feet / shield). Empty array when the item is in
+ * no set. N:M by design — Tallum Helmet (547) returns three sets (Tallum
+ * Heavy / Light / Robe). Order is the natural set-id order.
+ */
+export function getArmorSetsByItemId(
+  chronicle: Chronicle,
+  itemId: number
+): ArmorSet[] {
+  return (
+    getChronicleIndexes(chronicle).armorSetsByItemId.get(itemId) ?? []
+  );
 }

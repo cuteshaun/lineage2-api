@@ -23,6 +23,8 @@ import { getItemById } from "@/lib/data/indexes";
  * - oncast trigger on a magic weapon (Branch of The Mother Tree)
  * - Beginner-gear with no SA mechanic (Falchion)
  * - Magical S-grade with regHp/regMp fractional rounding (Arcana Mace)
+ * - Armor piece with N:M `partOfSets` cross-link (Tallum Helmet — id 547,
+ *   member of three Tallum sets: Heavy / Light / Robe)
  */
 const REPRESENTATIVE_ITEMS: Array<{ id: number; name: string }> = [
   { id: 6367, name: "Angel Slayer" },
@@ -37,6 +39,7 @@ const REPRESENTATIVE_ITEMS: Array<{ id: number; name: string }> = [
   { id: 68, name: "Falchion" },
   { id: 6579, name: "Arcana Mace" },
   { id: 305, name: "Tallum Glaive" },
+  { id: 547, name: "Tallum Helmet" },
 ];
 
 for (const { id, name } of REPRESENTATIVE_ITEMS) {

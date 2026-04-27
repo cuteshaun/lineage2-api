@@ -1,6 +1,7 @@
 import type { Chronicle } from "../../chronicles";
-import type { Item, SkillEffect } from "../../types";
+import type { ArmorSet, Item, SkillEffect } from "../../types";
 import {
+  getArmorSetsByItemId,
   getItemById,
   getSaVariants,
   getSaBaseWeaponId,
@@ -8,6 +9,7 @@ import {
   getRecipesByProductId,
   getSkillByKey,
 } from "../../data/indexes";
+import type { ArmorSetListDto } from "./armor-set";
 
 export interface SkillSummaryDto {
   id: number;
@@ -135,6 +137,12 @@ export interface ItemDetailDto {
   baseWeaponId?: number;
   crafting?: CraftingInfoDto;
   craftedBy?: CraftedByDto[];
+  /**
+   * Every armor set that lists this item as a piece. Plural by design —
+   * one item (e.g. Tallum Helmet) can belong to several sets (Heavy /
+   * Light / Robe). Omitted when the item is in no set.
+   */
+  partOfSets?: ArmorSetListDto[];
 }
 
 const BODYPART_LABELS: Record<string, string> = {
@@ -480,5 +488,33 @@ export function toItemDetailDto(
     dto.craftedBy = entries;
   }
 
+  // Reverse cross-link: every armor set that lists this item as a piece.
+  // Same compact shape as `ArmorSetListDto` from the armor-sets list
+  // endpoint, so consumers can navigate `/api/.../armor-sets/{id}` for
+  // the full detail. Plural — Tallum Helmet (547) belongs to 3 sets.
+  const partOfSets = getArmorSetsByItemId(chronicle, item.id);
+  if (partOfSets.length > 0) {
+    dto.partOfSets = partOfSets.map(toArmorSetListDtoInline);
+  }
+
   return dto;
+}
+
+/**
+ * Inline copy of `toArmorSetListDto` to avoid an import cycle between
+ * `item.ts` and `armor-set.ts` (the latter imports `resolveSkill` from
+ * here). The shape is dead simple (id / name / pieceCount) — drift risk
+ * is negligible. If the shape ever grows, factor it into a shared util.
+ */
+function toArmorSetListDtoInline(set: ArmorSet): ArmorSetListDto {
+  let pieceCount = 1; // chest is always present
+  if (set.pieces.legs != null) pieceCount++;
+  if (set.pieces.head != null) pieceCount++;
+  if (set.pieces.gloves != null) pieceCount++;
+  if (set.pieces.feet != null) pieceCount++;
+  return {
+    id: set.id,
+    name: set.name,
+    pieceCount,
+  };
 }

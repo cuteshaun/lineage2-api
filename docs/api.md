@@ -36,20 +36,50 @@ Requesting an unknown chronicle returns **404**.
 
 ## Endpoint summary
 
+### Items
+
 | Method | Path | Description |
 |---|---|---|
 | GET | `/api/[chronicle]/items` | List items (filter, sort, paginate) |
-| GET | `/api/[chronicle]/items/[id]` | Single item by id |
-| GET | `/api/[chronicle]/npcs` | List NPCs (filter, sort, paginate) |
-| GET | `/api/[chronicle]/npcs/[id]` | Single NPC by id |
-| GET | `/api/[chronicle]/npcs/[id]/drops` | Enriched drops for an NPC (REST style) |
-| GET | `/api/[chronicle]/monsters` | List monsters (filtered NPC subset) |
-| GET | `/api/[chronicle]/monsters/[id]` | Single monster by id |
-| GET | `/api/[chronicle]/drops/npc/[id]` | Enriched drops for an NPC (alternate path) |
-| GET | `/api/[chronicle]/armor-sets` | Full armor-set catalog (rich, single-shot) |
-| GET | `/api/[chronicle]/meta/npc-types` | Known npcType values + counts |
+| GET | `/api/[chronicle]/items/[id]` | Single item by id (enriched: skill, SA, recipes, partOfSets) |
+| GET | `/api/[chronicle]/items/[id]/dropped-by` | NPCs that drop this item (paginated) |
+| GET | `/api/[chronicle]/items/[id]/spoiled-by` | NPCs that spoil this item (paginated) |
+
+### NPCs / monsters (cleaned layer — default)
+
+| Method | Path | Description |
+|---|---|---|
+| GET | `/api/[chronicle]/npcs` | List cleaned NPCs (one record per unique name) |
+| GET | `/api/[chronicle]/npcs/[id]` | Single cleaned NPC; accepts canonical or any merged raw id |
+| GET | `/api/[chronicle]/npcs/[id]/drops` | Aggregated drops for the cleaned NPC |
+| GET | `/api/[chronicle]/npcs/[id]/spawns` | Aggregated spawn points for the cleaned NPC |
+| GET | `/api/[chronicle]/monsters` | List monsters (cleaned NPC subset) |
+| GET | `/api/[chronicle]/monsters/[id]` | Single monster by cleaned id |
+| GET | `/api/[chronicle]/drops/npc/[id]` | Aggregated drops (alternate path, identical response) |
+
+### NPCs / monsters (raw layer — source-faithful)
+
+| Method | Path | Description |
+|---|---|---|
+| GET | `/api/[chronicle]/raw/npcs` | List every raw NPC row (no name dedup) |
+| GET | `/api/[chronicle]/raw/npcs/[id]` | Single raw NPC by source id |
+| GET | `/api/[chronicle]/raw/monsters` | Raw monster subset |
+| GET | `/api/[chronicle]/raw/monsters/[id]` | Single raw monster by source id |
+| GET | `/api/[chronicle]/raw/monsters/[id]/spawns` | Raw spawns for a single source id (no aggregation) |
+
+### Armor sets
+
+| Method | Path | Description |
+|---|---|---|
+| GET | `/api/[chronicle]/armor-sets` | Full armor-set catalog (rich, single-shot — no detail endpoint) |
+
+### Meta (filter dropdowns)
+
+| Method | Path | Description |
+|---|---|---|
+| GET | `/api/[chronicle]/meta/npc-types` | Known npcType values + counts (with `isMonster` flag) |
 | GET | `/api/[chronicle]/meta/item-types` | Known item type values + counts |
-| GET | `/api/[chronicle]/meta/item-grades` | Known item grade values + counts |
+| GET | `/api/[chronicle]/meta/item-grades` | Known item grade values + counts (Lineage rank order) |
 
 ## Response shapes
 
@@ -121,6 +151,29 @@ Allowed: `id`, `-id`, `name`, `-name`, `grade`, `-grade`
 > order (`none → d → c → b → a → s`), not alphabetical. `sort=-grade` is the
 > reverse.
 
+## Item details
+
+`GET /api/[chronicle]/items/[id]` returns the full item detail. On top of
+the base fields (id, name, type, grade, combat stats, weapon/armor
+properties), the response carries optional sections that are only emitted
+when applicable:
+
+| Section | Present when |
+|---|---|
+| `skill` | Item has a non-null `itemSkill` reference that resolves |
+| `specialAbilityOptions` | Base weapon has at least one SA variant grouped under it |
+| `pvpBonus` | Base weapon is A/S-grade **and** has SA variants — encodes the soul-crystal `+5% PvP Damage` engine rule |
+| `baseWeaponId` | Item is itself an SA variant; reverse link to its base |
+| `crafting` | Item is a recipe scroll |
+| `craftedBy` | Item is produced by one or more recipes |
+| `partOfSets` | Item is a piece of one or more armor sets — embeds the **full** `ArmorSetDetailDto[]` so consumers can render set context in place |
+
+The full field-level contract lives in
+[`docs/api-contract.md`](./api-contract.md), mechanically locked by the
+snapshot suite at `tests/items.snapshot.test.ts`. The
+representative-items list there is the authoritative reference for which
+enrichment paths are exercised.
+
 ### `/npcs` filters
 
 | Param | Type | Notes |
@@ -153,6 +206,19 @@ HalishaChest, Monster, PenaltyMonster, RaidBoss, RiftInvader, TamedBeast
 Passing a non-monster `npcType` (e.g. `Folk`) returns **400**.
 
 Sort options are identical to `/npcs`.
+
+## Cleaned vs raw NPC layer
+
+The NPC dataset is exposed in two parallel layers:
+
+| Layer | Routes | Behavior |
+|---|---|---|
+| **cleaned** (default) | `/npcs`, `/npcs/[id]`, `/npcs/[id]/drops`, `/npcs/[id]/spawns`, `/monsters`, `/monsters/[id]` | One record per unique name. Drops + spawns aggregated across every merged raw id, deduped on `(category, itemId, min, max, chance)` for drops and on the full position tuple for spawns. `[id]` accepts either the canonical id or any merged raw id. |
+| **raw** (`/raw/...`) | `/raw/npcs`, `/raw/npcs/[id]`, `/raw/monsters`, `/raw/monsters/[id]`, `/raw/monsters/[id]/spawns` | Source-faithful. Every raw row preserved. No name dedup, no aggregation. Each row carries `mergedIds=[id]` and `mergedCount=1` for shape uniformity with the cleaned layer. |
+
+Use the cleaned layer for player-facing browsing (no duplicate "Grim Wolf"
+rows). Use the raw layer when you need engine-level fidelity — e.g.
+debugging spawn or drop differences across NPC variants that share a name.
 
 ## Drops endpoints
 
@@ -217,6 +283,61 @@ Pick whichever fits your client. Both routes share one implementation.
 the referenced item id has been removed from the chronicle.
 
 If the requested NPC has no drops table at all, both endpoints return **404**.
+
+### Reverse lookups (`/items/[id]/dropped-by`, `/items/[id]/spoiled-by`)
+
+Given an item id, list every cleaned NPC that drops or spoils it.
+
+- `dropped-by` covers normal drop categories (`category != -1`).
+- `spoiled-by` covers spoil entries (`category == -1`).
+
+Identical drop tuples that appear under multiple categories on the same
+NPC collapse into one row with a `rollCount` reflecting how many
+categories contributed.
+
+```json
+{
+  "data": [
+    {
+      "npc": { "id": 22001, "name": "Grim Wolf", "type": "Monster", "level": 19 },
+      "entry": { "min": 1, "max": 1, "chance": 166, "category": 1 },
+      "rollCount": 1
+    }
+  ],
+  "meta": { "total": 12, "limit": 25, "offset": 0 }
+}
+```
+
+Both endpoints accept the standard `limit` / `offset` pagination params
+(default `limit` is **25**, not 50).
+
+## Spawn endpoints
+
+| Path | Layer | Behavior |
+|---|---|---|
+| `/api/[chronicle]/npcs/[id]/spawns` | cleaned | Aggregated across merged ids; deduped on full position tuple |
+| `/api/[chronicle]/raw/monsters/[id]/spawns` | raw | Source-faithful, single id, no aggregation |
+
+Both return `{ data: Spawn[] }`. An NPC that exists but has no
+`spawnlist` rows returns **200** with an empty array; **404** is reserved
+for unknown ids.
+
+```json
+{
+  "data": [
+    {
+      "npcId":         22001,
+      "x":             12345,
+      "y":             -67890,
+      "z":             -3500,
+      "heading":       16384,
+      "respawnDelay":  60,
+      "respawnRandom": 0,
+      "periodOfDay":   0
+    }
+  ]
+}
+```
 
 ## Armor sets
 
@@ -343,6 +464,18 @@ GET /api/interlude/npcs/22001/drops
 # Drops for an NPC (alternate path, identical response)
 GET /api/interlude/drops/npc/22001
 
+# Reverse lookup: NPCs that drop a given item
+GET /api/interlude/items/391/dropped-by
+
+# Reverse lookup: NPCs that spoil a given item
+GET /api/interlude/items/1806/spoiled-by
+
+# Spawn coordinates for a cleaned NPC
+GET /api/interlude/npcs/22001/spawns
+
+# Raw NPC list — source-faithful, no name dedup
+GET /api/interlude/raw/npcs?levelMin=20&levelMax=25
+
 # Full armor-set catalog (rich, all 51 sets in one response)
 GET /api/interlude/armor-sets
 
@@ -368,3 +501,11 @@ GET /api/interlude/meta/item-grades
   request and cached in memory; ID lookups, list filters, and meta summaries
   all read from the cached indexes.
 - **Response headers:** all routes set `Cache-Control: public, max-age=86400`.
+
+## Related documents
+
+- [`api-contract.md`](./api-contract.md) — DTO field-level stability
+  contract: which fields are stable, normalization / rounding rules,
+  and the snapshot suite that mechanically locks them.
+- [`README.md`](../README.md) — project overview, build/run instructions,
+  and how to add a new chronicle.

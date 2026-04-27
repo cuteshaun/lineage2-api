@@ -84,8 +84,6 @@ interface ChronicleIndexes {
   recipesByProductItemId: Map<number, Recipe[]>;
   /** All parsed armor sets (sorted by synthetic id ascending). */
   armorSets: ArmorSet[];
-  /** Armor-set lookup by synthetic id. */
-  armorSetsById: Map<number, ArmorSet>;
   /**
    * Reverse lookup: itemId → every `ArmorSet` that lists the item as a
    * piece. N:M relationship — a single helmet (e.g. Tallum Helmet `547`)
@@ -373,11 +371,13 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
     list.push(r);
   }
 
-  // Armor-set indexes
-  const armorSetsById = new Map<number, ArmorSet>();
+  // Armor-set indexes. `armorSets` is the catalog list (rendered by the
+  // `/armor-sets` endpoint with full detail). `armorSetsByItemId` is the
+  // reverse index used by `ItemDetailDto.partOfSets`. We deliberately
+  // skip an id-keyed map — there is no detail endpoint, and the catalog
+  // is shipped in one round-trip.
   const armorSetsByItemId = new Map<number, ArmorSet[]>();
   for (const set of dataset.armorSets) {
-    armorSetsById.set(set.id, set);
     const slotIds = [
       set.pieces.chest,
       set.pieces.legs,
@@ -430,7 +430,6 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
     recipeByRecipeItemId,
     recipesByProductItemId,
     armorSets: dataset.armorSets,
-    armorSetsById,
     armorSetsByItemId,
     skillByKey,
   };
@@ -868,35 +867,14 @@ export function getSkillByKey(
 
 // --- Armor-set lookups ---
 
-export interface ArmorSetListOptions {
-  q?: string | null;
-  limit: number;
-  offset: number;
-}
-
-/** Returns an armor set by its synthetic id, or `undefined`. */
-export function getArmorSetById(
-  chronicle: Chronicle,
-  id: number
-): ArmorSet | undefined {
-  return getChronicleIndexes(chronicle).armorSetsById.get(id);
-}
-
 /**
- * Returns paginated armor sets, optionally filtered by case-insensitive
- * name substring (`q`). Total reflects the filtered count.
+ * Returns every armor set for the chronicle, in synthetic-id order. Used
+ * by the catalog endpoint (`GET /api/[chronicle]/armor-sets`) — there is
+ * no detail endpoint, so callers either consume the catalog in full or
+ * walk through `ItemDetailDto.partOfSets[]` from a piece.
  */
-export function getArmorSets(
-  chronicle: Chronicle,
-  options: ArmorSetListOptions
-): ListResult<ArmorSet> {
-  const all = getChronicleIndexes(chronicle).armorSets;
-  const q = options.q?.trim().toLowerCase() || null;
-  const filtered = q ? all.filter((s) => matchesQuery(s.name, q)) : all;
-  return {
-    data: paginate(filtered, options.limit, options.offset),
-    total: filtered.length,
-  };
+export function getAllArmorSets(chronicle: Chronicle): ArmorSet[] {
+  return getChronicleIndexes(chronicle).armorSets;
 }
 
 /**

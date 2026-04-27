@@ -15,18 +15,7 @@ export interface ArmorSetPieceDto {
 }
 
 /**
- * Compact summary used by the list endpoint. `pieceCount` reflects the
- * number of equipment slots actually required by this set (always >= 1
- * since `chest` is mandatory in the source XML).
- */
-export interface ArmorSetListDto {
-  id: number;
-  name: string;
-  pieceCount: number;
-}
-
-/**
- * Detail shape for `GET /api/[chronicle]/armor-sets/[id]`. Skill
+ * Detail shape embedded into `ItemDetailDto.partOfSets[]`. Skill
  * references from the underlying `ArmorSet` model are fully resolved
  * into `SkillSummaryDto` so consumers see description + effects without
  * a second lookup. A skill that fails to resolve becomes `null` rather
@@ -60,19 +49,6 @@ function resolvePiece(
     itemId,
     name: item?.name ?? `#${itemId}`,
     iconFile: item?.iconFile ?? null,
-  };
-}
-
-export function toArmorSetListDto(set: ArmorSet): ArmorSetListDto {
-  let pieceCount = 1; // chest is always present
-  if (set.pieces.legs != null) pieceCount++;
-  if (set.pieces.head != null) pieceCount++;
-  if (set.pieces.gloves != null) pieceCount++;
-  if (set.pieces.feet != null) pieceCount++;
-  return {
-    id: set.id,
-    name: set.name,
-    pieceCount,
   };
 }
 

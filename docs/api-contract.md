@@ -59,7 +59,7 @@ be `null` per type; the field itself is always emitted.
 | `baseWeaponId?: number` | Item is itself an SA variant; reverse link to its base |
 | `crafting?: CraftingInfoDto` | Item is a recipe scroll |
 | `craftedBy?: CraftedByDto[]` | Item is produced by one or more recipes |
-| `partOfSets?: ArmorSetDetailDto[]` | Item is listed as a piece in one or more armor sets. **Plural** — one item (Tallum Helmet 547) can belong to several sets (Heavy / Light / Robe). Order is the natural set-id order. Each entry is the **full** armor-set detail (same shape as `GET /api/[chronicle]/armor-sets/{id}`) — pieces with icons, bonus skill resolved, optional shield + enchant6 bonuses — so consumers can render the set in place without a second round-trip. |
+| `partOfSets?: ArmorSetDetailDto[]` | Item is listed as a piece in one or more armor sets. **Plural** — one item (Tallum Helmet 547) can belong to several sets (Heavy / Light / Robe). Order is the natural set-id order. Each entry is the **full** armor-set detail — pieces with icons, bonus skill resolved, optional shield + enchant6 bonuses — so consumers can render the set in place without a second round-trip. The catalog endpoint (`GET /api/[chronicle]/armor-sets`) returns the same shape; there is no per-id detail endpoint. |
 | `specialAbilityOptions[].saveMechanic?` | Variant has `mp_consume_reduce` or `reduced_soulshot` in its raw `properties` |
 | `specialAbilityOptions[].statDelta?` | Variant is a Light (weight delta) or Quick Recovery (reuseDelay delta) SA |
 
@@ -110,42 +110,37 @@ Applied inside `resolveSkill` ([`src/lib/api/dto/item.ts`](../src/lib/api/dto/it
 - **Description text** — `"none"` (engine placeholder) collapses to `null`. Trailing PvP-clause patterns (e.g. `"… Increases damage inflicted during PvP."`) are stripped to keep the player-facing text clean.
 - **DRAIN derivation** — when a skill has `skillType="DRAIN"` and `power != null` and no usable description, we synthesize `"During a critical attack, absorbs {power} HP from target."` (with `power` rounded the same way as `add` effect values). No other skill types are derived; we leave them unresolved per the "no fabrication" rule.
 
-## `ArmorSetListDto` — stable fields (`GET /api/[chronicle]/armor-sets`)
+## `ArmorSetDetailDto` — stable fields
+
+Reachable via two paths, both returning the same per-set shape:
+
+- `GET /api/[chronicle]/armor-sets` — catalog endpoint. Response is
+  `{ data: ArmorSetDetailDto[], meta: { total, limit, offset } }`. All
+  sets ship in one round-trip (51 entries on Interlude). No query
+  params today; cross-endpoint param design is deferred. There is no
+  per-id detail endpoint by design — the catalog is small enough to
+  render in full, and any single set is also reachable by walking from
+  one of its pieces.
+- `GET /api/[chronicle]/items/{id}` → `partOfSets[]` — embedded shape.
+  Locked by the items snapshot suite via Tallum Helmet (id 547), which
+  exercises the N:M case with three sets.
+
+The catalog is independently locked by
+`tests/armor-sets.catalog.snapshot.test.ts`.
 
 | Field | Type | Notes |
 |---|---|---|
 | `id` | number | Synthetic position-based id assigned at parse time (1..N over `armorSets.xml`). Stable as long as the source XML order is stable. |
 | `name` | string | Set name from XML. **Not unique** — `"Mithril Robe Set"` collides; consumers should use `id`, not `name`, to disambiguate. |
-| `pieceCount` | number | Number of equipment slots required by this set (1..5). `chest` is always present, so always `>= 1`. |
-
-List endpoint accepts `q` (case-insensitive name substring), `limit` (default 50, max 200), `offset`. No sort param yet.
-
-## `ArmorSetDetailDto` — stable fields (`GET /api/[chronicle]/armor-sets/[id]`)
-
-| Field | Type | Notes |
-|---|---|---|
-| `id` | number | Same synthetic id as the list shape. |
-| `name` | string | Same as the list shape. |
 | `pieces` | `{ chest, legs?, head?, gloves?, feet? }` | Each piece is `{ itemId, name, iconFile }` (mirrors `CraftingIngredientDto`). `chest` is always present; other slots are present only when required by the set (XML `0` sentinels are dropped). |
 | `bonusSkill` | `SkillSummaryDto \| null` | Main set bonus, fully resolved with description + effects. `null` only when the skill ref fails to resolve (defensive — not expected in current data). |
 | `shield?` | `{ piece, bonusSkill }` | Present only for sets with a shield slot. `piece` is an `ArmorSetPieceDto`; `bonusSkill` is a `SkillSummaryDto \| null` (same nullability semantics as the main `bonusSkill`). |
 | `enchant6BonusSkill?` | `SkillSummaryDto \| null` | Present only when the set carries an enchant-6 bonus. Same skill-summary shape with description + effects. |
 
-Reference fixtures (`tests/__snapshots__/armor-sets.dto.snapshot.test.ts.snap`):
-- **Wooden Set** — smallest (chest + legs + head only, no shield, no enchant6).
-- **Tallum Heavy Set** — mid-complexity (4 pieces, no shield, with enchant6).
-- **Avadon Heavy Set** — full (5 pieces + shield bonus + enchant6).
-- **Major Arcana Set** — caster (4 pieces, no shield, with enchant6).
-- **Imperial Crusader Set** — largest (5 pieces + shield + enchant6).
-
 ### What deliberately is NOT on `ArmorSetDetailDto`
 
 - **Partial-set tier bonuses** — the engine doesn't carry them in `armorSets.xml`. Bonuses are all-or-nothing.
 - **Player-facing labels for set-specific stats** like `maxLoad`, `STR`, `DEX`, `WIT`, `MEN`, `runSpd` — these are exposed in `bonusSkill.effects[]` with raw stat keys; UI labeling is not part of the API contract.
-
-### Cross-link from `ItemDetailDto`
-
-Reverse direction is supported via `ItemDetailDto.partOfSets?: ArmorSetDetailDto[]`. Given an item id, the response embeds the **full** detail of every set the item is a piece of — not a compact reference, the same shape returned by the standalone `/armor-sets/{id}` endpoint. UIs can render set bonuses + piece lists in place. Reference fixture: Tallum Helmet (id 547) renders three full set details (Tallum Heavy / Light / Robe Sets).
 
 ## Engine-rule fields (not derived from a single skill / item)
 

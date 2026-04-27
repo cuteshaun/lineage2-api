@@ -334,6 +334,27 @@ export default async function ItemDetailsPage({
         </Section>
       )}
 
+      {item.partOfSets && item.partOfSets.length > 0 && (
+        <Section title="Part of">
+          <div className="flex flex-col gap-2">
+            {item.partOfSets.map((set) => (
+              <Link
+                key={set.id}
+                href={`/${chronicle}/armor-sets/${set.id}`}
+                className="flex items-center justify-between rounded border border-zinc-200 p-2.5 transition-colors hover:border-zinc-300 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:border-zinc-600 dark:hover:bg-zinc-900"
+              >
+                <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+                  {set.name}
+                </span>
+                <span className="font-mono text-xs text-zinc-500 dark:text-zinc-400">
+                  {set.pieceCount} piece{set.pieceCount === 1 ? "" : "s"}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </Section>
+      )}
+
       {item.specialAbilityOptions && item.specialAbilityOptions.length > 0 && (
         <Section
           title={'Special Ability'}

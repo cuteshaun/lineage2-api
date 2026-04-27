@@ -6,10 +6,15 @@ export function ChronicleNav({
   section,
 }: {
   chronicle: Chronicle;
-  section?: "items" | "npcs" | "monsters";
+  section?: "items" | "npcs" | "monsters" | "armor-sets";
 }) {
   const links: Array<{ href: string; label: string; key: typeof section }> = [
     { href: `/${chronicle}/items`, label: "Items", key: "items" },
+    {
+      href: `/${chronicle}/armor-sets`,
+      label: "Armor Sets",
+      key: "armor-sets",
+    },
     { href: `/${chronicle}/npcs`, label: "NPCs", key: "npcs" },
     { href: `/${chronicle}/monsters`, label: "Monsters", key: "monsters" },
   ];

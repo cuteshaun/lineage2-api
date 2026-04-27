@@ -5,6 +5,7 @@ import type { Chronicle } from "../chronicles";
 import type {
   ArmorSet,
   Item,
+  Multisell,
   Npc,
   NpcDrops,
   Recipe,
@@ -20,6 +21,7 @@ interface ChronicleDataset {
   recipes: Recipe[];
   armorSets: ArmorSet[];
   skills: Skill[];
+  multisells: Multisell[];
 }
 
 const datasetCache = new Map<Chronicle, ChronicleDataset>();
@@ -57,6 +59,9 @@ export function loadChronicleDataset(chronicle: Chronicle): ChronicleDataset {
       path.join(config.generatedDir, "armor-sets.json")
     ),
     skills: readJson<Skill[]>(path.join(config.generatedDir, "skills.json")),
+    multisells: readJson<Multisell[]>(
+      path.join(config.generatedDir, "multisells.json")
+    ),
   };
 
   datasetCache.set(chronicle, dataset);

@@ -60,6 +60,8 @@ be `null` per type; the field itself is always emitted.
 | `crafting?: CraftingInfoDto` | Item is a recipe scroll |
 | `craftedBy?: CraftedByDto[]` | Item is produced by one or more recipes |
 | `partOfSets?: ArmorSetDetailDto[]` | Item is listed as a piece in one or more armor sets. **Plural** — one item (Tallum Helmet 547) can belong to several sets (Heavy / Light / Robe). Order is the natural set-id order. Each entry is the **full** armor-set detail — pieces with icons, bonus skill resolved, optional shield + enchant6 bonuses — so consumers can render the set in place without a second round-trip. The catalog endpoint (`GET /api/[chronicle]/armor-sets`) returns the same shape; there is no per-id detail endpoint. |
+| `exchangeFrom?: ExchangeOptionDto[]` | Mammon exchanges that *produce* this item — answers "how do I obtain this?" Present on unsealed A/S armor + accessories. Plural by contract; current Mammon dataset is 1:1. |
+| `exchangeFor?: ExchangeOptionDto[]` | Mammon exchanges that *consume* this item as an ingredient — answers "what can I exchange this for?" Present on sealed A/S armor + accessories. Plural by contract. |
 | `specialAbilityOptions[].saveMechanic?` | Variant has `mp_consume_reduce` or `reduced_soulshot` in its raw `properties` |
 | `specialAbilityOptions[].statDelta?` | Variant is a Light (weight delta) or Quick Recovery (reuseDelay delta) SA |
 
@@ -141,6 +143,45 @@ The catalog is independently locked by
 
 - **Partial-set tier bonuses** — the engine doesn't carry them in `armorSets.xml`. Bonuses are all-or-nothing.
 - **Player-facing labels for set-specific stats** like `maxLoad`, `STR`, `DEX`, `WIT`, `MEN`, `runSpd` — these are exposed in `bonusSkill.effects[]` with raw stat keys; UI labeling is not part of the API contract.
+
+## `ExchangeOptionDto` — stable fields
+
+Returned under `ItemDetailDto.exchangeFrom[]` / `exchangeFor[]`. One row
+per multisell entry the item participates in.
+
+| Field | Type | Notes |
+|---|---|---|
+| `multisellId` | number | Source multisell file id (e.g. `311262506`). Exposed for traceability/debugging; consumers shouldn't depend on stable values across chronicles. |
+| `maintainEnchantment` | boolean | Whether the production preserves the ingredient's enchant level. Mirrors the source XML's `<list maintainEnchantment="…">` attribute. |
+| `npc` | `{ id, name }` | NPC offering the exchange. Resolved from the multisell file's `<npcs><npc>` block. For the parsed Mammon-scoped subset, this is always Blacksmith of Mammon (id 31126). |
+| `required` | `ItemQuantityDto[]` | Items consumed. For Mammon unseal: `[{ sealed item × 1 }, { Ancient Adena × N }]`. Order matches the source XML. |
+| `produces` | `ItemQuantityDto` | Item produced. Single-valued — every parsed Mammon entry has exactly one `<production>`. |
+
+`ItemQuantityDto` is the resolved `{ itemId, name, iconFile, count }`
+shape used for both ingredients and productions. Item-id resolution is
+the same path used elsewhere in the DTO; if an item id has been removed
+from the chronicle, `name` falls back to `#<id>` and `iconFile` is
+`null`.
+
+### Scope
+
+Only the five Mammon multisell files are parsed today:
+
+| File id | Purpose |
+|---|---|
+| `311262504` | Unseal S-Grade Armor (14 entries) |
+| `311262505` | Unseal S-Grade Accessories (3 entries) |
+| `311262506` | Unseal A-Grade Armor (55 entries) |
+| `311262507` | Unseal A-Grade Accessories (6 entries) |
+| `311262508` | Reseal A-Grade Armor (24 entries) |
+
+Total: 102 entries. Generic multisells (regular shops, dye merchants,
+SA-related Mammon files `311262509`–`511`) are deliberately out of
+scope.
+
+Reference fixtures (`tests/items.snapshot.test.ts`):
+- **Tallum Plate Armor (2382)** — unsealed A-grade with `exchangeFrom` populated.
+- **Sealed Tallum Plate Armor (5293)** — sealed A-grade with `exchangeFor` populated.
 
 ## Engine-rule fields (not derived from a single skill / item)
 

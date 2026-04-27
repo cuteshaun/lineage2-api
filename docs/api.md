@@ -167,6 +167,8 @@ when applicable:
 | `crafting` | Item is a recipe scroll |
 | `craftedBy` | Item is produced by one or more recipes |
 | `partOfSets` | Item is a piece of one or more armor sets — embeds the **full** `ArmorSetDetailDto[]` so consumers can render set context in place |
+| `exchangeFrom` | Mammon multisell entries that *produce* this item — present on unsealed A/S armor + accessories. Resolves to `ExchangeOptionDto[]` with NPC, required items, Ancient Adena cost, and the produced item. |
+| `exchangeFor` | Mammon multisell entries that *consume* this item as an ingredient — present on sealed A/S armor + accessories. Same shape as `exchangeFrom`, viewed from the ingredient side. |
 
 The full field-level contract lives in
 [`docs/api-contract.md`](./api-contract.md), mechanically locked by the
@@ -463,6 +465,12 @@ GET /api/interlude/npcs/22001/drops
 
 # Drops for an NPC (alternate path, identical response)
 GET /api/interlude/drops/npc/22001
+
+# Item detail with Mammon exchange (Tallum Plate Armor: produced by unsealing)
+GET /api/interlude/items/2382
+
+# Item detail with Mammon exchange (Sealed Tallum Plate Armor: consumed when unsealing)
+GET /api/interlude/items/5293
 
 # Reverse lookup: NPCs that drop a given item
 GET /api/interlude/items/391/dropped-by

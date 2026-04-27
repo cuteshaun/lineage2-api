@@ -40,6 +40,8 @@ export interface ChronicleSources {
   armorSetsXmlFile: string;
   /** Absolute path to the `skills/` XML directory in the upstream datapack. */
   skillsXmlDir: string;
+  /** Absolute path to the `multisell/` XML directory in the upstream datapack. */
+  multisellXmlDir: string;
 }
 
 interface SourceSpec {
@@ -57,6 +59,7 @@ interface SourceSpec {
   recipesXmlFile: string[];
   armorSetsXmlFile: string[];
   skillsXmlDir: string[];
+  multisellXmlDir: string[];
 }
 
 const SOURCE_SPECS: Record<Chronicle, SourceSpec> = {
@@ -128,6 +131,14 @@ const SOURCE_SPECS: Record<Chronicle, SourceSpec> = {
       "xml",
       "skills",
     ],
+    multisellXmlDir: [
+      "..",
+      "aCis_382_LATEST_STABLE",
+      "aCis_datapack",
+      "data",
+      "xml",
+      "multisell",
+    ],
   },
 };
 
@@ -155,5 +166,6 @@ export function getChronicleSources(chronicle: Chronicle): ChronicleSources {
     recipesXmlFile: path.join(root, ...spec.recipesXmlFile),
     armorSetsXmlFile: path.join(root, ...spec.armorSetsXmlFile),
     skillsXmlDir: path.join(root, ...spec.skillsXmlDir),
+    multisellXmlDir: path.join(root, ...spec.multisellXmlDir),
   };
 }

@@ -1107,6 +1107,36 @@ exports[`item 547 (Tallum Helmet) DTO matches snapshot 1`] = `
   "bodypart": "Helmet",
   "crystalCount": 139,
   "etcItemType": null,
+  "exchangeFrom": [
+    {
+      "maintainEnchantment": true,
+      "multisellId": 311262506,
+      "npc": {
+        "id": 31126,
+        "name": "Blacksmith of Mammon",
+      },
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_helmet_i00.png",
+        "itemId": 547,
+        "name": "Tallum Helm",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_helmet_i02.png",
+          "itemId": 5294,
+          "name": "Sealed Tallum Helmet",
+        },
+        {
+          "count": 130500,
+          "iconFile": "etc_ancient_adena_i00.png",
+          "itemId": 5575,
+          "name": "Ancient Adena",
+        },
+      ],
+    },
+  ],
   "grade": "a",
   "iconFile": "armor_helmet_i00.png",
   "id": 547,
@@ -1373,6 +1403,233 @@ exports[`item 547 (Tallum Helmet) DTO matches snapshot 1`] = `
   "type": "armor",
   "weaponType": null,
   "weight": 570,
+}
+`;
+
+exports[`item 2382 (Tallum Plate Armor) DTO matches snapshot 1`] = `
+{
+  "accCombat": null,
+  "armorType": "HEAVY",
+  "bodypart": "Full Armor",
+  "crystalCount": 541,
+  "etcItemType": null,
+  "exchangeFrom": [
+    {
+      "maintainEnchantment": true,
+      "multisellId": 311262506,
+      "npc": {
+        "id": 31126,
+        "name": "Blacksmith of Mammon",
+      },
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t77_ul_i00.png",
+        "itemId": 2382,
+        "name": "Tallum Plate Armor",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t77_ul_i02.png",
+          "itemId": 5293,
+          "name": "Sealed Tallum Plate Armor",
+        },
+        {
+          "count": 507750,
+          "iconFile": "etc_ancient_adena_i00.png",
+          "itemId": 5575,
+          "name": "Ancient Adena",
+        },
+      ],
+    },
+  ],
+  "grade": "a",
+  "iconFile": "armor_t77_ul_i00.png",
+  "id": 2382,
+  "isDropable": null,
+  "isMagical": null,
+  "isSellable": null,
+  "isStackable": null,
+  "isTradable": null,
+  "itemSkill": null,
+  "mAtk": null,
+  "mDef": null,
+  "material": "LEATHER",
+  "mpConsume": null,
+  "name": "Tallum Plate Armor",
+  "pAtk": null,
+  "pAtkSpd": null,
+  "pDef": 278,
+  "partOfSets": [
+    {
+      "bonusSkill": {
+        "description": "Increases resistance to poison/bleeding attacks. Atk. Spd. and maximum weight limit are also increased. STR+2, CON-2.",
+        "effects": [
+          {
+            "op": "mul",
+            "stat": "pAtkSpd",
+            "value": 1.08,
+          },
+          {
+            "op": "add",
+            "stat": "maxLoad",
+            "value": 5759,
+          },
+          {
+            "op": "add",
+            "stat": "STR",
+            "value": 2,
+          },
+        ],
+        "iconFile": null,
+        "id": 3531,
+        "level": 1,
+        "name": "Tallum Heavy Armor Set",
+        "operateType": "OP_PASSIVE",
+        "power": null,
+        "skillType": "BUFF",
+        "target": "TARGET_SELF",
+      },
+      "enchant6BonusSkill": {
+        "description": "Increases P. Def. and MP regeneration by enchanting set items.",
+        "effects": [
+          {
+            "op": "add",
+            "stat": "pDef",
+            "value": 50,
+          },
+          {
+            "op": "add",
+            "stat": "regMp",
+            "value": 2,
+          },
+        ],
+        "iconFile": null,
+        "id": 3620,
+        "level": 1,
+        "name": "Enchant Heavy Armor (Grade A)",
+        "operateType": "OP_PASSIVE",
+        "power": null,
+        "skillType": "BUFF",
+        "target": "TARGET_SELF",
+      },
+      "id": 34,
+      "name": "Tallum Heavy Set",
+      "pieces": {
+        "chest": {
+          "iconFile": "armor_t77_ul_i00.png",
+          "itemId": 2382,
+          "name": "Tallum Plate Armor",
+        },
+        "feet": {
+          "iconFile": "armor_t77_b_i00.png",
+          "itemId": 5780,
+          "name": "Tallum Boots - Heavy Armor",
+        },
+        "gloves": {
+          "iconFile": "armor_t77_g_i00.png",
+          "itemId": 5768,
+          "name": "Tallum Gloves - Heavy Armor",
+        },
+        "head": {
+          "iconFile": "armor_helmet_i00.png",
+          "itemId": 547,
+          "name": "Tallum Helm",
+        },
+      },
+    },
+  ],
+  "price": 6770000,
+  "rCrit": null,
+  "rEvas": null,
+  "rShld": null,
+  "reuseDelay": null,
+  "sDef": null,
+  "soulshots": null,
+  "spiritshots": null,
+  "type": "armor",
+  "weaponType": null,
+  "weight": 9780,
+}
+`;
+
+exports[`item 5293 (Sealed Tallum Plate Armor) DTO matches snapshot 1`] = `
+{
+  "accCombat": null,
+  "armorType": "HEAVY",
+  "bodypart": "Full Armor",
+  "craftedBy": [
+    {
+      "recipeItemId": 5418,
+      "recipeName": "Recipe: Sealed Tallum Plate Armor(60%)",
+      "successRate": 60,
+    },
+    {
+      "recipeItemId": 5419,
+      "recipeName": "Recipe: Sealed Tallum Plate Armor(100%)",
+      "successRate": 100,
+    },
+  ],
+  "crystalCount": 541,
+  "etcItemType": null,
+  "exchangeFor": [
+    {
+      "maintainEnchantment": true,
+      "multisellId": 311262506,
+      "npc": {
+        "id": 31126,
+        "name": "Blacksmith of Mammon",
+      },
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t77_ul_i00.png",
+        "itemId": 2382,
+        "name": "Tallum Plate Armor",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t77_ul_i02.png",
+          "itemId": 5293,
+          "name": "Sealed Tallum Plate Armor",
+        },
+        {
+          "count": 507750,
+          "iconFile": "etc_ancient_adena_i00.png",
+          "itemId": 5575,
+          "name": "Ancient Adena",
+        },
+      ],
+    },
+  ],
+  "grade": "a",
+  "iconFile": "armor_t77_ul_i02.png",
+  "id": 5293,
+  "isDropable": null,
+  "isMagical": null,
+  "isSellable": null,
+  "isStackable": null,
+  "isTradable": null,
+  "itemSkill": null,
+  "mAtk": null,
+  "mDef": null,
+  "material": "LEATHER",
+  "mpConsume": null,
+  "name": "Sealed Tallum Plate Armor",
+  "pAtk": null,
+  "pAtkSpd": null,
+  "pDef": 278,
+  "price": 6770000,
+  "rCrit": null,
+  "rEvas": null,
+  "rShld": null,
+  "reuseDelay": null,
+  "sDef": null,
+  "soulshots": null,
+  "spiritshots": null,
+  "type": "armor",
+  "weaponType": null,
+  "weight": 9780,
 }
 `;
 

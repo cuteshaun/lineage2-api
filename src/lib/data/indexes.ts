@@ -2,6 +2,7 @@ import type { Chronicle } from "../chronicles";
 import type {
   ArmorSet,
   Item,
+  Multisell,
   Npc,
   NpcDrops,
   Recipe,
@@ -92,6 +93,21 @@ interface ChronicleIndexes {
   armorSetsByItemId: Map<number, ArmorSet[]>;
   /** Skill lookup by `"${id}-${level}"` key (matches `itemSkill` format). */
   skillByKey: Map<string, Skill>;
+  /**
+   * Pointer to a single multisell entry. The `multisell` reference is
+   * shared with the catalog list so consumers/tests don't see duplicate
+   * objects; `entryIndex` selects the row within `multisell.entries`.
+   */
+  multisells: Multisell[];
+  /** itemId → exchanges in which this item appears as an ingredient. */
+  exchangesByIngredientId: Map<number, MultisellEntryRef[]>;
+  /** itemId → exchanges that produce this item. */
+  exchangesByProductId: Map<number, MultisellEntryRef[]>;
+}
+
+export interface MultisellEntryRef {
+  multisell: Multisell;
+  entryIndex: number;
 }
 
 export interface NpcTypeSummary {
@@ -403,6 +419,33 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
     skillByKey.set(`${s.id}-${s.level}`, s);
   }
 
+  // Multisell exchange indexes. Forward (ingredient → exchange) and
+  // reverse (product → exchange). Only the Mammon-scoped multisells are
+  // ingested today — see `scripts/parse-multisell.ts`.
+  const exchangesByIngredientId = new Map<number, MultisellEntryRef[]>();
+  const exchangesByProductId = new Map<number, MultisellEntryRef[]>();
+  for (const multisell of dataset.multisells) {
+    for (let i = 0; i < multisell.entries.length; i++) {
+      const ref: MultisellEntryRef = { multisell, entryIndex: i };
+      const entry = multisell.entries[i];
+      for (const ing of entry.ingredients) {
+        let list = exchangesByIngredientId.get(ing.itemId);
+        if (!list) {
+          list = [];
+          exchangesByIngredientId.set(ing.itemId, list);
+        }
+        list.push(ref);
+      }
+      const prodId = entry.production.itemId;
+      let plist = exchangesByProductId.get(prodId);
+      if (!plist) {
+        plist = [];
+        exchangesByProductId.set(prodId, plist);
+      }
+      plist.push(ref);
+    }
+  }
+
   return {
     items: dataset.items,
     rawNpcs: dataset.npcs,
@@ -432,6 +475,9 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
     armorSets: dataset.armorSets,
     armorSetsByItemId,
     skillByKey,
+    multisells: dataset.multisells,
+    exchangesByIngredientId,
+    exchangesByProductId,
   };
 }
 
@@ -889,5 +935,37 @@ export function getArmorSetsByItemId(
 ): ArmorSet[] {
   return (
     getChronicleIndexes(chronicle).armorSetsByItemId.get(itemId) ?? []
+  );
+}
+
+// --- Multisell exchange lookups ---
+
+/**
+ * Returns every Mammon-scoped exchange in which this item appears as an
+ * ingredient. Player-facing question: "what can I exchange this for?"
+ *
+ * Empty array when the item participates in no Mammon exchange.
+ */
+export function getExchangesByIngredientId(
+  chronicle: Chronicle,
+  itemId: number
+): MultisellEntryRef[] {
+  return (
+    getChronicleIndexes(chronicle).exchangesByIngredientId.get(itemId) ?? []
+  );
+}
+
+/**
+ * Returns every Mammon-scoped exchange that produces this item.
+ * Player-facing question: "how do I obtain this?"
+ *
+ * Empty array when no Mammon exchange produces the item.
+ */
+export function getExchangesByProductId(
+  chronicle: Chronicle,
+  itemId: number
+): MultisellEntryRef[] {
+  return (
+    getChronicleIndexes(chronicle).exchangesByProductId.get(itemId) ?? []
   );
 }

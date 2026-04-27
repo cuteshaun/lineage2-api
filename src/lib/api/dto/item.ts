@@ -1,8 +1,11 @@
 import type { Chronicle } from "../../chronicles";
-import type { Item } from "../../types";
+import type { Item, Multisell, MultisellEntry } from "../../types";
 import {
   getArmorSetsByItemId,
+  getExchangesByIngredientId,
+  getExchangesByProductId,
   getItemById,
+  getRawNpcById,
   getSaVariants,
   getSaBaseWeaponId,
   getRecipeByItemId,
@@ -42,6 +45,33 @@ export interface CraftingIngredientDto {
   name: string;
   count: number;
   iconFile: string | null;
+}
+
+export interface NpcRefDto {
+  id: number;
+  name: string;
+}
+
+/** Resolved item-with-count, used for both ingredients and productions of an exchange. */
+export interface ItemQuantityDto {
+  itemId: number;
+  name: string;
+  iconFile: string | null;
+  count: number;
+}
+
+/**
+ * One row of a Mammon multisell, fully resolved. The DTO is symmetric:
+ * it appears under `exchangeFor[]` when the current item is one of
+ * `required[]`, and under `exchangeFrom[]` when the current item is
+ * `produces`. `multisellId` is exposed for traceability/debugging only.
+ */
+export interface ExchangeOptionDto {
+  multisellId: number;
+  maintainEnchantment: boolean;
+  npc: NpcRefDto;
+  required: ItemQuantityDto[];
+  produces: ItemQuantityDto;
 }
 
 export interface CraftingInfoDto {
@@ -125,6 +155,21 @@ export interface ItemDetailDto {
    * Light / Robe). Omitted when the item is in no set.
    */
   partOfSets?: ArmorSetDetailDto[];
+  /**
+   * Mammon exchanges that produce this item. Player-facing question:
+   * "how do I obtain this?" For unsealed A/S armor and accessories,
+   * this resolves to the Blacksmith of Mammon unseal flow with the
+   * sealed item + Ancient Adena cost. Omitted when no Mammon exchange
+   * produces the item. Plural — the contract permits multi-source
+   * exchanges, though the current Mammon dataset is 1:1.
+   */
+  exchangeFrom?: ExchangeOptionDto[];
+  /**
+   * Mammon exchanges in which this item is consumed as an ingredient.
+   * Player-facing question: "what can I exchange this for?" Sealed
+   * A/S armor lands here. Plural for the same reason as `exchangeFrom`.
+   */
+  exchangeFor?: ExchangeOptionDto[];
 }
 
 const BODYPART_LABELS: Record<string, string> = {
@@ -389,5 +434,72 @@ export function toItemDetailDto(
     );
   }
 
+  // Mammon exchange cross-links. `exchangeFrom` answers "how do I get
+  // this?" (this item is the production); `exchangeFor` answers "what
+  // can I exchange this for?" (this item is an ingredient). Scope is
+  // limited to the parsed Mammon multisells — see parse-multisell.ts.
+  const exchangeFromRefs = getExchangesByProductId(chronicle, item.id);
+  if (exchangeFromRefs.length > 0) {
+    const resolved = exchangeFromRefs
+      .map((ref) => toExchangeOptionDto(ref.multisell, ref.entryIndex, chronicle))
+      .filter((dto): dto is ExchangeOptionDto => dto !== null);
+    if (resolved.length > 0) dto.exchangeFrom = resolved;
+  }
+  const exchangeForRefs = getExchangesByIngredientId(chronicle, item.id);
+  if (exchangeForRefs.length > 0) {
+    const resolved = exchangeForRefs
+      .map((ref) => toExchangeOptionDto(ref.multisell, ref.entryIndex, chronicle))
+      .filter((dto): dto is ExchangeOptionDto => dto !== null);
+    if (resolved.length > 0) dto.exchangeFor = resolved;
+  }
+
   return dto;
+}
+
+function toItemQuantityDto(
+  chronicle: Chronicle,
+  itemId: number,
+  count: number
+): ItemQuantityDto {
+  const item = getItemById(chronicle, itemId);
+  return {
+    itemId,
+    name: item?.name ?? `#${itemId}`,
+    iconFile: item?.iconFile ?? null,
+    count,
+  };
+}
+
+/**
+ * Resolve one entry of a multisell into the public DTO shape. Returns
+ * `null` when the multisell has no NPC reference we can resolve — this
+ * shouldn't happen for the Mammon dataset (parser fails loud on missing
+ * `<npcs>`), but it's a defensive guard so callers can `.filter()`.
+ */
+function toExchangeOptionDto(
+  multisell: Multisell,
+  entryIndex: number,
+  chronicle: Chronicle
+): ExchangeOptionDto | null {
+  const entry: MultisellEntry = multisell.entries[entryIndex];
+  // Use the first npcId — Mammon multisells always have exactly one
+  // (Blacksmith of Mammon, id 31126). Future multi-NPC multisells would
+  // surface as multiple `ExchangeOptionDto` entries instead, but that's
+  // out of scope until a non-Mammon parser lands.
+  const npcId = multisell.npcIds[0];
+  const npc = getRawNpcById(chronicle, npcId);
+  if (!npc) return null;
+  return {
+    multisellId: multisell.id,
+    maintainEnchantment: multisell.maintainEnchantment,
+    npc: { id: npc.id, name: npc.name },
+    required: entry.ingredients.map((ing) =>
+      toItemQuantityDto(chronicle, ing.itemId, ing.count)
+    ),
+    produces: toItemQuantityDto(
+      chronicle,
+      entry.production.itemId,
+      entry.production.count
+    ),
+  };
 }

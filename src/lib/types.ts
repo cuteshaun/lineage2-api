@@ -266,6 +266,39 @@ export interface ArmorSet {
   enchant6BonusSkill?: string;
 }
 
+/**
+ * One row of a multisell list — a single fixed exchange of N
+ * ingredients for 1 production. Only the unseal/reseal Mammon files
+ * are parsed today, all of which carry exactly one production per
+ * `<item>` block, so `production` is single-valued.
+ */
+export interface MultisellEntry {
+  ingredients: Array<{ itemId: number; count: number }>;
+  production: { itemId: number; count: number };
+}
+
+/**
+ * One multisell file, e.g. `data/xml/multisell/311262506.xml`
+ * (Blacksmith of Mammon — Unseal A-Grade Armor). Only the
+ * Mammon-scoped subset is parsed at build time; broader multisell
+ * support (regular shops, dye merchants, etc.) is deliberately out
+ * of scope.
+ */
+export interface Multisell {
+  /** Source filename id. */
+  id: number;
+  /**
+   * NPC ids that offer this multisell, parsed from the file's `<npcs>`
+   * block. Always at least one entry (the parser rejects files with no
+   * `<npcs>` block since the npc->multisell join would otherwise be
+   * ambiguous).
+   */
+  npcIds: number[];
+  /** Whether the production preserves the ingredient's enchant level. */
+  maintainEnchantment: boolean;
+  entries: MultisellEntry[];
+}
+
 export interface SkillEffect {
   stat: string;
   op: "mul" | "add";

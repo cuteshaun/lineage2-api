@@ -5,6 +5,7 @@ import { parseSpawns } from "./parse-spawns";
 import { parseRecipes } from "./parse-recipes";
 import { parseArmorSets } from "./parse-armorsets";
 import { parseSkills } from "./parse-skills";
+import { parseMultisells } from "./parse-multisell";
 import {
   isChronicle,
   SUPPORTED_CHRONICLES,
@@ -53,6 +54,9 @@ async function main() {
   console.log();
 
   const skills = await parseSkills(chronicle);
+  console.log();
+
+  const multisells = await parseMultisells(chronicle);
 
   let totalCategories = 0;
   let totalDropEntries = 0;
@@ -77,6 +81,13 @@ async function main() {
   console.log(`  Recipes:              ${recipes.length}`);
   console.log(`  Armor sets:           ${armorSets.length}`);
   console.log(`  Skills:               ${skills.length}`);
+  const totalMultisellEntries = multisells.reduce(
+    (n, m) => n + m.entries.length,
+    0
+  );
+  console.log(
+    `  Multisells:           ${multisells.length} files, ${totalMultisellEntries} entries`
+  );
   console.log(`  Completed in ${elapsed}s`);
 }
 

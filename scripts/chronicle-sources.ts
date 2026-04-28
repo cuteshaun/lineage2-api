@@ -42,6 +42,12 @@ export interface ChronicleSources {
   skillsXmlDir: string;
   /** Absolute path to the `multisell/` XML directory in the upstream datapack. */
   multisellXmlDir: string;
+  /** Absolute path to the `classes/` XML directory in the upstream datapack. */
+  classesXmlDir: string;
+  /** Absolute path to `spellbooks.xml` in the upstream datapack. */
+  spellbooksXmlFile: string;
+  /** Absolute path to the `ClassId.java` enum (canonical class tree: id, name, race, type, level, parent). */
+  classIdEnumFile: string;
 }
 
 interface SourceSpec {
@@ -60,6 +66,9 @@ interface SourceSpec {
   armorSetsXmlFile: string[];
   skillsXmlDir: string[];
   multisellXmlDir: string[];
+  classesXmlDir: string[];
+  spellbooksXmlFile: string[];
+  classIdEnumFile: string[];
 }
 
 const SOURCE_SPECS: Record<Chronicle, SourceSpec> = {
@@ -139,6 +148,35 @@ const SOURCE_SPECS: Record<Chronicle, SourceSpec> = {
       "xml",
       "multisell",
     ],
+    classesXmlDir: [
+      "..",
+      "aCis_382_LATEST_STABLE",
+      "aCis_datapack",
+      "data",
+      "xml",
+      "classes",
+    ],
+    spellbooksXmlFile: [
+      "..",
+      "aCis_382_LATEST_STABLE",
+      "aCis_datapack",
+      "data",
+      "xml",
+      "spellbooks.xml",
+    ],
+    classIdEnumFile: [
+      "..",
+      "aCis_382_LATEST_STABLE",
+      "aCis_gameserver",
+      "java",
+      "net",
+      "sf",
+      "l2j",
+      "gameserver",
+      "enums",
+      "actors",
+      "ClassId.java",
+    ],
   },
 };
 
@@ -167,5 +205,8 @@ export function getChronicleSources(chronicle: Chronicle): ChronicleSources {
     armorSetsXmlFile: path.join(root, ...spec.armorSetsXmlFile),
     skillsXmlDir: path.join(root, ...spec.skillsXmlDir),
     multisellXmlDir: path.join(root, ...spec.multisellXmlDir),
+    classesXmlDir: path.join(root, ...spec.classesXmlDir),
+    spellbooksXmlFile: path.join(root, ...spec.spellbooksXmlFile),
+    classIdEnumFile: path.join(root, ...spec.classIdEnumFile),
   };
 }

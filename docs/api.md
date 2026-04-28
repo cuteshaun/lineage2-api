@@ -73,6 +73,13 @@ Requesting an unknown chronicle returns **404**.
 |---|---|---|
 | GET | `/api/[chronicle]/armor-sets` | Full armor-set catalog (rich, single-shot — no detail endpoint) |
 
+### Classes
+
+| Method | Path | Description |
+|---|---|---|
+| GET | `/api/[chronicle]/classes` | All player classes (89 on Interlude — base, 1st, 2nd, 3rd profession) |
+| GET | `/api/[chronicle]/classes/[id]` | Single class with skill-learn table + parent/child cross-links |
+
 ### Meta (filter dropdowns)
 
 | Method | Path | Description |
@@ -169,6 +176,7 @@ when applicable:
 | `partOfSets` | Item is a piece of one or more armor sets — embeds the **full** `ArmorSetDetailDto[]` so consumers can render set context in place |
 | `exchangeFrom` | Mammon multisell entries that *produce* this item — present on unsealed A/S armor + accessories. Resolves to `ExchangeOptionDto[]` with NPC, required items, Ancient Adena cost, and the produced item. |
 | `exchangeFor` | Mammon multisell entries that *consume* this item as an ingredient — present on sealed A/S armor + accessories. Same shape as `exchangeFrom`, viewed from the ingredient side. |
+| `usedAsSpellbook` | Present only when the item is a spellbook. Resolves to a single `SpellbookSkillDto` carrying the taught skill + every class that learns it. |
 
 The full field-level contract lives in
 [`docs/api-contract.md`](./api-contract.md), mechanically locked by the
@@ -341,6 +349,53 @@ for unknown ids.
 }
 ```
 
+## Classes
+
+`GET /api/[chronicle]/classes` returns every player class in one
+response (89 on Interlude — 9 base, 18 1st-profession, 31 2nd-profession,
+31 3rd-profession). `GET /api/[chronicle]/classes/[id]` returns a
+single class with its full skill-learn table and parent/child links.
+
+```json
+{
+  "data": [
+    { "id": 0,  "name": "Human Fighter",   "race": "Human", "type": "Fighter", "professionLevel": 0, "parentClassId": null },
+    { "id": 1,  "name": "Warrior",         "race": "Human", "type": "Fighter", "professionLevel": 1, "parentClassId": 0 },
+    { "id": 90, "name": "Phoenix Knight",  "race": "Human", "type": "Fighter", "professionLevel": 3, "parentClassId": 5 },
+    "..."
+  ],
+  "meta": { "total": 89, "limit": 89, "offset": 0 }
+}
+```
+
+Class-detail responses add `childClassIds: number[]` and
+`skills: ClassSkillLearnDto[]`. Each skill row carries `name` and
+`iconFile` resolved straight from `skills.json` — no separate icon
+parser. When the skill requires a spellbook, `spellbookItemId` points
+at the required item.
+
+```json
+{
+  "data": {
+    "id": 0,
+    "name": "Human Fighter",
+    "race": "Human",
+    "type": "Fighter",
+    "professionLevel": 0,
+    "parentClassId": null,
+    "childClassIds": [1, 4, 7],
+    "skills": [
+      { "skillId": 3, "skillLevel": 1, "name": "Power Strike", "iconFile": "skill0003.png", "minPlayerLevel": 5, "spCost": 50 },
+      "..."
+    ]
+  }
+}
+```
+
+The reverse direction (skill → classes that learn it) lives on items
+that are spellbooks via `ItemDetailDto.usedAsSpellbook` — see the
+item-details section above.
+
 ## Armor sets
 
 `GET /api/[chronicle]/armor-sets` returns the full armor-set catalog in
@@ -486,6 +541,12 @@ GET /api/interlude/raw/npcs?levelMin=20&levelMax=25
 
 # Full armor-set catalog (rich, all 51 sets in one response)
 GET /api/interlude/armor-sets
+
+# All player classes (89 on Interlude)
+GET /api/interlude/classes
+
+# Single class with skill-learn table (Human Fighter)
+GET /api/interlude/classes/0
 
 # Filter dropdowns: known npc types
 GET /api/interlude/meta/npc-types

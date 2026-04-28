@@ -1406,6 +1406,81 @@ exports[`item 547 (Tallum Helmet) DTO matches snapshot 1`] = `
 }
 `;
 
+exports[`item 1152 (Spellbook: Heal) DTO matches snapshot 1`] = `
+{
+  "accCombat": null,
+  "armorType": null,
+  "bodypart": null,
+  "crystalCount": null,
+  "etcItemType": null,
+  "grade": "none",
+  "iconFile": "etc_spell_books_white_i00.png",
+  "id": 1152,
+  "isDropable": null,
+  "isMagical": null,
+  "isSellable": null,
+  "isStackable": null,
+  "isTradable": null,
+  "itemSkill": null,
+  "mAtk": null,
+  "mDef": null,
+  "material": "PAPER",
+  "mpConsume": null,
+  "name": "Spellbook: Heal",
+  "pAtk": null,
+  "pAtkSpd": null,
+  "pDef": null,
+  "price": 100,
+  "rCrit": null,
+  "rEvas": null,
+  "rShld": null,
+  "reuseDelay": null,
+  "sDef": null,
+  "soulshots": null,
+  "spiritshots": null,
+  "type": "etcitem",
+  "usedAsSpellbook": {
+    "iconFile": "skill1011.png",
+    "learnedBy": [
+      {
+        "id": 10,
+        "name": "Human Mystic",
+        "professionLevel": 0,
+      },
+      {
+        "id": 15,
+        "name": "Cleric",
+        "professionLevel": 1,
+      },
+      {
+        "id": 25,
+        "name": "Elven Mystic",
+        "professionLevel": 0,
+      },
+      {
+        "id": 29,
+        "name": "Elven Oracle",
+        "professionLevel": 1,
+      },
+      {
+        "id": 38,
+        "name": "Dark Mystic",
+        "professionLevel": 0,
+      },
+      {
+        "id": 42,
+        "name": "Shillien Oracle",
+        "professionLevel": 1,
+      },
+    ],
+    "skillId": 1011,
+    "skillName": "Heal",
+  },
+  "weaponType": null,
+  "weight": 120,
+}
+`;
+
 exports[`item 2382 (Tallum Plate Armor) DTO matches snapshot 1`] = `
 {
   "accCombat": null,

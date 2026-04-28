@@ -267,6 +267,51 @@ export interface ArmorSet {
 }
 
 /**
+ * Player class (race/profession). Metadata (id, name, race, type, parent,
+ * professionLevel) is sourced from the canonical `ClassId.java` enum;
+ * skill-learn entries come from the per-race XML files in
+ * `data/xml/classes/`. Only Interlude classes are present (no Kamael,
+ * no 4th profession).
+ */
+export interface ClassRecord {
+  /** Canonical class id (matches `ClassId.java` ordinal). */
+  id: number;
+  /** Display name from the enum (e.g. "Human Fighter", "Phoenix Knight"). */
+  name: string;
+  /** "Human" | "Elf" | "Dark Elf" | "Orc" | "Dwarf". Normalized from the Java enum. */
+  race: string;
+  /** "Fighter" | "Mystic" | "Priest". Normalized from the Java enum. */
+  type: string;
+  /** 0 = base, 1 = 1st profession, 2 = 2nd profession, 3 = 3rd profession. */
+  professionLevel: number;
+  /** Parent class id, or `null` when this is a base class (level 0). */
+  parentClassId: number | null;
+  /** Skills the class can learn, sorted by skillId then skillLevel. */
+  skills: ClassSkillLearn[];
+}
+
+/** One skill the class learns at a given player level for an SP cost. */
+export interface ClassSkillLearn {
+  skillId: number;
+  skillLevel: number;
+  /** Minimum player level required to learn the skill. */
+  minPlayerLevel: number;
+  /** Skill point cost. */
+  spCost: number;
+}
+
+/**
+ * One spellbook -> skill mapping from `data/xml/spellbooks.xml`. The
+ * presence of an entry means consuming the item teaches the skill.
+ * Skill levels are not differentiated in the source data — one item
+ * teaches all levels of the skill.
+ */
+export interface Spellbook {
+  skillId: number;
+  itemId: number;
+}
+
+/**
  * One row of a multisell list — a single fixed exchange of N
  * ingredients for 1 production. Only the unseal/reseal Mammon files
  * are parsed today, all of which carry exactly one production per

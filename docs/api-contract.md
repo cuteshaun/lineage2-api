@@ -62,6 +62,7 @@ be `null` per type; the field itself is always emitted.
 | `partOfSets?: ArmorSetDetailDto[]` | Item is listed as a piece in one or more armor sets. **Plural** — one item (Tallum Helmet 547) can belong to several sets (Heavy / Light / Robe). Order is the natural set-id order. Each entry is the **full** armor-set detail — pieces with icons, bonus skill resolved, optional shield + enchant6 bonuses — so consumers can render the set in place without a second round-trip. The catalog endpoint (`GET /api/[chronicle]/armor-sets`) returns the same shape; there is no per-id detail endpoint. |
 | `exchangeFrom?: ExchangeOptionDto[]` | Mammon exchanges that *produce* this item — answers "how do I obtain this?" Present on unsealed A/S armor + accessories. Plural by contract; current Mammon dataset is 1:1. |
 | `exchangeFor?: ExchangeOptionDto[]` | Mammon exchanges that *consume* this item as an ingredient — answers "what can I exchange this for?" Present on sealed A/S armor + accessories. Plural by contract. |
+| `usedAsSpellbook?: SpellbookSkillDto` | Present only when the item is a spellbook (entry in `data/xml/spellbooks.xml`). Single-valued — each spellbook teaches exactly one skill in source data. Carries `skillId`, `skillName`, `iconFile`, and `learnedBy: ClassRefDto[]` (every class that learns *any* level of the skill). |
 | `specialAbilityOptions[].saveMechanic?` | Variant has `mp_consume_reduce` or `reduced_soulshot` in its raw `properties` |
 | `specialAbilityOptions[].statDelta?` | Variant is a Light (weight delta) or Quick Recovery (reuseDelay delta) SA |
 
@@ -182,6 +183,55 @@ scope.
 Reference fixtures (`tests/items.snapshot.test.ts`):
 - **Tallum Plate Armor (2382)** — unsealed A-grade with `exchangeFrom` populated.
 - **Sealed Tallum Plate Armor (5293)** — sealed A-grade with `exchangeFor` populated.
+
+## `ClassDetailDto` — stable fields (`GET /api/[chronicle]/classes/[id]`)
+
+Player class with progression metadata + the full skill-learn table.
+Class metadata (id, name, race, type, professionLevel, parent) is
+sourced from the canonical `ClassId.java` enum so it stays
+engine-truthful even if the class XML files are reorganised.
+
+| Field | Type | Notes |
+|---|---|---|
+| `id` | number | Canonical class id (matches the L2 client's class numbering, 0–117 with gaps for engine dummies). Stable across all Interlude-derived servers. |
+| `name` | string | Display name from the enum (e.g. `"Human Fighter"`, `"Phoenix Knight"`). |
+| `race` | string | One of `"Human"`, `"Elf"`, `"Dark Elf"`, `"Orc"`, `"Dwarf"`. (No Kamael — added post-Interlude.) |
+| `type` | string | `"Fighter"` / `"Mystic"` / `"Priest"`. Enum-derived. |
+| `professionLevel` | number | `0` = base class, `1` = 1st profession, `2` = 2nd profession, `3` = 3rd profession. |
+| `parentClassId` | number \| null | Direct parent class id; `null` for base classes. |
+| `childClassIds` | number[] | Direct children — sorted by id, empty for 3rd-profession leaves. |
+| `skills` | `ClassSkillLearnDto[]` | Sorted by `(skillId, skillLevel, minPlayerLevel)`. |
+
+### `ClassSkillLearnDto` — stable fields
+
+| Field | Type | Notes |
+|---|---|---|
+| `skillId`, `skillLevel` | number | Reference into `skills.json` — keyed via the same `"id-level"` convention used by `Item.itemSkill`. |
+| `name`, `iconFile` | string / string \| null | Resolved from the existing skill record. **No new icon parser** — values come straight from `skills.json`. Falls back to `#<id>-<lvl>` and `null` if the skill fails to resolve. |
+| `minPlayerLevel` | number | Player level required to learn the skill. |
+| `spCost` | number | Skill point cost. |
+| `spellbookItemId?` | number | Item id of the required spellbook from `spellbooks.xml`, when one exists. |
+
+`ClassListDto` (`GET /api/[chronicle]/classes`) is the same shape minus
+`childClassIds` and `skills`. Both endpoints ship full responses without
+query params today; cross-endpoint param design is deferred.
+
+Reference fixtures (`tests/classes.snapshot.test.ts`):
+- **Human Fighter (0)** — base class, no parent, exercises root skill-learn shape.
+- **Human Knight (4)** — 1st profession, exercises parent link + heavier skill list.
+- **Phoenix Knight (90)** — 3rd profession, exercises deep-parent link.
+
+### `SpellbookSkillDto` — stable fields (under `ItemDetailDto.usedAsSpellbook`)
+
+| Field | Type | Notes |
+|---|---|---|
+| `skillId` | number | The skill the spellbook teaches. |
+| `skillName`, `iconFile` | string / string \| null | Resolved from `skills.json` at level 1 (the source XML doesn't differentiate skill levels for spellbooks — one item teaches all levels). |
+| `learnedBy` | `ClassRefDto[]` | Every class that can learn *any* level of the skill, sorted by class id. Each entry is a compact `{ id, name, professionLevel }` reference; **not** a full `ClassDetailDto` — that would recurse and balloon the response. |
+
+Reference fixture: **Spellbook: Heal (1152)** in the items snapshot
+suite locks the cross-link to all 6 classes that learn Heal (Human
+Mystic, Cleric, Elven Mystic, Elven Oracle, Dark Mystic, Shillien Oracle).
 
 ## Engine-rule fields (not derived from a single skill / item)
 

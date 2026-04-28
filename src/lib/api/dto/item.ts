@@ -2,6 +2,7 @@ import type { Chronicle } from "../../chronicles";
 import type { Item, Multisell, MultisellEntry } from "../../types";
 import {
   getArmorSetsByItemId,
+  getAllClasses,
   getExchangesByIngredientId,
   getExchangesByProductId,
   getItemById,
@@ -10,7 +11,10 @@ import {
   getSaBaseWeaponId,
   getRecipeByItemId,
   getRecipesByProductId,
+  getSkillByKey,
+  getSpellbookSkillByItemId,
 } from "../../data/indexes";
+import { toClassRefDto, type ClassRefDto } from "./class";
 import { resolveSkill, type SkillSummaryDto } from "./skill";
 import {
   toArmorSetDetailDto,
@@ -58,6 +62,20 @@ export interface ItemQuantityDto {
   name: string;
   iconFile: string | null;
   count: number;
+}
+
+/**
+ * Cross-link from a spellbook item back to the skill it teaches and
+ * the classes that learn that skill. Compact by design — embeds only
+ * `ClassRefDto` (id+name+professionLevel), not the full
+ * `ClassDetailDto`, to avoid recursion / response bloat.
+ */
+export interface SpellbookSkillDto {
+  skillId: number;
+  skillName: string;
+  iconFile: string | null;
+  /** Classes that can learn this skill, sorted by class id. */
+  learnedBy: ClassRefDto[];
 }
 
 /**
@@ -170,6 +188,13 @@ export interface ItemDetailDto {
    * A/S armor lands here. Plural for the same reason as `exchangeFrom`.
    */
   exchangeFor?: ExchangeOptionDto[];
+  /**
+   * When this item is a spellbook (entry in `data/xml/spellbooks.xml`),
+   * resolve the skill it teaches and the classes that can learn it.
+   * Omitted when the item is not a spellbook. Single-valued — each
+   * spellbook teaches exactly one skill in the source data.
+   */
+  usedAsSpellbook?: SpellbookSkillDto;
 }
 
 const BODYPART_LABELS: Record<string, string> = {
@@ -453,7 +478,43 @@ export function toItemDetailDto(
     if (resolved.length > 0) dto.exchangeFor = resolved;
   }
 
+  // Spellbook cross-link: when this item teaches a skill via
+  // `spellbooks.xml`, resolve the skill + every class that learns it.
+  const taughtSkillId = getSpellbookSkillByItemId(chronicle, item.id);
+  if (taughtSkillId !== undefined) {
+    const spellbookDto = toSpellbookSkillDto(chronicle, taughtSkillId);
+    if (spellbookDto) dto.usedAsSpellbook = spellbookDto;
+  }
+
   return dto;
+}
+
+/**
+ * Resolve a spellbook's taught skill into the public DTO shape. The
+ * spellbook XML doesn't differentiate skill levels — one item teaches
+ * all levels of the skill — so we surface the skill at level 1 for
+ * its name+icon and aggregate `learnedBy` across every class that
+ * learns *any* level of the skill.
+ */
+function toSpellbookSkillDto(
+  chronicle: Chronicle,
+  skillId: number
+): SpellbookSkillDto | null {
+  const resolved = getSkillByKey(chronicle, `${skillId}-1`);
+  const learnedBy: ClassRefDto[] = [];
+  for (const c of getAllClasses(chronicle)) {
+    if (c.skills.some((s) => s.skillId === skillId)) {
+      learnedBy.push(toClassRefDto(c));
+    }
+  }
+  // No class learns it AND we can't resolve the skill itself — bail.
+  if (!resolved && learnedBy.length === 0) return null;
+  return {
+    skillId,
+    skillName: resolved?.name ?? `#${skillId}`,
+    iconFile: resolved?.iconFile ?? null,
+    learnedBy,
+  };
 }
 
 function toItemQuantityDto(

@@ -27,6 +27,8 @@ import { getItemById } from "@/lib/data/indexes";
  *   member of three Tallum sets: Heavy / Light / Robe)
  * - Mammon `exchangeFrom` — A-grade unsealed armor (Tallum Plate Armor 2382)
  * - Mammon `exchangeFor` — A-grade sealed armor (Sealed Tallum Plate Armor 5293)
+ * - Spellbook (`usedAsSpellbook`) — Spellbook: Heal (id 1152) — locks the
+ *   skill→class learner cross-link for spellbook items.
  */
 const REPRESENTATIVE_ITEMS: Array<{ id: number; name: string }> = [
   { id: 6367, name: "Angel Slayer" },
@@ -44,6 +46,7 @@ const REPRESENTATIVE_ITEMS: Array<{ id: number; name: string }> = [
   { id: 547, name: "Tallum Helmet" },
   { id: 2382, name: "Tallum Plate Armor" },
   { id: 5293, name: "Sealed Tallum Plate Armor" },
+  { id: 1152, name: "Spellbook: Heal" },
 ];
 
 for (const { id, name } of REPRESENTATIVE_ITEMS) {

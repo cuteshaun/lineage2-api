@@ -1,6 +1,7 @@
 import type { Chronicle } from "../chronicles";
 import type {
   ArmorSet,
+  ClassRecord,
   Item,
   Multisell,
   Npc,
@@ -8,6 +9,7 @@ import type {
   Recipe,
   Skill,
   Spawn,
+  Spellbook,
 } from "../types";
 import { loadChronicleDataset } from "./loaders";
 import { buildCleanedNpcs } from "./cleaned-npcs";
@@ -103,6 +105,20 @@ interface ChronicleIndexes {
   exchangesByIngredientId: Map<number, MultisellEntryRef[]>;
   /** itemId → exchanges that produce this item. */
   exchangesByProductId: Map<number, MultisellEntryRef[]>;
+  /** All player classes, sorted by id. */
+  classes: ClassRecord[];
+  /** Class lookup by id. */
+  classesById: Map<number, ClassRecord>;
+  /**
+   * Reverse cross-link: parent class id → direct child class ids.
+   * Empty for leaf classes (3rd profession or base classes with no
+   * declared children — though every base class does have children).
+   */
+  childClassIdsByParent: Map<number, number[]>;
+  /** Spellbook item id → skill id. (Reverse direction of `<book>`.) */
+  spellbookSkillByItemId: Map<number, number>;
+  /** Spellbook skill id → item id. */
+  spellbookItemBySkillId: Map<number, number>;
 }
 
 export interface MultisellEntryRef {
@@ -419,6 +435,33 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
     skillByKey.set(`${s.id}-${s.level}`, s);
   }
 
+  // Class indexes
+  const classesById = new Map<number, ClassRecord>();
+  const childClassIdsByParent = new Map<number, number[]>();
+  for (const c of dataset.classes) {
+    classesById.set(c.id, c);
+    if (c.parentClassId !== null) {
+      let list = childClassIdsByParent.get(c.parentClassId);
+      if (!list) {
+        list = [];
+        childClassIdsByParent.set(c.parentClassId, list);
+      }
+      list.push(c.id);
+    }
+  }
+  // Sort children by id for deterministic output.
+  for (const list of childClassIdsByParent.values()) {
+    list.sort((a, b) => a - b);
+  }
+
+  // Spellbook indexes (forward + reverse).
+  const spellbookSkillByItemId = new Map<number, number>();
+  const spellbookItemBySkillId = new Map<number, number>();
+  for (const b of dataset.spellbooks) {
+    spellbookSkillByItemId.set(b.itemId, b.skillId);
+    spellbookItemBySkillId.set(b.skillId, b.itemId);
+  }
+
   // Multisell exchange indexes. Forward (ingredient → exchange) and
   // reverse (product → exchange). Only the Mammon-scoped multisells are
   // ingested today — see `scripts/parse-multisell.ts`.
@@ -478,6 +521,11 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
     multisells: dataset.multisells,
     exchangesByIngredientId,
     exchangesByProductId,
+    classes: dataset.classes,
+    classesById,
+    childClassIdsByParent,
+    spellbookSkillByItemId,
+    spellbookItemBySkillId,
   };
 }
 
@@ -968,4 +1016,54 @@ export function getExchangesByProductId(
   return (
     getChronicleIndexes(chronicle).exchangesByProductId.get(itemId) ?? []
   );
+}
+
+// --- Class lookups ---
+
+/** Returns every player class for the chronicle, sorted by id. */
+export function getAllClasses(chronicle: Chronicle): ClassRecord[] {
+  return getChronicleIndexes(chronicle).classes;
+}
+
+/** Returns a class by canonical id, or `undefined`. */
+export function getClassById(
+  chronicle: Chronicle,
+  id: number
+): ClassRecord | undefined {
+  return getChronicleIndexes(chronicle).classesById.get(id);
+}
+
+/**
+ * Direct child class ids (next profession step). Empty for 3rd-profession
+ * leaves and for base classes if the engine declares no children
+ * (rare — every base class has children in Interlude).
+ */
+export function getChildClassIds(
+  chronicle: Chronicle,
+  parentId: number
+): number[] {
+  return (
+    getChronicleIndexes(chronicle).childClassIdsByParent.get(parentId) ?? []
+  );
+}
+
+// --- Spellbook lookups ---
+
+/**
+ * Returns the skill id taught by consuming this item, or `undefined`
+ * when the item is not a spellbook. Used by `ItemDetailDto.usedAsSpellbook?`.
+ */
+export function getSpellbookSkillByItemId(
+  chronicle: Chronicle,
+  itemId: number
+): number | undefined {
+  return getChronicleIndexes(chronicle).spellbookSkillByItemId.get(itemId);
+}
+
+/** Returns the spellbook item id required to learn this skill, or `undefined`. */
+export function getSpellbookItemBySkillId(
+  chronicle: Chronicle,
+  skillId: number
+): number | undefined {
+  return getChronicleIndexes(chronicle).spellbookItemBySkillId.get(skillId);
 }

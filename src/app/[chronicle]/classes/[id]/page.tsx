@@ -129,85 +129,114 @@ export default async function ClassDetailPage({
             No class skills declared in source data.
           </p>
         ) : (
-          <SkillTable chronicle={chronicle} skills={cls.skills} />
+          <SkillsByLevel chronicle={chronicle} skills={cls.skills} />
         )}
       </Section>
     </div>
   );
 }
 
-function SkillTable({
+function SkillsByLevel({
   chronicle,
   skills,
 }: {
   chronicle: string;
   skills: ClassSkillLearnDto[];
 }) {
-  // Sort: by required player level, then by skill name, then by skill level.
-  const sorted = [...skills].sort(
-    (a, b) =>
-      a.minPlayerLevel - b.minPlayerLevel ||
-      a.name.localeCompare(b.name) ||
-      a.skillLevel - b.skillLevel
-  );
+  // Group skills by minPlayerLevel; within each group, sort by skill
+  // name then skill level for stable rendering.
+  const groups = new Map<number, ClassSkillLearnDto[]>();
+  for (const s of skills) {
+    let list = groups.get(s.minPlayerLevel);
+    if (!list) {
+      list = [];
+      groups.set(s.minPlayerLevel, list);
+    }
+    list.push(s);
+  }
+  const orderedLevels = [...groups.keys()].sort((a, b) => a - b);
 
   return (
-    <div className="overflow-x-auto rounded border border-zinc-200 dark:border-zinc-800">
-      <table className="w-full text-sm">
-        <thead className="bg-zinc-50 text-left font-mono text-[10px] uppercase tracking-wide text-zinc-500 dark:bg-zinc-900 dark:text-zinc-400">
-          <tr>
-            <th className="w-16 px-3 py-2 text-right">Lvl</th>
-            <th className="px-3 py-2">Skill</th>
-            <th className="w-16 px-3 py-2 text-right">Sk.Lv</th>
-            <th className="w-24 px-3 py-2 text-right">SP</th>
-            <th className="px-3 py-2">Spellbook</th>
-          </tr>
-        </thead>
-        <tbody>
-          {sorted.map((s) => (
-            <tr
-              key={`${s.skillId}-${s.skillLevel}`}
-              className="border-t border-zinc-100 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-900"
-            >
-              <td className="px-3 py-2 text-right font-mono text-xs text-zinc-600 dark:text-zinc-400">
-                {s.minPlayerLevel}
-              </td>
-              <td className="px-3 py-2">
-                <span className="flex items-center gap-2">
-                  <ItemIcon
-                    iconFile={s.iconFile}
-                    name={s.name}
-                    size={20}
-                    decorative
-                  />
-                  <span className="text-zinc-900 dark:text-zinc-100">
-                    {s.name}
-                  </span>
-                </span>
-              </td>
-              <td className="px-3 py-2 text-right font-mono text-xs text-zinc-600 dark:text-zinc-400">
-                {s.skillLevel}
-              </td>
-              <td className="px-3 py-2 text-right font-mono text-xs text-zinc-600 dark:text-zinc-400">
-                {s.spCost.toLocaleString()}
-              </td>
-              <td className="px-3 py-2">
-                {s.spellbookItemId ? (
-                  <Link
-                    href={`/${chronicle}/items/${s.spellbookItemId}`}
-                    className="font-mono text-xs text-indigo-600 hover:underline dark:text-indigo-400"
-                  >
-                    item #{s.spellbookItemId}
-                  </Link>
-                ) : (
-                  <span className="text-zinc-400 dark:text-zinc-600">—</span>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="flex flex-col gap-6">
+      {orderedLevels.map((level) => {
+        const rows = (groups.get(level) ?? []).sort(
+          (a, b) =>
+            a.name.localeCompare(b.name) || a.skillLevel - b.skillLevel
+        );
+        return (
+          <section key={level} className="flex flex-col gap-2">
+            <h3 className="font-mono text-sm font-bold text-amber-500 dark:text-amber-400">
+              Lvl {level}
+            </h3>
+            <ul className="flex flex-col gap-2 pl-3">
+              {rows.map((s) => (
+                <SkillRow
+                  key={`${s.skillId}-${s.skillLevel}`}
+                  chronicle={chronicle}
+                  skill={s}
+                />
+              ))}
+            </ul>
+          </section>
+        );
+      })}
     </div>
+  );
+}
+
+function SkillRow({
+  chronicle,
+  skill,
+}: {
+  chronicle: string;
+  skill: ClassSkillLearnDto;
+}) {
+  return (
+    <li className="flex items-start gap-3">
+      <ItemIcon
+        iconFile={skill.iconFile}
+        name={skill.name}
+        size={28}
+        decorative
+      />
+      <div className="flex min-w-0 flex-1 flex-col gap-1">
+        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 text-sm">
+          <span className="font-semibold text-zinc-900 dark:text-zinc-100">
+            {skill.name}{" "}
+            <span className="font-mono text-xs text-zinc-500 dark:text-zinc-400">
+              Lv {skill.skillLevel}
+            </span>
+          </span>
+          <span className="font-mono text-xs text-zinc-500 dark:text-zinc-400">
+            {skill.spCost.toLocaleString()} SP
+          </span>
+          {skill.mpConsume != null && skill.mpConsume > 0 && (
+            <span className="font-mono text-xs text-sky-600 dark:text-sky-400">
+              {skill.mpConsume} MP
+            </span>
+          )}
+          {skill.spellbook && (
+            <Link
+              href={`/${chronicle}/items/${skill.spellbook.itemId}`}
+              className="flex items-center gap-1.5 rounded bg-indigo-50 px-2 py-0.5 text-xs text-indigo-700 transition-colors hover:bg-indigo-100 dark:bg-indigo-950/50 dark:text-indigo-300 dark:hover:bg-indigo-900/60"
+            >
+              <ItemIcon
+                iconFile={skill.spellbook.iconFile}
+                name={skill.spellbook.name}
+                size={14}
+                decorative
+              />
+              <span>{skill.spellbook.name}</span>
+            </Link>
+          )}
+        </div>
+        {skill.description && (
+          <p className="text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
+            {skill.description}
+          </p>
+        )}
+      </div>
+    </li>
   );
 }
 

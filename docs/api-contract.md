@@ -207,10 +207,11 @@ engine-truthful even if the class XML files are reorganised.
 | Field | Type | Notes |
 |---|---|---|
 | `skillId`, `skillLevel` | number | Reference into `skills.json` — keyed via the same `"id-level"` convention used by `Item.itemSkill`. |
-| `name`, `iconFile` | string / string \| null | Resolved from the existing skill record. **No new icon parser** — values come straight from `skills.json`. Falls back to `#<id>-<lvl>` and `null` if the skill fails to resolve. |
-| `minPlayerLevel` | number | Player level required to learn the skill. |
-| `spCost` | number | Skill point cost. |
-| `spellbookItemId?` | number | Item id of the required spellbook from `spellbooks.xml`, when one exists. |
+| `name`, `description`, `iconFile` | string / string \| null / string \| null | Resolved from the existing skill record. **No new icon parser** — values come straight from `skills.json`. `name` falls back to `#<id>-<lvl>`; `description` and `iconFile` fall back to `null` if the skill fails to resolve or has no source description. |
+| `minPlayerLevel` | number | Player level required to learn the skill. The aCis source XML deliberately uses tier-of-3 progression — the same skill often has 3 consecutive `skillLevel` entries with the same `minPlayerLevel`. This is engine truth, not duplication. |
+| `spCost` | number | Skill point cost — paid every time the player learns a new level. |
+| `mpConsume` | number \| null | MP consumed each time the skill is cast at this level. `null` for passives/toggles with no MP cost in source data. |
+| `spellbook?` | `SpellbookItemRefDto` | Spellbook item required to **first** learn this skill. Surfaced only on the **lowest-skillLevel row per skill** in the class — engine-truth, the book is consumed once per skill family, not once per level. Omitted entirely when no spellbook is required. |
 
 `ClassListDto` (`GET /api/[chronicle]/classes`) is the same shape minus
 `childClassIds` and `skills`. Both endpoints ship full responses without

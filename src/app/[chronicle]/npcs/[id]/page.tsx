@@ -2,10 +2,20 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isChronicle } from "@/lib/chronicles";
 import { apiFetch } from "@/lib/api/client";
-import { NpcDetails } from "@/components/explorer/NpcDetails";
+import { NpcDetails, type NpcShopSummary } from "@/components/explorer/NpcDetails";
 import type { NpcDropsDto } from "@/lib/api/dto/drops";
 import type { NpcDetailDto } from "@/lib/api/dto/npc";
+import type {
+  ExchangeOptionDto,
+  ShopProductDto,
+} from "@/lib/api/dto/item";
 import type { Spawn } from "@/lib/types";
+
+interface ShopResponse {
+  npc: { id: number; name: string };
+  buyList?: ShopProductDto[];
+  exchanges?: ExchangeOptionDto[];
+}
 
 export default async function NpcDetailsPage({
   params,
@@ -18,12 +28,13 @@ export default async function NpcDetailsPage({
   const numericId = Number(id);
   if (!Number.isInteger(numericId) || numericId <= 0) notFound();
 
-  // Fetch NPC detail, drops, and raw spawns in parallel. All three share
-  // the same numeric id, so parallel fetching is safe.
-  const [npcResult, dropsResult, spawnsResult] = await Promise.all([
+  // Fetch NPC detail, drops, raw spawns, and shop summary in parallel.
+  // All four share the same numeric id, so parallel fetching is safe.
+  const [npcResult, dropsResult, spawnsResult, shopResult] = await Promise.all([
     apiFetch<NpcDetailDto>(`/api/${chronicle}/npcs/${numericId}`),
     apiFetch<NpcDropsDto>(`/api/${chronicle}/npcs/${numericId}/drops`),
     apiFetch<Spawn[]>(`/api/${chronicle}/npcs/${numericId}/spawns`),
+    apiFetch<ShopResponse>(`/api/${chronicle}/npcs/${numericId}/shop`),
   ]);
 
   if (!npcResult.ok) {
@@ -44,6 +55,18 @@ export default async function NpcDetailsPage({
   // the whole page.
   const spawns = spawnsResult.ok ? spawnsResult.data : null;
 
+  // Compact shop summary — counts only, not the full payload. The detail
+  // view lives at `/[chronicle]/npcs/[id]/shop`. NPCs with no buyList +
+  // no exchanges yield `null`, suppressing the section entirely.
+  let shop: NpcShopSummary | null = null;
+  if (shopResult.ok) {
+    const buyListCount = shopResult.data.buyList?.length ?? 0;
+    const exchangesCount = shopResult.data.exchanges?.length ?? 0;
+    if (buyListCount > 0 || exchangesCount > 0) {
+      shop = { buyListCount, exchangesCount };
+    }
+  }
+
   return (
     <div className="flex flex-col gap-6">
       <Link
@@ -57,6 +80,7 @@ export default async function NpcDetailsPage({
         npc={npcResult.data}
         drops={drops}
         spawns={spawns}
+        shop={shop}
         kind="npc"
       />
     </div>

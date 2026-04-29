@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { DropsTable } from "./DropsTable";
 import { SpawnSummary } from "./SpawnSummary";
 import type { Chronicle } from "@/lib/chronicles";
@@ -5,17 +6,29 @@ import type { NpcDetailDto } from "@/lib/api/dto/npc";
 import type { NpcDropsDto } from "@/lib/api/dto/drops";
 import type { Spawn } from "@/lib/types";
 
+/**
+ * Compact shop summary passed in by the page handler. Counts only —
+ * the detail view lives at `/[chronicle]/npcs/[id]/shop`. `null` when
+ * the NPC has no buyList and no allow-listed multisells.
+ */
+export interface NpcShopSummary {
+  buyListCount: number;
+  exchangesCount: number;
+}
+
 export function NpcDetails({
   chronicle,
   npc,
   drops,
   spawns,
+  shop,
   kind,
 }: {
   chronicle: Chronicle;
   npc: NpcDetailDto;
   drops: NpcDropsDto | null;
   spawns: Spawn[] | null;
+  shop?: NpcShopSummary | null;
   kind: "npc" | "monster";
 }) {
   return (
@@ -116,6 +129,37 @@ export function NpcDetails({
               </li>
             ))}
           </ul>
+        </Section>
+      )}
+
+      {shop && (
+        <Section title="Shop">
+          <Link
+            href={`/${chronicle}/npcs/${npc.id}/shop`}
+            className="flex items-center justify-between rounded border border-zinc-100 p-3 text-sm transition-colors hover:border-zinc-300 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:border-zinc-600 dark:hover:bg-zinc-900"
+          >
+            <span className="flex items-baseline gap-3">
+              {shop.buyListCount > 0 && (
+                <span className="text-zinc-900 dark:text-zinc-100">
+                  <span className="font-semibold">{shop.buyListCount}</span>{" "}
+                  <span className="text-zinc-500 dark:text-zinc-400">
+                    {shop.buyListCount === 1 ? "product" : "products"}
+                  </span>
+                </span>
+              )}
+              {shop.exchangesCount > 0 && (
+                <span className="text-zinc-900 dark:text-zinc-100">
+                  <span className="font-semibold">{shop.exchangesCount}</span>{" "}
+                  <span className="text-zinc-500 dark:text-zinc-400">
+                    {shop.exchangesCount === 1 ? "exchange" : "exchanges"}
+                  </span>
+                </span>
+              )}
+            </span>
+            <span className="font-mono text-xs text-indigo-600 dark:text-indigo-400">
+              View shop →
+            </span>
+          </Link>
         </Section>
       )}
 

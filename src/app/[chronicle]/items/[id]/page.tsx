@@ -325,6 +325,38 @@ export default async function ItemDetailsPage({
         </Section>
       )}
 
+      {item.soldBy && item.soldBy.length > 0 && (
+        <Section
+          title={
+            item.soldBy.length === 1
+              ? "Sold By"
+              : `Sold By (${item.soldBy.length})`
+          }
+        >
+          <div className="flex flex-col">
+            {item.soldBy.map((offer) => (
+              <Link
+                key={`${offer.npc.id}-${offer.buyListId}`}
+                href={`/${chronicle}/npcs/${offer.npc.id}`}
+                className="flex items-center justify-between gap-3 border-t border-zinc-100 px-3 py-2 text-sm transition-colors first:border-t-0 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-900"
+              >
+                <span className="text-zinc-900 dark:text-zinc-100">
+                  {offer.npc.name}
+                </span>
+                <span className="flex items-baseline gap-3">
+                  <span className="font-mono text-xs text-zinc-700 dark:text-zinc-300">
+                    {offer.price.toLocaleString()} a
+                  </span>
+                  <span className="font-mono text-[10px] uppercase tracking-wide text-zinc-400 dark:text-zinc-500">
+                    list #{offer.buyListId}
+                  </span>
+                </span>
+              </Link>
+            ))}
+          </div>
+        </Section>
+      )}
+
       {item.exchangeFrom && item.exchangeFrom.length > 0 && (
         <Section
           title={

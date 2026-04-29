@@ -4,6 +4,7 @@ import { getChronicleDataConfig } from "../chronicle-config";
 import type { Chronicle } from "../chronicles";
 import type {
   ArmorSet,
+  BuyList,
   ClassRecord,
   Item,
   Multisell,
@@ -24,6 +25,7 @@ interface ChronicleDataset {
   armorSets: ArmorSet[];
   skills: Skill[];
   multisells: Multisell[];
+  buyLists: BuyList[];
   classes: ClassRecord[];
   spellbooks: Spellbook[];
 }
@@ -65,6 +67,9 @@ export function loadChronicleDataset(chronicle: Chronicle): ChronicleDataset {
     skills: readJson<Skill[]>(path.join(config.generatedDir, "skills.json")),
     multisells: readJson<Multisell[]>(
       path.join(config.generatedDir, "multisells.json")
+    ),
+    buyLists: readJson<BuyList[]>(
+      path.join(config.generatedDir, "buylists.json")
     ),
     classes: readJson<ClassRecord[]>(
       path.join(config.generatedDir, "classes.json")

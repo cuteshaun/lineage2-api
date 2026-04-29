@@ -1,0 +1,138 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`buyLists for Lector (30001) match snapshot 1`] = `
+[
+  {
+    "id": 1,
+    "npcId": 30001,
+    "products": [
+      {
+        "itemId": 1,
+        "price": 883,
+      },
+      {
+        "itemId": 4,
+        "price": 883,
+      },
+      {
+        "itemId": 11,
+        "price": 883,
+      },
+      {
+        "itemId": 13,
+        "price": 883,
+      },
+      {
+        "itemId": 3,
+        "price": 14375,
+      },
+      {
+        "itemId": 152,
+        "price": 9280,
+      },
+      {
+        "itemId": 12,
+        "price": 14375,
+      },
+      {
+        "itemId": 215,
+        "price": 14375,
+      },
+      {
+        "itemId": 14,
+        "price": 14375,
+      },
+      {
+        "itemId": 5,
+        "price": 14375,
+      },
+      {
+        "itemId": 153,
+        "price": 21275,
+      },
+      {
+        "itemId": 1333,
+        "price": 62215,
+      },
+      {
+        "itemId": 66,
+        "price": 62215,
+      },
+      {
+        "itemId": 67,
+        "price": 62215,
+      },
+      {
+        "itemId": 122,
+        "price": 62215,
+      },
+      {
+        "itemId": 154,
+        "price": 62215,
+      },
+      {
+        "itemId": 216,
+        "price": 62215,
+      },
+      {
+        "itemId": 271,
+        "price": 62215,
+      },
+      {
+        "itemId": 2,
+        "price": 156400,
+      },
+      {
+        "itemId": 218,
+        "price": 156400,
+      },
+      {
+        "itemId": 272,
+        "price": 156400,
+      },
+      {
+        "itemId": 15,
+        "price": 156400,
+      },
+      {
+        "itemId": 5284,
+        "price": 280600,
+      },
+    ],
+  },
+  {
+    "id": 2,
+    "npcId": 30001,
+    "products": [
+      {
+        "itemId": 7,
+        "price": 883,
+      },
+      {
+        "itemId": 308,
+        "price": 883,
+      },
+      {
+        "itemId": 8,
+        "price": 14375,
+      },
+      {
+        "itemId": 99,
+        "price": 14375,
+      },
+      {
+        "itemId": 9,
+        "price": 62215,
+      },
+      {
+        "itemId": 176,
+        "price": 156400,
+      },
+      {
+        "itemId": 310,
+        "price": 156400,
+      },
+    ],
+  },
+]
+`;

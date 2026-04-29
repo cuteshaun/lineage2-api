@@ -48,6 +48,8 @@ export interface ChronicleSources {
   spellbooksXmlFile: string;
   /** Absolute path to the `ClassId.java` enum (canonical class tree: id, name, race, type, level, parent). */
   classIdEnumFile: string;
+  /** Absolute path to `buyLists.xml` in the upstream datapack. */
+  buyListsXmlFile: string;
 }
 
 interface SourceSpec {
@@ -69,6 +71,7 @@ interface SourceSpec {
   classesXmlDir: string[];
   spellbooksXmlFile: string[];
   classIdEnumFile: string[];
+  buyListsXmlFile: string[];
 }
 
 const SOURCE_SPECS: Record<Chronicle, SourceSpec> = {
@@ -177,6 +180,14 @@ const SOURCE_SPECS: Record<Chronicle, SourceSpec> = {
       "actors",
       "ClassId.java",
     ],
+    buyListsXmlFile: [
+      "..",
+      "aCis_382_LATEST_STABLE",
+      "aCis_datapack",
+      "data",
+      "xml",
+      "buyLists.xml",
+    ],
   },
 };
 
@@ -208,5 +219,6 @@ export function getChronicleSources(chronicle: Chronicle): ChronicleSources {
     classesXmlDir: path.join(root, ...spec.classesXmlDir),
     spellbooksXmlFile: path.join(root, ...spec.spellbooksXmlFile),
     classIdEnumFile: path.join(root, ...spec.classIdEnumFile),
+    buyListsXmlFile: path.join(root, ...spec.buyListsXmlFile),
   };
 }

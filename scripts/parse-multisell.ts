@@ -15,21 +15,35 @@ const parser = new XMLParser({
 });
 
 /**
- * Mammon Blacksmith multisell files. Scope is deliberately narrow —
- * only the Seven Signs unseal / reseal flows. Any other multisell
- * (regular shops, dye merchants, generic vendors) is intentionally
- * out of scope.
+ * Multisell files we ingest. Curated allow-list — see roadmap M2 plan
+ * for category boundaries. Anything not in this list (quest exchanges,
+ * SA insertion, manor crop conversion, dyes, shadow weapons, etc.) is
+ * deliberately out of scope.
  *
  * File-id semantics from aCis comments:
- *   311262504 — Unseal S-Grade Armor
- *   311262505 — Unseal S-Grade Accessories
- *   311262506 — Unseal A-Grade Armor
- *   311262507 — Unseal A-Grade Accessories
- *   311262508 — Reseal A-Grade Armor
+ *   311262504 — Mammon: Unseal S-Grade Armor      (Blacksmith of Mammon)
+ *   311262505 — Mammon: Unseal S-Grade Accessories
+ *   311262506 — Mammon: Unseal A-Grade Armor
+ *   311262507 — Mammon: Unseal A-Grade Accessories
+ *   311262508 — Mammon: Reseal A-Grade Armor
+ *        1002 — B-Grade Unseal                    (14 town blacksmiths)
+ *        1003 — B-Grade Reseal                    (14 town blacksmiths)
+ *        1235 — Apella Trader                     (clan armor; 2 traders)
+ *   300974001 — Luxury Shop weapons               (Trader Galladucci)
+ *   300984001 — Luxury Shop armor                 (Trader Alexandria)
+ *   300984002 — Luxury Shop misc                  (Trader Alexandria)
  */
-const MAMMON_MULTISELL_IDS = [
+const ALLOWED_MULTISELL_IDS = [
+  // Mammon
   311262504, 311262505, 311262506, 311262507, 311262508,
+  // B-grade seal/unseal
+  1002, 1003,
+  // Clan / luxury
+  1235, 300974001, 300984001, 300984002,
 ] as const;
+
+/** Adena item id — used to collapse `isTaxIngredient="true"` entries into the main Adena cost. */
+const ADENA_ITEM_ID = 57;
 
 function arrayify<T>(maybe: T | T[] | undefined): T[] {
   if (maybe === undefined || maybe === null) return [];
@@ -53,7 +67,8 @@ function readEntry(node: Record<string, unknown>): MultisellEntry | null {
     return null;
   }
 
-  const ingredients: MultisellEntry["ingredients"] = [];
+  // First pass: collect (itemId, count) pairs.
+  const rawPairs: Array<{ itemId: number; count: number }> = [];
   for (const ing of ingredientRaw) {
     const ingNode = ing as Record<string, unknown>;
     const itemId = Number(ingNode["@_id"]);
@@ -61,10 +76,31 @@ function readEntry(node: Record<string, unknown>): MultisellEntry | null {
     if (!Number.isFinite(itemId) || itemId <= 0 || !Number.isFinite(count)) {
       continue;
     }
-    ingredients.push({ itemId, count });
+    rawPairs.push({ itemId, count });
   }
 
-  if (ingredients.length === 0) return null;
+  if (rawPairs.length === 0) return null;
+
+  // Second pass: collapse Adena ingredients (including any
+  // `isTaxIngredient="true"` rows) into one summed entry. Source XML
+  // can split castle tax into a separate `<ingredient id="57" count="..."
+  // isTaxIngredient="true"/>` row alongside the main Adena cost; from
+  // the player's perspective the total is what matters. The flag
+  // itself is dropped from the public record.
+  const ingredients: MultisellEntry["ingredients"] = [];
+  let adenaCount = 0;
+  let adenaSeen = false;
+  for (const p of rawPairs) {
+    if (p.itemId === ADENA_ITEM_ID) {
+      adenaCount += p.count;
+      adenaSeen = true;
+    } else {
+      ingredients.push(p);
+    }
+  }
+  if (adenaSeen) {
+    ingredients.push({ itemId: ADENA_ITEM_ID, count: adenaCount });
+  }
 
   return {
     ingredients,
@@ -134,7 +170,7 @@ export async function parseMultisells(
   }
 
   const multisells: Multisell[] = [];
-  for (const id of MAMMON_MULTISELL_IDS) {
+  for (const id of ALLOWED_MULTISELL_IDS) {
     const filePath = path.join(dir, `${id}.xml`);
     if (!fs.existsSync(filePath)) {
       console.error(`[parse-multisell] Expected file missing: ${filePath}`);

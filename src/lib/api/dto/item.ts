@@ -3,6 +3,7 @@ import type { Item, Multisell, MultisellEntry } from "../../types";
 import {
   getArmorSetsByItemId,
   getAllClasses,
+  getBuyListsByItemId,
   getExchangesByIngredientId,
   getExchangesByProductId,
   getItemById,
@@ -79,15 +80,50 @@ export interface SpellbookSkillDto {
 }
 
 /**
- * One row of a Mammon multisell, fully resolved. The DTO is symmetric:
- * it appears under `exchangeFor[]` when the current item is one of
- * `required[]`, and under `exchangeFrom[]` when the current item is
- * `produces`. `multisellId` is exposed for traceability/debugging only.
+ * One offer from a merchant's buyList — direct adena→item purchase.
+ * Distinct from `ExchangeOptionDto` (which represents multi-ingredient
+ * exchanges); `ShopOfferDto` is always single-NPC, single-currency
+ * (Adena, item id 57 implicit).
+ *
+ * Used under `ItemDetailDto.soldBy[]` (NPC view of the same data
+ * uses {@link ShopProductDto} instead, which omits the redundant NPC).
+ */
+export interface ShopOfferDto {
+  npc: NpcRefDto;
+  /** Adena cost. */
+  price: number;
+  /** Source buyList id, exposed for traceability/debugging only. */
+  buyListId: number;
+}
+
+/**
+ * One product in an NPC's shop view — same engine row as
+ * {@link ShopOfferDto} viewed from the merchant's side. The NPC is
+ * implicit (the page subject), so it's not repeated here.
+ */
+export interface ShopProductDto {
+  itemId: number;
+  name: string;
+  iconFile: string | null;
+  price: number;
+  buyListId: number;
+}
+
+/**
+ * One row of a multisell exchange, fully resolved. The DTO is
+ * symmetric: it appears under `exchangeFor[]` when the current item
+ * is one of `required[]`, and under `exchangeFrom[]` when the current
+ * item is `produces`. `multisellId` is exposed for traceability only.
+ *
+ * `npcs` is plural because real multisells often reference multiple
+ * NPCs (e.g. B-grade unseal lists 14 town blacksmiths). Castle-tax
+ * Adena is summed into the main Adena ingredient — the public DTO
+ * shows one Adena line per entry, never the raw split.
  */
 export interface ExchangeOptionDto {
   multisellId: number;
   maintainEnchantment: boolean;
-  npc: NpcRefDto;
+  npcs: NpcRefDto[];
   required: ItemQuantityDto[];
   produces: ItemQuantityDto;
 }
@@ -195,6 +231,13 @@ export interface ItemDetailDto {
    * spellbook teaches exactly one skill in the source data.
    */
   usedAsSpellbook?: SpellbookSkillDto;
+  /**
+   * Direct merchants that sell this item for Adena. Sourced from
+   * `buyLists.xml`. Sorted by `price` ascending, then NPC id.
+   * Distinct from `exchangeFrom` (multi-ingredient exchange) — the
+   * two never overlap.
+   */
+  soldBy?: ShopOfferDto[];
 }
 
 const BODYPART_LABELS: Record<string, string> = {
@@ -486,6 +529,27 @@ export function toItemDetailDto(
     if (spellbookDto) dto.usedAsSpellbook = spellbookDto;
   }
 
+  // BuyList cross-link: every merchant who sells this item directly
+  // for Adena. Sorted by price ascending then NPC id for stable
+  // pagination/diff. Skips merchants whose NPC fails to resolve.
+  const buyListRefs = getBuyListsByItemId(chronicle, item.id);
+  if (buyListRefs.length > 0) {
+    const offers: ShopOfferDto[] = [];
+    for (const ref of buyListRefs) {
+      const npc = getRawNpcById(chronicle, ref.buyList.npcId);
+      if (!npc) continue;
+      offers.push({
+        npc: { id: npc.id, name: npc.name },
+        price: ref.buyList.products[ref.productIndex].price,
+        buyListId: ref.buyList.id,
+      });
+    }
+    if (offers.length > 0) {
+      offers.sort((a, b) => a.price - b.price || a.npc.id - b.npc.id);
+      dto.soldBy = offers;
+    }
+  }
+
   return dto;
 }
 
@@ -543,17 +607,20 @@ function toExchangeOptionDto(
   chronicle: Chronicle
 ): ExchangeOptionDto | null {
   const entry: MultisellEntry = multisell.entries[entryIndex];
-  // Use the first npcId — Mammon multisells always have exactly one
-  // (Blacksmith of Mammon, id 31126). Future multi-NPC multisells would
-  // surface as multiple `ExchangeOptionDto` entries instead, but that's
-  // out of scope until a non-Mammon parser lands.
-  const npcId = multisell.npcIds[0];
-  const npc = getRawNpcById(chronicle, npcId);
-  if (!npc) return null;
+  // Resolve every NPC in `<npcs>`. Multi-NPC multisells (e.g. B-grade
+  // unseal lists 14 town blacksmiths) surface as one ExchangeOptionDto
+  // with all NPCs in `npcs[]`. Skip NPCs that fail to resolve; if every
+  // NPC is unknown, drop the entry (caller filters nulls).
+  const npcs: NpcRefDto[] = [];
+  for (const id of multisell.npcIds) {
+    const npc = getRawNpcById(chronicle, id);
+    if (npc) npcs.push({ id: npc.id, name: npc.name });
+  }
+  if (npcs.length === 0) return null;
   return {
     multisellId: multisell.id,
     maintainEnchantment: multisell.maintainEnchantment,
-    npc: { id: npc.id, name: npc.name },
+    npcs,
     required: entry.ingredients.map((ing) =>
       toItemQuantityDto(chronicle, ing.itemId, ing.count)
     ),

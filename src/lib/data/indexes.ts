@@ -1,6 +1,7 @@
 import type { Chronicle } from "../chronicles";
 import type {
   ArmorSet,
+  BuyList,
   ClassRecord,
   Item,
   Multisell,
@@ -119,6 +120,19 @@ interface ChronicleIndexes {
   spellbookSkillByItemId: Map<number, number>;
   /** Spellbook skill id → item id. */
   spellbookItemBySkillId: Map<number, number>;
+  /** All merchant buyLists, sorted by id. */
+  buyLists: BuyList[];
+  /** npcId → every buyList offered by this merchant. */
+  buyListsByNpcId: Map<number, BuyList[]>;
+  /** itemId → every buyList offer that includes this item, with the index into `buyList.products`. */
+  buyListsByItemId: Map<number, BuyListProductRef[]>;
+  /** npcId → every multisell whose `<npcs>` block contains this id. Powers `/npcs/[id]/shop`. */
+  multisellsByNpcId: Map<number, Multisell[]>;
+}
+
+export interface BuyListProductRef {
+  buyList: BuyList;
+  productIndex: number;
 }
 
 export interface MultisellEntryRef {
@@ -463,11 +477,20 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
   }
 
   // Multisell exchange indexes. Forward (ingredient → exchange) and
-  // reverse (product → exchange). Only the Mammon-scoped multisells are
-  // ingested today — see `scripts/parse-multisell.ts`.
+  // reverse (product → exchange). Curated allow-list of multisells —
+  // see `scripts/parse-multisell.ts` for the included files.
   const exchangesByIngredientId = new Map<number, MultisellEntryRef[]>();
   const exchangesByProductId = new Map<number, MultisellEntryRef[]>();
+  const multisellsByNpcId = new Map<number, Multisell[]>();
   for (const multisell of dataset.multisells) {
+    for (const npcId of multisell.npcIds) {
+      let list = multisellsByNpcId.get(npcId);
+      if (!list) {
+        list = [];
+        multisellsByNpcId.set(npcId, list);
+      }
+      list.push(multisell);
+    }
     for (let i = 0; i < multisell.entries.length; i++) {
       const ref: MultisellEntryRef = { multisell, entryIndex: i };
       const entry = multisell.entries[i];
@@ -486,6 +509,28 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
         exchangesByProductId.set(prodId, plist);
       }
       plist.push(ref);
+    }
+  }
+
+  // BuyList indexes (forward by NPC, reverse by item).
+  const buyListsByNpcId = new Map<number, BuyList[]>();
+  const buyListsByItemId = new Map<number, BuyListProductRef[]>();
+  for (const buyList of dataset.buyLists) {
+    let npcLists = buyListsByNpcId.get(buyList.npcId);
+    if (!npcLists) {
+      npcLists = [];
+      buyListsByNpcId.set(buyList.npcId, npcLists);
+    }
+    npcLists.push(buyList);
+
+    for (let i = 0; i < buyList.products.length; i++) {
+      const ref: BuyListProductRef = { buyList, productIndex: i };
+      let itemRefs = buyListsByItemId.get(buyList.products[i].itemId);
+      if (!itemRefs) {
+        itemRefs = [];
+        buyListsByItemId.set(buyList.products[i].itemId, itemRefs);
+      }
+      itemRefs.push(ref);
     }
   }
 
@@ -526,6 +571,10 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
     childClassIdsByParent,
     spellbookSkillByItemId,
     spellbookItemBySkillId,
+    buyLists: dataset.buyLists,
+    buyListsByNpcId,
+    buyListsByItemId,
+    multisellsByNpcId,
   };
 }
 
@@ -1066,4 +1115,42 @@ export function getSpellbookItemBySkillId(
   skillId: number
 ): number | undefined {
   return getChronicleIndexes(chronicle).spellbookItemBySkillId.get(skillId);
+}
+
+// --- BuyList lookups ---
+
+/**
+ * Returns every buyList (merchant inventory) offered by this NPC.
+ * Empty array when the NPC has no buyLists. A given NPC can have
+ * multiple buyLists (e.g. categories like "armor" + "consumables").
+ */
+export function getBuyListsByNpcId(
+  chronicle: Chronicle,
+  npcId: number
+): BuyList[] {
+  return getChronicleIndexes(chronicle).buyListsByNpcId.get(npcId) ?? [];
+}
+
+/**
+ * Returns every buyList offer that includes this item, paired with the
+ * index into `buyList.products`. Used by `ItemDetailDto.soldBy?` to
+ * enumerate every merchant who sells the item directly for Adena.
+ */
+export function getBuyListsByItemId(
+  chronicle: Chronicle,
+  itemId: number
+): BuyListProductRef[] {
+  return getChronicleIndexes(chronicle).buyListsByItemId.get(itemId) ?? [];
+}
+
+/**
+ * Returns every multisell whose `<npcs>` block lists this NPC.
+ * Powers the `/npcs/[id]/shop` reverse lookup. Empty array when the
+ * NPC offers no allow-listed multisell.
+ */
+export function getMultisellsByNpcId(
+  chronicle: Chronicle,
+  npcId: number
+): Multisell[] {
+  return getChronicleIndexes(chronicle).multisellsByNpcId.get(npcId) ?? [];
 }

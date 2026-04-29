@@ -63,6 +63,7 @@ be `null` per type; the field itself is always emitted.
 | `exchangeFrom?: ExchangeOptionDto[]` | Mammon exchanges that *produce* this item — answers "how do I obtain this?" Present on unsealed A/S armor + accessories. Plural by contract; current Mammon dataset is 1:1. |
 | `exchangeFor?: ExchangeOptionDto[]` | Mammon exchanges that *consume* this item as an ingredient — answers "what can I exchange this for?" Present on sealed A/S armor + accessories. Plural by contract. |
 | `usedAsSpellbook?: SpellbookSkillDto` | Present only when the item is a spellbook (entry in `data/xml/spellbooks.xml`). Single-valued — each spellbook teaches exactly one skill in source data. Carries `skillId`, `skillName`, `iconFile`, and `learnedBy: ClassRefDto[]` (every class that learns *any* level of the skill). |
+| `soldBy?: ShopOfferDto[]` | Direct merchants selling this item for Adena. Sourced from `buyLists.xml`. Sorted by `price` ascending then NPC id. Distinct from `exchangeFrom` (multi-ingredient exchange) — the two never overlap. |
 | `specialAbilityOptions[].saveMechanic?` | Variant has `mp_consume_reduce` or `reduced_soulshot` in its raw `properties` |
 | `specialAbilityOptions[].statDelta?` | Variant is a Light (weight delta) or Quick Recovery (reuseDelay delta) SA |
 
@@ -152,11 +153,11 @@ per multisell entry the item participates in.
 
 | Field | Type | Notes |
 |---|---|---|
-| `multisellId` | number | Source multisell file id (e.g. `311262506`). Exposed for traceability/debugging; consumers shouldn't depend on stable values across chronicles. |
+| `multisellId` | number | Source multisell file id. Exposed for traceability only — consumers shouldn't pin to specific values; the allow-list grows over time. |
 | `maintainEnchantment` | boolean | Whether the production preserves the ingredient's enchant level. Mirrors the source XML's `<list maintainEnchantment="…">` attribute. |
-| `npc` | `{ id, name }` | NPC offering the exchange. Resolved from the multisell file's `<npcs><npc>` block. For the parsed Mammon-scoped subset, this is always Blacksmith of Mammon (id 31126). |
-| `required` | `ItemQuantityDto[]` | Items consumed. For Mammon unseal: `[{ sealed item × 1 }, { Ancient Adena × N }]`. Order matches the source XML. |
-| `produces` | `ItemQuantityDto` | Item produced. Single-valued — every parsed Mammon entry has exactly one `<production>`. |
+| `npcs` | `NpcRefDto[]` | All NPCs offering this exchange, from the source `<npcs>` block. Plural by design — many real multisells (e.g. B-grade unseal) list 14+ town blacksmiths in one file. NPCs that fail to resolve are dropped. |
+| `required` | `ItemQuantityDto[]` | Items consumed. **Castle-tax Adena is summed into the main Adena ingredient** (engine raw split via `isTaxIngredient="true"` is not preserved in the public DTO — consumers see one Adena cost, not two). |
+| `produces` | `ItemQuantityDto` | Item produced. Single-valued — every parsed entry has exactly one `<production>`. |
 
 `ItemQuantityDto` is the resolved `{ itemId, name, iconFile, count }`
 shape used for both ingredients and productions. Item-id resolution is
@@ -166,23 +167,79 @@ from the chronicle, `name` falls back to `#<id>` and `iconFile` is
 
 ### Scope
 
-Only the five Mammon multisell files are parsed today:
+Curated allow-list — 11 multisell files parsed today:
 
-| File id | Purpose |
-|---|---|
-| `311262504` | Unseal S-Grade Armor (14 entries) |
-| `311262505` | Unseal S-Grade Accessories (3 entries) |
-| `311262506` | Unseal A-Grade Armor (55 entries) |
-| `311262507` | Unseal A-Grade Accessories (6 entries) |
-| `311262508` | Reseal A-Grade Armor (24 entries) |
+| File id | Purpose | NPCs |
+|---|---|---|
+| `311262504` | Mammon: unseal S-grade armor | 1 (Blacksmith of Mammon) |
+| `311262505` | Mammon: unseal S-grade accessories | 1 |
+| `311262506` | Mammon: unseal A-grade armor | 1 |
+| `311262507` | Mammon: unseal A-grade accessories | 1 |
+| `311262508` | Mammon: reseal A-grade armor | 1 |
+| `1002` | B-grade unseal | 14 town blacksmiths |
+| `1003` | B-grade reseal | 14 town blacksmiths |
+| `1235` | Apella Trader (clan armor; Clan Reputation + Adena) | 2 clan traders |
+| `300974001` | Luxury Shop weapons (Trader Galladucci) | 1 |
+| `300984001` | Luxury Shop armor (Trader Alexandria) | 1 |
+| `300984002` | Luxury Shop misc (Trader Alexandria) | 1 |
 
-Total: 102 entries. Generic multisells (regular shops, dye merchants,
-SA-related Mammon files `311262509`–`511`) are deliberately out of
-scope.
+Quest exchanges, manor crop conversion, SA insertion/removal, dyes,
+shadow weapons, pet equipment swaps, and newbie scrolls are
+deliberately out of scope. They live in their own milestones.
 
 Reference fixtures (`tests/items.snapshot.test.ts`):
-- **Tallum Plate Armor (2382)** — unsealed A-grade with `exchangeFrom` populated.
-- **Sealed Tallum Plate Armor (5293)** — sealed A-grade with `exchangeFor` populated.
+- **Tallum Plate Armor (2382)** — unsealed A-grade with `exchangeFrom`.
+- **Sealed Tallum Plate Armor (5293)** — sealed A-grade with `exchangeFor`.
+- **Sealed Apella Plate Armor (7871)** — multi-currency exchange (Clan Reputation + Adena + castle tax). Locks tax-collapse rule.
+- **Zubei's Gauntlets - Heavy Armor (5710)** — first production of multisell 1002. Locks `npcs[]` with all 14 blacksmiths.
+
+## `ShopOfferDto` / `ShopProductDto` — stable fields
+
+Two views of the same `buyLists.xml` data — direct adena→item
+purchases. Distinct from `ExchangeOptionDto` (multi-ingredient).
+
+`ShopOfferDto` (item view; under `ItemDetailDto.soldBy[]`):
+
+| Field | Type | Notes |
+|---|---|---|
+| `npc` | `NpcRefDto` | The merchant. |
+| `price` | number | Adena cost. |
+| `buyListId` | number | Source buyList id, exposed for traceability. |
+
+`ShopProductDto` (NPC view; under `/npcs/[id]/shop` `buyList[]`):
+
+| Field | Type | Notes |
+|---|---|---|
+| `itemId` | number | Item being sold. |
+| `name`, `iconFile` | string / string \| null | Resolved from items.json. |
+| `price` | number | Adena cost. |
+| `buyListId` | number | Source buyList id. |
+
+Both are sorted by `price` ascending then by NPC id (offer view) or
+item id (product view).
+
+## `GET /api/[chronicle]/npcs/[id]/shop` — endpoint contract
+
+Returns one merchant's combined direct-buy + exchange offerings.
+
+```jsonc
+{
+  "data": {
+    "npc": { "id": 30298, "name": "Pinter" },
+    "buyList": [ /* ShopProductDto[] — omitted when none */ ],
+    "exchanges": [ /* ExchangeOptionDto[] — omitted when none */ ]
+  }
+}
+```
+
+- 200 with one or both fields omitted when the NPC exists but has no shop data.
+- 404 only when the NPC id is unknown.
+- Mirrors `/spawns` behavior (200 with empty when no data, 404 only on unknown id).
+
+`buyList` skips `npcId="-1"` sentinel entries from the source XML
+(212 entries on Interlude — admin/debug lists not bound to any
+merchant). `exchanges` covers only the curated multisell allow-list
+above.
 
 ## `ClassDetailDto` — stable fields (`GET /api/[chronicle]/classes/[id]`)
 

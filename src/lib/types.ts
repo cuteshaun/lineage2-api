@@ -312,10 +312,34 @@ export interface Spellbook {
 }
 
 /**
+ * One product offered by a merchant via the buyLists system. Pure
+ * adena-for-item: currency is implicitly Adena (item id 57), no
+ * exchange semantics, no enchant preservation.
+ */
+export interface BuyListProduct {
+  itemId: number;
+  /** Adena cost. Currency is always Adena (id 57) for buyLists. */
+  price: number;
+}
+
+/**
+ * One merchant inventory from `buyLists.xml`. A given NPC can have
+ * multiple buyLists (e.g. Pinter has separate lists for grade
+ * categories). Source format:
+ * `<buyList id="N" npcId="M"><product id, price/>...</buyList>`
+ */
+export interface BuyList {
+  id: number;
+  npcId: number;
+  products: BuyListProduct[];
+}
+
+/**
  * One row of a multisell list — a single fixed exchange of N
- * ingredients for 1 production. Only the unseal/reseal Mammon files
- * are parsed today, all of which carry exactly one production per
- * `<item>` block, so `production` is single-valued.
+ * ingredients for 1 production. Mammon (5 files) plus a curated
+ * allow-list of additional shop/exchange multisells (B-grade
+ * seal/unseal, Luxury Shop, Apella Trader) are parsed today; all
+ * carry exactly one production per `<item>` block.
  */
 export interface MultisellEntry {
   ingredients: Array<{ itemId: number; count: number }>;

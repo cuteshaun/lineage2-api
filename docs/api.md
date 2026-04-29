@@ -53,6 +53,7 @@ Requesting an unknown chronicle returns **404**.
 | GET | `/api/[chronicle]/npcs/[id]` | Single cleaned NPC; accepts canonical or any merged raw id |
 | GET | `/api/[chronicle]/npcs/[id]/drops` | Aggregated drops for the cleaned NPC |
 | GET | `/api/[chronicle]/npcs/[id]/spawns` | Aggregated spawn points for the cleaned NPC |
+| GET | `/api/[chronicle]/npcs/[id]/shop` | Merchant's direct-buy products + curated multisell exchanges |
 | GET | `/api/[chronicle]/monsters` | List monsters (cleaned NPC subset) |
 | GET | `/api/[chronicle]/monsters/[id]` | Single monster by cleaned id |
 | GET | `/api/[chronicle]/drops/npc/[id]` | Aggregated drops (alternate path, identical response) |
@@ -177,6 +178,7 @@ when applicable:
 | `exchangeFrom` | Mammon multisell entries that *produce* this item — present on unsealed A/S armor + accessories. Resolves to `ExchangeOptionDto[]` with NPC, required items, Ancient Adena cost, and the produced item. |
 | `exchangeFor` | Mammon multisell entries that *consume* this item as an ingredient — present on sealed A/S armor + accessories. Same shape as `exchangeFrom`, viewed from the ingredient side. |
 | `usedAsSpellbook` | Present only when the item is a spellbook. Resolves to a single `SpellbookSkillDto` carrying the taught skill + every class that learns it. |
+| `soldBy` | Present when the item is offered for direct adena purchase by any merchant via `buyLists.xml`. Resolves to `ShopOfferDto[]` (sorted by price ascending then NPC id). |
 
 The full field-level contract lives in
 [`docs/api-contract.md`](./api-contract.md), mechanically locked by the
@@ -535,6 +537,9 @@ GET /api/interlude/items/1806/spoiled-by
 
 # Spawn coordinates for a cleaned NPC
 GET /api/interlude/npcs/22001/spawns
+
+# Merchant shop view (buyList products + curated exchanges)
+GET /api/interlude/npcs/30001/shop
 
 # Raw NPC list — source-faithful, no name dedup
 GET /api/interlude/raw/npcs?levelMin=20&levelMax=25

@@ -29,6 +29,14 @@ import { getItemById } from "@/lib/data/indexes";
  * - Mammon `exchangeFor` — A-grade sealed armor (Sealed Tallum Plate Armor 5293)
  * - Spellbook (`usedAsSpellbook`) — Spellbook: Heal (id 1152) — locks the
  *   skill→class learner cross-link for spellbook items.
+ * - BuyList (`soldBy`) — Wooden Arrow (id 17) — basic ammunition sold by
+ *   many grocers; locks the multi-NPC `soldBy[]` shape.
+ * - Apella exchange (`exchangeFrom`) — Sealed Apella Plate Armor (7871) —
+ *   exercises Clan Reputation + Adena multi-currency with castle-tax
+ *   collapse (raw split summed into one Adena line in the public DTO).
+ * - B-grade unseal multi-NPC — Zubei's Gauntlets - Heavy Armor (5710) —
+ *   first production of multisell 1002; locks `npcs[]` plural with all
+ *   14 town blacksmiths in one entry.
  */
 const REPRESENTATIVE_ITEMS: Array<{ id: number; name: string }> = [
   { id: 6367, name: "Angel Slayer" },
@@ -47,6 +55,9 @@ const REPRESENTATIVE_ITEMS: Array<{ id: number; name: string }> = [
   { id: 2382, name: "Tallum Plate Armor" },
   { id: 5293, name: "Sealed Tallum Plate Armor" },
   { id: 1152, name: "Spellbook: Heal" },
+  { id: 17, name: "Wooden Arrow" },
+  { id: 7871, name: "Sealed Apella Plate Armor" },
+  { id: 5710, name: "Zubei's Gauntlets - Heavy Armor" },
 ];
 
 for (const { id, name } of REPRESENTATIVE_ITEMS) {

@@ -1,5 +1,356 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`item 17 (Wooden Arrow) DTO matches snapshot 1`] = `
+{
+  "accCombat": null,
+  "armorType": null,
+  "bodypart": "Off-hand",
+  "craftedBy": [
+    {
+      "recipeItemId": 1666,
+      "recipeName": "Recipe: Wooden Arrow",
+      "successRate": 100,
+    },
+  ],
+  "crystalCount": null,
+  "etcItemType": "arrow",
+  "grade": "none",
+  "iconFile": "etc_wooden_quiver_i00.png",
+  "id": 17,
+  "isDropable": null,
+  "isMagical": null,
+  "isSellable": null,
+  "isStackable": true,
+  "isTradable": null,
+  "itemSkill": null,
+  "mAtk": null,
+  "mDef": null,
+  "material": "WOOD",
+  "mpConsume": null,
+  "name": "Wooden Arrow",
+  "pAtk": null,
+  "pAtkSpd": null,
+  "pDef": null,
+  "price": 2,
+  "rCrit": null,
+  "rEvas": null,
+  "rShld": null,
+  "reuseDelay": null,
+  "sDef": null,
+  "soldBy": [
+    {
+      "buyListId": 14,
+      "npc": {
+        "id": 30004,
+        "name": "Katerina",
+      },
+      "price": 2,
+    },
+    {
+      "buyListId": 20,
+      "npc": {
+        "id": 30063,
+        "name": "Lara",
+      },
+      "price": 2,
+    },
+    {
+      "buyListId": 23,
+      "npc": {
+        "id": 30081,
+        "name": "Helvetia",
+      },
+      "price": 2,
+    },
+    {
+      "buyListId": 28,
+      "npc": {
+        "id": 30085,
+        "name": "Stanford",
+      },
+      "price": 2,
+    },
+    {
+      "buyListId": 30,
+      "npc": {
+        "id": 30094,
+        "name": "Gentler",
+      },
+      "price": 2,
+    },
+    {
+      "buyListId": 35,
+      "npc": {
+        "id": 30137,
+        "name": "Vollodos",
+      },
+      "price": 2,
+    },
+    {
+      "buyListId": 42,
+      "npc": {
+        "id": 30150,
+        "name": "Herbiel",
+      },
+      "price": 2,
+    },
+    {
+      "buyListId": 43,
+      "npc": {
+        "id": 30163,
+        "name": "Rex",
+      },
+      "price": 2,
+    },
+    {
+      "buyListId": 21,
+      "npc": {
+        "id": 30165,
+        "name": "Ralford",
+      },
+      "price": 2,
+    },
+    {
+      "buyListId": 51,
+      "npc": {
+        "id": 30180,
+        "name": "Sara",
+      },
+      "price": 2,
+    },
+    {
+      "buyListId": 63,
+      "npc": {
+        "id": 30254,
+        "name": "Harmony",
+      },
+      "price": 2,
+    },
+    {
+      "buyListId": 65,
+      "npc": {
+        "id": 30301,
+        "name": "Hally",
+      },
+      "price": 2,
+    },
+    {
+      "buyListId": 68,
+      "npc": {
+        "id": 30315,
+        "name": "Poesia",
+      },
+      "price": 2,
+    },
+    {
+      "buyListId": 80,
+      "npc": {
+        "id": 30519,
+        "name": "Mion",
+      },
+      "price": 2,
+    },
+    {
+      "buyListId": 86,
+      "npc": {
+        "id": 30561,
+        "name": "Papuma",
+      },
+      "price": 2,
+    },
+    {
+      "buyListId": 100,
+      "npc": {
+        "id": 30839,
+        "name": "Holly",
+      },
+      "price": 2,
+    },
+    {
+      "buyListId": 5803,
+      "npc": {
+        "id": 30891,
+        "name": "Verona",
+      },
+      "price": 2,
+    },
+    {
+      "buyListId": 5601,
+      "npc": {
+        "id": 30893,
+        "name": "Payel",
+      },
+      "price": 2,
+    },
+    {
+      "buyListId": 106,
+      "npc": {
+        "id": 31256,
+        "name": "Leon",
+      },
+      "price": 2,
+    },
+    {
+      "buyListId": 108,
+      "npc": {
+        "id": 31257,
+        "name": "Veronica",
+      },
+      "price": 2,
+    },
+    {
+      "buyListId": 117,
+      "npc": {
+        "id": 31263,
+        "name": "Liesel",
+      },
+      "price": 2,
+    },
+    {
+      "buyListId": 124,
+      "npc": {
+        "id": 31300,
+        "name": "Drumond",
+      },
+      "price": 2,
+    },
+    {
+      "buyListId": 126,
+      "npc": {
+        "id": 31301,
+        "name": "Nils",
+      },
+      "price": 2,
+    },
+    {
+      "buyListId": 135,
+      "npc": {
+        "id": 31307,
+        "name": "Weber",
+      },
+      "price": 2,
+    },
+    {
+      "buyListId": 383,
+      "npc": {
+        "id": 31373,
+        "name": "Atan",
+      },
+      "price": 2,
+    },
+    {
+      "buyListId": 382,
+      "npc": {
+        "id": 31380,
+        "name": "Diyabu",
+      },
+      "price": 2,
+    },
+    {
+      "buyListId": 180,
+      "npc": {
+        "id": 31945,
+        "name": "Auzendorff",
+      },
+      "price": 2,
+    },
+    {
+      "buyListId": 182,
+      "npc": {
+        "id": 31946,
+        "name": "Hombre",
+      },
+      "price": 2,
+    },
+    {
+      "buyListId": 191,
+      "npc": {
+        "id": 31952,
+        "name": "Pele",
+      },
+      "price": 2,
+    },
+    {
+      "buyListId": 22,
+      "npc": {
+        "id": 30078,
+        "name": "Pano",
+      },
+      "price": 3,
+    },
+    {
+      "buyListId": 71,
+      "npc": {
+        "id": 30420,
+        "name": "Tyra",
+      },
+      "price": 3,
+    },
+    {
+      "buyListId": 72,
+      "npc": {
+        "id": 30436,
+        "name": "Sarien",
+      },
+      "price": 3,
+    },
+    {
+      "buyListId": 74,
+      "npc": {
+        "id": 30437,
+        "name": "Rolento",
+      },
+      "price": 3,
+    },
+    {
+      "buyListId": 73,
+      "npc": {
+        "id": 30834,
+        "name": "Cema",
+      },
+      "price": 3,
+    },
+    {
+      "buyListId": 95,
+      "npc": {
+        "id": 30834,
+        "name": "Cema",
+      },
+      "price": 3,
+    },
+    {
+      "buyListId": 5804,
+      "npc": {
+        "id": 31044,
+        "name": "Galman",
+      },
+      "price": 3,
+    },
+    {
+      "buyListId": 5805,
+      "npc": {
+        "id": 31045,
+        "name": "Kitzka",
+      },
+      "price": 3,
+    },
+    {
+      "buyListId": 147,
+      "npc": {
+        "id": 31386,
+        "name": "Violet",
+      },
+      "price": 3,
+    },
+  ],
+  "soulshots": null,
+  "spiritshots": null,
+  "type": "etcitem",
+  "weaponType": null,
+  "weight": 6,
+}
+`;
+
 exports[`item 68 (Falchion) DTO matches snapshot 1`] = `
 {
   "accCombat": null,
@@ -30,6 +381,120 @@ exports[`item 68 (Falchion) DTO matches snapshot 1`] = `
   "rShld": null,
   "reuseDelay": null,
   "sDef": null,
+  "soldBy": [
+    {
+      "buyListId": 25,
+      "npc": {
+        "id": 30084,
+        "name": "Graham",
+      },
+      "price": 268400,
+    },
+    {
+      "buyListId": 49,
+      "npc": {
+        "id": 30179,
+        "name": "Raudia",
+      },
+      "price": 280600,
+    },
+    {
+      "buyListId": 15,
+      "npc": {
+        "id": 30060,
+        "name": "Sabrin",
+      },
+      "price": 292800,
+    },
+    {
+      "buyListId": 53,
+      "npc": {
+        "id": 30207,
+        "name": "Arodin",
+      },
+      "price": 292800,
+    },
+    {
+      "buyListId": 69,
+      "npc": {
+        "id": 30321,
+        "name": "Sydnia",
+      },
+      "price": 292800,
+    },
+    {
+      "buyListId": 96,
+      "npc": {
+        "id": 30837,
+        "name": "Woodrow",
+      },
+      "price": 292800,
+    },
+    {
+      "buyListId": 5802,
+      "npc": {
+        "id": 30891,
+        "name": "Verona",
+      },
+      "price": 292800,
+    },
+    {
+      "buyListId": 105,
+      "npc": {
+        "id": 31256,
+        "name": "Leon",
+      },
+      "price": 292800,
+    },
+    {
+      "buyListId": 107,
+      "npc": {
+        "id": 31257,
+        "name": "Veronica",
+      },
+      "price": 292800,
+    },
+    {
+      "buyListId": 123,
+      "npc": {
+        "id": 31300,
+        "name": "Drumond",
+      },
+      "price": 292800,
+    },
+    {
+      "buyListId": 125,
+      "npc": {
+        "id": 31301,
+        "name": "Nils",
+      },
+      "price": 292800,
+    },
+    {
+      "buyListId": 179,
+      "npc": {
+        "id": 31945,
+        "name": "Auzendorff",
+      },
+      "price": 292800,
+    },
+    {
+      "buyListId": 181,
+      "npc": {
+        "id": 31946,
+        "name": "Hombre",
+      },
+      "price": 292800,
+    },
+    {
+      "buyListId": 87,
+      "npc": {
+        "id": 30684,
+        "name": "Viktor",
+      },
+      "price": 317200,
+    },
+  ],
   "soulshots": 2,
   "specialAbilityOptions": [
     {
@@ -62,6 +527,38 @@ exports[`item 72 (Stormbringer) DTO matches snapshot 1`] = `
   ],
   "crystalCount": 916,
   "etcItemType": null,
+  "exchangeFrom": [
+    {
+      "maintainEnchantment": false,
+      "multisellId": 300974001,
+      "npcs": [
+        {
+          "id": 30097,
+          "name": "Galladucci",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "weapon_stormbringer_i00.png",
+        "itemId": 72,
+        "name": "Stormbringer",
+      },
+      "required": [
+        {
+          "count": 573,
+          "iconFile": "etc_crystal_green_i00.png",
+          "itemId": 1459,
+          "name": "Crystal: C-Grade",
+        },
+        {
+          "count": 2865,
+          "iconFile": "etc_crystal_blue_i00.png",
+          "itemId": 1458,
+          "name": "Crystal: D-Grade",
+        },
+      ],
+    },
+  ],
   "grade": "c",
   "iconFile": "weapon_stormbringer_i00.png",
   "id": 72,
@@ -1111,10 +1608,12 @@ exports[`item 547 (Tallum Helmet) DTO matches snapshot 1`] = `
     {
       "maintainEnchantment": true,
       "multisellId": 311262506,
-      "npc": {
-        "id": 31126,
-        "name": "Blacksmith of Mammon",
-      },
+      "npcs": [
+        {
+          "id": 31126,
+          "name": "Blacksmith of Mammon",
+        },
+      ],
       "produces": {
         "count": 1,
         "iconFile": "armor_helmet_i00.png",
@@ -1436,6 +1935,280 @@ exports[`item 1152 (Spellbook: Heal) DTO matches snapshot 1`] = `
   "rShld": null,
   "reuseDelay": null,
   "sDef": null,
+  "soldBy": [
+    {
+      "buyListId": 196,
+      "npc": {
+        "id": 31670,
+        "name": "Burns",
+      },
+      "price": 107,
+    },
+    {
+      "buyListId": 369,
+      "npc": {
+        "id": 30082,
+        "name": "Denkus",
+      },
+      "price": 110,
+    },
+    {
+      "buyListId": 29,
+      "npc": {
+        "id": 30094,
+        "name": "Gentler",
+      },
+      "price": 110,
+    },
+    {
+      "buyListId": 150,
+      "npc": {
+        "id": 31419,
+        "name": "Lorel",
+      },
+      "price": 110,
+    },
+    {
+      "buyListId": 197,
+      "npc": {
+        "id": 31420,
+        "name": "Tomanel",
+      },
+      "price": 110,
+    },
+    {
+      "buyListId": 355,
+      "npc": {
+        "id": 30003,
+        "name": "Silvia",
+      },
+      "price": 115,
+    },
+    {
+      "buyListId": 362,
+      "npc": {
+        "id": 30138,
+        "name": "Minaless",
+      },
+      "price": 115,
+    },
+    {
+      "buyListId": 360,
+      "npc": {
+        "id": 30149,
+        "name": "Creamees",
+      },
+      "price": 115,
+    },
+    {
+      "buyListId": 371,
+      "npc": {
+        "id": 30181,
+        "name": "Galibredo",
+      },
+      "price": 115,
+    },
+    {
+      "buyListId": 149,
+      "npc": {
+        "id": 31413,
+        "name": "Antonio",
+      },
+      "price": 115,
+    },
+    {
+      "buyListId": 359,
+      "npc": {
+        "id": 31414,
+        "name": "Lynn",
+      },
+      "price": 115,
+    },
+    {
+      "buyListId": 361,
+      "npc": {
+        "id": 31415,
+        "name": "Triya",
+      },
+      "price": 115,
+    },
+    {
+      "buyListId": 174,
+      "npc": {
+        "id": 31422,
+        "name": "Migel",
+      },
+      "price": 115,
+    },
+    {
+      "buyListId": 366,
+      "npc": {
+        "id": 30062,
+        "name": "Sonia",
+      },
+      "price": 120,
+    },
+    {
+      "buyListId": 373,
+      "npc": {
+        "id": 30294,
+        "name": "Varan",
+      },
+      "price": 120,
+    },
+    {
+      "buyListId": 66,
+      "npc": {
+        "id": 30313,
+        "name": "Asha",
+      },
+      "price": 120,
+    },
+    {
+      "buyListId": 205,
+      "npc": {
+        "id": 30314,
+        "name": "Nestle",
+      },
+      "price": 120,
+    },
+    {
+      "buyListId": 101,
+      "npc": {
+        "id": 30840,
+        "name": "Lorenzo",
+      },
+      "price": 120,
+    },
+    {
+      "buyListId": 376,
+      "npc": {
+        "id": 30842,
+        "name": "Alexis",
+      },
+      "price": 120,
+    },
+    {
+      "buyListId": 377,
+      "npc": {
+        "id": 30892,
+        "name": "Enverun",
+      },
+      "price": 120,
+    },
+    {
+      "buyListId": 115,
+      "npc": {
+        "id": 31262,
+        "name": "Rupert",
+      },
+      "price": 120,
+    },
+    {
+      "buyListId": 121,
+      "npc": {
+        "id": 31284,
+        "name": "Elena",
+      },
+      "price": 120,
+    },
+    {
+      "buyListId": 133,
+      "npc": {
+        "id": 31306,
+        "name": "Natasha",
+      },
+      "price": 120,
+    },
+    {
+      "buyListId": 139,
+      "npc": {
+        "id": 31338,
+        "name": "Anton",
+      },
+      "price": 120,
+    },
+    {
+      "buyListId": 170,
+      "npc": {
+        "id": 31416,
+        "name": "Aren",
+      },
+      "price": 120,
+    },
+    {
+      "buyListId": 171,
+      "npc": {
+        "id": 31417,
+        "name": "Berynel",
+      },
+      "price": 120,
+    },
+    {
+      "buyListId": 160,
+      "npc": {
+        "id": 31418,
+        "name": "Rouke",
+      },
+      "price": 120,
+    },
+    {
+      "buyListId": 202,
+      "npc": {
+        "id": 31421,
+        "name": "Ratriya",
+      },
+      "price": 120,
+    },
+    {
+      "buyListId": 162,
+      "npc": {
+        "id": 31423,
+        "name": "Romas",
+      },
+      "price": 120,
+    },
+    {
+      "buyListId": 151,
+      "npc": {
+        "id": 31666,
+        "name": "Lumen",
+      },
+      "price": 120,
+    },
+    {
+      "buyListId": 189,
+      "npc": {
+        "id": 31951,
+        "name": "Jose",
+      },
+      "price": 120,
+    },
+    {
+      "buyListId": 194,
+      "npc": {
+        "id": 31973,
+        "name": "Raheel",
+      },
+      "price": 120,
+    },
+    {
+      "buyListId": 46,
+      "npc": {
+        "id": 30166,
+        "name": "Wesley",
+      },
+      "price": 130,
+    },
+    {
+      "buyListId": 380,
+      "npc": {
+        "id": 30231,
+        "name": "Garette",
+      },
+      "price": 130,
+    },
+  ],
   "soulshots": null,
   "spiritshots": null,
   "type": "etcitem",
@@ -1492,10 +2265,12 @@ exports[`item 2382 (Tallum Plate Armor) DTO matches snapshot 1`] = `
     {
       "maintainEnchantment": true,
       "multisellId": 311262506,
-      "npc": {
-        "id": 31126,
-        "name": "Blacksmith of Mammon",
-      },
+      "npcs": [
+        {
+          "id": 31126,
+          "name": "Blacksmith of Mammon",
+        },
+      ],
       "produces": {
         "count": 1,
         "iconFile": "armor_t77_ul_i00.png",
@@ -1651,10 +2426,12 @@ exports[`item 5293 (Sealed Tallum Plate Armor) DTO matches snapshot 1`] = `
     {
       "maintainEnchantment": true,
       "multisellId": 311262506,
-      "npc": {
-        "id": 31126,
-        "name": "Blacksmith of Mammon",
-      },
+      "npcs": [
+        {
+          "id": 31126,
+          "name": "Blacksmith of Mammon",
+        },
+      ],
       "produces": {
         "count": 1,
         "iconFile": "armor_t77_ul_i00.png",
@@ -1705,6 +2482,279 @@ exports[`item 5293 (Sealed Tallum Plate Armor) DTO matches snapshot 1`] = `
   "type": "armor",
   "weaponType": null,
   "weight": 9780,
+}
+`;
+
+exports[`item 5710 (Zubei's Gauntlets - Heavy Armor) DTO matches snapshot 1`] = `
+{
+  "accCombat": null,
+  "armorType": null,
+  "bodypart": "Gloves",
+  "crystalCount": 69,
+  "etcItemType": null,
+  "exchangeFor": [
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1003,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t64_g_i02.png",
+        "itemId": 612,
+        "name": "Zubei's Gauntlets",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t64_g_i00.png",
+          "itemId": 5710,
+          "name": "Zubei's Gauntlets - Heavy Armor",
+        },
+      ],
+    },
+  ],
+  "exchangeFrom": [
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1002,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t64_g_i00.png",
+        "itemId": 5710,
+        "name": "Zubei's Gauntlets - Heavy Armor",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t64_g_i02.png",
+          "itemId": 612,
+          "name": "Zubei's Gauntlets",
+        },
+      ],
+    },
+  ],
+  "grade": "b",
+  "iconFile": "armor_t64_g_i00.png",
+  "id": 5710,
+  "isDropable": null,
+  "isMagical": null,
+  "isSellable": null,
+  "isStackable": null,
+  "isTradable": null,
+  "itemSkill": null,
+  "mAtk": null,
+  "mDef": null,
+  "material": "MITHRIL",
+  "mpConsume": null,
+  "name": "Zubei's Gauntlets - Heavy Armor",
+  "pAtk": null,
+  "pAtkSpd": null,
+  "pDef": 41,
+  "partOfSets": [
+    {
+      "bonusSkill": {
+        "description": "Increases P. Def. and Max HP.",
+        "effects": [
+          {
+            "op": "mul",
+            "stat": "pDef",
+            "value": 1.0524,
+          },
+          {
+            "op": "add",
+            "stat": "maxHp",
+            "value": 294,
+          },
+        ],
+        "iconFile": null,
+        "id": 3518,
+        "level": 1,
+        "name": "Zubei's Heavy Armor Set",
+        "operateType": "OP_PASSIVE",
+        "power": null,
+        "skillType": "BUFF",
+        "target": "TARGET_SELF",
+      },
+      "enchant6BonusSkill": {
+        "description": "Increases P. Def. and MP regeneration by enchanting set items.",
+        "effects": [
+          {
+            "op": "add",
+            "stat": "pDef",
+            "value": 44,
+          },
+          {
+            "op": "add",
+            "stat": "regMp",
+            "value": 2,
+          },
+        ],
+        "iconFile": null,
+        "id": 3617,
+        "level": 1,
+        "name": "Enchant Heavy Armor (Grade B)",
+        "operateType": "OP_PASSIVE",
+        "power": null,
+        "skillType": "BUFF",
+        "target": "TARGET_SELF",
+      },
+      "id": 19,
+      "name": "Zubei Heavy Set",
+      "pieces": {
+        "chest": {
+          "iconFile": "armor_t64_u_i00.png",
+          "itemId": 357,
+          "name": "Zubei's Breastplate",
+        },
+        "feet": {
+          "iconFile": "armor_t64_b_i00.png",
+          "itemId": 5726,
+          "name": "Zubei's Boots - Heavy Armor",
+        },
+        "gloves": {
+          "iconFile": "armor_t64_g_i00.png",
+          "itemId": 5710,
+          "name": "Zubei's Gauntlets - Heavy Armor",
+        },
+        "head": {
+          "iconFile": "armor_helmet_i00.png",
+          "itemId": 503,
+          "name": "Zubei's Helmet",
+        },
+        "legs": {
+          "iconFile": "armor_t64_l_i00.png",
+          "itemId": 383,
+          "name": "Zubei's Gaiters",
+        },
+      },
+    },
+  ],
+  "price": 519000,
+  "rCrit": null,
+  "rEvas": null,
+  "rShld": null,
+  "reuseDelay": null,
+  "sDef": null,
+  "soulshots": null,
+  "spiritshots": null,
+  "type": "armor",
+  "weaponType": null,
+  "weight": 590,
 }
 `;
 
@@ -2669,5 +3719,111 @@ exports[`item 7575 (Draconic Bow) DTO matches snapshot 1`] = `
   "type": "weapon",
   "weaponType": "BOW",
   "weight": 1650,
+}
+`;
+
+exports[`item 7871 (Sealed Apella Plate Armor) DTO matches snapshot 1`] = `
+{
+  "accCombat": null,
+  "armorType": "HEAVY",
+  "bodypart": "Full Armor",
+  "crystalCount": null,
+  "etcItemType": null,
+  "exchangeFor": [
+    {
+      "maintainEnchantment": true,
+      "multisellId": 311262506,
+      "npcs": [
+        {
+          "id": 31126,
+          "name": "Blacksmith of Mammon",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t1004_ul_i00.png",
+        "itemId": 7861,
+        "name": "Apella Plate Armor",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t1004_ul_i02.png",
+          "itemId": 7871,
+          "name": "Sealed Apella Plate Armor",
+        },
+        {
+          "count": 772500,
+          "iconFile": "etc_ancient_adena_i00.png",
+          "itemId": 5575,
+          "name": "Ancient Adena",
+        },
+      ],
+    },
+  ],
+  "exchangeFrom": [
+    {
+      "maintainEnchantment": false,
+      "multisellId": 1235,
+      "npcs": [
+        {
+          "id": 32024,
+          "name": "Mulia",
+        },
+        {
+          "id": 32025,
+          "name": "Ilia",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t1004_ul_i02.png",
+        "itemId": 7871,
+        "name": "Sealed Apella Plate Armor",
+      },
+      "required": [
+        {
+          "count": 13540,
+          "iconFile": null,
+          "itemId": 65336,
+          "name": "#65336",
+        },
+        {
+          "count": 7337000,
+          "iconFile": "etc_adena_i00.png",
+          "itemId": 57,
+          "name": "Adena",
+        },
+      ],
+    },
+  ],
+  "grade": "a",
+  "iconFile": "armor_t1004_ul_i02.png",
+  "id": 7871,
+  "isDropable": null,
+  "isMagical": null,
+  "isSellable": null,
+  "isStackable": null,
+  "isTradable": null,
+  "itemSkill": null,
+  "mAtk": null,
+  "mDef": null,
+  "material": "LEATHER",
+  "mpConsume": null,
+  "name": "Sealed Apella Plate Armor",
+  "pAtk": null,
+  "pAtkSpd": null,
+  "pDef": 278,
+  "price": null,
+  "rCrit": null,
+  "rEvas": null,
+  "rShld": null,
+  "reuseDelay": null,
+  "sDef": null,
+  "soulshots": null,
+  "spiritshots": null,
+  "type": "armor",
+  "weaponType": null,
+  "weight": 9780,
 }
 `;

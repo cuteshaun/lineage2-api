@@ -1,0 +1,3883 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`NPC shop — Lector (30001), buyList-only 1`] = `
+{
+  "buyList": [
+    {
+      "buyListId": 1,
+      "iconFile": "weapon_small_sword_i00.png",
+      "itemId": 1,
+      "name": "Short Sword",
+      "price": 883,
+    },
+    {
+      "buyListId": 1,
+      "iconFile": "weapon_club_i00.png",
+      "itemId": 4,
+      "name": "Club",
+      "price": 883,
+    },
+    {
+      "buyListId": 2,
+      "iconFile": "weapon_apprentices_rod_i00.png",
+      "itemId": 7,
+      "name": "Apprentice's Rod",
+      "price": 883,
+    },
+    {
+      "buyListId": 1,
+      "iconFile": "weapon_bone_dagger_i00.png",
+      "itemId": 11,
+      "name": "Bone Dagger",
+      "price": 883,
+    },
+    {
+      "buyListId": 1,
+      "iconFile": "weapon_short_bow_i00.png",
+      "itemId": 13,
+      "name": "Short Bow",
+      "price": 883,
+    },
+    {
+      "buyListId": 2,
+      "iconFile": "weapon_buffalo_horn_i00.png",
+      "itemId": 308,
+      "name": "Buffalo's Horn",
+      "price": 883,
+    },
+    {
+      "buyListId": 1,
+      "iconFile": "weapon_heavy_chisel_i00.png",
+      "itemId": 152,
+      "name": "Heavy Chisel",
+      "price": 9280,
+    },
+    {
+      "buyListId": 1,
+      "iconFile": "weapon_broad_sword_i00.png",
+      "itemId": 3,
+      "name": "Broadsword",
+      "price": 14375,
+    },
+    {
+      "buyListId": 1,
+      "iconFile": "weapon_mace_i00.png",
+      "itemId": 5,
+      "name": "Mace",
+      "price": 14375,
+    },
+    {
+      "buyListId": 2,
+      "iconFile": "weapon_willow_staff_i00.png",
+      "itemId": 8,
+      "name": "Willow Staff",
+      "price": 14375,
+    },
+    {
+      "buyListId": 1,
+      "iconFile": "weapon_knife_i00.png",
+      "itemId": 12,
+      "name": "Knife",
+      "price": 14375,
+    },
+    {
+      "buyListId": 1,
+      "iconFile": "weapon_bow_i00.png",
+      "itemId": 14,
+      "name": "Bow",
+      "price": 14375,
+    },
+    {
+      "buyListId": 2,
+      "iconFile": "weapon_apprentices_spellbook_i00.png",
+      "itemId": 99,
+      "name": "Apprentice's Spellbook",
+      "price": 14375,
+    },
+    {
+      "buyListId": 1,
+      "iconFile": "weapon_doomed_dagger_i00.png",
+      "itemId": 215,
+      "name": "Doom Dagger",
+      "price": 14375,
+    },
+    {
+      "buyListId": 1,
+      "iconFile": "weapon_sickle_i00.png",
+      "itemId": 153,
+      "name": "Sickle",
+      "price": 21275,
+    },
+    {
+      "buyListId": 2,
+      "iconFile": "weapon_cedar_staff_i00.png",
+      "itemId": 9,
+      "name": "Cedar Staff",
+      "price": 62215,
+    },
+    {
+      "buyListId": 1,
+      "iconFile": "weapon_gladius_i00.png",
+      "itemId": 66,
+      "name": "Gladius",
+      "price": 62215,
+    },
+    {
+      "buyListId": 1,
+      "iconFile": "weapon_orcish_sword_i00.png",
+      "itemId": 67,
+      "name": "Orcish Sword",
+      "price": 62215,
+    },
+    {
+      "buyListId": 1,
+      "iconFile": "weapon_handmade_sword_i00.png",
+      "itemId": 122,
+      "name": "Handmade Sword",
+      "price": 62215,
+    },
+    {
+      "buyListId": 1,
+      "iconFile": "weapon_dwarven_mace_i00.png",
+      "itemId": 154,
+      "name": "Dwarven Mace",
+      "price": 62215,
+    },
+    {
+      "buyListId": 1,
+      "iconFile": "weapon_dirk_i00.png",
+      "itemId": 216,
+      "name": "Dirk",
+      "price": 62215,
+    },
+    {
+      "buyListId": 1,
+      "iconFile": "weapon_hunting_bow_i00.png",
+      "itemId": 271,
+      "name": "Hunting Bow",
+      "price": 62215,
+    },
+    {
+      "buyListId": 1,
+      "iconFile": "weapon_brandish_i00.png",
+      "itemId": 1333,
+      "name": "Brandish",
+      "price": 62215,
+    },
+    {
+      "buyListId": 1,
+      "iconFile": "weapon_long_sword_i00.png",
+      "itemId": 2,
+      "name": "Long Sword",
+      "price": 156400,
+    },
+    {
+      "buyListId": 1,
+      "iconFile": "weapon_short_spear_i00.png",
+      "itemId": 15,
+      "name": "Short Spear",
+      "price": 156400,
+    },
+    {
+      "buyListId": 2,
+      "iconFile": "weapon_apprentices_staff_i00.png",
+      "itemId": 176,
+      "name": "Journeyman's Staff",
+      "price": 156400,
+    },
+    {
+      "buyListId": 1,
+      "iconFile": "weapon_throw_knife_i00.png",
+      "itemId": 218,
+      "name": "Throwing Knife",
+      "price": 156400,
+    },
+    {
+      "buyListId": 1,
+      "iconFile": "weapon_short_bow_i00.png",
+      "itemId": 272,
+      "name": "Forest Bow",
+      "price": 156400,
+    },
+    {
+      "buyListId": 2,
+      "iconFile": "weapon_apprentices_spellbook_i00.png",
+      "itemId": 310,
+      "name": "Relic of The Saints",
+      "price": 156400,
+    },
+    {
+      "buyListId": 1,
+      "iconFile": "weapon_zweihander_i00.png",
+      "itemId": 5284,
+      "name": "Zweihander",
+      "price": 280600,
+    },
+  ],
+  "exchanges": undefined,
+  "npc": {
+    "id": 30001,
+    "name": "Lector",
+  },
+}
+`;
+
+exports[`NPC shop — Pinter (30298), exchange-only blacksmith 1`] = `
+{
+  "buyList": undefined,
+  "exchanges": [
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1002,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t64_g_i00.png",
+        "itemId": 5710,
+        "name": "Zubei's Gauntlets - Heavy Armor",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t64_g_i02.png",
+          "itemId": 612,
+          "name": "Zubei's Gauntlets",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1002,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t65_g_i00.png",
+        "itemId": 5711,
+        "name": "Zubei's Gauntlets - Light Armor",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t64_g_i02.png",
+          "itemId": 612,
+          "name": "Zubei's Gauntlets",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1002,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t56_g_i00.png",
+        "itemId": 5712,
+        "name": "Zubei's Gauntlets - Robe",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t64_g_i02.png",
+          "itemId": 612,
+          "name": "Zubei's Gauntlets",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1002,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t66_g_i00.png",
+        "itemId": 5714,
+        "name": "Avadon Gloves - Heavy Armor",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t66_g_i02.png",
+          "itemId": 2464,
+          "name": "Avadon Gloves",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1002,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t67_g_i00.png",
+        "itemId": 5715,
+        "name": "Avadon Gloves - Light Armor",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t66_g_i02.png",
+          "itemId": 2464,
+          "name": "Avadon Gloves",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1002,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t59_g_i00.png",
+        "itemId": 5716,
+        "name": "Avadon Gloves - Robe",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t66_g_i02.png",
+          "itemId": 2464,
+          "name": "Avadon Gloves",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1002,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t68_g_i00.png",
+        "itemId": 5718,
+        "name": "Blue Wolf Gloves - Heavy Armor",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t68_g_i02.png",
+          "itemId": 2487,
+          "name": "Blue Wolf Gloves",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1002,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t69_g_i00.png",
+        "itemId": 5719,
+        "name": "Blue Wolf Gloves - Light Armor",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t68_g_i02.png",
+          "itemId": 2487,
+          "name": "Blue Wolf Gloves",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1002,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t70_g_i00.png",
+        "itemId": 5720,
+        "name": "Blue Wolf Gloves - Robe",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t68_g_i02.png",
+          "itemId": 2487,
+          "name": "Blue Wolf Gloves",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1002,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t71_g_i00.png",
+        "itemId": 5722,
+        "name": "Doom Gloves - Heavy Armor",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t71_g_i02.png",
+          "itemId": 2475,
+          "name": "Doom Gloves",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1002,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t72_g_i00.png",
+        "itemId": 5723,
+        "name": "Doom Gloves - Light Armor",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t71_g_i02.png",
+          "itemId": 2475,
+          "name": "Doom Gloves",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1002,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t73_g_i00.png",
+        "itemId": 5724,
+        "name": "Doom Gloves - Robe",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t71_g_i02.png",
+          "itemId": 2475,
+          "name": "Doom Gloves",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1002,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t64_b_i00.png",
+        "itemId": 5726,
+        "name": "Zubei's Boots - Heavy Armor",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t64_b_i02.png",
+          "itemId": 554,
+          "name": "Zubei's Boots",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1002,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t65_b_i00.png",
+        "itemId": 5727,
+        "name": "Zubei's Boots - Light Armor",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t64_b_i02.png",
+          "itemId": 554,
+          "name": "Zubei's Boots",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1002,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t56_b_i00.png",
+        "itemId": 5728,
+        "name": "Zubei's Boots - Robe",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t64_b_i02.png",
+          "itemId": 554,
+          "name": "Zubei's Boots",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1002,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t66_b_i00.png",
+        "itemId": 5730,
+        "name": "Avadon Boots - Heavy Armor",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t66_b_i02.png",
+          "itemId": 600,
+          "name": "Avadon Boots",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1002,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t67_b_i00.png",
+        "itemId": 5731,
+        "name": "Avadon Boots - Light Armor",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t66_b_i02.png",
+          "itemId": 600,
+          "name": "Avadon Boots",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1002,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t59_b_i00.png",
+        "itemId": 5732,
+        "name": "Avadon Boots - Robe",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t66_b_i02.png",
+          "itemId": 600,
+          "name": "Avadon Boots",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1002,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t68_b_i00.png",
+        "itemId": 5734,
+        "name": "Blue Wolf Boots - Heavy Armor",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t68_b_i02.png",
+          "itemId": 2439,
+          "name": "Blue Wolf Boots",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1002,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t69_b_i00.png",
+        "itemId": 5735,
+        "name": "Blue Wolf Boots - Light Armor",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t68_b_i02.png",
+          "itemId": 2439,
+          "name": "Blue Wolf Boots",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1002,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t70_b_i00.png",
+        "itemId": 5736,
+        "name": "Blue Wolf Boots - Robe",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t68_b_i02.png",
+          "itemId": 2439,
+          "name": "Blue Wolf Boots",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1002,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t71_b_i00.png",
+        "itemId": 5738,
+        "name": "Doom Boots - Heavy Armor",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t71_b_i02.png",
+          "itemId": 601,
+          "name": "Boots of Doom",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1002,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t72_b_i00.png",
+        "itemId": 5739,
+        "name": "Doom Boots - Light Armor",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t71_b_i02.png",
+          "itemId": 601,
+          "name": "Boots of Doom",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1002,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t73_b_i00.png",
+        "itemId": 5740,
+        "name": "Doom Boots - Robe",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t71_b_i02.png",
+          "itemId": 601,
+          "name": "Boots of Doom",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1003,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t64_g_i02.png",
+        "itemId": 612,
+        "name": "Zubei's Gauntlets",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t64_g_i00.png",
+          "itemId": 5710,
+          "name": "Zubei's Gauntlets - Heavy Armor",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1003,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t64_g_i02.png",
+        "itemId": 612,
+        "name": "Zubei's Gauntlets",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t65_g_i00.png",
+          "itemId": 5711,
+          "name": "Zubei's Gauntlets - Light Armor",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1003,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t64_g_i02.png",
+        "itemId": 612,
+        "name": "Zubei's Gauntlets",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t56_g_i00.png",
+          "itemId": 5712,
+          "name": "Zubei's Gauntlets - Robe",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1003,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t66_g_i02.png",
+        "itemId": 2464,
+        "name": "Avadon Gloves",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t66_g_i00.png",
+          "itemId": 5714,
+          "name": "Avadon Gloves - Heavy Armor",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1003,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t66_g_i02.png",
+        "itemId": 2464,
+        "name": "Avadon Gloves",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t67_g_i00.png",
+          "itemId": 5715,
+          "name": "Avadon Gloves - Light Armor",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1003,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t66_g_i02.png",
+        "itemId": 2464,
+        "name": "Avadon Gloves",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t59_g_i00.png",
+          "itemId": 5716,
+          "name": "Avadon Gloves - Robe",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1003,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t68_g_i02.png",
+        "itemId": 2487,
+        "name": "Blue Wolf Gloves",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t68_g_i00.png",
+          "itemId": 5718,
+          "name": "Blue Wolf Gloves - Heavy Armor",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1003,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t68_g_i02.png",
+        "itemId": 2487,
+        "name": "Blue Wolf Gloves",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t69_g_i00.png",
+          "itemId": 5719,
+          "name": "Blue Wolf Gloves - Light Armor",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1003,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t68_g_i02.png",
+        "itemId": 2487,
+        "name": "Blue Wolf Gloves",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t70_g_i00.png",
+          "itemId": 5720,
+          "name": "Blue Wolf Gloves - Robe",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1003,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t71_g_i02.png",
+        "itemId": 2475,
+        "name": "Doom Gloves",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t71_g_i00.png",
+          "itemId": 5722,
+          "name": "Doom Gloves - Heavy Armor",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1003,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t71_g_i02.png",
+        "itemId": 2475,
+        "name": "Doom Gloves",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t72_g_i00.png",
+          "itemId": 5723,
+          "name": "Doom Gloves - Light Armor",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1003,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t71_g_i02.png",
+        "itemId": 2475,
+        "name": "Doom Gloves",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t73_g_i00.png",
+          "itemId": 5724,
+          "name": "Doom Gloves - Robe",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1003,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t64_b_i02.png",
+        "itemId": 554,
+        "name": "Zubei's Boots",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t64_b_i00.png",
+          "itemId": 5726,
+          "name": "Zubei's Boots - Heavy Armor",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1003,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t64_b_i02.png",
+        "itemId": 554,
+        "name": "Zubei's Boots",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t65_b_i00.png",
+          "itemId": 5727,
+          "name": "Zubei's Boots - Light Armor",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1003,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t64_b_i02.png",
+        "itemId": 554,
+        "name": "Zubei's Boots",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t56_b_i00.png",
+          "itemId": 5728,
+          "name": "Zubei's Boots - Robe",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1003,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t66_b_i02.png",
+        "itemId": 600,
+        "name": "Avadon Boots",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t66_b_i00.png",
+          "itemId": 5730,
+          "name": "Avadon Boots - Heavy Armor",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1003,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t66_b_i02.png",
+        "itemId": 600,
+        "name": "Avadon Boots",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t67_b_i00.png",
+          "itemId": 5731,
+          "name": "Avadon Boots - Light Armor",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1003,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t66_b_i02.png",
+        "itemId": 600,
+        "name": "Avadon Boots",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t59_b_i00.png",
+          "itemId": 5732,
+          "name": "Avadon Boots - Robe",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1003,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t68_b_i02.png",
+        "itemId": 2439,
+        "name": "Blue Wolf Boots",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t68_b_i00.png",
+          "itemId": 5734,
+          "name": "Blue Wolf Boots - Heavy Armor",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1003,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t68_b_i02.png",
+        "itemId": 2439,
+        "name": "Blue Wolf Boots",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t69_b_i00.png",
+          "itemId": 5735,
+          "name": "Blue Wolf Boots - Light Armor",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1003,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t68_b_i02.png",
+        "itemId": 2439,
+        "name": "Blue Wolf Boots",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t70_b_i00.png",
+          "itemId": 5736,
+          "name": "Blue Wolf Boots - Robe",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1003,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t71_b_i02.png",
+        "itemId": 601,
+        "name": "Boots of Doom",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t71_b_i00.png",
+          "itemId": 5738,
+          "name": "Doom Boots - Heavy Armor",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1003,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t71_b_i02.png",
+        "itemId": 601,
+        "name": "Boots of Doom",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t72_b_i00.png",
+          "itemId": 5739,
+          "name": "Doom Boots - Light Armor",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": true,
+      "multisellId": 1003,
+      "npcs": [
+        {
+          "id": 30298,
+          "name": "Pinter",
+        },
+        {
+          "id": 30300,
+          "name": "Pushkin",
+        },
+        {
+          "id": 30317,
+          "name": "Kluto",
+        },
+        {
+          "id": 30458,
+          "name": "Poitan",
+        },
+        {
+          "id": 30471,
+          "name": "Rupio",
+        },
+        {
+          "id": 30678,
+          "name": "Helton",
+        },
+        {
+          "id": 30688,
+          "name": "Duning",
+        },
+        {
+          "id": 30846,
+          "name": "Wilbert",
+        },
+        {
+          "id": 30898,
+          "name": "Morning",
+        },
+        {
+          "id": 31271,
+          "name": "Hilda",
+        },
+        {
+          "id": 31316,
+          "name": "Vincenz",
+        },
+        {
+          "id": 31583,
+          "name": "Feynn",
+        },
+        {
+          "id": 31960,
+          "name": "Byron",
+        },
+        {
+          "id": 31990,
+          "name": "Siger",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t71_b_i02.png",
+        "itemId": 601,
+        "name": "Boots of Doom",
+      },
+      "required": [
+        {
+          "count": 1,
+          "iconFile": "armor_t73_b_i00.png",
+          "itemId": 5740,
+          "name": "Doom Boots - Robe",
+        },
+      ],
+    },
+  ],
+  "npc": {
+    "id": 30298,
+    "name": "Pinter",
+  },
+}
+`;

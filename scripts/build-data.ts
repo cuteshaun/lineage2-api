@@ -6,6 +6,7 @@ import { parseRecipes } from "./parse-recipes";
 import { parseArmorSets } from "./parse-armorsets";
 import { parseSkills } from "./parse-skills";
 import { parseMultisells } from "./parse-multisell";
+import { parseBuyLists } from "./parse-buylists";
 import { parseClasses } from "./parse-classes";
 import {
   isChronicle,
@@ -60,6 +61,9 @@ async function main() {
   const multisells = await parseMultisells(chronicle);
   console.log();
 
+  const buyLists = await parseBuyLists(chronicle);
+  console.log();
+
   const classesResult = await parseClasses(chronicle);
 
   let totalCategories = 0;
@@ -91,6 +95,14 @@ async function main() {
   );
   console.log(
     `  Multisells:           ${multisells.length} files, ${totalMultisellEntries} entries`
+  );
+  const totalBuyListProducts = buyLists.reduce(
+    (n, b) => n + b.products.length,
+    0
+  );
+  const distinctShopNpcs = new Set(buyLists.map((b) => b.npcId)).size;
+  console.log(
+    `  BuyLists:             ${buyLists.length} (${distinctShopNpcs} NPCs, ${totalBuyListProducts} products)`
   );
   const totalClassSkillRows = classesResult.classes.reduce(
     (n, c) => n + c.skills.length,

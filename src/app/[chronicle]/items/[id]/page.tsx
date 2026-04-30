@@ -410,6 +410,62 @@ export default async function ItemDetailsPage({
         </Section>
       )}
 
+      {item.rewardOfQuests && item.rewardOfQuests.length > 0 && (
+        <Section
+          title={
+            item.rewardOfQuests.length === 1
+              ? "Reward of Quest"
+              : `Reward of Quests (${item.rewardOfQuests.length})`
+          }
+        >
+          <ul className="flex flex-col gap-1.5 text-sm">
+            {item.rewardOfQuests.map((q) => (
+              <li key={q.id}>
+                <Link
+                  href={`/${chronicle}/quests/${q.id}`}
+                  className="flex items-baseline justify-between gap-3 hover:underline"
+                >
+                  <span className="text-zinc-900 dark:text-zinc-100">
+                    {q.name}
+                  </span>
+                  <span className="font-mono text-[11px] text-zinc-500 dark:text-zinc-400">
+                    {q.levelMin != null ? `Lv ${q.levelMin}` : "—"}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </Section>
+      )}
+
+      {item.questItemFor && item.questItemFor.length > 0 && (
+        <Section
+          title={
+            item.questItemFor.length === 1
+              ? "Quest Item For"
+              : `Quest Item For (${item.questItemFor.length})`
+          }
+        >
+          <ul className="flex flex-col gap-1.5 text-sm">
+            {item.questItemFor.map((q) => (
+              <li key={q.id}>
+                <Link
+                  href={`/${chronicle}/quests/${q.id}`}
+                  className="flex items-baseline justify-between gap-3 hover:underline"
+                >
+                  <span className="text-zinc-900 dark:text-zinc-100">
+                    {q.name}
+                  </span>
+                  <span className="font-mono text-[11px] text-zinc-500 dark:text-zinc-400">
+                    {q.levelMin != null ? `Lv ${q.levelMin}` : "—"}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </Section>
+      )}
+
       {item.partOfSets && item.partOfSets.length > 0 && (
         <Section
           title={

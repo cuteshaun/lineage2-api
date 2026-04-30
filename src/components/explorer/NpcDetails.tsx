@@ -163,6 +163,70 @@ export function NpcDetails({
         </Section>
       )}
 
+      {npc.startsQuests && npc.startsQuests.length > 0 && (
+        <Section
+          title={
+            npc.startsQuests.length === 1
+              ? "Starts Quest"
+              : `Starts Quests (${npc.startsQuests.length})`
+          }
+        >
+          <ul className="flex flex-col gap-1.5 text-sm">
+            {npc.startsQuests.map((q) => (
+              <li key={q.id}>
+                <Link
+                  href={`/${chronicle}/quests/${q.id}`}
+                  className="flex items-baseline justify-between gap-3 hover:underline"
+                >
+                  <span className="text-zinc-900 dark:text-zinc-100">
+                    {q.name}
+                  </span>
+                  <span className="font-mono text-[11px] text-zinc-500 dark:text-zinc-400">
+                    {q.levelMin != null ? `Lv ${q.levelMin}` : "—"}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </Section>
+      )}
+
+      {npc.involvedInQuests && npc.involvedInQuests.length > 0 && (
+        <Section
+          title={`Involved in Quests (${npc.involvedInQuests.length})`}
+        >
+          <ul className="flex flex-col gap-1.5 text-sm">
+            {npc.involvedInQuests.map((q) => (
+              <li key={q.id}>
+                <Link
+                  href={`/${chronicle}/quests/${q.id}`}
+                  className="flex items-baseline justify-between gap-3 hover:underline"
+                >
+                  <span className="flex items-baseline gap-2 text-zinc-900 dark:text-zinc-100">
+                    {q.name}
+                    {q.roles && q.roles.length > 0 && (
+                      <span className="flex gap-1">
+                        {q.roles.map((r) => (
+                          <span
+                            key={r}
+                            className="rounded-full bg-zinc-200 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wide text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300"
+                          >
+                            {r}
+                          </span>
+                        ))}
+                      </span>
+                    )}
+                  </span>
+                  <span className="font-mono text-[11px] text-zinc-500 dark:text-zinc-400">
+                    {q.levelMin != null ? `Lv ${q.levelMin}` : "—"}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </Section>
+      )}
+
       <Section title="Drops">
         <DropsTable chronicle={chronicle} drops={drops?.drops ?? []} />
       </Section>

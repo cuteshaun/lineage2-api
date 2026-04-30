@@ -50,6 +50,8 @@ export interface ChronicleSources {
   classIdEnumFile: string;
   /** Absolute path to `buyLists.xml` in the upstream datapack. */
   buyListsXmlFile: string;
+  /** Absolute path to the `scripting/quests/` directory (Java quest scripts). */
+  questsScriptsDir: string;
 }
 
 interface SourceSpec {
@@ -72,6 +74,7 @@ interface SourceSpec {
   spellbooksXmlFile: string[];
   classIdEnumFile: string[];
   buyListsXmlFile: string[];
+  questsScriptsDir: string[];
 }
 
 const SOURCE_SPECS: Record<Chronicle, SourceSpec> = {
@@ -188,6 +191,18 @@ const SOURCE_SPECS: Record<Chronicle, SourceSpec> = {
       "xml",
       "buyLists.xml",
     ],
+    questsScriptsDir: [
+      "..",
+      "aCis_382_LATEST_STABLE",
+      "aCis_gameserver",
+      "java",
+      "net",
+      "sf",
+      "l2j",
+      "gameserver",
+      "scripting",
+      "quests",
+    ],
   },
 };
 
@@ -220,5 +235,6 @@ export function getChronicleSources(chronicle: Chronicle): ChronicleSources {
     spellbooksXmlFile: path.join(root, ...spec.spellbooksXmlFile),
     classIdEnumFile: path.join(root, ...spec.classIdEnumFile),
     buyListsXmlFile: path.join(root, ...spec.buyListsXmlFile),
+    questsScriptsDir: path.join(root, ...spec.questsScriptsDir),
   };
 }

@@ -1905,6 +1905,143 @@ exports[`item 547 (Tallum Helmet) DTO matches snapshot 1`] = `
 }
 `;
 
+exports[`item 687 (Darin's Letter (Q001 quest item)) DTO matches snapshot 1`] = `
+{
+  "accCombat": null,
+  "armorType": null,
+  "bodypart": null,
+  "crystalCount": null,
+  "etcItemType": "quest",
+  "grade": "none",
+  "iconFile": "etc_scroll_gray_i00.png",
+  "id": 687,
+  "isDropable": false,
+  "isMagical": null,
+  "isSellable": false,
+  "isStackable": null,
+  "isTradable": false,
+  "itemSkill": null,
+  "mAtk": null,
+  "mDef": null,
+  "material": "PAPER",
+  "mpConsume": null,
+  "name": "Darin's Letter",
+  "pAtk": null,
+  "pAtkSpd": null,
+  "pDef": null,
+  "price": null,
+  "questItemFor": [
+    {
+      "id": 1,
+      "levelMin": 2,
+      "name": "Letters of Love",
+    },
+  ],
+  "rCrit": null,
+  "rEvas": null,
+  "rShld": null,
+  "reuseDelay": null,
+  "sDef": null,
+  "soulshots": null,
+  "spiritshots": null,
+  "type": "etcitem",
+  "weaponType": null,
+  "weight": null,
+}
+`;
+
+exports[`item 906 (Necklace (Q001 reward)) DTO matches snapshot 1`] = `
+{
+  "accCombat": null,
+  "armorType": null,
+  "bodypart": "Necklace",
+  "crystalCount": null,
+  "etcItemType": null,
+  "grade": "none",
+  "iconFile": "accessary_necklace_of_knowledge_i00.png",
+  "id": 906,
+  "isDropable": null,
+  "isMagical": null,
+  "isSellable": null,
+  "isStackable": null,
+  "isTradable": null,
+  "itemSkill": null,
+  "mAtk": null,
+  "mDef": 18,
+  "material": "SILVER",
+  "mpConsume": null,
+  "name": "Necklace of Knowledge",
+  "pAtk": null,
+  "pAtkSpd": null,
+  "pDef": null,
+  "price": 1080,
+  "rCrit": null,
+  "rEvas": null,
+  "rShld": null,
+  "reuseDelay": null,
+  "rewardOfQuests": [
+    {
+      "id": 1,
+      "levelMin": 2,
+      "name": "Letters of Love",
+    },
+    {
+      "id": 5,
+      "levelMin": 2,
+      "name": "Miner's Favor",
+    },
+  ],
+  "sDef": null,
+  "soldBy": [
+    {
+      "buyListId": 13,
+      "npc": {
+        "id": 30003,
+        "name": "Silvia",
+      },
+      "price": 1242,
+    },
+    {
+      "buyListId": 36,
+      "npc": {
+        "id": 30138,
+        "name": "Minaless",
+      },
+      "price": 1242,
+    },
+    {
+      "buyListId": 41,
+      "npc": {
+        "id": 30149,
+        "name": "Creamees",
+      },
+      "price": 1242,
+    },
+    {
+      "buyListId": 79,
+      "npc": {
+        "id": 30518,
+        "name": "Garita",
+      },
+      "price": 1242,
+    },
+    {
+      "buyListId": 85,
+      "npc": {
+        "id": 30560,
+        "name": "Uska",
+      },
+      "price": 1242,
+    },
+  ],
+  "soulshots": null,
+  "spiritshots": null,
+  "type": "armor",
+  "weaponType": null,
+  "weight": 150,
+}
+`;
+
 exports[`item 1152 (Spellbook: Heal) DTO matches snapshot 1`] = `
 {
   "accCombat": null,

@@ -81,6 +81,13 @@ Requesting an unknown chronicle returns **404**.
 | GET | `/api/[chronicle]/classes` | All player classes (89 on Interlude — base, 1st, 2nd, 3rd profession) |
 | GET | `/api/[chronicle]/classes/[id]` | Single class with skill-learn table + parent/child cross-links |
 
+### Quests
+
+| Method | Path | Description |
+|---|---|---|
+| GET | `/api/[chronicle]/quests` | Full quest catalog (329 on Interlude). Compact `QuestListDto` with rewards preview. |
+| GET | `/api/[chronicle]/quests/[id]` | Single quest with rewards, involved NPCs/monsters, quest items, race/class gates. |
+
 ### Meta (filter dropdowns)
 
 | Method | Path | Description |
@@ -179,6 +186,8 @@ when applicable:
 | `exchangeFor` | Mammon multisell entries that *consume* this item as an ingredient — present on sealed A/S armor + accessories. Same shape as `exchangeFrom`, viewed from the ingredient side. |
 | `usedAsSpellbook` | Present only when the item is a spellbook. Resolves to a single `SpellbookSkillDto` carrying the taught skill + every class that learns it. |
 | `soldBy` | Present when the item is offered for direct adena purchase by any merchant via `buyLists.xml`. Resolves to `ShopOfferDto[]` (sorted by price ascending then NPC id). |
+| `rewardOfQuests` | Present when the item is granted as a final quest reward. Adena (57) is never in this list — quest adena lives on the quest's `rewards.adena`. |
+| `questItemFor` | Present when the item is registered via a quest's `setItemsIds(...)` (engine-tracked transient items). |
 
 The full field-level contract lives in
 [`docs/api-contract.md`](./api-contract.md), mechanically locked by the
@@ -546,6 +555,12 @@ GET /api/interlude/raw/npcs?levelMin=20&levelMax=25
 
 # Full armor-set catalog (rich, all 51 sets in one response)
 GET /api/interlude/armor-sets
+
+# Full quest catalog (329 on Interlude)
+GET /api/interlude/quests
+
+# Single quest detail (Q001 Letters of Love)
+GET /api/interlude/quests/1
 
 # All player classes (89 on Interlude)
 GET /api/interlude/classes

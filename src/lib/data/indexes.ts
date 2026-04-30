@@ -7,6 +7,7 @@ import type {
   Multisell,
   Npc,
   NpcDrops,
+  Quest,
   Recipe,
   Skill,
   Spawn,
@@ -128,6 +129,18 @@ interface ChronicleIndexes {
   buyListsByItemId: Map<number, BuyListProductRef[]>;
   /** npcId → every multisell whose `<npcs>` block contains this id. Powers `/npcs/[id]/shop`. */
   multisellsByNpcId: Map<number, Multisell[]>;
+  /** All quests, sorted by id. */
+  quests: Quest[];
+  /** Quest lookup by id. */
+  questsById: Map<number, Quest>;
+  /** npcId → every quest where this NPC is in `startNpcIds`. */
+  questsByStartNpcId: Map<number, Quest[]>;
+  /** npcId → every quest where this NPC is in `talkNpcIds` ∪ `killNpcIds` (raw union; DTO layer dedupes against startsQuests per role rules). */
+  questsByInvolvedNpcId: Map<number, Quest[]>;
+  /** itemId → every quest whose `rewards.items[]` includes this item. Adena (57) is intentionally excluded — surfaced via `rewards.adena`, not items. */
+  questsByRewardItemId: Map<number, Quest[]>;
+  /** itemId → every quest whose `questItemIds[]` (setItemsIds) includes this item. */
+  questsByQuestItemId: Map<number, Quest[]>;
 }
 
 export interface BuyListProductRef {
@@ -512,6 +525,36 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
     }
   }
 
+  // Quest indexes — five maps so each cross-link is O(1) lookup.
+  const questsById = new Map<number, Quest>();
+  const questsByStartNpcId = new Map<number, Quest[]>();
+  const questsByInvolvedNpcId = new Map<number, Quest[]>();
+  const questsByRewardItemId = new Map<number, Quest[]>();
+  const questsByQuestItemId = new Map<number, Quest[]>();
+
+  const pushTo = <K>(m: Map<K, Quest[]>, k: K, q: Quest) => {
+    let list = m.get(k);
+    if (!list) {
+      list = [];
+      m.set(k, list);
+    }
+    list.push(q);
+  };
+
+  for (const q of dataset.quests) {
+    questsById.set(q.id, q);
+    for (const npcId of q.startNpcIds) pushTo(questsByStartNpcId, npcId, q);
+
+    // Involved-NPC union: talk + kill, deduped per quest so a single
+    // NPC mentioned in both lists doesn't appear twice on its own
+    // detail page.
+    const involved = new Set<number>([...q.talkNpcIds, ...q.killNpcIds]);
+    for (const npcId of involved) pushTo(questsByInvolvedNpcId, npcId, q);
+
+    for (const it of q.rewards.items) pushTo(questsByRewardItemId, it.itemId, q);
+    for (const itemId of q.questItemIds) pushTo(questsByQuestItemId, itemId, q);
+  }
+
   // BuyList indexes (forward by NPC, reverse by item).
   const buyListsByNpcId = new Map<number, BuyList[]>();
   const buyListsByItemId = new Map<number, BuyListProductRef[]>();
@@ -575,6 +618,12 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
     buyListsByNpcId,
     buyListsByItemId,
     multisellsByNpcId,
+    quests: dataset.quests,
+    questsById,
+    questsByStartNpcId,
+    questsByInvolvedNpcId,
+    questsByRewardItemId,
+    questsByQuestItemId,
   };
 }
 
@@ -1153,4 +1202,55 @@ export function getMultisellsByNpcId(
   npcId: number
 ): Multisell[] {
   return getChronicleIndexes(chronicle).multisellsByNpcId.get(npcId) ?? [];
+}
+
+// --- Quest lookups ---
+
+/** Returns every quest in the chronicle, sorted by id. */
+export function getAllQuests(chronicle: Chronicle): Quest[] {
+  return getChronicleIndexes(chronicle).quests;
+}
+
+/** Returns a quest by id, or `undefined`. */
+export function getQuestById(
+  chronicle: Chronicle,
+  id: number
+): Quest | undefined {
+  return getChronicleIndexes(chronicle).questsById.get(id);
+}
+
+/** Quests where this NPC is the start NPC. Used by `NpcDetailDto.startsQuests`. */
+export function getQuestsByStartNpcId(
+  chronicle: Chronicle,
+  npcId: number
+): Quest[] {
+  return getChronicleIndexes(chronicle).questsByStartNpcId.get(npcId) ?? [];
+}
+
+/**
+ * Quests where this NPC is in the talk OR kill target lists. Powers
+ * `NpcDetailDto.involvedInQuests` after the DTO layer applies the
+ * start-vs-involved dedup rules.
+ */
+export function getQuestsByInvolvedNpcId(
+  chronicle: Chronicle,
+  npcId: number
+): Quest[] {
+  return getChronicleIndexes(chronicle).questsByInvolvedNpcId.get(npcId) ?? [];
+}
+
+/** Quests where this item appears in `rewards.items[]`. Adena (57) is excluded by design. */
+export function getQuestsByRewardItemId(
+  chronicle: Chronicle,
+  itemId: number
+): Quest[] {
+  return getChronicleIndexes(chronicle).questsByRewardItemId.get(itemId) ?? [];
+}
+
+/** Quests where this item is registered via `setItemsIds(...)` (transient quest items). */
+export function getQuestsByQuestItemId(
+  chronicle: Chronicle,
+  itemId: number
+): Quest[] {
+  return getChronicleIndexes(chronicle).questsByQuestItemId.get(itemId) ?? [];
 }

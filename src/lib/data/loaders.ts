@@ -10,6 +10,7 @@ import type {
   Multisell,
   Npc,
   NpcDrops,
+  Quest,
   Recipe,
   Skill,
   Spawn,
@@ -28,6 +29,7 @@ interface ChronicleDataset {
   buyLists: BuyList[];
   classes: ClassRecord[];
   spellbooks: Spellbook[];
+  quests: Quest[];
 }
 
 const datasetCache = new Map<Chronicle, ChronicleDataset>();
@@ -77,6 +79,7 @@ export function loadChronicleDataset(chronicle: Chronicle): ChronicleDataset {
     spellbooks: readJson<Spellbook[]>(
       path.join(config.generatedDir, "spellbooks.json")
     ),
+    quests: readJson<Quest[]>(path.join(config.generatedDir, "quests.json")),
   };
 
   datasetCache.set(chronicle, dataset);

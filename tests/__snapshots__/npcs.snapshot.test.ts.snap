@@ -1,0 +1,80 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`npc 27059 (Hatar (Q105 kill target)) DTO matches snapshot 1`] = `
+{
+  "atkSpd": 253,
+  "crit": 4,
+  "exp": 0,
+  "hp": 185,
+  "id": 27059,
+  "involvedInQuests": [
+    {
+      "id": 105,
+      "levelMin": 10,
+      "name": "Skirmish with the Orcs",
+      "roles": [
+        "kill",
+      ],
+    },
+  ],
+  "isAggressive": false,
+  "level": 11,
+  "mAtk": 14,
+  "mDef": 47,
+  "mp": 116,
+  "name": "Uoph",
+  "npcType": "Monster",
+  "pAtk": 21,
+  "pDef": 64,
+  "race": "Humanoid",
+  "raceDescription": "They have two arms, two legs, and they walk upright. Culture and communal life varies by race.",
+  "raceIconFile": "skill4295.png",
+  "runSpd": 110,
+  "skills": [],
+  "sp": 0,
+  "title": "Kaboo Chief",
+  "walkSpd": 45,
+}
+`;
+
+exports[`npc 30048 (Darin (Q001 start)) DTO matches snapshot 1`] = `
+{
+  "atkSpd": 253,
+  "crit": 4,
+  "exp": 0,
+  "hp": 2444,
+  "id": 30048,
+  "isAggressive": false,
+  "level": 70,
+  "mAtk": 470,
+  "mDef": 217,
+  "mp": 1346,
+  "name": "Darin",
+  "npcType": "Folk",
+  "pAtk": 689,
+  "pDef": 296,
+  "race": "Human",
+  "raceDescription": "The last race created by the gods, Humans won the race war for domination of the entire world. Their strong desire for domination is perhaps fueled by the fact that their life span is the shortest among all the races.",
+  "raceIconFile": "skill4416_human.png",
+  "runSpd": 120,
+  "skills": [
+    {
+      "description": "none",
+      "iconFile": "skill0000.png",
+      "id": 4045,
+      "level": 1,
+      "name": "Resist Full Magic Attack",
+    },
+  ],
+  "sp": 0,
+  "startsQuests": [
+    {
+      "id": 1,
+      "levelMin": 2,
+      "name": "Letters of Love",
+    },
+  ],
+  "title": null,
+  "walkSpd": 50,
+}
+`;

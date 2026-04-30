@@ -7,6 +7,8 @@ import {
   getExchangesByIngredientId,
   getExchangesByProductId,
   getItemById,
+  getQuestsByQuestItemId,
+  getQuestsByRewardItemId,
   getRawNpcById,
   getSaVariants,
   getSaBaseWeaponId,
@@ -15,6 +17,7 @@ import {
   getSkillByKey,
   getSpellbookSkillByItemId,
 } from "../../data/indexes";
+import { toQuestRefDto, type QuestRefDto } from "./quest";
 import { toClassRefDto, type ClassRefDto } from "./class";
 import { resolveSkill, type SkillSummaryDto } from "./skill";
 import {
@@ -238,6 +241,19 @@ export interface ItemDetailDto {
    * two never overlap.
    */
   soldBy?: ShopOfferDto[];
+  /**
+   * Quests that grant this item as a final reward (not transient
+   * quest items — those go in `questItemFor?`). Adena rewards are
+   * tracked separately on `QuestRewards.adena`, so item id 57 never
+   * appears here.
+   */
+  rewardOfQuests?: QuestRefDto[];
+  /**
+   * Quests that register this item via `setItemsIds(...)` — quest-tracked
+   * items consumed and produced during the quest flow. Distinct from
+   * `rewardOfQuests`; an item is rarely both.
+   */
+  questItemFor?: QuestRefDto[];
 }
 
 const BODYPART_LABELS: Record<string, string> = {
@@ -527,6 +543,24 @@ export function toItemDetailDto(
   if (taughtSkillId !== undefined) {
     const spellbookDto = toSpellbookSkillDto(chronicle, taughtSkillId);
     if (spellbookDto) dto.usedAsSpellbook = spellbookDto;
+  }
+
+  // Quest cross-links — final rewards and transient quest items.
+  // Adena (item 57) is excluded from `rewardOfQuests` by parser
+  // design (it lives on `rewards.adena`, not `rewards.items[]`).
+  if (item.id !== 57) {
+    const rewardQuests = getQuestsByRewardItemId(chronicle, item.id);
+    if (rewardQuests.length > 0) {
+      dto.rewardOfQuests = rewardQuests
+        .map((q) => toQuestRefDto(q))
+        .sort((a, b) => a.id - b.id);
+    }
+  }
+  const questItemQuests = getQuestsByQuestItemId(chronicle, item.id);
+  if (questItemQuests.length > 0) {
+    dto.questItemFor = questItemQuests
+      .map((q) => toQuestRefDto(q))
+      .sort((a, b) => a.id - b.id);
   }
 
   // BuyList cross-link: every merchant who sells this item directly

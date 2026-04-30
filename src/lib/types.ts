@@ -312,6 +312,65 @@ export interface Spellbook {
 }
 
 /**
+ * Aggregated reward block for a quest. Items, adena, exp, sp are
+ * extracted from the Java script via lexical-proximity to
+ * `exitQuest(...)` calls — see `scripts/parse-quests.ts`. Values
+ * are `null` when the script doesn't grant that resource on
+ * completion. `items` is always an array (empty when none).
+ */
+export interface QuestRewards {
+  items: Array<{ itemId: number; count: number }>;
+  adena: number | null;
+  exp: number | null;
+  sp: number | null;
+}
+
+/**
+ * One quest extracted from an aCis Java quest script. Metadata only —
+ * walkthrough text, narrative description, and HTML dialogue are NOT
+ * included (the latter stays internal; the former two require the
+ * client-side `questname-e.dat` enrichment that lands in M3B).
+ */
+export interface Quest {
+  /** Quest id from `super(id, "name")`. Range 1..N. */
+  id: number;
+  /** Quest name from the `super` constructor. */
+  name: string;
+  /** Source filename for traceability, e.g. `"Q001_LettersOfLove.java"`. */
+  scriptFile: string;
+  /** Min player level inferred from `getLevel() < N` checks in STATE_CREATED. `null` when no check is found. */
+  levelMin: number | null;
+  /** From `exitQuest(true|false)`. `null` when the script never calls `exitQuest` (rare; treat as one-time). */
+  repeatable: boolean | null;
+  /**
+   * Race symbols from `player.getRace() ==/!= ClassRace.X` checks.
+   * Canonical aCis enum names ("HUMAN", "ELF", "DARK_ELF", "ORC",
+   * "DWARF"). Empty when no race gate is encoded.
+   */
+  raceRestrictions: string[];
+  /**
+   * Class ids from `getClassId() ==/!=/equalsOrChildOf ClassId.X`
+   * checks, resolved against `classes.json`. Empty when no class
+   * gate is encoded.
+   */
+  classRestrictions: number[];
+  /** From `addStartNpc(...)` — typically 1, plural for the rare multi-start case. */
+  startNpcIds: number[];
+  /** From `addTalkId(...)`. Deduped. */
+  talkNpcIds: number[];
+  /** From `addKillId(...)`. Deduped. */
+  killNpcIds: number[];
+  /**
+   * From `setItemsIds(...)` declared at the top of the constructor.
+   * Engine list of every item the quest registers (transient + final);
+   * count is not encoded here so the public DTO surfaces these as
+   * `count=0` for shape parity with `ItemQuantityDto`.
+   */
+  questItemIds: number[];
+  rewards: QuestRewards;
+}
+
+/**
  * One product offered by a merchant via the buyLists system. Pure
  * adena-for-item: currency is implicitly Adena (item id 57), no
  * exchange semantics, no enchant preservation.

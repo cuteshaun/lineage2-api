@@ -8,6 +8,7 @@ import { parseSkills } from "./parse-skills";
 import { parseMultisells } from "./parse-multisell";
 import { parseBuyLists } from "./parse-buylists";
 import { parseClasses } from "./parse-classes";
+import { parseQuests } from "./parse-quests";
 import {
   isChronicle,
   SUPPORTED_CHRONICLES,
@@ -65,6 +66,9 @@ async function main() {
   console.log();
 
   const classesResult = await parseClasses(chronicle);
+  console.log();
+
+  const quests = await parseQuests(chronicle);
 
   let totalCategories = 0;
   let totalDropEntries = 0;
@@ -112,6 +116,16 @@ async function main() {
     `  Classes:              ${classesResult.classes.length} (${totalClassSkillRows} skill-learn rows)`
   );
   console.log(`  Spellbooks:           ${classesResult.spellbooks.length}`);
+  const questsWithRewards = quests.filter(
+    (q) =>
+      q.rewards.items.length > 0 ||
+      q.rewards.adena !== null ||
+      q.rewards.exp !== null ||
+      q.rewards.sp !== null
+  ).length;
+  console.log(
+    `  Quests:               ${quests.length} (${questsWithRewards} with rewards)`
+  );
   console.log(`  Completed in ${elapsed}s`);
 }
 

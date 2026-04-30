@@ -58,6 +58,11 @@ const REPRESENTATIVE_ITEMS: Array<{ id: number; name: string }> = [
   { id: 17, name: "Wooden Arrow" },
   { id: 7871, name: "Sealed Apella Plate Armor" },
   { id: 5710, name: "Zubei's Gauntlets - Heavy Armor" },
+  // Quest cross-link fixtures (M3):
+  // - Necklace (906) is the final reward of Q001 → exercises `rewardOfQuests`.
+  // - Darin's Letter (687) is in `setItemsIds` of Q001 → exercises `questItemFor`.
+  { id: 906, name: "Necklace (Q001 reward)" },
+  { id: 687, name: "Darin's Letter (Q001 quest item)" },
 ];
 
 for (const { id, name } of REPRESENTATIVE_ITEMS) {

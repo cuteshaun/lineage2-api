@@ -64,6 +64,8 @@ be `null` per type; the field itself is always emitted.
 | `exchangeFor?: ExchangeOptionDto[]` | Mammon exchanges that *consume* this item as an ingredient — answers "what can I exchange this for?" Present on sealed A/S armor + accessories. Plural by contract. |
 | `usedAsSpellbook?: SpellbookSkillDto` | Present only when the item is a spellbook (entry in `data/xml/spellbooks.xml`). Single-valued — each spellbook teaches exactly one skill in source data. Carries `skillId`, `skillName`, `iconFile`, and `learnedBy: ClassRefDto[]` (every class that learns *any* level of the skill). |
 | `soldBy?: ShopOfferDto[]` | Direct merchants selling this item for Adena. Sourced from `buyLists.xml`. Sorted by `price` ascending then NPC id. Distinct from `exchangeFrom` (multi-ingredient exchange) — the two never overlap. |
+| `rewardOfQuests?: QuestRefDto[]` | Quests that grant this item as a final reward. Sorted by quest id. Adena (item id 57) is excluded — quest adena lives on `QuestRewards.adena`, not in this list. |
+| `questItemFor?: QuestRefDto[]` | Quests that register this item via `setItemsIds(...)` — engine-tracked transient items. An item is rarely both `rewardOfQuests` and `questItemFor`. |
 | `specialAbilityOptions[].saveMechanic?` | Variant has `mp_consume_reduce` or `reduced_soulshot` in its raw `properties` |
 | `specialAbilityOptions[].statDelta?` | Variant is a Light (weight delta) or Quick Recovery (reuseDelay delta) SA |
 
@@ -290,6 +292,96 @@ Reference fixtures (`tests/classes.snapshot.test.ts`):
 Reference fixture: **Spellbook: Heal (1152)** in the items snapshot
 suite locks the cross-link to all 6 classes that learn Heal (Human
 Mystic, Cleric, Elven Mystic, Elven Oracle, Dark Mystic, Shillien Oracle).
+
+## `QuestDetailDto` — stable fields (`GET /api/[chronicle]/quests/[id]`)
+
+Quest catalog parsed mechanically from aCis Java quest scripts. Walkthrough text, narrative
+descriptions, and HTML dialogue are **not** included in M3 — those wait for the
+`questname-e.dat` enrichment landing in M3B. The fields below are the engine-truthful
+subset extractable from the Java scripts via regex (no AST, no NLP).
+
+| Field | Type | Notes |
+|---|---|---|
+| `id`, `name` | number / string | From `super(id, "name")` in the quest's constructor. Always present. |
+| `scriptFile` | string | Source filename for traceability, e.g. `"Q001_LettersOfLove.java"`. |
+| `levelMin` | number \| null | Smallest `getLevel() < N` constraint in the quest's `STATE_CREATED` branch. `null` when no level gate is encoded. **`levelMax` is intentionally absent** — it's rarely encoded in source; lands in M3B. |
+| `repeatable` | boolean \| null | From `exitQuest(true\|false)`. `null` when the script never calls `exitQuest` (rare). |
+| `raceRestrictions` | string[] | Canonical aCis enum names ("HUMAN", "ELF", "DARK_ELF", "ORC", "DWARF") from positive-form `getRace() == ClassRace.X` checks. Negative-form gates (`!=`) are not surfaced — they're common across many classes and would clutter the public DTO. Empty when no race gate is encoded. |
+| `classRestrictions` | `ClassRefDto[]` | Resolved against `classes.json` from `ClassId.X` enum references in `==` / `equalsOrChildOf` checks. Empty when no class gate is encoded. |
+| `startNpcs` | `NpcRefDto[]` | From `addStartNpc(...)`. Typically 1, plural for the rare multi-start case. |
+| `involvedNpcs` | `NpcRefDto[]` | From `addTalkId(...)`. Player-friendly: "who do I talk to during this quest". |
+| `involvedMonsters` | `NpcRefDto[]` | From `addKillId(...)`. Player-friendly: "what do I kill". |
+| `questItems` | `ItemQuantityDto[]` | From `setItemsIds(...)` declared at top of constructor. **`count` is always 0** — the engine list registers item ids but doesn't carry quantities; the field shape exists for parity with `ItemQuantityDto` and to preserve item icon/name resolution. |
+| `rewards` | `QuestRewardsDto` | See "Reward extraction" below. |
+
+`QuestListDto` (`GET /api/[chronicle]/quests`) is a compact subset of the above: drops
+`scriptFile`, `involvedNpcs`, `involvedMonsters`, `questItems`, and the full `rewards`
+object; instead surfaces `startNpc` (single, first) and `rewardsPreview: { adena, exp, sp,
+itemCount }` for at-a-glance browsing.
+
+### `QuestRewardsDto` — proximity heuristic
+
+The non-trivial extraction. aCis doesn't separate "intermediate `giveItems`" (transient
+quest items mid-flow) from "final reward `giveItems`". We disambiguate via lexical
+proximity: a `giveItems` / `rewardItems` / `rewardExpAndSp` call counts as a final reward
+**iff** it appears within 20 lines back / 5 lines forward of an `exitQuest(...)` call in
+the same file. Items registered via `setItemsIds(...)` are then **subtracted** from the
+reward list — they're transient quest items by definition (the engine wipes them on
+`exitQuest`), so any reward-window match for them is a false positive.
+
+| Field | Type | Notes |
+|---|---|---|
+| `items` | `ItemQuantityDto[]` | Final reward items, deduped by item id with summed counts. Sorted by item id. Adena (57) is excluded — surfaced separately on `adena`. |
+| `adena` | number \| null | Sum of all Adena (`giveItems(57, X)` / `rewardItems(57, X)`) within the proximity window. `null` when none. |
+| `exp` | number \| null | Sum of all `rewardExpAndSp(exp, sp)` first-arg values within the window. |
+| `sp` | number \| null | Same, second arg. |
+
+Reward extraction is the riskiest mechanical extraction in M3. Snapshot fixtures lock 4
+representative quests so any heuristic regression surfaces visibly.
+
+### Scope notes
+
+- **Walkthrough text, narrative description, location, levelMax, quest type
+  (party/solo/event/saga)** — none of these are reliably extractable from Java scripts.
+  Defer to M3B (client `questname-e.dat`) and M3C (manual annotation) where applicable.
+- **HTML dialogue** stays internal — we don't publish narrative prose as guide content.
+- **329 quests parsed** on Interlude. Reference fixtures (`tests/quests.snapshot.test.ts`):
+  Q001 (Letters of Love — simple intro), Q105 (Skirmish with the Orcs — kill quest), Q401
+  (Path to a Warrior — class restriction + exp/sp reward), Q211 (Trial of the Challenger —
+  multi-step boss-kill with class gate, exercises proximity heuristic on a longer file).
+
+### `QuestRefDto` shape
+
+```ts
+export interface QuestRefDto {
+  id: number;
+  name: string;
+  levelMin: number | null;
+  /** Populated only on `NpcDetailDto.involvedInQuests[]`. One or more of "talk", "kill". */
+  roles?: string[];
+}
+```
+
+Used in cross-links from items/NPCs back to quests (`ItemDetailDto.rewardOfQuests`,
+`questItemFor`, `NpcDetailDto.startsQuests`, `involvedInQuests`).
+
+### `NpcDetailDto.startsQuests` vs `involvedInQuests` — dedup rules
+
+`startsQuests` is the unfiltered list of quests where the NPC is in `Quest.startNpcIds`.
+`involvedInQuests` is the additional-role list with these dedup rules:
+
+- A quest already in `startsQuests` is re-listed under `involvedInQuests` **only** when the
+  NPC has a non-trivial role beyond starting:
+  - `kill` role: always re-listed (clear additional info — start NPC is also a kill target
+    is genuinely interesting).
+  - `talk` role: not re-listed when the NPC is also the start NPC (start NPCs almost always
+    double as talk targets during the quest; that overlap is implicit and noise).
+- Quests where the NPC has *only* kill or talk roles (not start) appear under
+  `involvedInQuests` regardless.
+- `roles` lists the contributing non-start roles, e.g. `["talk"]`, `["kill"]`,
+  `["talk", "kill"]`. Omitted when empty (defensive — current parser always classifies).
+
+`involvedInQuests` is detail-only; not surfaced on `NpcListDto`.
 
 ## Engine-rule fields (not derived from a single skill / item)
 

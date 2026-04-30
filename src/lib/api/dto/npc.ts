@@ -1,6 +1,11 @@
 import type { Npc } from "../../types";
 import type { Chronicle } from "../../chronicles";
-import { getSkillByKey } from "../../data/indexes";
+import {
+  getQuestsByInvolvedNpcId,
+  getQuestsByStartNpcId,
+  getSkillByKey,
+} from "../../data/indexes";
+import { toQuestRefDto, type QuestRefDto } from "./quest";
 
 export interface NpcListDto {
   id: number;
@@ -35,6 +40,21 @@ export interface NpcDetailDto {
   walkSpd: number | null;
   runSpd: number | null;
   skills: NpcSkillDto[];
+  /**
+   * Quests that this NPC starts (NPC ∈ `Quest.startNpcIds`). Compact
+   * refs only — full quest detail lives at `/quests/[id]`. Empty when
+   * the NPC starts no quests.
+   */
+  startsQuests?: QuestRefDto[];
+  /**
+   * Quests this NPC participates in beyond starting them — talk
+   * targets and kill targets. A quest already in `startsQuests` is
+   * re-listed here only when the NPC has a meaningful additional
+   * role (kill target, or talk-target without being the starter).
+   * `roles?` lists the contributing roles (e.g. `["talk"]`,
+   * `["kill"]`, `["talk", "kill"]`).
+   */
+  involvedInQuests?: QuestRefDto[];
 }
 
 export interface NpcSkillDto {
@@ -135,7 +155,27 @@ export function toNpcDetailDto(npc: Npc, chronicle: Chronicle): NpcDetailDto {
     ? (getSkillByKey(chronicle, `${SKILL_ID_RACES}-${raceSkill.level}`)?.description ?? null)
     : null;
 
-  return {
+  // Quest cross-links. `startsQuests` is the unfiltered list of quests
+  // started by the NPC. `involvedInQuests` lists quests where the NPC
+  // has a kill role, or a talk role *without* also being the start NPC
+  // (because a start NPC almost always doubles as a talk target during
+  // the quest, and listing that overlap is noise).
+  const startQuests = getQuestsByStartNpcId(chronicle, npc.id);
+  const startedQuestIds = new Set(startQuests.map((q) => q.id));
+  const involvedRaw = getQuestsByInvolvedNpcId(chronicle, npc.id);
+  const involvedRefs: QuestRefDto[] = [];
+  for (const q of involvedRaw) {
+    const isTalk = q.talkNpcIds.includes(npc.id);
+    const isKill = q.killNpcIds.includes(npc.id);
+    const isStart = startedQuestIds.has(q.id);
+    const roles: string[] = [];
+    if (isTalk && !isStart) roles.push("talk");
+    if (isKill) roles.push("kill");
+    if (roles.length === 0) continue;
+    involvedRefs.push(toQuestRefDto(q, roles));
+  }
+
+  const dto: NpcDetailDto = {
     id: npc.id,
     name: npc.name,
     title: npc.title,
@@ -174,4 +214,15 @@ export function toNpcDetailDto(npc: Npc, chronicle: Chronicle): NpcDetailDto {
         };
       }),
   };
+
+  if (startQuests.length > 0) {
+    dto.startsQuests = startQuests
+      .map((q) => toQuestRefDto(q))
+      .sort((a, b) => a.id - b.id);
+  }
+  if (involvedRefs.length > 0) {
+    dto.involvedInQuests = involvedRefs.sort((a, b) => a.id - b.id);
+  }
+
+  return dto;
 }

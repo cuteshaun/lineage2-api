@@ -8,6 +8,7 @@ import type {
   Npc,
   NpcDrops,
   Quest,
+  QuestNameRecord,
   Recipe,
   Skill,
   Spawn,
@@ -141,6 +142,12 @@ interface ChronicleIndexes {
   questsByRewardItemId: Map<number, Quest[]>;
   /** itemId → every quest whose `questItemIds[]` (setItemsIds) includes this item. */
   questsByQuestItemId: Map<number, Quest[]>;
+  /**
+   * Quest id → narrative metadata from `questname-e.dat`. Empty when
+   * the chronicle doesn't ship a questname DAT (in which case the
+   * DTO's `description?` is simply omitted).
+   */
+  questNameById: Map<number, QuestNameRecord>;
 }
 
 export interface BuyListProductRef {
@@ -555,6 +562,11 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
     for (const itemId of q.questItemIds) pushTo(questsByQuestItemId, itemId, q);
   }
 
+  const questNameById = new Map<number, QuestNameRecord>();
+  for (const rec of Object.values(dataset.questNames)) {
+    questNameById.set(rec.id, rec);
+  }
+
   // BuyList indexes (forward by NPC, reverse by item).
   const buyListsByNpcId = new Map<number, BuyList[]>();
   const buyListsByItemId = new Map<number, BuyListProductRef[]>();
@@ -624,6 +636,7 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
     questsByInvolvedNpcId,
     questsByRewardItemId,
     questsByQuestItemId,
+    questNameById,
   };
 }
 
@@ -1253,4 +1266,17 @@ export function getQuestsByQuestItemId(
   itemId: number
 ): Quest[] {
   return getChronicleIndexes(chronicle).questsByQuestItemId.get(itemId) ?? [];
+}
+
+/**
+ * Narrative metadata from `questname-e.dat` for a quest, or
+ * `undefined` when the chronicle doesn't ship a questname DAT or
+ * the DAT has no record for this id (rare — client-only stubs go
+ * the other way).
+ */
+export function getQuestNameById(
+  chronicle: Chronicle,
+  id: number
+): QuestNameRecord | undefined {
+  return getChronicleIndexes(chronicle).questNameById.get(id);
 }

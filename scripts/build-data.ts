@@ -9,6 +9,8 @@ import { parseMultisells } from "./parse-multisell";
 import { parseBuyLists } from "./parse-buylists";
 import { parseClasses } from "./parse-classes";
 import { parseQuests } from "./parse-quests";
+import { parseQuestName } from "./parse-questname";
+import { getChronicleSources } from "./chronicle-sources";
 import {
   isChronicle,
   SUPPORTED_CHRONICLES,
@@ -69,6 +71,15 @@ async function main() {
   console.log();
 
   const quests = await parseQuests(chronicle);
+  console.log();
+
+  // questname.json is optional per chronicle. parseQuestName returns an
+  // empty map when `questNameDatFile` isn't declared in chronicle-sources;
+  // when it IS declared, it fails loud on missing/unreadable inputs.
+  const questNameSources = getChronicleSources(chronicle);
+  const questNames = questNameSources.questNameDatFile
+    ? await parseQuestName(chronicle)
+    : new Map();
 
   let totalCategories = 0;
   let totalDropEntries = 0;
@@ -126,6 +137,16 @@ async function main() {
   console.log(
     `  Quests:               ${quests.length} (${questsWithRewards} with rewards)`
   );
+  if (questNames.size > 0) {
+    const javaQuestIds = new Set(quests.map((q) => q.id));
+    let matchedDescriptions = 0;
+    for (const id of questNames.keys()) {
+      if (javaQuestIds.has(id as number)) matchedDescriptions++;
+    }
+    console.log(
+      `  Quest descriptions:   ${matchedDescriptions}/${quests.length} (${questNames.size} DAT records, ${questNames.size - matchedDescriptions} client-only stubs ignored)`
+    );
+  }
   console.log(`  Completed in ${elapsed}s`);
 }
 

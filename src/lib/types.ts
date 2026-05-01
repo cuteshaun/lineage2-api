@@ -371,6 +371,29 @@ export interface Quest {
 }
 
 /**
+ * Per-quest narrative metadata extracted from the L2 client's
+ * `questname-e.dat`. Keyed by the same `id` as `Quest`. Optional —
+ * a chronicle that doesn't declare `questNameDatFile` produces no
+ * records, in which case `QuestDetailDto.description` is simply
+ * absent.
+ *
+ * Currently only the player-facing overview is surfaced. The DAT
+ * also carries per-step prose, race/class label strings, and
+ * client-only quest stubs without Java counterparts; none of those
+ * are exposed in M3B (see plan). Adding fields later is additive.
+ */
+export interface QuestNameRecord {
+  /** Quest id matching `Quest.id`. Joins are id-only, never by name. */
+  id: number;
+  /**
+   * Replicated overview prose ("Darin, a young man on Talking Island,
+   * carries a torch for Gatekeeper Roxxy..."). Always non-empty —
+   * empty overviews are dropped at parse time.
+   */
+  description: string;
+}
+
+/**
  * One product offered by a merchant via the buyLists system. Pure
  * adena-for-item: currency is implicitly Adena (item id 57), no
  * exchange semantics, no enchant preservation.

@@ -295,16 +295,18 @@ Mystic, Cleric, Elven Mystic, Elven Oracle, Dark Mystic, Shillien Oracle).
 
 ## `QuestDetailDto` — stable fields (`GET /api/[chronicle]/quests/[id]`)
 
-Quest catalog parsed mechanically from aCis Java quest scripts. Walkthrough text, narrative
-descriptions, and HTML dialogue are **not** included in M3 — those wait for the
-`questname-e.dat` enrichment landing in M3B. The fields below are the engine-truthful
-subset extractable from the Java scripts via regex (no AST, no NLP).
+Quest catalog parsed mechanically from aCis Java quest scripts, with a single
+optional flavor field merged from the L2 client's `questname-e.dat`.
+Walkthrough text and HTML dialogue remain **not** included — those would
+require either narrative-prose extraction or a manual editorial layer, both
+out of scope. The Java fields below are engine-truthful (regex over the
+quest scripts; no AST, no NLP); `description` is purely additive on top.
 
 | Field | Type | Notes |
 |---|---|---|
 | `id`, `name` | number / string | From `super(id, "name")` in the quest's constructor. Always present. |
 | `scriptFile` | string | Source filename for traceability, e.g. `"Q001_LettersOfLove.java"`. |
-| `levelMin` | number \| null | Smallest `getLevel() < N` constraint in the quest's `STATE_CREATED` branch. `null` when no level gate is encoded. **`levelMax` is intentionally absent** — it's rarely encoded in source; lands in M3B. |
+| `levelMin` | number \| null | Smallest `getLevel() < N` constraint in the quest's `STATE_CREATED` branch. `null` when no level gate is encoded. **`levelMax` is intentionally absent** — `questname-e.dat` does not carry a reliable max-level field on Interlude (the per-record leading uint32 produces values like 138 that don't behave as a level cap), so M3B does not surface one. |
 | `repeatable` | boolean \| null | From `exitQuest(true\|false)`. `null` when the script never calls `exitQuest` (rare). |
 | `raceRestrictions` | string[] | Canonical aCis enum names ("HUMAN", "ELF", "DARK_ELF", "ORC", "DWARF") from positive-form `getRace() == ClassRace.X` checks. Negative-form gates (`!=`) are not surfaced — they're common across many classes and would clutter the public DTO. Empty when no race gate is encoded. |
 | `classRestrictions` | `ClassRefDto[]` | Resolved against `classes.json` from `ClassId.X` enum references in `==` / `equalsOrChildOf` checks. Empty when no class gate is encoded. |
@@ -313,6 +315,7 @@ subset extractable from the Java scripts via regex (no AST, no NLP).
 | `involvedMonsters` | `NpcRefDto[]` | From `addKillId(...)`. Player-friendly: "what do I kill". |
 | `questItems` | `ItemQuantityDto[]` | From `setItemsIds(...)` declared at top of constructor. **`count` is always 0** — the engine list registers item ids but doesn't carry quantities; the field shape exists for parity with `ItemQuantityDto` and to preserve item icon/name resolution. |
 | `rewards` | `QuestRewardsDto` | See "Reward extraction" below. |
+| `description?` | string | Player-facing flavor prose from the L2 client's `questname-e.dat` (e.g. *"Darin, a young man on Talking Island, carries a torch for Gatekeeper Roxxy, who doesn't return his affections."*). **Additive**: Java-derived fields above are authoritative — `description` is never used to override `name`, `levelMin`, `repeatable`, `raceRestrictions`, `classRestrictions`, `rewards.*`, `startNpcs`, `involvedNpcs`, `involvedMonsters`, `questItems`, or `scriptFile`, even when the DAT carries its own value for them. Omitted when the chronicle doesn't ship a `questname-e.dat` (gated by `questNameDatFile` in `chronicle-sources.ts`) or the quest has no DAT counterpart. |
 
 `QuestListDto` (`GET /api/[chronicle]/quests`) is a compact subset of the above: drops
 `scriptFile`, `involvedNpcs`, `involvedMonsters`, `questItems`, and the full `rewards`
@@ -341,14 +344,23 @@ representative quests so any heuristic regression surfaces visibly.
 
 ### Scope notes
 
-- **Walkthrough text, narrative description, location, levelMax, quest type
-  (party/solo/event/saga)** — none of these are reliably extractable from Java scripts.
-  Defer to M3B (client `questname-e.dat`) and M3C (manual annotation) where applicable.
-- **HTML dialogue** stays internal — we don't publish narrative prose as guide content.
-- **329 quests parsed** on Interlude. Reference fixtures (`tests/quests.snapshot.test.ts`):
-  Q001 (Letters of Love — simple intro), Q105 (Skirmish with the Orcs — kill quest), Q401
-  (Path to a Warrior — class restriction + exp/sp reward), Q211 (Trial of the Challenger —
-  multi-step boss-kill with class gate, exercises proximity heuristic on a longer file).
+- **Walkthrough text, location, levelMax, quest type (party/solo/event/saga)** —
+  none of these are reliably extractable from Java scripts, and the Interlude
+  `questname-e.dat` either doesn't carry them or carries them in a form that
+  doesn't survive Phase-0 verification (e.g. step descriptions are walkthrough
+  prose, not structured short titles; the per-record leading uint32 doesn't
+  behave as `levelMax`). The narrative `description` IS surfaced — see the
+  optional row in the field table above. Other deferred items wait for M4
+  (Locations) and any future manual-annotation pass.
+- **HTML dialogue** stays internal — we don't publish walkthrough prose as guide content.
+- **329 quests parsed** on Interlude (100% of the Java catalog has a
+  `questname-e.dat` counterpart joined by id; the DAT also carries 13
+  client-only stubs without Java counterparts that are silently ignored).
+  Reference fixtures (`tests/quests.snapshot.test.ts`): Q001 (Letters of Love —
+  simple intro), Q105 (Skirmish with the Orcs — kill quest), Q401 (Path to a
+  Warrior — class restriction + exp/sp reward), Q211 (Trial of the Challenger —
+  multi-step boss-kill with class gate, exercises proximity heuristic on a
+  longer file).
 
 ### `QuestRefDto` shape
 

@@ -27,147 +27,10 @@
  */
 
 import fs from "node:fs";
-import zlib from "node:zlib";
 import type { Chronicle } from "../src/lib/chronicles";
 import { getChronicleSources } from "./chronicle-sources";
 import type { Item } from "../src/lib/types";
-
-// --- Ver413 RSA public parameter sets (well-known, community docs) ---
-const MOD_MODIFIED_B64 =
-  "dbTW3lwBZUQGihrPElhp9D0uCfxVuLHiiVVtr5uHV2NVk0RiiLNlPaHOkch7saXBjxYyNJXFXX1ywIkKg/ab/R/ZQ06xwC8+Rnnt+kMwkxkHASnCZ8hWBNh7tluuIF3jcHrx0hCIgau1Z8Oz0GmuZ8OkxqOqk9JkE9TGYJSuIDk=";
-const MOD_ORIGINAL_B64 =
-  "l985hHLd9zfvCgzRfo0XLw/vFmGjiorh1ugpvBxuTDz8GSkt2p75AXXkbnOUoYhQtkF9A75u6idNPtHd5bXXvecswKC3HQNghlVjOIF5OgLJpn2e8rRet8CNS+MpCDzkUOaPeGe2dJMU1AUR0JvFdEVRuqhqidw4Ej3BZo/XLYM=";
-const EXP_MODIFIED = 0x1dn;
-const EXP_ORIGINAL = 0x35n;
-
-const FILE_HEADER = "Lineage2Ver413";
-const FILE_HEADER_BYTES = FILE_HEADER.length * 2; // UTF-16LE
-const RSA_BLOCK = 128;
-
-function bytesToBigInt(buf: Buffer): bigint {
-  let n = 0n;
-  for (const b of buf) n = (n << 8n) | BigInt(b);
-  return n;
-}
-
-function bigIntToBytes(n: bigint, byteLen: number): Buffer {
-  const out = Buffer.alloc(byteLen);
-  for (let i = byteLen - 1; i >= 0 && n > 0n; i--) {
-    out[i] = Number(n & 0xffn);
-    n >>= 8n;
-  }
-  return out;
-}
-
-function modPow(base: bigint, exp: bigint, mod: bigint): bigint {
-  let r = 1n;
-  base %= mod;
-  while (exp > 0n) {
-    if (exp & 1n) r = (r * base) % mod;
-    exp >>= 1n;
-    base = (base * base) % mod;
-  }
-  return r;
-}
-
-function rsaDecryptBlocks(
-  cipher: Buffer,
-  modBytes: Buffer,
-  exp: bigint
-): Buffer | null {
-  const mod = bytesToBigInt(modBytes);
-  const chunks: Buffer[] = [];
-  // Trim the 20-byte signature trailer that Ver413 dumps append after the
-  // last full RSA block.
-  const usable = cipher.length - (cipher.length % RSA_BLOCK);
-  for (let off = 0; off < usable; off += RSA_BLOCK) {
-    const plain = bigIntToBytes(
-      modPow(
-        bytesToBigInt(cipher.subarray(off, off + RSA_BLOCK)),
-        exp,
-        mod
-      ),
-      RSA_BLOCK
-    );
-    const size = plain.readUInt32BE(0);
-    // With the wrong key the first 4 bytes decode to a large garbage uint —
-    // they are then used as a sentinel to fall through to the next key.
-    if (size > RSA_BLOCK - 4) return null;
-    chunks.push(plain.subarray(4, 4 + size));
-  }
-  return chunks.length ? Buffer.concat(chunks) : null;
-}
-
-async function tolerantInflate(input: Buffer): Promise<Buffer> {
-  // Ver413 signature-trailer truncation makes the last zlib block report
-  // "unexpected end of file" even though every meaningful byte decoded. We
-  // swallow the terminal error and return whatever was produced.
-  return new Promise((resolve) => {
-    const z = zlib.createInflate();
-    const parts: Buffer[] = [];
-    z.on("data", (c: Buffer) => parts.push(c));
-    z.on("error", () => {});
-    z.on("close", () => resolve(Buffer.concat(parts)));
-    z.end(input);
-  });
-}
-
-async function decodeVer413(datPath: string): Promise<Buffer> {
-  const buf = fs.readFileSync(datPath);
-  const head = buf.subarray(0, FILE_HEADER_BYTES).toString("utf16le");
-  if (head !== FILE_HEADER) {
-    throw new Error(
-      `[parse-icon-mappings] unexpected Ver413 header in ${datPath}: ${JSON.stringify(head)}`
-    );
-  }
-  const cipher = buf.subarray(FILE_HEADER_BYTES);
-  const modModified = Buffer.from(MOD_MODIFIED_B64, "base64");
-  const modOriginal = Buffer.from(MOD_ORIGINAL_B64, "base64");
-
-  let concat = rsaDecryptBlocks(cipher, modModified, EXP_MODIFIED);
-  if (!concat) concat = rsaDecryptBlocks(cipher, modOriginal, EXP_ORIGINAL);
-  if (!concat) {
-    throw new Error(
-      `[parse-icon-mappings] both RSA parameter sets failed for ${datPath}`
-    );
-  }
-  // Decoded payload is `uint32 uncompLen` + zlib-deflate of UTF-16LE body.
-  return tolerantInflate(concat.subarray(4));
-}
-
-// --- body parsing ---
-
-type Ustring = { off: number; end: number; s: string };
-
-function scanUtf16Ustrings(buf: Buffer): Ustring[] {
-  const hits: Ustring[] = [];
-  for (let i = 0; i + 8 <= buf.length; i++) {
-    const n = buf.readInt32LE(i);
-    if (n < 4 || n > 256 || (n & 1) !== 0) continue;
-    const end = i + 4 + n;
-    if (end > buf.length) continue;
-    let good = true;
-    for (let j = i + 4; j < end; j += 2) {
-      const lo = buf[j];
-      const hi = buf[j + 1];
-      if (hi > 1) {
-        good = false;
-        break;
-      }
-      if (lo < 0x20 && lo !== 0) {
-        good = false;
-        break;
-      }
-    }
-    if (!good) continue;
-    const s = buf.subarray(i + 4, end).toString("utf16le").replace(/\0+$/, "");
-    if (s.length < 3) continue;
-    if (!/^[A-Za-z0-9_.\- ]+$/.test(s)) continue;
-    hits.push({ off: i, end, s });
-    i = end - 1;
-  }
-  return hits;
-}
+import { decodeVer413, scanUtf16Ustrings, type Ustring } from "./lib/ver413";
 
 const ICON_USTRING_RE = /^icon\.[A-Za-z]+_/;
 
@@ -246,7 +109,7 @@ export async function parseIconMappings(
       );
       continue;
     }
-    const decoded = await decodeVer413(job.path);
+    const decoded = await decodeVer413(job.path, "[parse-icon-mappings]");
     const mappings = extractMappingsFromBuffer(decoded, allValidIds);
     for (const [id, iconName] of mappings) {
       // itemId is unique per grp file but an item *could* theoretically

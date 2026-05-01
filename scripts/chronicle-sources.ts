@@ -52,6 +52,13 @@ export interface ChronicleSources {
   buyListsXmlFile: string;
   /** Absolute path to the `scripting/quests/` directory (Java quest scripts). */
   questsScriptsDir: string;
+  /**
+   * Absolute path to `questname-e.dat` (encrypted L2 client quest table).
+   * **Optional**: chronicles that don't ship a questname DAT omit this
+   * field entirely. When set, `parse-questname.ts` runs and the file
+   * is required — missing/unreadable/undecodable fails the build loud.
+   */
+  questNameDatFile?: string;
 }
 
 interface SourceSpec {
@@ -75,6 +82,8 @@ interface SourceSpec {
   classIdEnumFile: string[];
   buyListsXmlFile: string[];
   questsScriptsDir: string[];
+  /** Optional — chronicles without a client questname DAT omit this. */
+  questNameDatFile?: string[];
 }
 
 const SOURCE_SPECS: Record<Chronicle, SourceSpec> = {
@@ -203,6 +212,8 @@ const SOURCE_SPECS: Record<Chronicle, SourceSpec> = {
       "scripting",
       "quests",
     ],
+    // Configured for Interlude → questname-e.dat is required at build time.
+    questNameDatFile: ["data", "datapack", "interlude", "questname-e.dat"],
   },
 };
 
@@ -236,5 +247,8 @@ export function getChronicleSources(chronicle: Chronicle): ChronicleSources {
     classIdEnumFile: path.join(root, ...spec.classIdEnumFile),
     buyListsXmlFile: path.join(root, ...spec.buyListsXmlFile),
     questsScriptsDir: path.join(root, ...spec.questsScriptsDir),
+    questNameDatFile: spec.questNameDatFile
+      ? path.join(root, ...spec.questNameDatFile)
+      : undefined,
   };
 }

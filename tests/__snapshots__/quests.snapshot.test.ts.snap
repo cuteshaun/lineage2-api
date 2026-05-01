@@ -3,6 +3,7 @@
 exports[`quest 1 (Letters of Love) DTO matches snapshot 1`] = `
 {
   "classRestrictions": [],
+  "description": "Darin, a young man on Talking Island, carries a torch for Gatekeeper Roxxy, who doesn't return his affections. Darin is not so easily dissuaded, however.",
   "id": 1,
   "involvedMonsters": [],
   "involvedNpcs": [
@@ -75,6 +76,7 @@ exports[`quest 1 (Letters of Love) DTO matches snapshot 1`] = `
 exports[`quest 105 (Skirmish with the Orcs) DTO matches snapshot 1`] = `
 {
   "classRestrictions": [],
+  "description": "Kaboo Orcs from the Misty Mountains have invaded the Elven Forest again. Help Sentinel Kendell and the Elven Fighters defeat the invaders and take the head of the Orc Captain!",
   "id": 105,
   "involvedMonsters": [
     {
@@ -244,6 +246,7 @@ exports[`quest 105 (Skirmish with the Orcs) DTO matches snapshot 1`] = `
 exports[`quest 211 (Trial of the Challenger) DTO matches snapshot 1`] = `
 {
   "classRestrictions": [],
+  "description": "Many Warriors seek the challenger's mark as proof of their valor. A conspiracy of darkness surrounds the mark.",
   "id": 211,
   "involvedMonsters": [
     {
@@ -353,6 +356,7 @@ exports[`quest 401 (Path to a Warrior) DTO matches snapshot 1`] = `
       "professionLevel": 1,
     },
   ],
+  "description": "All warriors must be courageous and tenacious. Do you possess these qualities?",
   "id": 401,
   "involvedMonsters": [
     {

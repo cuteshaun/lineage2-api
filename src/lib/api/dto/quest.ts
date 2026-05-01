@@ -3,6 +3,7 @@ import type { Quest } from "../../types";
 import {
   getClassById,
   getItemById,
+  getQuestNameById,
   getRawNpcById,
 } from "../../data/indexes";
 import { toClassRefDto, type ClassRefDto } from "./class";
@@ -65,6 +66,15 @@ export interface QuestDetailDto {
    */
   questItems: ItemQuantityDto[];
   rewards: QuestRewardsDto;
+  /**
+   * Player-facing flavor prose extracted from the L2 client's
+   * `questname-e.dat` when the chronicle ships one. Authoritative
+   * Java fields above (name, levelMin, repeatable, race/class
+   * gates, rewards, NPC ids) are never overridden by the DAT —
+   * `description` is purely additive. Omitted when the chronicle
+   * doesn't ship the DAT or the quest has no DAT counterpart.
+   */
+  description?: string;
 }
 
 function resolveItemQuantityRefs(
@@ -151,7 +161,7 @@ export function toQuestDetailDto(
   q: Quest,
   chronicle: Chronicle
 ): QuestDetailDto {
-  return {
+  const dto: QuestDetailDto = {
     id: q.id,
     name: q.name,
     scriptFile: q.scriptFile,
@@ -173,4 +183,9 @@ export function toQuestDetailDto(
       sp: q.rewards.sp,
     },
   };
+  const questName = getQuestNameById(chronicle, q.id);
+  if (questName && questName.description.length > 0) {
+    dto.description = questName.description;
+  }
+  return dto;
 }

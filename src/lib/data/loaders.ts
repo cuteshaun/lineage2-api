@@ -11,6 +11,7 @@ import type {
   Npc,
   NpcDrops,
   Quest,
+  QuestNameRecord,
   Recipe,
   Skill,
   Spawn,
@@ -30,6 +31,12 @@ interface ChronicleDataset {
   classes: ClassRecord[];
   spellbooks: Spellbook[];
   quests: Quest[];
+  /**
+   * Per-quest narrative metadata from `questname-e.dat`. Empty
+   * record when the chronicle doesn't ship a questname DAT — in
+   * that case `QuestDetailDto.description` is simply absent.
+   */
+  questNames: Record<string, QuestNameRecord>;
 }
 
 const datasetCache = new Map<Chronicle, ChronicleDataset>();
@@ -41,6 +48,24 @@ function readJson<T>(filePath: string): T {
     );
   }
   return JSON.parse(fs.readFileSync(filePath, "utf-8")) as T;
+}
+
+/**
+ * Optional companion to `quests.json`. Falls back to `{}` when the
+ * file is absent — that's the legitimate state for chronicles whose
+ * `chronicle-sources.ts` doesn't declare `questNameDatFile`. (When
+ * the source IS declared, `pnpm build:data` fails loud before we
+ * ever reach runtime, so a configured-but-missing file never gets
+ * here.)
+ */
+function readQuestNamesIfPresent(
+  filePath: string
+): Record<string, QuestNameRecord> {
+  if (!fs.existsSync(filePath)) return {};
+  return JSON.parse(fs.readFileSync(filePath, "utf-8")) as Record<
+    string,
+    QuestNameRecord
+  >;
 }
 
 export function loadChronicleDataset(chronicle: Chronicle): ChronicleDataset {
@@ -80,6 +105,9 @@ export function loadChronicleDataset(chronicle: Chronicle): ChronicleDataset {
       path.join(config.generatedDir, "spellbooks.json")
     ),
     quests: readJson<Quest[]>(path.join(config.generatedDir, "quests.json")),
+    questNames: readQuestNamesIfPresent(
+      path.join(config.generatedDir, "questname.json")
+    ),
   };
 
   datasetCache.set(chronicle, dataset);

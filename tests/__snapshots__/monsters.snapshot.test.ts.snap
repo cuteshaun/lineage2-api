@@ -1,0 +1,178 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`monsters detail — Grim Wolf (22001) 1`] = `
+{
+  "body": {
+    "data": {
+      "atkSpd": 253,
+      "crit": 4,
+      "exp": 1199,
+      "hp": 461,
+      "id": 22001,
+      "isAggressive": false,
+      "level": 25,
+      "mAtk": 44,
+      "mDef": 75,
+      "mp": 259,
+      "name": "Grim Wolf",
+      "npcType": "Monster",
+      "pAtk": 65,
+      "pDef": 102,
+      "race": "Animal",
+      "raceDescription": "These general animals are hunted by humanoids. They sometimes attack humanoids, but only to defend themselves or their territory.",
+      "raceIconFile": "skill4293.png",
+      "runSpd": 130,
+      "skills": [
+        {
+          "description": "Vulnerable to Blunt Weapons.",
+          "iconFile": "skill4274.png",
+          "id": 4274,
+          "level": 3,
+          "name": "Blunt Attack Weak Point",
+        },
+        {
+          "description": "Vulnerable to Pole Arm Weapons.",
+          "iconFile": "skill4458.png",
+          "id": 4458,
+          "level": 3,
+          "name": "Spear Weapon Weak Point",
+        },
+      ],
+      "sp": 60,
+      "title": null,
+      "walkSpd": 24,
+    },
+  },
+  "status": 200,
+}
+`;
+
+exports[`monsters detail — invalid id returns 404 1`] = `
+{
+  "body": {
+    "error": "Monster 999999 not found",
+    "status": 404,
+  },
+  "status": 404,
+}
+`;
+
+exports[`monsters list — default sort, limit=5 1`] = `
+{
+  "body": {
+    "data": [
+      {
+        "hp": 40,
+        "id": 12774,
+        "isAggressive": false,
+        "level": 1,
+        "name": "Young Squash",
+        "npcType": "Monster",
+        "title": null,
+      },
+      {
+        "hp": 40,
+        "id": 12775,
+        "isAggressive": false,
+        "level": 1,
+        "name": "High Quality Squash",
+        "npcType": "Monster",
+        "title": null,
+      },
+      {
+        "hp": 40,
+        "id": 12776,
+        "isAggressive": false,
+        "level": 1,
+        "name": "Low Quality Squash",
+        "npcType": "Monster",
+        "title": null,
+      },
+      {
+        "hp": 40,
+        "id": 12777,
+        "isAggressive": false,
+        "level": 1,
+        "name": "Large Young Squash",
+        "npcType": "Monster",
+        "title": null,
+      },
+      {
+        "hp": 40,
+        "id": 12778,
+        "isAggressive": false,
+        "level": 1,
+        "name": "High Quality Large Squash",
+        "npcType": "Monster",
+        "title": null,
+      },
+    ],
+    "meta": {
+      "limit": 5,
+      "offset": 0,
+      "total": 2519,
+    },
+  },
+  "status": 200,
+}
+`;
+
+exports[`monsters list — sort=-level, limit=5 1`] = `
+{
+  "body": {
+    "data": [
+      {
+        "hp": 2975,
+        "id": 22195,
+        "isAggressive": false,
+        "level": 99,
+        "name": "Ritual Sacrifice",
+        "npcType": "Monster",
+        "title": null,
+      },
+      {
+        "hp": 3960,
+        "id": 29052,
+        "isAggressive": false,
+        "level": 99,
+        "name": "Follower Dummy",
+        "npcType": "Monster",
+        "title": null,
+      },
+      {
+        "hp": 3163,
+        "id": 22188,
+        "isAggressive": true,
+        "level": 87,
+        "name": "Andreas' Captain of the Royal Guard",
+        "npcType": "Monster",
+        "title": null,
+      },
+      {
+        "hp": 3290,
+        "id": 22199,
+        "isAggressive": true,
+        "level": 87,
+        "name": "Pterosaur",
+        "npcType": "Monster",
+        "title": null,
+      },
+      {
+        "hp": 339687,
+        "id": 22215,
+        "isAggressive": true,
+        "level": 87,
+        "name": "Tyrannosaurus",
+        "npcType": "Monster",
+        "title": null,
+      },
+    ],
+    "meta": {
+      "limit": 5,
+      "offset": 0,
+      "total": 2519,
+    },
+  },
+  "status": 200,
+}
+`;

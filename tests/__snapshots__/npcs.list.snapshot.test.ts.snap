@@ -1,0 +1,191 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`npcs list — default sort, limit=5 1`] = `
+{
+  "body": {
+    "data": [
+      {
+        "hp": 247,
+        "id": 12077,
+        "isAggressive": false,
+        "level": 15,
+        "name": "Wolf",
+        "npcType": "Pet",
+        "title": null,
+      },
+      {
+        "hp": 773,
+        "id": 12311,
+        "isAggressive": false,
+        "level": 35,
+        "name": "Hatchling of the Wind",
+        "npcType": "Pet",
+        "title": null,
+      },
+      {
+        "hp": 773,
+        "id": 12312,
+        "isAggressive": false,
+        "level": 35,
+        "name": "Hatchling of the Stars",
+        "npcType": "Pet",
+        "title": null,
+      },
+      {
+        "hp": 773,
+        "id": 12313,
+        "isAggressive": false,
+        "level": 35,
+        "name": "Hatchling of Twilight",
+        "npcType": "Pet",
+        "title": null,
+      },
+      {
+        "hp": 1673,
+        "id": 12526,
+        "isAggressive": false,
+        "level": 55,
+        "name": "Wind Strider",
+        "npcType": "Pet",
+        "title": null,
+      },
+    ],
+    "meta": {
+      "limit": 5,
+      "offset": 0,
+      "total": 4354,
+    },
+  },
+  "status": 200,
+}
+`;
+
+exports[`npcs list — invalid range (levelMin > levelMax) returns 400 1`] = `
+{
+  "body": {
+    "error": "Invalid range: levelMin > levelMax",
+    "status": 400,
+  },
+  "status": 400,
+}
+`;
+
+exports[`npcs list — levelMin=60&levelMax=65 sort=level, limit=5 1`] = `
+{
+  "body": {
+    "data": [
+      {
+        "hp": 3093,
+        "id": 14120,
+        "isAggressive": false,
+        "level": 60,
+        "name": "Kat the Cat",
+        "npcType": "Servitor",
+        "title": null,
+      },
+      {
+        "hp": 3093,
+        "id": 14168,
+        "isAggressive": false,
+        "level": 60,
+        "name": "Mew the Cat",
+        "npcType": "Servitor",
+        "title": null,
+      },
+      {
+        "hp": 2320,
+        "id": 14212,
+        "isAggressive": false,
+        "level": 60,
+        "name": "Kai the Cat",
+        "npcType": "Servitor",
+        "title": null,
+      },
+      {
+        "hp": 1933,
+        "id": 14252,
+        "isAggressive": false,
+        "level": 60,
+        "name": "Feline Queen",
+        "npcType": "Servitor",
+        "title": null,
+      },
+      {
+        "hp": 3093,
+        "id": 14304,
+        "isAggressive": false,
+        "level": 60,
+        "name": "Boxer the Unicorn",
+        "npcType": "Servitor",
+        "title": null,
+      },
+    ],
+    "meta": {
+      "limit": 5,
+      "offset": 0,
+      "total": 250,
+    },
+  },
+  "status": 200,
+}
+`;
+
+exports[`npcs list — npcType=RaidBoss sort=-level, limit=5 1`] = `
+{
+  "body": {
+    "data": [
+      {
+        "hp": 689061,
+        "id": 25305,
+        "isAggressive": false,
+        "level": 87,
+        "name": "Ketra's Chief Brakki",
+        "npcType": "RaidBoss",
+        "title": "Raid Boss",
+      },
+      {
+        "hp": 240490,
+        "id": 25306,
+        "isAggressive": false,
+        "level": 87,
+        "name": "Soul of Fire Nastron",
+        "npcType": "RaidBoss",
+        "title": "Raid Boss",
+      },
+      {
+        "hp": 689061,
+        "id": 25315,
+        "isAggressive": false,
+        "level": 87,
+        "name": "Varka's Chief Horus",
+        "npcType": "RaidBoss",
+        "title": "Raid Boss",
+      },
+      {
+        "hp": 240490,
+        "id": 25316,
+        "isAggressive": false,
+        "level": 87,
+        "name": "Soul of Water Ashutar",
+        "npcType": "RaidBoss",
+        "title": "Raid Boss",
+      },
+      {
+        "hp": 115708,
+        "id": 29062,
+        "isAggressive": true,
+        "level": 87,
+        "name": "Andreas Van Halter",
+        "npcType": "RaidBoss",
+        "title": "Seer of Pagan",
+      },
+    ],
+    "meta": {
+      "limit": 5,
+      "offset": 0,
+      "total": 208,
+    },
+  },
+  "status": 200,
+}
+`;

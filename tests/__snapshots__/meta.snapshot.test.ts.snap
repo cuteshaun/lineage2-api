@@ -1,0 +1,402 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`meta/item-grades 1`] = `
+{
+  "body": {
+    "data": [
+      {
+        "count": 7335,
+        "name": "none",
+      },
+      {
+        "count": 318,
+        "name": "d",
+      },
+      {
+        "count": 504,
+        "name": "c",
+      },
+      {
+        "count": 506,
+        "name": "b",
+      },
+      {
+        "count": 409,
+        "name": "a",
+      },
+      {
+        "count": 134,
+        "name": "s",
+      },
+    ],
+  },
+  "status": 200,
+}
+`;
+
+exports[`meta/item-types 1`] = `
+{
+  "body": {
+    "data": [
+      {
+        "count": 1125,
+        "name": "armor",
+      },
+      {
+        "count": 6864,
+        "name": "etcitem",
+      },
+      {
+        "count": 1217,
+        "name": "weapon",
+      },
+    ],
+  },
+  "status": 200,
+}
+`;
+
+exports[`meta/npc-types 1`] = `
+{
+  "body": {
+    "data": [
+      {
+        "count": 77,
+        "isMonster": false,
+        "name": "Adventurer",
+      },
+      {
+        "count": 5,
+        "isMonster": false,
+        "name": "Auctioneer",
+      },
+      {
+        "count": 3,
+        "isMonster": false,
+        "name": "BabyPet",
+      },
+      {
+        "count": 54,
+        "isMonster": false,
+        "name": "BorderGuard",
+      },
+      {
+        "count": 1,
+        "isMonster": false,
+        "name": "BroadcastingTower",
+      },
+      {
+        "count": 80,
+        "isMonster": false,
+        "name": "CabalBuffer",
+      },
+      {
+        "count": 9,
+        "isMonster": false,
+        "name": "CastleBlacksmith",
+      },
+      {
+        "count": 9,
+        "isMonster": false,
+        "name": "CastleChamberlain",
+      },
+      {
+        "count": 69,
+        "isMonster": false,
+        "name": "CastleDoorman",
+      },
+      {
+        "count": 9,
+        "isMonster": false,
+        "name": "CastleGatekeeper",
+      },
+      {
+        "count": 9,
+        "isMonster": false,
+        "name": "CastleMagician",
+      },
+      {
+        "count": 9,
+        "isMonster": false,
+        "name": "CastleWarehouseKeeper",
+      },
+      {
+        "count": 62,
+        "isMonster": true,
+        "name": "Chest",
+      },
+      {
+        "count": 2,
+        "isMonster": false,
+        "name": "ChristmasTree",
+      },
+      {
+        "count": 40,
+        "isMonster": false,
+        "name": "ClanHallDoorman",
+      },
+      {
+        "count": 39,
+        "isMonster": false,
+        "name": "ClanHallManagerNpc",
+      },
+      {
+        "count": 1,
+        "isMonster": false,
+        "name": "ClassMaster",
+      },
+      {
+        "count": 1,
+        "isMonster": false,
+        "name": "ControlTower",
+      },
+      {
+        "count": 11,
+        "isMonster": false,
+        "name": "DawnPriest",
+      },
+      {
+        "count": 1,
+        "isMonster": false,
+        "name": "DerbyTrackManagerNpc",
+      },
+      {
+        "count": 2,
+        "isMonster": false,
+        "name": "Doorman",
+      },
+      {
+        "count": 30,
+        "isMonster": false,
+        "name": "DungeonGatekeeper",
+      },
+      {
+        "count": 11,
+        "isMonster": false,
+        "name": "DuskPriest",
+      },
+      {
+        "count": 63,
+        "isMonster": true,
+        "name": "FeedableBeast",
+      },
+      {
+        "count": 20,
+        "isMonster": false,
+        "name": "FestivalGuide",
+      },
+      {
+        "count": 110,
+        "isMonster": true,
+        "name": "FestivalMonster",
+      },
+      {
+        "count": 22,
+        "isMonster": false,
+        "name": "Fisherman",
+      },
+      {
+        "count": 1,
+        "isMonster": false,
+        "name": "FlameTower",
+      },
+      {
+        "count": 759,
+        "isMonster": false,
+        "name": "Folk",
+      },
+      {
+        "count": 4,
+        "isMonster": true,
+        "name": "FriendlyMonster",
+      },
+      {
+        "count": 57,
+        "isMonster": false,
+        "name": "Gatekeeper",
+      },
+      {
+        "count": 4,
+        "isMonster": false,
+        "name": "GoldenRamMercenary",
+      },
+      {
+        "count": 15,
+        "isMonster": true,
+        "name": "GrandBoss",
+      },
+      {
+        "count": 155,
+        "isMonster": false,
+        "name": "Guard",
+      },
+      {
+        "count": 1,
+        "isMonster": true,
+        "name": "HalishaChest",
+      },
+      {
+        "count": 11,
+        "isMonster": false,
+        "name": "HolyThing",
+      },
+      {
+        "count": 13,
+        "isMonster": false,
+        "name": "ManorManagerNpc",
+      },
+      {
+        "count": 9,
+        "isMonster": false,
+        "name": "MercenaryManagerNpc",
+      },
+      {
+        "count": 176,
+        "isMonster": false,
+        "name": "Merchant",
+      },
+      {
+        "count": 2541,
+        "isMonster": true,
+        "name": "Monster",
+      },
+      {
+        "count": 5,
+        "isMonster": false,
+        "name": "MutedFolk",
+      },
+      {
+        "count": 6,
+        "isMonster": false,
+        "name": "OlympiadManagerNpc",
+      },
+      {
+        "count": 8,
+        "isMonster": true,
+        "name": "PenaltyMonster",
+      },
+      {
+        "count": 9,
+        "isMonster": false,
+        "name": "Pet",
+      },
+      {
+        "count": 208,
+        "isMonster": true,
+        "name": "RaidBoss",
+      },
+      {
+        "count": 132,
+        "isMonster": true,
+        "name": "RiftInvader",
+      },
+      {
+        "count": 1,
+        "isMonster": false,
+        "name": "SchemeBuffer",
+      },
+      {
+        "count": 62,
+        "isMonster": false,
+        "name": "SepulcherNpc",
+      },
+      {
+        "count": 764,
+        "isMonster": false,
+        "name": "Servitor",
+      },
+      {
+        "count": 302,
+        "isMonster": false,
+        "name": "SiegeGuard",
+      },
+      {
+        "count": 11,
+        "isMonster": false,
+        "name": "SiegeNpc",
+      },
+      {
+        "count": 93,
+        "isMonster": false,
+        "name": "SiegeSummon",
+      },
+      {
+        "count": 3,
+        "isMonster": false,
+        "name": "SignsPriest",
+      },
+      {
+        "count": 11,
+        "isMonster": false,
+        "name": "SymbolMaker",
+      },
+      {
+        "count": 6,
+        "isMonster": true,
+        "name": "TamedBeast",
+      },
+      {
+        "count": 11,
+        "isMonster": false,
+        "name": "TownPet",
+      },
+      {
+        "count": 181,
+        "isMonster": false,
+        "name": "Trainer",
+      },
+      {
+        "count": 14,
+        "isMonster": false,
+        "name": "VillageMasterDElf",
+      },
+      {
+        "count": 26,
+        "isMonster": false,
+        "name": "VillageMasterDwarf",
+      },
+      {
+        "count": 13,
+        "isMonster": false,
+        "name": "VillageMasterFighter",
+      },
+      {
+        "count": 10,
+        "isMonster": false,
+        "name": "VillageMasterMystic",
+      },
+      {
+        "count": 14,
+        "isMonster": false,
+        "name": "VillageMasterOrc",
+      },
+      {
+        "count": 13,
+        "isMonster": false,
+        "name": "VillageMasterPriest",
+      },
+      {
+        "count": 12,
+        "isMonster": false,
+        "name": "Walker",
+      },
+      {
+        "count": 50,
+        "isMonster": false,
+        "name": "WarehouseKeeper",
+      },
+      {
+        "count": 1,
+        "isMonster": false,
+        "name": "WeddingManagerNpc",
+      },
+      {
+        "count": 11,
+        "isMonster": false,
+        "name": "WyvernManagerNpc",
+      },
+    ],
+  },
+  "status": 200,
+}
+`;

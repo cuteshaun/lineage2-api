@@ -1,0 +1,200 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`dropped-by — Emergency Dressing (1834), limit=5 1`] = `
+{
+  "body": {
+    "data": [
+      {
+        "chance": 22.5319,
+        "chanceDisplay": "22.53%",
+        "npc": {
+          "id": 25077,
+          "level": 24,
+          "name": "Captain Dogun",
+          "type": "Monster",
+        },
+        "qty": "1",
+      },
+      {
+        "chance": 18.2933,
+        "chanceDisplay": "18.29%",
+        "npc": {
+          "id": 25374,
+          "level": 20,
+          "name": "Abyss Flyer",
+          "type": "Monster",
+        },
+        "qty": "1",
+      },
+      {
+        "chance": 10,
+        "chanceDisplay": "10%",
+        "npc": {
+          "id": 20611,
+          "level": 32,
+          "name": "Dre Vanul Warrior",
+          "type": "Monster",
+        },
+        "qty": "1",
+      },
+      {
+        "chance": 8.0505,
+        "chanceDisplay": "8.05%",
+        "npc": {
+          "id": 20614,
+          "level": 28,
+          "name": "Lafi Lizardman Scout",
+          "type": "Monster",
+        },
+        "qty": "1",
+      },
+      {
+        "chance": 6.4592,
+        "chanceDisplay": "6.46%",
+        "npc": {
+          "id": 20615,
+          "level": 29,
+          "name": "Ritmal Swordsman",
+          "type": "Monster",
+        },
+        "qty": "1",
+      },
+    ],
+    "meta": {
+      "limit": 5,
+      "offset": 0,
+      "total": 9,
+    },
+  },
+  "status": 200,
+}
+`;
+
+exports[`dropped-by — Small Shield (19), full small list 1`] = `
+{
+  "body": {
+    "data": [
+      {
+        "chance": 0.9012,
+        "chanceDisplay": "0.9%",
+        "npc": {
+          "id": 20005,
+          "level": 7,
+          "name": "Imp Elder",
+          "type": "Monster",
+        },
+        "qty": "1",
+      },
+      {
+        "chance": 0.9012,
+        "chanceDisplay": "0.9%",
+        "npc": {
+          "id": 20470,
+          "level": 7,
+          "name": "Kaboo Orc Grunt",
+          "type": "Monster",
+        },
+        "qty": "1",
+      },
+      {
+        "chance": 0.9012,
+        "chanceDisplay": "0.9%",
+        "npc": {
+          "id": 20131,
+          "level": 7,
+          "name": "Orc Grunt",
+          "type": "Monster",
+        },
+        "qty": "1",
+      },
+      {
+        "chance": 0.9012,
+        "chanceDisplay": "0.9%",
+        "npc": {
+          "id": 20312,
+          "level": 7,
+          "name": "Rakeclaw Imp Hunter",
+          "type": "Monster",
+        },
+        "qty": "1",
+      },
+    ],
+    "meta": {
+      "limit": 10,
+      "offset": 0,
+      "total": 4,
+    },
+  },
+  "status": 200,
+}
+`;
+
+exports[`spoiled-by — Theca Leather Armor Pattern (1984), limit=5 1`] = `
+{
+  "body": {
+    "data": [
+      {
+        "chance": 15.3567,
+        "chanceDisplay": "15.36%",
+        "npc": {
+          "id": 21724,
+          "level": 53,
+          "name": "Purgatory Invader Elite Soldier",
+          "type": "RiftInvader",
+        },
+        "qty": "1–2",
+      },
+      {
+        "chance": 14.6414,
+        "chanceDisplay": "14.64%",
+        "npc": {
+          "id": 21727,
+          "level": 53,
+          "name": "Purgatory Invader Magus",
+          "type": "RiftInvader",
+        },
+        "qty": "1",
+      },
+      {
+        "chance": 9.8744,
+        "chanceDisplay": "9.87%",
+        "npc": {
+          "id": 18276,
+          "level": 54,
+          "name": "Treasure Chest",
+          "type": "Chest",
+        },
+        "qty": "1",
+      },
+      {
+        "chance": 8.1636,
+        "chanceDisplay": "8.16%",
+        "npc": {
+          "id": 21709,
+          "level": 53,
+          "name": "Purgatory Invader Shaman",
+          "type": "RiftInvader",
+        },
+        "qty": "1",
+      },
+      {
+        "chance": 7.7945,
+        "chanceDisplay": "7.79%",
+        "npc": {
+          "id": 20986,
+          "level": 54,
+          "name": "Sairon",
+          "type": "Monster",
+        },
+        "qty": "1",
+      },
+    ],
+    "meta": {
+      "limit": 5,
+      "offset": 0,
+      "total": 8,
+    },
+  },
+  "status": 200,
+}
+`;

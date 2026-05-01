@@ -1,0 +1,251 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`items list — default sort, limit=5 1`] = `
+{
+  "body": {
+    "data": [
+      {
+        "grade": "none",
+        "iconFile": "weapon_small_sword_i00.png",
+        "id": 1,
+        "name": "Short Sword",
+        "price": 768,
+        "type": "weapon",
+        "weight": 1600,
+      },
+      {
+        "grade": "none",
+        "iconFile": "weapon_long_sword_i00.png",
+        "id": 2,
+        "name": "Long Sword",
+        "price": 136000,
+        "type": "weapon",
+        "weight": 1560,
+      },
+      {
+        "grade": "none",
+        "iconFile": "weapon_broad_sword_i00.png",
+        "id": 3,
+        "name": "Broadsword",
+        "price": 12500,
+        "type": "weapon",
+        "weight": 1590,
+      },
+      {
+        "grade": "none",
+        "iconFile": "weapon_club_i00.png",
+        "id": 4,
+        "name": "Club",
+        "price": 768,
+        "type": "weapon",
+        "weight": 1870,
+      },
+      {
+        "grade": "none",
+        "iconFile": "weapon_mace_i00.png",
+        "id": 5,
+        "name": "Mace",
+        "price": 12500,
+        "type": "weapon",
+        "weight": 1880,
+      },
+    ],
+    "meta": {
+      "limit": 5,
+      "offset": 0,
+      "total": 8771,
+    },
+  },
+  "status": 200,
+}
+`;
+
+exports[`items list — invalid grade returns 400 1`] = `
+{
+  "body": {
+    "error": "Invalid grade: xx. Allowed: none, d, c, b, a, s",
+    "status": 400,
+  },
+  "status": 400,
+}
+`;
+
+exports[`items list — page 2 (limit=5&offset=5) 1`] = `
+{
+  "body": {
+    "data": [
+      {
+        "grade": "none",
+        "iconFile": "weapon_apprentices_wand_i00.png",
+        "id": 6,
+        "name": "Apprentice's Wand",
+        "price": 138,
+        "type": "weapon",
+        "weight": 1350,
+      },
+      {
+        "grade": "none",
+        "iconFile": "weapon_apprentices_rod_i00.png",
+        "id": 7,
+        "name": "Apprentice's Rod",
+        "price": 768,
+        "type": "weapon",
+        "weight": 1330,
+      },
+      {
+        "grade": "none",
+        "iconFile": "weapon_willow_staff_i00.png",
+        "id": 8,
+        "name": "Willow Staff",
+        "price": 12500,
+        "type": "weapon",
+        "weight": 1080,
+      },
+      {
+        "grade": "none",
+        "iconFile": "weapon_cedar_staff_i00.png",
+        "id": 9,
+        "name": "Cedar Staff",
+        "price": 54100,
+        "type": "weapon",
+        "weight": 1090,
+      },
+      {
+        "grade": "none",
+        "iconFile": "weapon_dagger_i00.png",
+        "id": 10,
+        "name": "Dagger",
+        "price": 138,
+        "type": "weapon",
+        "weight": 1160,
+      },
+    ],
+    "meta": {
+      "limit": 5,
+      "offset": 5,
+      "total": 8771,
+    },
+  },
+  "status": 200,
+}
+`;
+
+exports[`items list — sort=name asc, limit=5 1`] = `
+{
+  "body": {
+    "data": [
+      {
+        "grade": "b",
+        "iconFile": "weapon_war_axe_i00.png",
+        "id": 163,
+        "name": "_",
+        "price": 8680000,
+        "type": "weapon",
+        "weight": 4000,
+      },
+      {
+        "grade": "a",
+        "iconFile": "weapon_war_axe_i00.png",
+        "id": 170,
+        "name": "_",
+        "price": 16600000,
+        "type": "weapon",
+        "weight": 6400,
+      },
+      {
+        "grade": "none",
+        "iconFile": "Item_Normal06.png",
+        "id": 1672,
+        "name": "__",
+        "price": 800,
+        "type": "etcitem",
+        "weight": 40,
+      },
+      {
+        "grade": "none",
+        "iconFile": "Item_Normal06.png",
+        "id": 1673,
+        "name": "__",
+        "price": 800,
+        "type": "etcitem",
+        "weight": 40,
+      },
+      {
+        "grade": "none",
+        "iconFile": "etc_crystal_blue_i00.png",
+        "id": 5912,
+        "name": "(Not used) Blue Soul Crystal: Grade 11",
+        "price": null,
+        "type": "etcitem",
+        "weight": 20,
+      },
+    ],
+    "meta": {
+      "limit": 5,
+      "offset": 0,
+      "total": 8771,
+    },
+  },
+  "status": 200,
+}
+`;
+
+exports[`items list — type=weapon&grade=s, limit=5 1`] = `
+{
+  "body": {
+    "data": [
+      {
+        "grade": "s",
+        "iconFile": "weapon_forgotten_blade_i00.png",
+        "id": 82,
+        "name": "God's Blade",
+        "price": 38000000,
+        "type": "weapon",
+        "weight": 1300,
+      },
+      {
+        "grade": "s",
+        "iconFile": "weapon_basalt_battlehammer_i00.png",
+        "id": 165,
+        "name": "Yablonski's Hammer",
+        "price": 35300000,
+        "type": "weapon",
+        "weight": 1570,
+      },
+      {
+        "grade": "s",
+        "iconFile": "weapon_imperial_staff_i00.png",
+        "id": 214,
+        "name": "The Staff",
+        "price": 35300000,
+        "type": "weapon",
+        "weight": 910,
+      },
+      {
+        "grade": "s",
+        "iconFile": "weapon_angel_slayer_i00.png",
+        "id": 237,
+        "name": "Dragon's Tooth",
+        "price": 35300000,
+        "type": "weapon",
+        "weight": 950,
+      },
+      {
+        "grade": "s",
+        "iconFile": "weapon_shining_bow_i00.png",
+        "id": 290,
+        "name": "The Bow",
+        "price": 35300000,
+        "type": "weapon",
+        "weight": 1650,
+      },
+    ],
+    "meta": {
+      "limit": 5,
+      "offset": 0,
+      "total": 32,
+    },
+  },
+  "status": 200,
+}
+`;

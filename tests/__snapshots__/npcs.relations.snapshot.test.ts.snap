@@ -1,0 +1,225 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`npc drops — Grim Wolf (22001) 1`] = `
+{
+  "body": {
+    "data": {
+      "drops": [
+        {
+          "chance": 70,
+          "chanceDisplay": "70%",
+          "itemId": 57,
+          "itemName": "Adena",
+          "qty": "136–255",
+          "type": "adena",
+        },
+        {
+          "chance": 5.8824,
+          "chanceDisplay": "5.88%",
+          "itemId": 1872,
+          "itemName": "Animal Bone",
+          "qty": "1",
+          "type": "regular",
+        },
+        {
+          "chance": 5.8824,
+          "chanceDisplay": "5.88%",
+          "itemId": 1867,
+          "itemName": "Animal Skin",
+          "qty": "1",
+          "type": "regular",
+        },
+        {
+          "chance": 1.1364,
+          "chanceDisplay": "1.14%",
+          "itemId": 1882,
+          "itemName": "Leather",
+          "qty": "1",
+          "type": "regular",
+        },
+        {
+          "chance": 0.7937,
+          "chanceDisplay": "0.79%",
+          "itemId": 2152,
+          "itemName": "Recipe: Enchanted Necklace",
+          "qty": "1",
+          "type": "regular",
+        },
+        {
+          "chance": 0.0483,
+          "chanceDisplay": "0.05%",
+          "itemId": 413,
+          "itemName": "Puma Skin Gaiters",
+          "qty": "1",
+          "type": "regular",
+        },
+        {
+          "chance": 0.0166,
+          "chanceDisplay": "0.02%",
+          "itemId": 391,
+          "itemName": "Puma Skin Shirt",
+          "qty": "1",
+          "type": "regular",
+        },
+        {
+          "chance": 25,
+          "chanceDisplay": "25%",
+          "itemId": 1867,
+          "itemName": "Animal Skin",
+          "qty": "1–2",
+          "type": "spoil",
+        },
+        {
+          "chance": 2.5,
+          "chanceDisplay": "2.5%",
+          "itemId": 1899,
+          "itemName": "Necklace of Devotion Chain",
+          "qty": "1",
+          "type": "spoil",
+        },
+        {
+          "chance": 0.65,
+          "chanceDisplay": "0.65%",
+          "itemId": 2152,
+          "itemName": "Recipe: Enchanted Necklace",
+          "qty": "1",
+          "type": "spoil",
+        },
+      ],
+      "npcId": 22001,
+      "npcName": "Grim Wolf",
+    },
+  },
+  "status": 200,
+}
+`;
+
+exports[`npc drops — invalid id returns 404 1`] = `
+{
+  "body": {
+    "error": "No drops found for NPC 999999",
+    "status": 404,
+  },
+  "status": 404,
+}
+`;
+
+exports[`npc spawns — Darin (30048), single spawn 1`] = `
+{
+  "body": {
+    "data": [
+      {
+        "heading": 42000,
+        "npcId": 30048,
+        "periodOfDay": 0,
+        "respawnDelay": 60,
+        "respawnRandom": 0,
+        "x": -84436,
+        "y": 242793,
+        "z": -3729,
+      },
+    ],
+  },
+  "status": 200,
+}
+`;
+
+exports[`npc spawns — Grim Wolf (22001), 8 spawns 1`] = `
+{
+  "body": {
+    "data": [
+      {
+        "heading": 45022,
+        "npcId": 22001,
+        "periodOfDay": 0,
+        "respawnDelay": 60,
+        "respawnRandom": 0,
+        "x": 48973,
+        "y": -115961,
+        "z": -3824,
+      },
+      {
+        "heading": 17948,
+        "npcId": 22001,
+        "periodOfDay": 0,
+        "respawnDelay": 60,
+        "respawnRandom": 0,
+        "x": 41672,
+        "y": -113145,
+        "z": -2191,
+      },
+      {
+        "heading": 19952,
+        "npcId": 22001,
+        "periodOfDay": 0,
+        "respawnDelay": 60,
+        "respawnRandom": 0,
+        "x": 41554,
+        "y": -112766,
+        "z": -2160,
+      },
+      {
+        "heading": 40455,
+        "npcId": 22001,
+        "periodOfDay": 0,
+        "respawnDelay": 60,
+        "respawnRandom": 0,
+        "x": 41393,
+        "y": -112883,
+        "z": -2113,
+      },
+      {
+        "heading": 25314,
+        "npcId": 22001,
+        "periodOfDay": 0,
+        "respawnDelay": 60,
+        "respawnRandom": 0,
+        "x": 41158,
+        "y": -112479,
+        "z": -2071,
+      },
+      {
+        "heading": 31429,
+        "npcId": 22001,
+        "periodOfDay": 0,
+        "respawnDelay": 60,
+        "respawnRandom": 0,
+        "x": 46734,
+        "y": -115708,
+        "z": -3815,
+      },
+      {
+        "heading": 37476,
+        "npcId": 22001,
+        "periodOfDay": 0,
+        "respawnDelay": 60,
+        "respawnRandom": 0,
+        "x": 46259,
+        "y": -115912,
+        "z": -3718,
+      },
+      {
+        "heading": 1982,
+        "npcId": 22001,
+        "periodOfDay": 0,
+        "respawnDelay": 60,
+        "respawnRandom": 0,
+        "x": 49727,
+        "y": -115513,
+        "z": -3787,
+      },
+    ],
+  },
+  "status": 200,
+}
+`;
+
+exports[`npc spawns — invalid id returns 404 1`] = `
+{
+  "body": {
+    "error": "NPC 999999 not found",
+    "status": 404,
+  },
+  "status": 404,
+}
+`;

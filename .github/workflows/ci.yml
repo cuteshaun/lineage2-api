@@ -1,0 +1,72 @@
+# Lightweight CI — only checks that do not require generated data.
+#
+# This workflow validates everything we can without running
+# `pnpm build:data`. The data pipeline depends on:
+#   - the upstream aCis datapack (lives outside this repo, GPL but
+#     not vendored here),
+#   - the user-supplied L2 client `questname-e.dat` (proprietary;
+#     not committed and intentionally not uploaded as a CI secret
+#     in this stage).
+# Because tests read `data/generated/<chronicle>/*.json` and that
+# directory is gitignored, `pnpm test` and `pnpm build:data` are
+# DELIBERATELY NOT RUN in CI yet. See the "Future full CI" notes
+# at the bottom of this file for the planned promotion path.
+#
+# What this workflow DOES catch:
+#   - TypeScript regressions in runtime code (`pnpm typecheck`)
+#   - TypeScript regressions in build-time parsers
+#     (`pnpm typecheck:scripts` — added in PR 1, runs against
+#     `tsconfig.scripts.json`, target ES2020)
+#   - Next.js route-handler compilation, NFT trace, and
+#     dynamic/static classification (`pnpm build` — verified to
+#     succeed with `data/generated/*` absent because every route
+#     handler is dynamic and reads JSON only at request time)
+#
+# What this workflow does NOT yet run, with justification:
+#   - `pnpm test`        — requires generated JSON on disk
+#   - `pnpm build:data`  — requires aCis upstream + questname-e.dat
+#   - `pnpm lint`        — currently has pre-existing false
+#     positives from `@next/next/no-html-link-for-pages` against
+#     the `<a href="/api/...">` examples on the landing page (see
+#     `src/app/page.tsx`); cleaning those up is a separate PR.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    name: Typecheck + build (no data required)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck (runtime + tests)
+        run: pnpm typecheck
+
+      - name: Typecheck (build-time parsers)
+        run: pnpm typecheck:scripts
+
+      - name: Next.js build (no data)
+        # Verified locally that `data/generated/*` is not required
+        # at build time — every API route is classified as dynamic
+        # (`ƒ`) and reads JSON only at request time.
+        run: pnpm build

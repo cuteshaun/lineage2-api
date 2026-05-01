@@ -410,7 +410,7 @@ Used in cross-links from items/NPCs back to quests (`ItemDetailDto.rewardOfQuest
 
 - Internal raw `Skill` / `Item` / `Npc` types from `src/lib/types.ts` — those are parser output, not contract.
 - Raw XML attributes the parser captures but doesn't surface (e.g. `effectRange`, `castRange`, `magicLevel` may be exposed on `SkillSummaryDto` selectively but full Skill state is not promised).
-- Skill `<effect>` blocks (DamOverTime, Stun, Slow magnitudes) — out of scope per [`CLAUDE.md`](../CLAUDE.md). Description text from `skillname-e.dat` is the player-facing surface for those; structured data is not parsed.
+- Skill `<effect>` blocks (DamOverTime, Stun, Slow magnitudes) — out of scope per [`AGENTS.md`](../AGENTS.md). Description text from `skillname-e.dat` is the player-facing surface for those; structured data is not parsed.
 - Speculative editorial text. We don't fabricate descriptions for SAs whose source data carries no usable signal — they render with just their `saName` plus whatever structured fields apply.
 
 ## What's *not* on the contract yet
@@ -443,4 +443,4 @@ pnpm test -- -u
 ## Related documents
 
 - [`api.md`](./api.md) — external-facing API overview (endpoints, query params, examples).
-- [`CLAUDE.md`](../CLAUDE.md) — project-wide engineering principles, scope, and out-of-scope notes.
+- [`AGENTS.md`](../AGENTS.md) — project-wide engineering principles, scope, and out-of-scope notes.

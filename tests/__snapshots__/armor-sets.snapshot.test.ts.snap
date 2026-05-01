@@ -82,5 +82,3 @@ exports[`armor set "Wooden Set" matches snapshot 1`] = `
   },
 }
 `;
-
-exports[`total armor set count is stable 1`] = `51`;

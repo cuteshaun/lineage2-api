@@ -41,6 +41,7 @@ for (const name of REPRESENTATIVE_SETS) {
   });
 }
 
-test("total armor set count is stable", () => {
-  expect(sets.length).toMatchSnapshot();
-});
+// `armor-sets.catalog.snapshot.test.ts` already locks the full DTO catalog
+// (id, name, pieces, bonus skills, etc.), which catches dropped sets,
+// duplicates, and ordering changes far better than a length-only snapshot.
+// No top-level count/structure snapshot lives here.

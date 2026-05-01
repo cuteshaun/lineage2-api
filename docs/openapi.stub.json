@@ -1,0 +1,85 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Lineage 2 API",
+    "version": "0.1.0",
+    "description": "Public read-only API over Lineage 2 Interlude datapack content. This document is a STUB: only a small set of shared reference schemas are registered. Full per-route coverage lands in a later phase of the Zod migration — see docs/api-contract.md."
+  },
+  "servers": [
+    {
+      "url": "/api/{chronicle}",
+      "description": "Chronicle-scoped base path"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "NpcRef": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ],
+        "description": "Compact NPC reference used in cross-link arrays. Resolves a numeric id to a player-readable name without forcing a second round-trip."
+      },
+      "ClassRef": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "professionLevel": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 3
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "professionLevel"
+        ],
+        "description": "Compact player-class reference. `professionLevel` is 0 (base) / 1 / 2 / 3 (no 4th profession in Interlude)."
+      },
+      "QuestRef": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "levelMin": {
+            "type": "integer",
+            "nullable": true
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "levelMin"
+        ],
+        "description": "Compact quest reference used by item / NPC cross-links. `roles?` is populated only on `NpcDetailDto.involvedInQuests[]` entries (one or more of 'talk' / 'kill')."
+      }
+    },
+    "parameters": {}
+  },
+  "paths": {}
+}

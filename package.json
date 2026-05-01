@@ -10,14 +10,17 @@
     "typecheck": "tsc --noEmit",
     "typecheck:scripts": "tsc --noEmit -p tsconfig.scripts.json",
     "build:data": "tsx scripts/build-data.ts",
+    "openapi": "tsx scripts/audit/generate-openapi.ts",
     "test": "vitest run",
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@asteasolutions/zod-to-openapi": "^8.5.0",
     "fast-xml-parser": "^5.5.11",
     "next": "16.2.3",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "zod": "^4.4.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

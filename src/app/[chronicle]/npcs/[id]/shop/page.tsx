@@ -4,17 +4,7 @@ import { isChronicle } from "@/lib/chronicles";
 import { apiFetch } from "@/lib/api/client";
 import { ItemIcon } from "@/components/explorer/ItemIcon";
 import { ExchangeCard } from "@/components/explorer/ExchangeCard";
-import type {
-  ExchangeOptionDto,
-  NpcRefDto,
-  ShopProductDto,
-} from "@/lib/api/dto/item";
-
-interface ShopResponse {
-  npc: NpcRefDto;
-  buyList?: ShopProductDto[];
-  exchanges?: ExchangeOptionDto[];
-}
+import type { ShopResponseDto } from "@/lib/api/dto/shop";
 
 export default async function NpcShopPage({
   params,
@@ -27,7 +17,7 @@ export default async function NpcShopPage({
   const numericId = Number(id);
   if (!Number.isInteger(numericId) || numericId <= 0) notFound();
 
-  const result = await apiFetch<ShopResponse>(
+  const result = await apiFetch<ShopResponseDto>(
     `/api/${chronicle}/npcs/${numericId}/shop`
   );
   if (!result.ok) {

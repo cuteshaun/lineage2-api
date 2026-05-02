@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { SpawnMap } from "./SpawnMap";
-import type { Spawn } from "@/lib/types";
+import type { EnrichedSpawnDto } from "@/lib/api/dto/spawn";
 
-function formatRespawn(spawns: Spawn[]): string {
+function formatRespawn(spawns: EnrichedSpawnDto[]): string {
   const delays = [...new Set(spawns.map((s) => s.respawnDelay))];
   if (delays.length === 0) return "—";
   if (delays.length === 1) {
@@ -20,14 +20,39 @@ function formatRespawn(spawns: Spawn[]): string {
   return `${fmt(min)}–${fmt(max)}`;
 }
 
-function formatPeriod(spawns: Spawn[]): string {
+function formatPeriod(spawns: EnrichedSpawnDto[]): string {
   const periods = [...new Set(spawns.map((s) => s.periodOfDay))].sort();
   const labels: Record<number, string> = { 0: "All day", 1: "Day", 2: "Night" };
   if (periods.length === 1) return labels[periods[0]] ?? String(periods[0]);
   return periods.map((p) => labels[p] ?? String(p)).join(", ");
 }
 
-export function SpawnSummary({ spawns }: { spawns: Spawn[] }) {
+/**
+ * Renders the per-region spawn breakdown. When every spawn shares
+ * the same region, shows just the name. When spawns split across
+ * regions, shows each region with its count. When no spawn carries
+ * a resolved region (out-of-grid coords), shows "—".
+ */
+function formatRegions(spawns: EnrichedSpawnDto[]): string {
+  const counts = new Map<number, { name: string; count: number }>();
+  for (const s of spawns) {
+    if (!s.region) continue;
+    const existing = counts.get(s.region.id);
+    if (existing) {
+      existing.count += 1;
+    } else {
+      counts.set(s.region.id, { name: s.region.name, count: 1 });
+    }
+  }
+  if (counts.size === 0) return "—";
+  const sorted = [...counts.values()].sort((a, b) =>
+    b.count - a.count || a.name.localeCompare(b.name)
+  );
+  if (sorted.length === 1) return sorted[0].name;
+  return sorted.map((r) => `${r.name} (${r.count})`).join(", ");
+}
+
+export function SpawnSummary({ spawns }: { spawns: EnrichedSpawnDto[] }) {
   const [mapOpen, setMapOpen] = useState(false);
 
   return (
@@ -42,6 +67,10 @@ export function SpawnSummary({ spawns }: { spawns: Spawn[] }) {
         <dt className="text-zinc-500 dark:text-zinc-400">Time</dt>
         <dd className="text-zinc-900 dark:text-zinc-100">
           {formatPeriod(spawns)}
+        </dd>
+        <dt className="text-zinc-500 dark:text-zinc-400">Region</dt>
+        <dd className="text-zinc-900 dark:text-zinc-100">
+          {formatRegions(spawns)}
         </dd>
       </dl>
 

@@ -5,17 +5,8 @@ import { apiFetch } from "@/lib/api/client";
 import { NpcDetails, type NpcShopSummary } from "@/components/explorer/NpcDetails";
 import type { NpcDropsDto } from "@/lib/api/dto/drops";
 import type { NpcDetailDto } from "@/lib/api/dto/npc";
-import type {
-  ExchangeOptionDto,
-  ShopProductDto,
-} from "@/lib/api/dto/item";
-import type { Spawn } from "@/lib/types";
-
-interface ShopResponse {
-  npc: { id: number; name: string };
-  buyList?: ShopProductDto[];
-  exchanges?: ExchangeOptionDto[];
-}
+import type { ShopResponseDto } from "@/lib/api/dto/shop";
+import type { EnrichedSpawnDto } from "@/lib/api/dto/spawn";
 
 export default async function NpcDetailsPage({
   params,
@@ -33,8 +24,8 @@ export default async function NpcDetailsPage({
   const [npcResult, dropsResult, spawnsResult, shopResult] = await Promise.all([
     apiFetch<NpcDetailDto>(`/api/${chronicle}/npcs/${numericId}`),
     apiFetch<NpcDropsDto>(`/api/${chronicle}/npcs/${numericId}/drops`),
-    apiFetch<Spawn[]>(`/api/${chronicle}/npcs/${numericId}/spawns`),
-    apiFetch<ShopResponse>(`/api/${chronicle}/npcs/${numericId}/shop`),
+    apiFetch<EnrichedSpawnDto[]>(`/api/${chronicle}/npcs/${numericId}/spawns`),
+    apiFetch<ShopResponseDto>(`/api/${chronicle}/npcs/${numericId}/shop`),
   ]);
 
   if (!npcResult.ok) {

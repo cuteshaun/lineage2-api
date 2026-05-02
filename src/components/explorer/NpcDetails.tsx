@@ -4,7 +4,7 @@ import { SpawnSummary } from "./SpawnSummary";
 import type { Chronicle } from "@/lib/chronicles";
 import type { NpcDetailDto } from "@/lib/api/dto/npc";
 import type { NpcDropsDto } from "@/lib/api/dto/drops";
-import type { Spawn } from "@/lib/types";
+import type { EnrichedSpawnDto } from "@/lib/api/dto/spawn";
 
 /**
  * Compact shop summary passed in by the page handler. Counts only —
@@ -27,7 +27,7 @@ export function NpcDetails({
   chronicle: Chronicle;
   npc: NpcDetailDto;
   drops: NpcDropsDto | null;
-  spawns: Spawn[] | null;
+  spawns: EnrichedSpawnDto[] | null;
   shop?: NpcShopSummary | null;
   kind: "npc" | "monster";
 }) {
@@ -68,6 +68,11 @@ export function NpcDetails({
         {npc.title && (
           <p className="text-sm text-zinc-500 dark:text-zinc-400">
             {npc.title}
+          </p>
+        )}
+        {npc.primaryRegion && (
+          <p className="font-mono text-[11px] uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+            {npc.primaryRegion.name}
           </p>
         )}
         {npc.raceDescription && (

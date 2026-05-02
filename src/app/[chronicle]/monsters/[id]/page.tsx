@@ -5,7 +5,7 @@ import { apiFetch } from "@/lib/api/client";
 import { NpcDetails } from "@/components/explorer/NpcDetails";
 import type { NpcDropsDto } from "@/lib/api/dto/drops";
 import type { NpcDetailDto } from "@/lib/api/dto/npc";
-import type { Spawn } from "@/lib/types";
+import type { EnrichedSpawnDto } from "@/lib/api/dto/spawn";
 
 export default async function MonsterDetailsPage({
   params,
@@ -21,7 +21,7 @@ export default async function MonsterDetailsPage({
   const [monsterResult, dropsResult, spawnsResult] = await Promise.all([
     apiFetch<NpcDetailDto>(`/api/${chronicle}/monsters/${numericId}`),
     apiFetch<NpcDropsDto>(`/api/${chronicle}/npcs/${numericId}/drops`),
-    apiFetch<Spawn[]>(`/api/${chronicle}/npcs/${numericId}/spawns`),
+    apiFetch<EnrichedSpawnDto[]>(`/api/${chronicle}/npcs/${numericId}/spawns`),
   ]);
 
   if (!monsterResult.ok) {

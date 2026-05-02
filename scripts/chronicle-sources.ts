@@ -59,6 +59,15 @@ export interface ChronicleSources {
    * is required — missing/unreadable/undecodable fails the build loud.
    */
   questNameDatFile?: string;
+  /**
+   * Absolute path to `mapRegions.xml` in the upstream datapack — the
+   * 19-region named table plus sparse (geoX, geoY) tile grid that
+   * powers M4 region resolution.
+   * **Optional**: chronicles that don't ship a regions XML omit this
+   * field. When set, `parse-regions.ts` runs and the file is required
+   * — missing/unreadable fails the build loud.
+   */
+  mapRegionsXmlFile?: string;
 }
 
 interface SourceSpec {
@@ -84,6 +93,8 @@ interface SourceSpec {
   questsScriptsDir: string[];
   /** Optional — chronicles without a client questname DAT omit this. */
   questNameDatFile?: string[];
+  /** Optional — chronicles without a regions XML omit this. */
+  mapRegionsXmlFile?: string[];
 }
 
 const SOURCE_SPECS: Record<Chronicle, SourceSpec> = {
@@ -214,6 +225,15 @@ const SOURCE_SPECS: Record<Chronicle, SourceSpec> = {
     ],
     // Configured for Interlude → questname-e.dat is required at build time.
     questNameDatFile: ["data", "datapack", "interlude", "questname-e.dat"],
+    // Configured for Interlude → mapRegions.xml is required at build time.
+    mapRegionsXmlFile: [
+      "..",
+      "aCis_382_LATEST_STABLE",
+      "aCis_datapack",
+      "data",
+      "xml",
+      "mapRegions.xml",
+    ],
   },
 };
 
@@ -249,6 +269,9 @@ export function getChronicleSources(chronicle: Chronicle): ChronicleSources {
     questsScriptsDir: path.join(root, ...spec.questsScriptsDir),
     questNameDatFile: spec.questNameDatFile
       ? path.join(root, ...spec.questNameDatFile)
+      : undefined,
+    mapRegionsXmlFile: spec.mapRegionsXmlFile
+      ? path.join(root, ...spec.mapRegionsXmlFile)
       : undefined,
   };
 }

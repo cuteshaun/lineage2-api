@@ -77,6 +77,73 @@
           "levelMin"
         ],
         "description": "Compact quest reference used by item / NPC cross-links. `roles?` is populated only on `NpcDetailDto.involvedInQuests[]` entries (one or more of 'talk' / 'kill')."
+      },
+      "RegionRef": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ],
+        "description": "Compact reference to a named L2 map region (e.g. 'Talking Island Village'). Region ids match the upstream engine's `mapRegions.xml` numbering. The table represents engine 'death-teleport' regions, not strict biome polygons — a coordinate's region is the in-game town it teleports to on death within that tile."
+      },
+      "EnrichedSpawn": {
+        "type": "object",
+        "properties": {
+          "npcId": {
+            "type": "integer"
+          },
+          "x": {
+            "type": "integer"
+          },
+          "y": {
+            "type": "integer"
+          },
+          "z": {
+            "type": "integer"
+          },
+          "heading": {
+            "type": "integer"
+          },
+          "respawnDelay": {
+            "type": "integer"
+          },
+          "respawnRandom": {
+            "type": "integer"
+          },
+          "periodOfDay": {
+            "type": "integer"
+          },
+          "region": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RegionRef"
+              },
+              {
+                "nullable": true
+              }
+            ]
+          }
+        },
+        "required": [
+          "npcId",
+          "x",
+          "y",
+          "z",
+          "heading",
+          "respawnDelay",
+          "respawnRandom",
+          "periodOfDay",
+          "region"
+        ],
+        "description": "One cleaned-layer spawn row with the resolved map region attached. `region` is `null` when the coordinate falls outside the upstream `mapRegions.xml` tile grid, or when the chronicle ships no regions XML. The raw spawn endpoints intentionally omit this field."
       }
     },
     "parameters": {}

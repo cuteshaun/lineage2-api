@@ -31,6 +31,8 @@ import { z } from "zod";
 import type { ClassRefDto } from "./dto/class";
 import type { NpcRefDto } from "./dto/item";
 import type { QuestRefDto } from "./dto/quest";
+import type { RegionRefDto } from "./dto/region";
+import type { EnrichedSpawnDto } from "./dto/spawn";
 
 // Idempotent — adds `.openapi(...)` to Zod's prototype so registered
 // schemas can carry per-field metadata for the generated spec.
@@ -69,6 +71,33 @@ export const QuestRefSchema = z
       "Compact quest reference used by item / NPC cross-links. `roles?` is populated only on `NpcDetailDto.involvedInQuests[]` entries (one or more of 'talk' / 'kill').",
   });
 
+export const RegionRefSchema = z
+  .object({
+    id: z.number().int(),
+    name: z.string(),
+  })
+  .openapi("RegionRef", {
+    description:
+      "Compact reference to a named L2 map region (e.g. 'Talking Island Village'). Region ids match the upstream engine's `mapRegions.xml` numbering. The table represents engine 'death-teleport' regions, not strict biome polygons — a coordinate's region is the in-game town it teleports to on death within that tile.",
+  });
+
+export const EnrichedSpawnSchema = z
+  .object({
+    npcId: z.number().int(),
+    x: z.number().int(),
+    y: z.number().int(),
+    z: z.number().int(),
+    heading: z.number().int(),
+    respawnDelay: z.number().int(),
+    respawnRandom: z.number().int(),
+    periodOfDay: z.number().int(),
+    region: RegionRefSchema.nullable(),
+  })
+  .openapi("EnrichedSpawn", {
+    description:
+      "One cleaned-layer spawn row with the resolved map region attached. `region` is `null` when the coordinate falls outside the upstream `mapRegions.xml` tile grid, or when the chronicle ships no regions XML. The raw spawn endpoints intentionally omit this field.",
+  });
+
 // --- Compile-time parity assertions ---
 //
 // `Equals<X, Y>` is the standard "type-level exact equals" trick.
@@ -100,4 +129,12 @@ type _ClassRefSchemaMatchesDto = Expect<
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 type _QuestRefSchemaMatchesDto = Expect<
   Equals<z.infer<typeof QuestRefSchema>, QuestRefDto>
+>;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+type _RegionRefSchemaMatchesDto = Expect<
+  Equals<z.infer<typeof RegionRefSchema>, RegionRefDto>
+>;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+type _EnrichedSpawnSchemaMatchesDto = Expect<
+  Equals<z.infer<typeof EnrichedSpawnSchema>, EnrichedSpawnDto>
 >;

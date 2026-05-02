@@ -395,6 +395,51 @@ Used in cross-links from items/NPCs back to quests (`ItemDetailDto.rewardOfQuest
 
 `involvedInQuests` is detail-only; not surfaced on `NpcListDto`.
 
+## `RegionRefDto` — stable fields
+
+Compact reference to a named L2 map region. Used by:
+
+- `EnrichedSpawnDto.region` — the resolved region for one spawn point.
+- `NpcDetailDto.primaryRegion?` and `MonsterDetailDto.primaryRegion?` —
+  the most-frequent region across an NPC/monster's cleaned spawns.
+- `GET /api/[chronicle]/regions` — the public catalog (19 entries on
+  Interlude).
+
+| Field | Type | Notes |
+|---|---|---|
+| `id` | number | Numeric region id matching the upstream engine's `mapRegions.xml` (0..18 on Interlude). |
+| `name` | string | Human-readable region name (e.g. `"Talking Island Village"`, `"Town of Aden"`, `"Primeval Isle"`). |
+
+**Important semantics — engine "death-teleport" regions, not biome polygons.** aCis's `mapRegions.xml` table encodes which town/village the client teleports a player to on death within each tile of the geodata grid. It is **not** a precise biome or zone polygon. A monster in the Outlaw Forest, for example, will have its primary region resolved to "Town of Schuttgart" because that's the closest engine teleport point — even though "Outlaw Forest" is the name a player would use for the area. Consumers should treat the field as "the in-game town this NPC is associated with" rather than "this NPC's biome label". Finer-grained zone polygons (TownZone, SiegeZone, WaterZone, …) live in separate `data/xml/zones/*.xml` files and are a future milestone, not part of M4.
+
+There is **no synthetic "Unknown" region**. Coordinates that fall outside the upstream tile grid resolve to `null`; chronicles that ship no `mapRegions.xml` produce empty `regions` lists and `null` everywhere downstream.
+
+## `EnrichedSpawnDto` — stable fields (cleaned spawn endpoints)
+
+Returned by `GET /api/[chronicle]/npcs/[id]/spawns` and the cleaned-monster sibling. Each row is the underlying engine `Spawn` (`spawnlist.sql` + `raidboss_spawnlist.sql` + `grandboss_data.sql` merged) with one optional resolved field.
+
+| Field | Type | Notes |
+|---|---|---|
+| `npcId` | number | Source NPC id this spawn point belongs to. |
+| `x`, `y`, `z` | number | World coordinates. |
+| `heading` | number | Facing direction (engine units). |
+| `respawnDelay` | number | Seconds. `0` for grandboss rows = "engine-driven, source is silent" (not "instant"); same caveat applies to raidboss rows where `spawn_time = 0`. |
+| `respawnRandom` | number | Seconds. |
+| `periodOfDay` | number | `0`/`1`/`2` from `spawnlist.sql`; `0` ("Any") for raidboss/grandboss rows that don't carry the column. |
+| `region` | `RegionRefDto \| null` | Resolved via `(x >> 15) + 4`, `(y >> 15) + 8` against the chronicle's `mapRegions.xml` tile grid. **Always present**, never omitted — `null` is the honest signal for unmapped grid cells, out-of-grid coords, or chronicles without a regions XML. The raw equivalent at `/api/[chronicle]/raw/monsters/[id]/spawns` does **not** carry this field; raw stays close to engine truth. |
+
+## `NpcDetailDto.primaryRegion?` / `MonsterDetailDto.primaryRegion?` — derivation rule
+
+Both detail DTOs share the same `toNpcDetailDto` mapper, so the rule is identical for `/npcs/[id]` and `/monsters/[id]`.
+
+- **Source**: cleaned-layer aggregated spawns (`getNpcSpawns`).
+- **Aggregation**: count occurrences of each non-null resolved region across the NPC's spawns.
+- **Selection**: most frequent region wins (mode by region id).
+- **Tiebreak**: lowest region id wins on equal counts. Stable / deterministic / locked by snapshot.
+- **Omission**: the field is **truly optional** (omitted, not `null`) when the NPC has no spawns at all OR every spawn falls outside the mapped grid OR the chronicle ships no `mapRegions.xml`. This is the one place in the API that uses optional-omission rather than always-present-with-`null`, because the player-facing detail page renders nothing for an unknown primary region.
+
+Read `primaryRegion` as "the in-game town this NPC is most-often associated with" rather than "this NPC's geographic biome", per the engine semantics noted on `RegionRefDto`.
+
 ## Engine-rule fields (not derived from a single skill / item)
 
 - **`pvpBonus`** — applied to every A/S-grade weapon with SA variants. Encodes the soul-crystal augmentation rule rather than per-variant data. Always `{ damageMultiplier: 1.05, display: "+5% PvP Damage" }` when present.
@@ -448,16 +493,18 @@ in `src/lib/api/dto/*.ts` plus snapshot fixtures under
 OpenAPI spec backed by Zod schemas, but full migration is risky
 to do in one shot and is being staged in three phases.
 
-**Phase A (landed)** — three small `Ref` DTOs (`NpcRefDto`,
-`ClassRefDto`, `QuestRefDto`) have parallel Zod schemas in
-[`src/lib/api/schemas.ts`](../src/lib/api/schemas.ts). Each schema
-carries a compile-time `Expect<Equals<z.infer<typeof Schema>, ExistingDto>>`
-assertion, so any drift between the schema and the hand-written
-interface fails `pnpm typecheck`. A stub OpenAPI document
+**Phase A (landed)** — five small DTOs have parallel Zod schemas in
+[`src/lib/api/schemas.ts`](../src/lib/api/schemas.ts):
+`NpcRefDto`, `ClassRefDto`, `QuestRefDto`, plus M4's `RegionRefDto`
+and `EnrichedSpawnDto`. Each schema carries a compile-time
+`Expect<Equals<z.infer<typeof Schema>, ExistingDto>>` assertion, so
+any drift between the schema and the hand-written interface fails
+`pnpm typecheck`. A stub OpenAPI document
 (`docs/openapi.stub.json`) is regenerated by `pnpm openapi`. The
 schemas file is **not imported by route handlers**, so Zod stays
 out of the runtime lambda bundle. Public response shapes are
-unchanged in this phase.
+unchanged by Phase A — schemas are an additive type-system safety
+net, not a runtime validator.
 
 **Phase B (deferred)** — migrate the larger DTOs (`ItemDetailDto`,
 `NpcDetailDto`, `QuestDetailDto`, etc.) one at a time and switch

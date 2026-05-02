@@ -10,6 +10,7 @@ import { parseBuyLists } from "./parse-buylists";
 import { parseClasses } from "./parse-classes";
 import { parseQuests } from "./parse-quests";
 import { parseQuestName } from "./parse-questname";
+import { parseRegions } from "./parse-regions";
 import { getChronicleSources } from "./chronicle-sources";
 import {
   isChronicle,
@@ -81,6 +82,13 @@ async function main() {
     ? await parseQuestName(chronicle)
     : new Map();
 
+  // regions.json follows the same configured-vs-skip pattern. Stage 1
+  // of M4: emit the artifact only — no DTO/route changes yet.
+  console.log();
+  const regions = questNameSources.mapRegionsXmlFile
+    ? await parseRegions(chronicle)
+    : null;
+
   let totalCategories = 0;
   let totalDropEntries = 0;
   for (const npc of drops) {
@@ -145,6 +153,13 @@ async function main() {
     }
     console.log(
       `  Quest descriptions:   ${matchedDescriptions}/${quests.length} (${questNames.size} DAT records, ${questNames.size - matchedDescriptions} client-only stubs ignored)`
+    );
+  }
+  if (regions) {
+    let mapped = 0;
+    for (const c of regions.grid.cells) if (c >= 0) mapped++;
+    console.log(
+      `  Regions:              ${regions.regions.length} (${mapped}/${regions.grid.cells.length} grid cells mapped)`
     );
   }
   console.log(`  Completed in ${elapsed}s`);

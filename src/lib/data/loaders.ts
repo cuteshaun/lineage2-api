@@ -13,6 +13,7 @@ import type {
   Quest,
   QuestNameRecord,
   Recipe,
+  RegionsArtifact,
   Skill,
   Spawn,
   Spellbook,
@@ -37,6 +38,15 @@ interface ChronicleDataset {
    * that case `QuestDetailDto.description` is simply absent.
    */
   questNames: Record<string, QuestNameRecord>;
+  /**
+   * Region table + tile grid from `mapRegions.xml`. `null` when
+   * the chronicle doesn't ship a regions XML — in that case the
+   * runtime accessors return empty list / null, and Stage 2's
+   * `region` / `primaryRegion` DTO fields will all be `null`
+   * for that chronicle. M4 Stage 1 emits the artifact only; the
+   * public DTO surface that consumes it lands in Stage 2.
+   */
+  regions: RegionsArtifact | null;
 }
 
 const datasetCache = new Map<Chronicle, ChronicleDataset>();
@@ -66,6 +76,18 @@ function readQuestNamesIfPresent(
     string,
     QuestNameRecord
   >;
+}
+
+/**
+ * Optional companion to the rest of the dataset. Falls back to
+ * `null` when the file is absent — that's the legitimate state for
+ * chronicles whose `chronicle-sources.ts` doesn't declare
+ * `mapRegionsXmlFile`. Configured-but-missing fails at build time,
+ * not here.
+ */
+function readRegionsIfPresent(filePath: string): RegionsArtifact | null {
+  if (!fs.existsSync(filePath)) return null;
+  return JSON.parse(fs.readFileSync(filePath, "utf-8")) as RegionsArtifact;
 }
 
 export function loadChronicleDataset(chronicle: Chronicle): ChronicleDataset {
@@ -107,6 +129,9 @@ export function loadChronicleDataset(chronicle: Chronicle): ChronicleDataset {
     quests: readJson<Quest[]>(path.join(config.generatedDir, "quests.json")),
     questNames: readQuestNamesIfPresent(
       path.join(config.generatedDir, "questname.json")
+    ),
+    regions: readRegionsIfPresent(
+      path.join(config.generatedDir, "regions.json")
     ),
   };
 

@@ -23,14 +23,18 @@ import {
 
 import {
   ClassRefSchema,
+  EnrichedSpawnSchema,
   NpcRefSchema,
   QuestRefSchema,
+  RegionRefSchema,
 } from "../../src/lib/api/schemas";
 
 const registry = new OpenAPIRegistry();
 registry.register("NpcRef", NpcRefSchema);
 registry.register("ClassRef", ClassRefSchema);
 registry.register("QuestRef", QuestRefSchema);
+registry.register("RegionRef", RegionRefSchema);
+registry.register("EnrichedSpawn", EnrichedSpawnSchema);
 
 const generator = new OpenApiGeneratorV3(registry.definitions);
 const document = generator.generateDocument({

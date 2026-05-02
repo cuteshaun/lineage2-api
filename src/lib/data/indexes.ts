@@ -10,6 +10,9 @@ import type {
   Quest,
   QuestNameRecord,
   Recipe,
+  Region,
+  RegionGrid,
+  RegionsArtifact,
   Skill,
   Spawn,
   Spellbook,
@@ -148,6 +151,20 @@ interface ChronicleIndexes {
    * DTO's `description?` is simply omitted).
    */
   questNameById: Map<number, QuestNameRecord>;
+  /**
+   * Sorted region list. Empty when the chronicle doesn't ship
+   * `mapRegions.xml`.
+   */
+  regions: Region[];
+  /** Region lookup by id. Empty when no regions configured. */
+  regionsById: Map<number, Region>;
+  /**
+   * Tile grid for coord-to-region lookup. `null` when no regions
+   * configured — `resolveRegionForCoordinate` will then return
+   * `null` for every input. Stage 1 of M4: artifact + accessors only;
+   * the public DTOs that consume this land in Stage 2.
+   */
+  regionGrid: RegionGrid | null;
 }
 
 export interface BuyListProductRef {
@@ -567,6 +584,17 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
     questNameById.set(rec.id, rec);
   }
 
+  // Region indexes. The artifact may be null when the chronicle
+  // doesn't ship a regions XML — in that case the runtime accessors
+  // return empty list / null.
+  const regions: Region[] = dataset.regions
+    ? [...dataset.regions.regions].sort((a, b) => a.id - b.id)
+    : [];
+  const regionsById = new Map<number, Region>(regions.map((r) => [r.id, r]));
+  const regionGrid: RegionGrid | null = dataset.regions
+    ? dataset.regions.grid
+    : null;
+
   // BuyList indexes (forward by NPC, reverse by item).
   const buyListsByNpcId = new Map<number, BuyList[]>();
   const buyListsByItemId = new Map<number, BuyListProductRef[]>();
@@ -637,6 +665,9 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
     questsByRewardItemId,
     questsByQuestItemId,
     questNameById,
+    regions,
+    regionsById,
+    regionGrid,
   };
 }
 
@@ -1279,4 +1310,68 @@ export function getQuestNameById(
   id: number
 ): QuestNameRecord | undefined {
   return getChronicleIndexes(chronicle).questNameById.get(id);
+}
+
+// --- Region lookups (M4 Stage 1: artifact + accessors only; the
+// public DTO surface that consumes them lands in Stage 2) ---
+
+/**
+ * Returns the chronicle's region table, sorted by id. Empty when
+ * the chronicle didn't ship `mapRegions.xml`.
+ */
+export function getRegions(chronicle: Chronicle): Region[] {
+  return getChronicleIndexes(chronicle).regions;
+}
+
+/**
+ * Returns one region by its numeric id, or `undefined` when the id
+ * is unknown or the chronicle has no regions configured.
+ */
+export function getRegionById(
+  chronicle: Chronicle,
+  id: number
+): Region | undefined {
+  return getChronicleIndexes(chronicle).regionsById.get(id);
+}
+
+/**
+ * Resolves a world coordinate `(x, y)` to a `Region`, or `null` when
+ * the point is outside the mapped tile grid, the cell is unmapped
+ * (`-1` in the artifact), or the chronicle has no regions
+ * configured.
+ *
+ * Conversion mirrors aCis `MapRegionData.java`:
+ *   rX = (x >> 15) + grid.originX
+ *   rY = (y >> 15) + grid.originY
+ *
+ * The result is then read from `grid.cells[rY * grid.width + rX]`.
+ * Pure function, allocation-free; safe to call on every spawn.
+ */
+export function resolveRegionForCoordinate(
+  chronicle: Chronicle,
+  x: number,
+  y: number
+): Region | null {
+  const idx = getChronicleIndexes(chronicle);
+  const grid = idx.regionGrid;
+  if (!grid) return null;
+  const rX = (x >> 15) + grid.originX;
+  const rY = (y >> 15) + grid.originY;
+  if (rX < 0 || rX >= grid.width) return null;
+  if (rY < 0 || rY >= grid.height) return null;
+  const id = grid.cells[rY * grid.width + rX];
+  if (id < 0) return null;
+  return idx.regionsById.get(id) ?? null;
+}
+
+/**
+ * Convenience over {@link resolveRegionForCoordinate} — pulls
+ * `(x, y)` straight from a `Spawn`. Use this from spawn DTO
+ * mappers (Stage 2) to keep the call site tidy.
+ */
+export function resolveRegionForSpawn(
+  chronicle: Chronicle,
+  spawn: Spawn
+): Region | null {
+  return resolveRegionForCoordinate(chronicle, spawn.x, spawn.y);
 }

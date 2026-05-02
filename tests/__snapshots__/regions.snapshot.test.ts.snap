@@ -1,0 +1,92 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`regions catalog (Interlude, 19 regions) 1`] = `
+{
+  "body": {
+    "data": [
+      {
+        "id": 0,
+        "name": "Talking Island Village",
+      },
+      {
+        "id": 1,
+        "name": "Elven Village",
+      },
+      {
+        "id": 2,
+        "name": "Dark Elven Village",
+      },
+      {
+        "id": 3,
+        "name": "Orc Village",
+      },
+      {
+        "id": 4,
+        "name": "Dwarven Village",
+      },
+      {
+        "id": 5,
+        "name": "Town of Gludio",
+      },
+      {
+        "id": 6,
+        "name": "Gludin Village",
+      },
+      {
+        "id": 7,
+        "name": "Town of Dion",
+      },
+      {
+        "id": 8,
+        "name": "Town of Giran",
+      },
+      {
+        "id": 9,
+        "name": "Town of Oren",
+      },
+      {
+        "id": 10,
+        "name": "Town of Aden",
+      },
+      {
+        "id": 11,
+        "name": "Hunters Village",
+      },
+      {
+        "id": 12,
+        "name": "Giran Harbor",
+      },
+      {
+        "id": 13,
+        "name": "Heine",
+      },
+      {
+        "id": 14,
+        "name": "Rune Township",
+      },
+      {
+        "id": 15,
+        "name": "Town of Goddard",
+      },
+      {
+        "id": 16,
+        "name": "Town of Schuttgart",
+      },
+      {
+        "id": 17,
+        "name": "Floran Village",
+      },
+      {
+        "id": 18,
+        "name": "Primeval Isle",
+      },
+    ],
+    "meta": {
+      "limit": 19,
+      "offset": 0,
+      "total": 19,
+    },
+  },
+  "status": 200,
+}
+`;

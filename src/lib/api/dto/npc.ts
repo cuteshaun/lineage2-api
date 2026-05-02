@@ -1,11 +1,14 @@
 import type { Npc } from "../../types";
 import type { Chronicle } from "../../chronicles";
 import {
+  getNpcSpawns,
   getQuestsByInvolvedNpcId,
   getQuestsByStartNpcId,
   getSkillByKey,
 } from "../../data/indexes";
 import { toQuestRefDto, type QuestRefDto } from "./quest";
+import { computePrimaryRegion } from "./spawn";
+import type { RegionRefDto } from "./region";
 
 export interface NpcListDto {
   id: number;
@@ -55,6 +58,23 @@ export interface NpcDetailDto {
    * `["kill"]`, `["talk", "kill"]`).
    */
   involvedInQuests?: QuestRefDto[];
+  /**
+   * Most-frequent map region across this NPC's cleaned spawns
+   * (mode by region id, lowest-id tiebreak). Omitted when:
+   *
+   *   - the NPC has no spawns, or
+   *   - every spawn falls outside the upstream `mapRegions.xml`
+   *     tile grid, or
+   *   - the chronicle ships no `mapRegions.xml`.
+   *
+   * Note that aCis's `mapRegions.xml` encodes engine
+   * "death-teleport" regions (which town the client teleports a
+   * player to on death within that tile), not strict biome
+   * polygons — so `primaryRegion` reads as "the in-game town this
+   * NPC is associated with" rather than "this NPC's biome label".
+   * See `RegionRefDto` for details.
+   */
+  primaryRegion?: RegionRefDto;
 }
 
 export interface NpcSkillDto {
@@ -222,6 +242,16 @@ export function toNpcDetailDto(npc: Npc, chronicle: Chronicle): NpcDetailDto {
   }
   if (involvedRefs.length > 0) {
     dto.involvedInQuests = involvedRefs.sort((a, b) => a.id - b.id);
+  }
+
+  // primaryRegion is computed from the *cleaned* spawn aggregation,
+  // matching the cleaned-NPC layer that this DTO represents. The
+  // helper returns null when there are no spawns or every spawn falls
+  // outside the mapped grid; we omit the field in that case.
+  const spawns = getNpcSpawns(chronicle, npc.id);
+  const primaryRegion = computePrimaryRegion(spawns, chronicle);
+  if (primaryRegion) {
+    dto.primaryRegion = primaryRegion;
   }
 
   return dto;

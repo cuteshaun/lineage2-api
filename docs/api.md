@@ -88,6 +88,12 @@ Requesting an unknown chronicle returns **404**.
 | GET | `/api/[chronicle]/quests` | Full quest catalog (329 on Interlude). Compact `QuestListDto` with rewards preview. |
 | GET | `/api/[chronicle]/quests/[id]` | Single quest with rewards, involved NPCs/monsters, quest items, race/class gates. Includes optional `description` (player-facing flavor prose from `questname-e.dat` when the chronicle ships one — Java fields remain authoritative). |
 
+### Regions
+
+| Method | Path | Description |
+|---|---|---|
+| GET | `/api/[chronicle]/regions` | Full region catalog (19 on Interlude — Talking Island Village, Town of Aden, …). Source: upstream `mapRegions.xml`. **These are engine "death-teleport" regions**, not strict biome polygons — a coordinate's region is the in-game town the client teleports to on death within that tile. Cleaned `/npcs/[id]/spawns` enriches each spawn with `region: RegionRefDto \| null`; `NpcDetailDto`/`MonsterDetailDto` carry an optional `primaryRegion` derived from spawn aggregation. Raw spawn endpoints intentionally stay unenriched. |
+
 ### Meta (filter dropdowns)
 
 | Method | Path | Description |

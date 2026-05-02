@@ -371,6 +371,50 @@ export interface Quest {
 }
 
 /**
+ * One named L2 region (e.g. "Talking Island Village", "Town of Aden")
+ * extracted from `data/xml/mapRegions.xml`. Ids are 0..18 for
+ * Interlude (19 entries) and indexed densely. The id matches the
+ * upstream engine's region id, so consumers can cross-reference
+ * with other aCis docs / scripts that quote the same numeric id.
+ */
+export interface Region {
+  id: number;
+  name: string;
+}
+
+/**
+ * Sparse tile grid mapping `(rX, rY)` array indices to a region id
+ * (or `-1` when the cell is unmapped). Coordinate-to-tile conversion
+ * matches `MapRegionData.java`:
+ *
+ *   rX = (worldX >> 15) + originX   // originX = 4 for Interlude
+ *   rY = (worldY >> 15) + originY   // originY = 8 for Interlude
+ *
+ * `cells` is a flat row-major array of length `width * height`,
+ * indexed by `rY * width + rX`. Out-of-grid coordinates and `-1`
+ * cells both resolve to `null` at the public API layer — there
+ * is no synthetic "Unknown" region.
+ */
+export interface RegionGrid {
+  originX: number;
+  originY: number;
+  width: number;
+  height: number;
+  cells: number[];
+}
+
+/**
+ * Composite artifact written to `data/generated/<chronicle>/regions.json`.
+ * Loaded as a unit by the runtime so the names and the grid stay
+ * consistent (a parser-time mismatch fails the build, never reaches
+ * the runtime).
+ */
+export interface RegionsArtifact {
+  regions: Region[];
+  grid: RegionGrid;
+}
+
+/**
  * Per-quest narrative metadata extracted from the L2 client's
  * `questname-e.dat`. Keyed by the same `id` as `Quest`. Optional —
  * a chronicle that doesn't declare `questNameDatFile` produces no

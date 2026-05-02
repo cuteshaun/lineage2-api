@@ -18,6 +18,10 @@ exports[`monsters detail — Grim Wolf (22001) 1`] = `
       "npcType": "Monster",
       "pAtk": 65,
       "pDef": 102,
+      "primaryRegion": {
+        "id": 16,
+        "name": "Town of Schuttgart",
+      },
       "race": "Animal",
       "raceDescription": "These general animals are hunted by humanoids. They sometimes attack humanoids, but only to defend themselves or their territory.",
       "raceIconFile": "skill4293.png",

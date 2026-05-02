@@ -26,6 +26,10 @@ exports[`npc 27059 (Hatar (Q105 kill target)) DTO matches snapshot 1`] = `
   "npcType": "Monster",
   "pAtk": 21,
   "pDef": 64,
+  "primaryRegion": {
+    "id": 1,
+    "name": "Elven Village",
+  },
   "race": "Humanoid",
   "raceDescription": "They have two arms, two legs, and they walk upright. Culture and communal life varies by race.",
   "raceIconFile": "skill4295.png",
@@ -53,6 +57,10 @@ exports[`npc 30048 (Darin (Q001 start)) DTO matches snapshot 1`] = `
   "npcType": "Folk",
   "pAtk": 689,
   "pDef": 296,
+  "primaryRegion": {
+    "id": 0,
+    "name": "Talking Island Village",
+  },
   "race": "Human",
   "raceDescription": "The last race created by the gods, Humans won the race war for domination of the entire world. Their strong desire for domination is perhaps fueled by the fact that their life span is the shortest among all the races.",
   "raceIconFile": "skill4416_human.png",

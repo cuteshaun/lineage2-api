@@ -24,6 +24,7 @@ import {
 import {
   ClassRefSchema,
   EnrichedSpawnSchema,
+  LocationRefSchema,
   NpcRefSchema,
   QuestClientJournalEntrySchema,
   QuestRefSchema,
@@ -37,6 +38,7 @@ registry.register("QuestRef", QuestRefSchema);
 registry.register("RegionRef", RegionRefSchema);
 registry.register("EnrichedSpawn", EnrichedSpawnSchema);
 registry.register("QuestClientJournalEntry", QuestClientJournalEntrySchema);
+registry.register("LocationRef", LocationRefSchema);
 
 const generator = new OpenApiGeneratorV3(registry.definitions);
 const document = generator.generateDocument({

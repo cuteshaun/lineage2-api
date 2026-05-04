@@ -1,7 +1,11 @@
 import type { Chronicle } from "../../chronicles";
 import type { Spawn } from "../../types";
-import { resolveRegionForSpawn } from "../../data/indexes";
+import {
+  resolveLocationForSpawn,
+  resolveRegionForSpawn,
+} from "../../data/indexes";
 import { toRegionRefDto, type RegionRefDto } from "./region";
+import { toLocationRefDto, type LocationRefDto } from "./location";
 
 /**
  * Public shape for a single cleaned-layer spawn row, returned by
@@ -34,6 +38,16 @@ export interface EnrichedSpawnDto {
   respawnRandom: number;
   periodOfDay: number;
   region: RegionRefDto | null;
+  /**
+   * Player-facing location (M7) — nearest hunting-zone anchor from
+   * `huntingzone-e.dat` within
+   * {@link LOCATION_NEAREST_DISTANCE_THRESHOLD} 2D distance. Always
+   * present; `null` when no anchor is close enough OR the chronicle
+   * ships no `huntingzone-e.dat`. Complementary to `region` —
+   * region is the engine death-teleport anchor (coarse), location
+   * is the player-facing area name (finer).
+   */
+  location: LocationRefDto | null;
 }
 
 export function toEnrichedSpawnDto(
@@ -41,6 +55,7 @@ export function toEnrichedSpawnDto(
   chronicle: Chronicle
 ): EnrichedSpawnDto {
   const region = resolveRegionForSpawn(chronicle, spawn);
+  const zone = resolveLocationForSpawn(chronicle, spawn);
   return {
     npcId: spawn.npcId,
     x: spawn.x,
@@ -51,6 +66,7 @@ export function toEnrichedSpawnDto(
     respawnRandom: spawn.respawnRandom,
     periodOfDay: spawn.periodOfDay,
     region: region ? toRegionRefDto(region) : null,
+    location: zone ? toLocationRefDto(zone) : null,
   };
 }
 

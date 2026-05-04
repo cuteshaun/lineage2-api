@@ -415,6 +415,52 @@ export interface RegionsArtifact {
 }
 
 /**
+ * One named L2 hunting zone / player-facing area extracted from
+ * the L2 client's `huntingzone-e.dat`. Internally we call this a
+ * `HuntingZone` to match the source filename; the public DTO layer
+ * surfaces it under the more general "location" naming
+ * (`LocationRefDto`, `EnrichedSpawnDto.location`,
+ * `NpcDetailDto.primaryLocation?`, `QuestDetailDto.primaryLocation?`).
+ *
+ * Each record carries a single `(x, y, z)` center anchor — NOT a
+ * polygon. Coordinate-to-zone resolution is therefore
+ * nearest-anchor-with-threshold (see
+ * `resolveLocationForCoordinate`), not point-in-polygon.
+ *
+ * **Territory catch-alls** (e.g. "Dion Territory", "Aden Territory",
+ * "Border", "Dimensional Rift") in the source DAT carry
+ * `x = y = z = 0` — they are intentionally **dropped at parse
+ * time** so the catalog only contains resolvable player-facing
+ * locations. The territory umbrellas are already covered by M4's
+ * `mapRegions.xml` table and surfaced as `primaryRegion`.
+ */
+export interface HuntingZone {
+  /** Source DAT id (1..220 in Interlude). Stable across builds. */
+  id: number;
+  /**
+   * Source-faithful "type" / category byte from the DAT. Observed
+   * values 1..7 — semantics not fully decoded; passed through for
+   * future use without claims about meaning.
+   */
+  type: number;
+  /**
+   * Recommended minimum player level for this zone. `0` when the
+   * source carries no level signal (e.g. towns and non-combat
+   * areas). The public DTO surfaces this as
+   * `LocationRefDto.minLevel: number | null` (0 → null).
+   */
+  minLevel: number;
+  /** Center X coordinate (game units). */
+  x: number;
+  /** Center Y coordinate (game units). */
+  y: number;
+  /** Center Z coordinate (game units). */
+  z: number;
+  /** Player-facing name (e.g. "Cruma Tower", "Ant Nest"). */
+  name: string;
+}
+
+/**
  * Per-quest narrative metadata extracted from the L2 client's
  * `questname-e.dat`. Keyed by the same `id` as `Quest`. Optional —
  * a chronicle that doesn't declare `questNameDatFile` produces no

@@ -7,6 +7,7 @@ import type {
   Multisell,
   Npc,
   NpcDrops,
+  HuntingZone,
   Quest,
   QuestNameRecord,
   Recipe,
@@ -184,6 +185,14 @@ interface ChronicleIndexes {
    * the public DTOs that consume this land in Stage 2.
    */
   regionGrid: RegionGrid | null;
+  /**
+   * M7 Stage 1: player-facing hunting / area locations from
+   * `huntingzone-e.dat`. Sorted by id. Empty when the chronicle
+   * doesn't ship the DAT.
+   */
+  huntingZones: HuntingZone[];
+  /** Lookup by source DAT id. */
+  huntingZonesById: Map<number, HuntingZone>;
 }
 
 export interface BuyListProductRef {
@@ -614,6 +623,16 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
     ? dataset.regions.grid
     : null;
 
+  // Hunting-zone (M7) indexes. Empty when the chronicle doesn't
+  // ship `huntingzone-e.dat`. Already filtered to spatial-only at
+  // parse time (territory catch-alls dropped).
+  const huntingZones: HuntingZone[] = [...dataset.huntingZones].sort(
+    (a, b) => a.id - b.id
+  );
+  const huntingZonesById = new Map<number, HuntingZone>(
+    huntingZones.map((z) => [z.id, z])
+  );
+
   // BuyList indexes (forward by NPC, reverse by item).
   const buyListsByNpcId = new Map<number, BuyList[]>();
   const buyListsByItemId = new Map<number, BuyListProductRef[]>();
@@ -703,6 +722,8 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
     regions,
     regionsById,
     regionGrid,
+    huntingZones,
+    huntingZonesById,
   };
 }
 
@@ -1424,4 +1445,96 @@ export function resolveRegionForSpawn(
   spawn: Spawn
 ): Region | null {
   return resolveRegionForCoordinate(chronicle, spawn.x, spawn.y);
+}
+
+// --- Hunting-location lookups (M7 Stage 1) ---
+
+/**
+ * Maximum 2D (X, Y) distance in game units for nearest-anchor
+ * lookup. Tunable; chosen for L2 hunting zones (typically 5–30k
+ * units across, ~209 anchors covering the continent — most spawns
+ * land within ~5–10k units of the nearest anchor). Coordinates
+ * outside this radius from every anchor resolve to `null`.
+ *
+ * Z-axis is intentionally ignored to keep the field
+ * player-intuitive — a monster on a tower's upper floor still maps
+ * to the tower as long as the X/Y planar distance fits the
+ * threshold. (Tower of Insolence is collapsed to a single anchor in
+ * `huntingzone-e.dat` despite the per-floor breakdown that exists
+ * in `zonename-e.dat`; ToI floors are not in this dataset.)
+ */
+export const LOCATION_NEAREST_DISTANCE_THRESHOLD = 10000;
+
+/** Returns the chronicle's player-facing hunting locations, sorted by id. */
+export function getHuntingZones(chronicle: Chronicle): HuntingZone[] {
+  return getChronicleIndexes(chronicle).huntingZones;
+}
+
+/**
+ * Returns one hunting zone by its source DAT id, or `undefined`
+ * when the id is unknown or the chronicle has no zones configured.
+ */
+export function getHuntingZoneById(
+  chronicle: Chronicle,
+  id: number
+): HuntingZone | undefined {
+  return getChronicleIndexes(chronicle).huntingZonesById.get(id);
+}
+
+/**
+ * Resolves a world coordinate `(x, y, z)` to the nearest hunting
+ * zone within {@link LOCATION_NEAREST_DISTANCE_THRESHOLD} 2D
+ * planar distance. Returns `null` when:
+ *
+ *   - no zone is within the threshold, OR
+ *   - the chronicle ships no `huntingzone-e.dat`.
+ *
+ * Algorithm: brute-force 2D Euclidean over the ~209 anchors, picks
+ * the smallest distance, returns the zone iff `distance² ≤
+ * threshold²`. Allocation-free and cheap (one pass per call). Z is
+ * intentionally ignored — see the constant's docstring for
+ * rationale.
+ *
+ * Tie-break: lowest distance wins; on exact tie, lowest id wins.
+ * The DTO layer surfaces this as `EnrichedSpawnDto.location: LocationRefDto | null`.
+ */
+export function resolveLocationForCoordinate(
+  chronicle: Chronicle,
+  x: number,
+  y: number,
+  // z accepted for parity with `resolveRegionForCoordinate`'s
+  // signature evolution path; currently unused but kept so callers
+  // can pass a full 3D coord without conditional branching.
+  _z?: number
+): HuntingZone | null {
+  const zones = getChronicleIndexes(chronicle).huntingZones;
+  if (zones.length === 0) return null;
+  const limit2 =
+    LOCATION_NEAREST_DISTANCE_THRESHOLD * LOCATION_NEAREST_DISTANCE_THRESHOLD;
+  let best: HuntingZone | null = null;
+  let bestDist2 = Number.POSITIVE_INFINITY;
+  for (const z of zones) {
+    const dx = z.x - x;
+    const dy = z.y - y;
+    const d2 = dx * dx + dy * dy;
+    if (d2 < bestDist2) {
+      bestDist2 = d2;
+      best = z;
+    } else if (d2 === bestDist2 && best && z.id < best.id) {
+      // Stable lowest-id tiebreak on exact-distance tie.
+      best = z;
+    }
+  }
+  return best && bestDist2 <= limit2 ? best : null;
+}
+
+/**
+ * Convenience over {@link resolveLocationForCoordinate} — pulls
+ * `(x, y, z)` straight from a `Spawn`.
+ */
+export function resolveLocationForSpawn(
+  chronicle: Chronicle,
+  spawn: Spawn
+): HuntingZone | null {
+  return resolveLocationForCoordinate(chronicle, spawn.x, spawn.y, spawn.z);
 }

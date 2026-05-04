@@ -110,6 +110,11 @@ exports[`npc spawns — Darin (30048), single spawn 1`] = `
     "data": [
       {
         "heading": 42000,
+        "location": {
+          "id": 48,
+          "minLevel": null,
+          "name": "Talking Island",
+        },
         "npcId": 30048,
         "periodOfDay": 0,
         "region": {
@@ -134,6 +139,11 @@ exports[`npc spawns — Grim Wolf (22001), 8 spawns 1`] = `
     "data": [
       {
         "heading": 45022,
+        "location": {
+          "id": 154,
+          "minLevel": 25,
+          "name": "Crypts of Disgrace",
+        },
         "npcId": 22001,
         "periodOfDay": 0,
         "region": {
@@ -148,6 +158,11 @@ exports[`npc spawns — Grim Wolf (22001), 8 spawns 1`] = `
       },
       {
         "heading": 17948,
+        "location": {
+          "id": 154,
+          "minLevel": 25,
+          "name": "Crypts of Disgrace",
+        },
         "npcId": 22001,
         "periodOfDay": 0,
         "region": {
@@ -162,6 +177,11 @@ exports[`npc spawns — Grim Wolf (22001), 8 spawns 1`] = `
       },
       {
         "heading": 19952,
+        "location": {
+          "id": 154,
+          "minLevel": 25,
+          "name": "Crypts of Disgrace",
+        },
         "npcId": 22001,
         "periodOfDay": 0,
         "region": {
@@ -176,6 +196,11 @@ exports[`npc spawns — Grim Wolf (22001), 8 spawns 1`] = `
       },
       {
         "heading": 40455,
+        "location": {
+          "id": 154,
+          "minLevel": 25,
+          "name": "Crypts of Disgrace",
+        },
         "npcId": 22001,
         "periodOfDay": 0,
         "region": {
@@ -190,6 +215,11 @@ exports[`npc spawns — Grim Wolf (22001), 8 spawns 1`] = `
       },
       {
         "heading": 25314,
+        "location": {
+          "id": 154,
+          "minLevel": 25,
+          "name": "Crypts of Disgrace",
+        },
         "npcId": 22001,
         "periodOfDay": 0,
         "region": {
@@ -204,6 +234,11 @@ exports[`npc spawns — Grim Wolf (22001), 8 spawns 1`] = `
       },
       {
         "heading": 31429,
+        "location": {
+          "id": 154,
+          "minLevel": 25,
+          "name": "Crypts of Disgrace",
+        },
         "npcId": 22001,
         "periodOfDay": 0,
         "region": {
@@ -218,6 +253,11 @@ exports[`npc spawns — Grim Wolf (22001), 8 spawns 1`] = `
       },
       {
         "heading": 37476,
+        "location": {
+          "id": 154,
+          "minLevel": 25,
+          "name": "Crypts of Disgrace",
+        },
         "npcId": 22001,
         "periodOfDay": 0,
         "region": {
@@ -232,6 +272,11 @@ exports[`npc spawns — Grim Wolf (22001), 8 spawns 1`] = `
       },
       {
         "heading": 1982,
+        "location": {
+          "id": 154,
+          "minLevel": 25,
+          "name": "Crypts of Disgrace",
+        },
         "npcId": 22001,
         "periodOfDay": 0,
         "region": {

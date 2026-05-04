@@ -11,6 +11,7 @@ import { parseClasses } from "./parse-classes";
 import { parseQuests } from "./parse-quests";
 import { parseQuestName } from "./parse-questname";
 import { parseRegions } from "./parse-regions";
+import { parseHuntingZones } from "./parse-huntingzones";
 import { getChronicleSources } from "./chronicle-sources";
 import {
   isChronicle,
@@ -89,6 +90,13 @@ async function main() {
     ? await parseRegions(chronicle)
     : null;
 
+  // huntingzones.json — M7 Stage 1. Same pattern as questname/regions:
+  // configured ⇒ required at build time, unconfigured ⇒ skip.
+  console.log();
+  const huntingZones = questNameSources.huntingZoneDatFile
+    ? await parseHuntingZones(chronicle)
+    : null;
+
   let totalCategories = 0;
   let totalDropEntries = 0;
   for (const npc of drops) {
@@ -160,6 +168,11 @@ async function main() {
     for (const c of regions.grid.cells) if (c >= 0) mapped++;
     console.log(
       `  Regions:              ${regions.regions.length} (${mapped}/${regions.grid.cells.length} grid cells mapped)`
+    );
+  }
+  if (huntingZones) {
+    console.log(
+      `  Hunting locations:    ${huntingZones.length} (spatial; catch-alls dropped)`
     );
   }
   console.log(`  Completed in ${elapsed}s`);

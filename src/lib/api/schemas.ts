@@ -30,6 +30,7 @@ import { z } from "zod";
 
 import type { ClassRefDto } from "./dto/class";
 import type { NpcRefDto } from "./dto/item";
+import type { LocationRefDto } from "./dto/location";
 import type {
   QuestClientJournalEntryDto,
   QuestRefDto,
@@ -74,6 +75,17 @@ export const QuestRefSchema = z
       "Compact quest reference used by item / NPC cross-links. `roles?` is populated only on `NpcDetailDto.involvedInQuests[]` entries (one or more of 'talk' / 'kill').",
   });
 
+export const LocationRefSchema = z
+  .object({
+    id: z.number().int(),
+    name: z.string(),
+    minLevel: z.number().int().nullable(),
+  })
+  .openapi("LocationRef", {
+    description:
+      "Compact reference to a player-facing L2 hunting / map location (e.g. \"Cruma Tower\", \"Ant Nest\", \"Sea of Spores\"). Sourced from the L2 client's `huntingzone-e.dat` center anchors. Resolution against spawn coordinates is *nearest-anchor-with-threshold* (default 10000 game units, 2D) — NOT polygon containment. `minLevel` is the recommended player level (`null` for towns and non-combat areas). Complementary to `RegionRef`, not a replacement.",
+  });
+
 export const RegionRefSchema = z
   .object({
     id: z.number().int(),
@@ -107,6 +119,7 @@ export const EnrichedSpawnSchema = z
     respawnRandom: z.number().int(),
     periodOfDay: z.number().int(),
     region: RegionRefSchema.nullable(),
+    location: LocationRefSchema.nullable(),
   })
   .openapi("EnrichedSpawn", {
     description:
@@ -159,4 +172,8 @@ type _QuestClientJournalEntrySchemaMatchesDto = Expect<
     z.infer<typeof QuestClientJournalEntrySchema>,
     QuestClientJournalEntryDto
   >
+>;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+type _LocationRefSchemaMatchesDto = Expect<
+  Equals<z.infer<typeof LocationRefSchema>, LocationRefDto>
 >;

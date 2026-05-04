@@ -94,6 +94,12 @@ Requesting an unknown chronicle returns **404**.
 |---|---|---|
 | GET | `/api/[chronicle]/regions` | Full region catalog (19 on Interlude — Talking Island Village, Town of Aden, …). Source: upstream `mapRegions.xml`. **These are engine "death-teleport" regions**, not strict biome polygons — a coordinate's region is the in-game town the client teleports to on death within that tile. Cleaned `/npcs/[id]/spawns` enriches each spawn with `region: RegionRefDto \| null`; `NpcDetailDto`/`MonsterDetailDto` carry an optional `primaryRegion` derived from spawn aggregation. Raw spawn endpoints intentionally stay unenriched. |
 
+### Locations
+
+| Method | Path | Description |
+|---|---|---|
+| GET | `/api/[chronicle]/locations` | Full player-facing location catalog (209 spatial entries on Interlude — *Cruma Tower*, *Ant Nest*, *Sea of Spores*, *Tower of Insolence*, …). Source: L2 client's `huntingzone-e.dat` center anchors. **Not polygon-accurate** — each entry carries a single `(x, y, z)` center, and spawn / detail resolution uses **nearest-anchor with a fixed 10000-unit 2D threshold**. Coordinates outside that radius from every anchor resolve to `null`. Cleaned `/npcs/[id]/spawns` adds `location: LocationRefDto \| null` per row. `NpcDetailDto` / `MonsterDetailDto` / `QuestDetailDto` carry an optional `primaryLocation` (mode-of-spawns rule, lowest-id tiebreak). **Complementary to** `primaryRegion`, not a replacement: region is the coarse death-teleport anchor; location is the fine player-facing area. Territory catch-alls (*Dion Territory*, etc.) are excluded — they overlap `mapRegions`. |
+
 ### Meta (filter dropdowns)
 
 | Method | Path | Description |

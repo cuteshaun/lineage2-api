@@ -26,6 +26,11 @@ exports[`npc 27059 (Hatar (Q105 kill target)) DTO matches snapshot 1`] = `
   "npcType": "Monster",
   "pAtk": 21,
   "pDef": 64,
+  "primaryLocation": {
+    "id": 68,
+    "minLevel": 8,
+    "name": "Elven Forest",
+  },
   "primaryRegion": {
     "id": 1,
     "name": "Elven Village",
@@ -57,6 +62,11 @@ exports[`npc 30048 (Darin (Q001 start)) DTO matches snapshot 1`] = `
   "npcType": "Folk",
   "pAtk": 689,
   "pDef": 296,
+  "primaryLocation": {
+    "id": 48,
+    "minLevel": null,
+    "name": "Talking Island",
+  },
   "primaryRegion": {
     "id": 0,
     "name": "Talking Island Village",

@@ -12,6 +12,7 @@ import { toClassRefDto, type ClassRefDto } from "./class";
 import type { ItemQuantityDto, NpcRefDto } from "./item";
 import type { RegionRefDto } from "./region";
 import { computePrimaryRegion } from "./spawn";
+import { computePrimaryLocation, type LocationRefDto } from "./location";
 
 /**
  * Compact reference used in cross-links from items/NPCs back to a
@@ -151,6 +152,27 @@ export interface QuestDetailDto {
    * → NPC-detail → `primaryRegion?` path.
    */
   primaryRegion?: RegionRefDto;
+  /**
+   * **Player-facing primary location** of the quest (M7) — the
+   * first start NPC's primary location, derived via mode-of-spawns
+   * over its cleaned spawns. Sourced from `huntingzone-e.dat`
+   * (e.g. *"Cruma Tower"*, *"Talking Island Village"*).
+   * Complementary to `primaryRegion`, not a replacement: region is
+   * the coarse death-teleport anchor; location is the fine
+   * player-facing area name.
+   *
+   * Resolution is **nearest-anchor with a fixed 10000-unit 2D
+   * threshold**, not polygon containment. Multi-start-NPC quests
+   * (rare) reflect the first start NPC's location only — same
+   * convention as `primaryRegion?`.
+   *
+   * Omitted when:
+   *   - the quest has no `startNpcs`, or
+   *   - the first start NPC has no spawns,
+   *   - every spawn is too far from any anchor, or
+   *   - the chronicle ships no `huntingzone-e.dat`.
+   */
+  primaryLocation?: LocationRefDto;
 }
 
 function resolveItemQuantityRefs(
@@ -294,6 +316,8 @@ export function toQuestDetailDto(
     const startSpawns = getNpcSpawns(chronicle, firstStart);
     const region = computePrimaryRegion(startSpawns, chronicle);
     if (region) dto.primaryRegion = region;
+    const location = computePrimaryLocation(startSpawns, chronicle);
+    if (location) dto.primaryLocation = location;
   }
 
   return dto;

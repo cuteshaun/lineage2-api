@@ -64,6 +64,16 @@ additional chronicles can be added without endpoint changes.
   These are engine "death-teleport" regions, not biome polygons —
   `primaryRegion` reads as "the in-game town this NPC is associated
   with" rather than "this NPC's biome label".
+- **Locations** — full catalog of 209 player-facing hunting / map
+  locations (Cruma Tower, Ant Nest, Sea of Spores, Tower of Insolence,
+  …) sourced from the L2 client's `huntingzone-e.dat`. Each entry
+  carries a `(x, y, z)` center anchor and a recommended `minLevel`.
+  Spawn rows and NPC / monster / quest detail responses get an
+  optional `location` / `primaryLocation` resolved by **nearest
+  anchor within a 10000 game-unit 2D threshold** — *not* polygon
+  containment. Complementary to `primaryRegion`, not a replacement:
+  regions name the death-teleport town, locations name the local
+  hunting ground.
 - **Meta endpoints** — known npc types / item types / item grades, with
   counts, for filter dropdowns.
 
@@ -73,7 +83,7 @@ additional chronicles can be added without endpoint changes.
 |---|---|
 | `data/datapack/<chronicle>/` | placeholder for upstream **L2 client DAT files** consumed at build time (e.g. `*grp.dat` for icons, `questname-e.dat` for quest journal entries) — untracked |
 | `data/manual-fixes/<chronicle>.json` | one file per chronicle, sectioned by entity |
-| `data/generated/<chronicle>/` | build output — `items`, `npcs`, `drops`, `spawns`, `recipes`, `skills`, `armor-sets`, `classes`, `spellbooks`, `multisells`, `buylists`, `quests`, `questname`, `regions` JSON |
+| `data/generated/<chronicle>/` | build output — `items`, `npcs`, `drops`, `spawns`, `recipes`, `skills`, `armor-sets`, `classes`, `spellbooks`, `multisells`, `buylists`, `quests`, `questname`, `regions`, `huntingzones` JSON |
 | `scripts/` | `parse-*.ts` per entity, plus `build-data.ts` orchestrator |
 | `src/lib/data/` | cached JSON loaders + in-memory indexes |
 | `src/lib/api/` | shared route helpers + DTO layer |
@@ -116,6 +126,7 @@ curl http://localhost:3000/api/interlude/armor-sets
 curl http://localhost:3000/api/interlude/meta/item-grades
 curl http://localhost:3000/api/interlude/quests/1
 curl http://localhost:3000/api/interlude/regions
+curl http://localhost:3000/api/interlude/locations
 curl http://localhost:3000/api/interlude/classes
 curl http://localhost:3000/api/interlude/npcs/30001/shop
 ```

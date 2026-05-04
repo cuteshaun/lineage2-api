@@ -68,6 +68,17 @@ export interface ChronicleSources {
    * — missing/unreadable fails the build loud.
    */
   mapRegionsXmlFile?: string;
+  /**
+   * Absolute path to `huntingzone-e.dat` — the encrypted L2 client
+   * table of player-facing area names with center anchors (e.g.
+   * "Cruma Tower", "Sea of Spores", "Ant Nest"). Powers M7 location
+   * resolution as a finer-grained complement to `primaryRegion`.
+   * **Optional**: chronicles that don't ship a hunting-zone DAT
+   * omit this field. When set, `parse-huntingzones.ts` runs and the
+   * file is required — missing/unreadable/undecodable fails the
+   * build loud.
+   */
+  huntingZoneDatFile?: string;
 }
 
 interface SourceSpec {
@@ -95,6 +106,8 @@ interface SourceSpec {
   questNameDatFile?: string[];
   /** Optional — chronicles without a regions XML omit this. */
   mapRegionsXmlFile?: string[];
+  /** Optional — chronicles without a hunting-zone DAT omit this. */
+  huntingZoneDatFile?: string[];
 }
 
 const SOURCE_SPECS: Record<Chronicle, SourceSpec> = {
@@ -234,6 +247,8 @@ const SOURCE_SPECS: Record<Chronicle, SourceSpec> = {
       "xml",
       "mapRegions.xml",
     ],
+    // Configured for Interlude → huntingzone-e.dat is required at build time.
+    huntingZoneDatFile: ["data", "datapack", "interlude", "huntingzone-e.dat"],
   },
 };
 
@@ -272,6 +287,9 @@ export function getChronicleSources(chronicle: Chronicle): ChronicleSources {
       : undefined,
     mapRegionsXmlFile: spec.mapRegionsXmlFile
       ? path.join(root, ...spec.mapRegionsXmlFile)
+      : undefined,
+    huntingZoneDatFile: spec.huntingZoneDatFile
+      ? path.join(root, ...spec.huntingZoneDatFile)
       : undefined,
   };
 }

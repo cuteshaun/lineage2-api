@@ -130,6 +130,9 @@
                 "nullable": true
               }
             ]
+          },
+          "location": {
+            "$ref": "#/components/schemas/LocationRef"
           }
         },
         "required": [
@@ -141,9 +144,32 @@
           "respawnDelay",
           "respawnRandom",
           "periodOfDay",
-          "region"
+          "region",
+          "location"
         ],
         "description": "One cleaned-layer spawn row with the resolved map region attached. `region` is `null` when the coordinate falls outside the upstream `mapRegions.xml` tile grid, or when the chronicle ships no regions XML. The raw spawn endpoints intentionally omit this field."
+      },
+      "LocationRef": {
+        "type": "object",
+        "nullable": true,
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "minLevel": {
+            "type": "integer",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "minLevel"
+        ],
+        "description": "Compact reference to a player-facing L2 hunting / map location (e.g. \"Cruma Tower\", \"Ant Nest\", \"Sea of Spores\"). Sourced from the L2 client's `huntingzone-e.dat` center anchors. Resolution against spawn coordinates is *nearest-anchor-with-threshold* (default 10000 game units, 2D) — NOT polygon containment. `minLevel` is the recommended player level (`null` for towns and non-combat areas). Complementary to `RegionRef`, not a replacement."
       },
       "QuestClientJournalEntry": {
         "type": "object",

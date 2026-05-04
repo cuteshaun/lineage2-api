@@ -9,6 +9,8 @@ import {
 import { toQuestRefDto, type QuestRefDto } from "./quest";
 import { computePrimaryRegion } from "./spawn";
 import type { RegionRefDto } from "./region";
+import { computePrimaryLocation } from "./location";
+import type { LocationRefDto } from "./location";
 
 export interface NpcListDto {
   id: number;
@@ -75,6 +77,27 @@ export interface NpcDetailDto {
    * See `RegionRefDto` for details.
    */
   primaryRegion?: RegionRefDto;
+  /**
+   * **Player-facing primary location** (M7) — the most-frequent
+   * nearest-anchor zone across this NPC's cleaned spawns, sourced
+   * from `huntingzone-e.dat` (e.g. *"Cruma Tower"*, *"Ant Nest"*,
+   * *"Sea of Spores"*). Mode-of-spawns rule, lowest-id tiebreak —
+   * same algorithm as `primaryRegion`. **Complementary to**
+   * `primaryRegion`, not a replacement: region is the coarse
+   * death-teleport anchor; location is the fine player-facing area.
+   *
+   * Resolution is **nearest-anchor with a fixed 10000-unit 2D
+   * threshold**, not polygon containment — `huntingzone-e.dat`
+   * carries only center anchors, no polygons. Coordinates outside
+   * the threshold from every anchor produce `null` here, and the
+   * field is **omitted** in that case.
+   *
+   * Omitted when:
+   *   - the NPC has no spawns,
+   *   - every spawn is too far from any anchor, or
+   *   - the chronicle ships no `huntingzone-e.dat`.
+   */
+  primaryLocation?: LocationRefDto;
 }
 
 export interface NpcSkillDto {
@@ -252,6 +275,14 @@ export function toNpcDetailDto(npc: Npc, chronicle: Chronicle): NpcDetailDto {
   const primaryRegion = computePrimaryRegion(spawns, chronicle);
   if (primaryRegion) {
     dto.primaryRegion = primaryRegion;
+  }
+
+  // primaryLocation (M7) — nearest-anchor over the same cleaned
+  // spawns. Independent of primaryRegion: a spawn might resolve to
+  // a region but no nearby location, or vice versa.
+  const primaryLocation = computePrimaryLocation(spawns, chronicle);
+  if (primaryLocation) {
+    dto.primaryLocation = primaryLocation;
   }
 
   return dto;

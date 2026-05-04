@@ -434,6 +434,31 @@ Compact reference to a named L2 map region. Used by:
 
 There is **no synthetic "Unknown" region**. Coordinates that fall outside the upstream tile grid resolve to `null`; chronicles that ship no `mapRegions.xml` produce empty `regions` lists and `null` everywhere downstream.
 
+## `LocationRefDto` — stable fields
+
+Compact reference to a player-facing L2 hunting / map location. Used by:
+
+- `EnrichedSpawnDto.location` — the resolved location for one spawn point.
+- `NpcDetailDto.primaryLocation?` / `MonsterDetailDto.primaryLocation?` /
+  `QuestDetailDto.primaryLocation?` — the most-frequent location across
+  the relevant cleaned spawns.
+- `GET /api/[chronicle]/locations` — the public catalog (209 entries on
+  Interlude).
+
+| Field | Type | Notes |
+|---|---|---|
+| `id` | number | Numeric location id matching the L2 client's `huntingzone-e.dat` numbering. |
+| `name` | string | Human-readable location name (e.g. `"Cruma Tower"`, `"Ant Nest"`, `"Sea of Spores"`, `"Tower of Insolence"`). |
+| `minLevel` | number \| null | Recommended player level from the DAT. `null` for towns and other non-combat areas where the source value is `0` (normalized — `0` is the engine's "no level constraint" sentinel, not a real recommendation). |
+
+**Important semantics — center anchors, not polygons.** Each catalog entry carries a single `(x, y, z)` center point. Spawn / detail resolution against a coordinate uses **nearest-anchor with a fixed 10000 game-unit 2D threshold** (Z is ignored), implemented in [`src/lib/data/indexes.ts`](../src/lib/data/indexes.ts) as `resolveLocationForCoordinate`. This is a **player-facing approximation, not a geometric containment check** — a spawn that sits between two anchors gets the closer one regardless of which polygonal area a player would say it belongs to. Coordinates farther than 10000 units from every anchor resolve to `null` rather than being snapped to the nearest distant anchor.
+
+**Territory catch-alls dropped at parse time.** `huntingzone-e.dat` ships ~11 entries with `(x=0, y=0, z=0)` ("Dion Territory", "Aden Territory", etc.). These overlap the `mapRegions` table and have no spatial anchor — the parser drops them entirely, so they appear in neither the catalog nor any spawn / detail resolution.
+
+**Complementary to `RegionRef`, not a replacement.** Regions name the engine's death-teleport town (M4); locations name the local hunting ground (M7). A monster in the Outlaw Forest resolves to *Town of Schuttgart* on `primaryRegion` and *Outlaw Forest* on `primaryLocation`.
+
+There is **no synthetic "Unknown" location**. Out-of-threshold coordinates resolve to `null`; chronicles that ship no `huntingzone-e.dat` produce empty `locations` lists and `null` everywhere downstream.
+
 ## `EnrichedSpawnDto` — stable fields (cleaned spawn endpoints)
 
 Returned by `GET /api/[chronicle]/npcs/[id]/spawns` and the cleaned-monster sibling. Each row is the underlying engine `Spawn` (`spawnlist.sql` + `raidboss_spawnlist.sql` + `grandboss_data.sql` merged) with one optional resolved field.
@@ -447,6 +472,7 @@ Returned by `GET /api/[chronicle]/npcs/[id]/spawns` and the cleaned-monster sibl
 | `respawnRandom` | number | Seconds. |
 | `periodOfDay` | number | `0`/`1`/`2` from `spawnlist.sql`; `0` ("Any") for raidboss/grandboss rows that don't carry the column. |
 | `region` | `RegionRefDto \| null` | Resolved via `(x >> 15) + 4`, `(y >> 15) + 8` against the chronicle's `mapRegions.xml` tile grid. **Always present**, never omitted — `null` is the honest signal for unmapped grid cells, out-of-grid coords, or chronicles without a regions XML. The raw equivalent at `/api/[chronicle]/raw/monsters/[id]/spawns` does **not** carry this field; raw stays close to engine truth. |
+| `location` | `LocationRefDto \| null` | Resolved via nearest-anchor against `huntingzone-e.dat` centers within a fixed 10000 game-unit 2D threshold (see `LocationRefDto` semantics above). **Always present**, never omitted — `null` is the honest signal for out-of-threshold coords or chronicles without a `huntingzone-e.dat`. The raw spawn endpoints do **not** carry this field. |
 
 ## `NpcDetailDto.primaryRegion?` / `MonsterDetailDto.primaryRegion?` — derivation rule
 
@@ -459,6 +485,18 @@ Both detail DTOs share the same `toNpcDetailDto` mapper, so the rule is identica
 - **Omission**: the field is **truly optional** (omitted, not `null`) when the NPC has no spawns at all OR every spawn falls outside the mapped grid OR the chronicle ships no `mapRegions.xml`. This is the one place in the API that uses optional-omission rather than always-present-with-`null`, because the player-facing detail page renders nothing for an unknown primary region.
 
 Read `primaryRegion` as "the in-game town this NPC is most-often associated with" rather than "this NPC's geographic biome", per the engine semantics noted on `RegionRefDto`.
+
+## `NpcDetailDto.primaryLocation?` / `MonsterDetailDto.primaryLocation?` / `QuestDetailDto.primaryLocation?` — derivation rule
+
+Same shape as `primaryRegion?`, applied against the M7 hunting-zone catalog instead of `mapRegions`.
+
+- **Source**: cleaned-layer aggregated spawns (`getNpcSpawns`) for NPC and monster detail; the **first** start NPC's spawns for quest detail (same multi-start caveat as `primaryRegion?`).
+- **Aggregation**: count occurrences of each non-null resolved location across the spawns. Resolution uses the same nearest-anchor-with-threshold rule as `EnrichedSpawnDto.location` (see `LocationRefDto` above).
+- **Selection**: most frequent location wins (mode by location id).
+- **Tiebreak**: lowest location id wins on equal counts. Stable / deterministic / locked by snapshot.
+- **Omission**: the field is **truly optional** (omitted, not `null`) when the NPC has no spawns at all OR every spawn falls outside the 10000-unit threshold of every anchor OR the chronicle ships no `huntingzone-e.dat`. Same omission semantics as `primaryRegion?`.
+
+Read `primaryLocation` as "the player-facing hunting ground this NPC is most-often found in" — *Cruma Tower*, *Ant Nest*, *Sea of Spores*, etc. Complementary to `primaryRegion?`, which still answers "the in-game town this NPC is associated with".
 
 ## Engine-rule fields (not derived from a single skill / item)
 
@@ -513,11 +551,11 @@ in `src/lib/api/dto/*.ts` plus snapshot fixtures under
 OpenAPI spec backed by Zod schemas, but full migration is risky
 to do in one shot and is being staged in three phases.
 
-**Phase A (landed)** — six small DTOs have parallel Zod schemas in
+**Phase A (landed)** — seven small DTOs have parallel Zod schemas in
 [`src/lib/api/schemas.ts`](../src/lib/api/schemas.ts):
 `NpcRefDto`, `ClassRefDto`, `QuestRefDto`, M4's `RegionRefDto` and
-`EnrichedSpawnDto`, and M5's `QuestClientJournalEntryDto`. Each
-schema carries a compile-time
+`EnrichedSpawnDto`, M5's `QuestClientJournalEntryDto`, and M7's
+`LocationRefDto`. Each schema carries a compile-time
 `Expect<Equals<z.infer<typeof Schema>, ExistingDto>>` assertion, so
 any drift between the schema and the hand-written interface fails
 `pnpm typecheck`. A stub OpenAPI document

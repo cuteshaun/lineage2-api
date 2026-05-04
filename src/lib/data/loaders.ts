@@ -6,6 +6,7 @@ import type {
   ArmorSet,
   BuyList,
   ClassRecord,
+  HuntingZone,
   Item,
   Multisell,
   Npc,
@@ -47,6 +48,14 @@ interface ChronicleDataset {
    * public DTO surface that consumes it lands in Stage 2.
    */
   regions: RegionsArtifact | null;
+  /**
+   * Player-facing hunting / area locations from `huntingzone-e.dat`
+   * (M7 Stage 1). Empty array when the chronicle doesn't ship the
+   * DAT — in that case all `LocationRefDto` resolutions return
+   * `null` / omitted. Catch-all "Territory" records were dropped
+   * at parse time; only spatial (real `(x, y, z)`) zones land here.
+   */
+  huntingZones: HuntingZone[];
 }
 
 const datasetCache = new Map<Chronicle, ChronicleDataset>();
@@ -88,6 +97,12 @@ function readQuestNamesIfPresent(
 function readRegionsIfPresent(filePath: string): RegionsArtifact | null {
   if (!fs.existsSync(filePath)) return null;
   return JSON.parse(fs.readFileSync(filePath, "utf-8")) as RegionsArtifact;
+}
+
+/** Optional, like questname / regions. Empty array when absent. */
+function readHuntingZonesIfPresent(filePath: string): HuntingZone[] {
+  if (!fs.existsSync(filePath)) return [];
+  return JSON.parse(fs.readFileSync(filePath, "utf-8")) as HuntingZone[];
 }
 
 export function loadChronicleDataset(chronicle: Chronicle): ChronicleDataset {
@@ -132,6 +147,9 @@ export function loadChronicleDataset(chronicle: Chronicle): ChronicleDataset {
     ),
     regions: readRegionsIfPresent(
       path.join(config.generatedDir, "regions.json")
+    ),
+    huntingZones: readHuntingZonesIfPresent(
+      path.join(config.generatedDir, "huntingzones.json")
     ),
   };
 

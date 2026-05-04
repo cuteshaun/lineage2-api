@@ -60,6 +60,11 @@ exports[`quest 1 (Letters of Love) DTO matches snapshot 1`] = `
   ],
   "levelMin": 2,
   "name": "Letters of Love",
+  "primaryLocation": {
+    "id": 48,
+    "minLevel": null,
+    "name": "Talking Island",
+  },
   "primaryRegion": {
     "id": 0,
     "name": "Talking Island Village",
@@ -194,6 +199,11 @@ exports[`quest 105 (Skirmish with the Orcs) DTO matches snapshot 1`] = `
   ],
   "levelMin": 10,
   "name": "Skirmish with the Orcs",
+  "primaryLocation": {
+    "id": 70,
+    "minLevel": null,
+    "name": "Elven Village",
+  },
   "primaryRegion": {
     "id": 1,
     "name": "Elven Village",
@@ -439,6 +449,11 @@ exports[`quest 211 (Trial of the Challenger) DTO matches snapshot 1`] = `
   ],
   "levelMin": 35,
   "name": "Trial of the Challenger",
+  "primaryLocation": {
+    "id": 7,
+    "minLevel": null,
+    "name": "Town of Dion",
+  },
   "primaryRegion": {
     "id": 7,
     "name": "Town of Dion",
@@ -585,6 +600,11 @@ exports[`quest 401 (Path to a Warrior) DTO matches snapshot 1`] = `
   ],
   "levelMin": 19,
   "name": "Path to a Warrior",
+  "primaryLocation": {
+    "id": 35,
+    "minLevel": null,
+    "name": "Gludin Village",
+  },
   "primaryRegion": {
     "id": 6,
     "name": "Gludin Village",

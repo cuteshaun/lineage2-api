@@ -86,7 +86,7 @@ Requesting an unknown chronicle returns **404**.
 | Method | Path | Description |
 |---|---|---|
 | GET | `/api/[chronicle]/quests` | Full quest catalog (329 on Interlude). Compact `QuestListDto` with rewards preview. |
-| GET | `/api/[chronicle]/quests/[id]` | Single quest with rewards, involved NPCs/monsters, quest items, race/class gates. Includes optional `description` (player-facing flavor prose from `questname-e.dat` when the chronicle ships one — Java fields remain authoritative). |
+| GET | `/api/[chronicle]/quests/[id]` | Single quest with rewards, involved NPCs/monsters, quest items, race/class gates. Optional fields from M3B/M5: `description` (player-facing flavor prose from `questname-e.dat`); `clientJournalEntries` (per-step in-game quest log entries with title + prose + completion NPC); `primaryRegion` (the start NPC's region — same `mapRegions.xml` table used by NPC/monster details). Java fields remain authoritative; client/region enrichment is purely additive. |
 
 ### Regions
 

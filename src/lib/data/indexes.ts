@@ -48,6 +48,25 @@ interface ChronicleIndexes {
   /** Lookup by canonical id (= id of the cleaned NPC serving this name). */
   cleanedNpcsById: Map<number, Npc>;
   /**
+   * Lookup by NPC display name. Each cleaned NPC contributes up to
+   * two keys to this map:
+   *
+   *   - The bare `name` (e.g. `"Roxxy"`).
+   *   - The combined `"<title> <name>"` form (e.g.
+   *     `"Gatekeeper Roxxy"`), when `title` is non-null.
+   *
+   * Both keys point at the same canonical record. This matches how
+   * the L2 client renders NPC names (the title floats above the
+   * name, and the DAT-authored quest journal NPC names use the
+   * combined form). Match is case-sensitive and exact — no fuzzy
+   * matching, no normalization. Names that match neither form
+   * resolve to `undefined`.
+   *
+   * Used at DTO time for resolving DAT-supplied NPC name strings,
+   * e.g. quest journal entries' `completionNpcName` → `NpcRefDto`.
+   */
+  cleanedNpcByName: Map<string, Npc>;
+  /**
    * Any raw id → the canonical id of the cleaned NPC that absorbs it. A
    * cleaned NPC's own id maps to itself. Used to accept either the canonical
    * id or any merged raw id on the cleaned routes.
@@ -626,6 +645,22 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
     itemsById: new Map(dataset.items.map((i) => [i.id, i])),
     rawNpcsById: new Map(dataset.npcs.map((n) => [n.id, n])),
     cleanedNpcsById: cleanedResult.cleanedById,
+    cleanedNpcByName: ((): Map<string, Npc> => {
+      const m = new Map<string, Npc>();
+      for (const n of cleanedResult.cleaned) {
+        // Don't overwrite an earlier-seen pure-name key with a title-
+        // composed key. Bare-name match always wins (a hypothetical NPC
+        // literally named "Gatekeeper Roxxy" would shadow the
+        // title-composed alias for "Roxxy"). In current Interlude data
+        // there's no such collision, but the rule is documented.
+        if (!m.has(n.name)) m.set(n.name, n);
+        if (n.title) {
+          const combined = `${n.title} ${n.name}`;
+          if (!m.has(combined)) m.set(combined, n);
+        }
+      }
+      return m;
+    })(),
     mergedIdToCanonicalId: cleanedResult.mergedIdToCanonicalId,
     rawDropsByNpcId,
     cleanedDropsById: cleanedResult.cleanedDropsById,
@@ -763,6 +798,21 @@ export function getRawNpcById(
   id: number
 ): Npc | undefined {
   return getChronicleIndexes(chronicle).rawNpcsById.get(id);
+}
+
+/**
+ * Cleaned NPC by display name (case-sensitive, exact). Accepts EITHER
+ * the bare `name` (`"Roxxy"`) OR the combined `"<title> <name>"`
+ * client-display form (`"Gatekeeper Roxxy"`); both resolve to the
+ * same canonical record. Returns `undefined` when neither form
+ * matches. No fuzzy matching, no normalization — used for resolving
+ * DAT-supplied NPC name strings at DTO time.
+ */
+export function getCleanedNpcByName(
+  chronicle: Chronicle,
+  name: string
+): Npc | undefined {
+  return getChronicleIndexes(chronicle).cleanedNpcByName.get(name);
 }
 
 /**

@@ -1,13 +1,17 @@
 import type { Chronicle } from "../../chronicles";
 import type { Quest } from "../../types";
 import {
+  getCleanedNpcByName,
   getClassById,
   getItemById,
+  getNpcSpawns,
   getQuestNameById,
   getRawNpcById,
 } from "../../data/indexes";
 import { toClassRefDto, type ClassRefDto } from "./class";
 import type { ItemQuantityDto, NpcRefDto } from "./item";
+import type { RegionRefDto } from "./region";
+import { computePrimaryRegion } from "./spawn";
 
 /**
  * Compact reference used in cross-links from items/NPCs back to a
@@ -28,6 +32,45 @@ export interface QuestRewardsDto {
   adena: number | null;
   exp: number | null;
   sp: number | null;
+}
+
+/**
+ * One entry in the player's in-game quest log for this quest, sourced
+ * from the L2 client's `questname-e.dat`. Mirrors what the client
+ * actually displays — `title` is the short label that appears in the
+ * journal (e.g. "Delivery of Love Letters"), `description` is the
+ * prose text shown when this step is active, `completionNpc` resolves
+ * the DAT-supplied completion-NPC name to a known cleaned NPC.
+ *
+ * **Honesty note**: these are client-authored journal entries, not a
+ * mechanically-derived walkthrough. The order is the DAT's stepIndex
+ * (1-based), and the entries are usually one-per-quest-state in
+ * sequence — but the engine is free to advance/reset state via Java
+ * code that doesn't always trace cleanly through these indices, so
+ * consumers should treat the list as "what the client log shows" not
+ * "the canonical walk path".
+ */
+export interface QuestClientJournalEntryDto {
+  /** 1-based step index from the DAT record header. */
+  stepIndex: number;
+  /** Short journal label (e.g. "Delivery of Love Letters"). */
+  title: string;
+  /**
+   * Prose journal text shown when this step is active. Carried
+   * verbatim from the DAT — full text, no truncation. The original
+   * client text can include literal `\n` characters for line breaks;
+   * those are preserved as-is for client-side rendering decisions.
+   */
+  description: string;
+  /**
+   * Completion NPC for this step — the NPC the player is meant to
+   * talk to next when this entry is the active log line. Resolved
+   * by exact-name match against the cleaned NPC index. `null` when
+   * the step record doesn't carry an NPC slot (multi-objective
+   * steps occasionally omit it) OR the supplied name doesn't match
+   * any known NPC in this chronicle.
+   */
+  completionNpc: NpcRefDto | null;
 }
 
 export interface QuestListDto {
@@ -75,6 +118,39 @@ export interface QuestDetailDto {
    * doesn't ship the DAT or the quest has no DAT counterpart.
    */
   description?: string;
+  /**
+   * In-game quest journal entries from `questname-e.dat`, one per
+   * step. Mirrors what the player actually sees in their client
+   * quest log — short titles + prose text + completion NPC. NOT a
+   * mechanically-derived walkthrough; consumers should render this
+   * as "the journal" rather than "the walkthrough". Ordered by
+   * `stepIndex` ascending. Omitted when the chronicle doesn't ship
+   * the DAT, the quest has no DAT counterpart, or every step row's
+   * title/description is empty.
+   */
+  clientJournalEntries?: QuestClientJournalEntryDto[];
+  /**
+   * Most-frequent map region across the **first** start NPC's
+   * cleaned spawns (mode by region id, lowest-id tiebreak —
+   * matches the existing `NpcDetailDto.primaryRegion?` rule).
+   * Answers "where do I start this quest?" without a second
+   * round-trip. Omitted when:
+   *
+   *   - the quest has no `startNpcs`, or
+   *   - the first start NPC has no spawns (e.g. dynamically
+   *     spawned by Java, or a server-side helper), or
+   *   - every spawn falls outside the upstream `mapRegions.xml`
+   *     tile grid, or
+   *   - the chronicle ships no `mapRegions.xml`.
+   *
+   * **Multi-start-NPC caveat**: a handful of saga quests have
+   * multiple start NPCs in different regions (e.g. profession
+   * quests). The field reflects the first start NPC's region
+   * only; this is documented behavior, not a bug. The full
+   * region picture is reachable via the existing `startNpcs[]`
+   * → NPC-detail → `primaryRegion?` path.
+   */
+  primaryRegion?: RegionRefDto;
 }
 
 function resolveItemQuantityRefs(
@@ -187,5 +263,38 @@ export function toQuestDetailDto(
   if (questName && questName.description.length > 0) {
     dto.description = questName.description;
   }
+  if (questName && questName.steps.length > 0) {
+    const journal = questName.steps
+      .map((s): QuestClientJournalEntryDto => {
+        const npc = s.completionNpcName
+          ? getCleanedNpcByName(chronicle, s.completionNpcName)
+          : null;
+        return {
+          stepIndex: s.stepIndex,
+          title: s.title,
+          description: s.description,
+          completionNpc: npc ? { id: npc.id, name: npc.name } : null,
+        };
+      })
+      // Steps come in stepIndex order from the parser, but be
+      // defensive — runtime sort is cheap and locks the contract.
+      .sort((a, b) => a.stepIndex - b.stepIndex);
+    if (journal.length > 0) {
+      dto.clientJournalEntries = journal;
+    }
+  }
+
+  // primaryRegion: derive from the first start NPC's cleaned spawns,
+  // matching the existing NpcDetailDto.primaryRegion? rule (mode by
+  // region id, lowest-id tiebreak). The first start NPC is the
+  // canonical "go here to start" anchor; multi-start-NPC quests
+  // (rare saga cases) are documented to reflect the first one.
+  if (q.startNpcIds.length > 0) {
+    const firstStart = q.startNpcIds[0];
+    const startSpawns = getNpcSpawns(chronicle, firstStart);
+    const region = computePrimaryRegion(startSpawns, chronicle);
+    if (region) dto.primaryRegion = region;
+  }
+
   return dto;
 }

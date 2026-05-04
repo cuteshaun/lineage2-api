@@ -435,6 +435,46 @@ export interface QuestNameRecord {
    * empty overviews are dropped at parse time.
    */
   description: string;
+  /**
+   * Per-step quest log entries from the L2 client, mirroring what the
+   * player sees in their in-game quest journal. Each entry's `title`
+   * is the short label (e.g. "Delivery of Love Letters"), `description`
+   * is the prose journal text the client shows when that step is
+   * active, and `completionNpcName` is the verbatim NPC name the
+   * record points at — public-DTO consumers resolve it to a numeric id
+   * via the NPC name index at request time.
+   *
+   * Empty when the DAT carries no step rows for the quest. The list
+   * is ordered by `stepIndex` ascending (1-based, matches the DAT's
+   * record header).
+   */
+  steps: QuestNameStep[];
+}
+
+/**
+ * One row of `QuestNameRecord.steps`. The shape is engine-truth:
+ * three FString fields the L2 client renders when the player is on
+ * this step. The public DTO layer translates these into
+ * `QuestClientJournalEntryDto`, resolving `completionNpcName` to an
+ * `NpcRefDto` when the name matches a known NPC.
+ */
+export interface QuestNameStep {
+  /** 1-based step index from the DAT record header. */
+  stepIndex: number;
+  /** Short journal label (e.g. "Delivery of Love Letters"). */
+  title: string;
+  /**
+   * Prose journal text the client shows on this step
+   * (e.g. "Darin of Talking Island Village has fallen in love...").
+   * Carried verbatim — truncation is a UI concern, not an API one.
+   */
+  description: string;
+  /**
+   * Verbatim NPC name string from the DAT (e.g. "Gatekeeper Roxxy").
+   * `null` when the step record does not carry a completion-NPC field
+   * (multi-objective steps occasionally omit it).
+   */
+  completionNpcName: string | null;
 }
 
 /**

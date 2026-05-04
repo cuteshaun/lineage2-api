@@ -144,6 +144,38 @@
           "region"
         ],
         "description": "One cleaned-layer spawn row with the resolved map region attached. `region` is `null` when the coordinate falls outside the upstream `mapRegions.xml` tile grid, or when the chronicle ships no regions XML. The raw spawn endpoints intentionally omit this field."
+      },
+      "QuestClientJournalEntry": {
+        "type": "object",
+        "properties": {
+          "stepIndex": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "completionNpc": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NpcRef"
+              },
+              {
+                "nullable": true
+              }
+            ]
+          }
+        },
+        "required": [
+          "stepIndex",
+          "title",
+          "description",
+          "completionNpc"
+        ],
+        "description": "One entry in the player's in-game quest log, sourced from the L2 client's `questname-e.dat`. Mirrors what the client actually displays — a short title, the prose journal text, and the completion NPC the player is meant to talk to next. NOT a mechanically-derived walkthrough."
       }
     },
     "parameters": {}

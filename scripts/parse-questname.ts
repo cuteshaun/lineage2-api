@@ -72,7 +72,7 @@ import type { Chronicle } from "../src/lib/chronicles";
 import { getChronicleDataConfig } from "../src/lib/chronicle-config";
 import { getChronicleSources } from "./chronicle-sources";
 import { decodeVer413 } from "./lib/ver413";
-import type { QuestNameRecord } from "../src/lib/types";
+import type { QuestNameRecord, QuestNameStep } from "../src/lib/types";
 
 /**
  * Read an Unreal Engine FCompactIndex (UE2 variable-length signed
@@ -193,34 +193,111 @@ function findRecordAnchors(buf: Buffer, hits: FStringHit[]): RecordAnchor[] {
 }
 
 /**
- * The per-quest "overview" is the last FString before the next
- * record's anchor (or, for the final record, the last FString in
- * the file). This definition is independent of how many strings
- * actually appear in a record (5/6/7), so multi-objective quests
- * that omit `completionNpc` parse identically to standard ones.
+ * Each anchor's record carries 5–7 FStrings between this anchor and
+ * the next:
+ *
+ *   - **Last** FString of the run is the per-quest "overview" — the
+ *     same prose repeated across every step of a quest, surfaced as
+ *     `QuestNameRecord.description`. M3B already extracted this; we
+ *     keep that behavior unchanged.
+ *
+ *   - **First** FString is the per-step `title` (short journal
+ *     label, e.g. "Delivery of Love Letters").
+ *
+ *   - **Second** FString is the per-step `description` (prose
+ *     journal text shown on that step, e.g. "Darin of Talking
+ *     Island Village has fallen in love...").
+ *
+ *   - **Third** FString, when present, is the completion-NPC name
+ *     (e.g. "Gatekeeper Roxxy"). Multi-objective steps occasionally
+ *     omit the dedicated NPC field — those records have only 5
+ *     FStrings instead of 6, and the title/description still occupy
+ *     positions 0/1. We detect "no NPC field" by the
+ *     intermediate-FString count of the anchor falling below 4
+ *     (anchor + ≤4 means there are ≤4 FStrings AFTER the name
+ *     anchor, i.e. no NPC slot).
+ *
+ * The position-based extraction is robust because the variable
+ * binary blocks between FStrings produce no false-positive FString
+ * hits (verified by the strict ASCII validator — see
+ * `tryReadFString`). Overview-position-from-end was already verified
+ * during M3B; title/description-from-start is symmetric.
  */
 function buildQuestNameRecords(
   buf: Buffer,
   hits: FStringHit[],
   anchors: RecordAnchor[]
 ): Map<number, QuestNameRecord> {
+  // First pass: per-quest overview (replicated; first writer wins).
   const overviewByQuest = new Map<number, string>();
+  // Per-quest steps, accumulated across anchors of the same questId.
+  const stepsByQuest = new Map<number, QuestNameStep[]>();
+
   for (let i = 0; i < anchors.length; i++) {
     const cur = anchors[i];
     const nextIdx = i + 1 < anchors.length ? anchors[i + 1].fsIdx : hits.length;
     const inter = hits.slice(cur.fsIdx + 1, nextIdx);
     if (inter.length === 0) continue;
+
+    // Overview = last FString of the run (M3B contract preserved).
     const overview = inter[inter.length - 1].text.trim();
-    if (overview.length === 0) continue;
-    // First step wins. Subsequent steps repeat the same overview, so the
-    // first non-empty value is canonical.
-    if (!overviewByQuest.has(cur.questId)) {
+    if (overview.length > 0 && !overviewByQuest.has(cur.questId)) {
       overviewByQuest.set(cur.questId, overview);
     }
+
+    // Per-step entry: position-based.
+    //   inter[0] → title
+    //   inter[1] → description
+    //   inter[2] → completionNpc (only when there are ≥5 FStrings
+    //              after the anchor → at least 5 inter entries on
+    //              the standard 6-FString record). Multi-objective
+    //              5-FString records omit the NPC slot; we still
+    //              emit the step with completionNpcName=null.
+    if (inter.length < 2) continue;
+    const title = inter[0].text.trim();
+    const description = inter[1].text.trim();
+    if (title.length === 0 || description.length === 0) continue;
+
+    // Each step record has either 5 or 6 FStrings (rarely 7). The
+    // anchor's `name` ("Letters of Love") is FString #0 of the run
+    // and is excluded from `inter`; so:
+    //
+    //   inter.length === 4 → 5-FString record:
+    //     [title, description, restrictions, overview]
+    //     completionNpc slot is OMITTED — leave name as null.
+    //
+    //   inter.length === 5 → standard 6-FString record:
+    //     [title, description, completionNpc, restrictions, overview]
+    //
+    //   inter.length === 6 → 7-FString multi-objective record:
+    //     [title, description, completionNpc, restrictions, overview, ?]
+    //
+    // Verified against Q001 step 1 (inter.length=5,
+    // completionNpc="Gatekeeper Roxxy") and Q004 step 1 (5-FString,
+    // no NPC).
+    let completionNpcName: string | null = null;
+    if (inter.length >= 5) {
+      const candidate = inter[2].text.trim();
+      if (candidate.length > 0) completionNpcName = candidate;
+    }
+
+    const stepIndex = cur.step;
+    const list = stepsByQuest.get(cur.questId) ?? [];
+    // Dedupe: anchors of (questId, stepIndex) repeat only when the
+    // DAT carries duplicate rows, which it doesn't; first writer
+    // wins defensively.
+    if (!list.some((s) => s.stepIndex === stepIndex)) {
+      list.push({ stepIndex, title, description, completionNpcName });
+    }
+    stepsByQuest.set(cur.questId, list);
   }
+
   const out = new Map<number, QuestNameRecord>();
   for (const [id, description] of overviewByQuest) {
-    out.set(id, { id, description });
+    const steps = (stepsByQuest.get(id) ?? []).sort(
+      (a, b) => a.stepIndex - b.stepIndex
+    );
+    out.set(id, { id, description, steps });
   }
   return out;
 }
@@ -288,9 +365,21 @@ export async function parseQuestName(
     JSON.stringify(obj, null, 2)
   );
 
+  let totalSteps = 0;
+  let stepsWithNpc = 0;
+  for (const rec of records.values()) {
+    totalSteps += rec.steps.length;
+    for (const s of rec.steps) {
+      if (s.completionNpcName !== null) stepsWithNpc++;
+    }
+  }
+
   console.log(`[parse-questname] Done. (chronicle=${chronicle})`);
   console.log(`  Step records found:    ${anchors.length}`);
   console.log(`  Distinct quests:       ${records.size}`);
+  console.log(
+    `  Journal entries:       ${totalSteps} (${stepsWithNpc} with completion NPC name)`
+  );
 
   return records;
 }

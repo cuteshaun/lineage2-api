@@ -316,6 +316,8 @@ quest scripts; no AST, no NLP); `description` is purely additive on top.
 | `questItems` | `ItemQuantityDto[]` | From `setItemsIds(...)` declared at top of constructor. **`count` is always 0** — the engine list registers item ids but doesn't carry quantities; the field shape exists for parity with `ItemQuantityDto` and to preserve item icon/name resolution. |
 | `rewards` | `QuestRewardsDto` | See "Reward extraction" below. |
 | `description?` | string | Player-facing flavor prose from the L2 client's `questname-e.dat` (e.g. *"Darin, a young man on Talking Island, carries a torch for Gatekeeper Roxxy, who doesn't return his affections."*). **Additive**: Java-derived fields above are authoritative — `description` is never used to override `name`, `levelMin`, `repeatable`, `raceRestrictions`, `classRestrictions`, `rewards.*`, `startNpcs`, `involvedNpcs`, `involvedMonsters`, `questItems`, or `scriptFile`, even when the DAT carries its own value for them. Omitted when the chronicle doesn't ship a `questname-e.dat` (gated by `questNameDatFile` in `chronicle-sources.ts`) or the quest has no DAT counterpart. |
+| `clientJournalEntries?` | `QuestClientJournalEntryDto[]` | In-game quest journal entries from the L2 client's `questname-e.dat`, one per step. Each entry carries the short journal `title` (e.g. `"Delivery of Love Letters"`), full prose `description` (verbatim from the DAT — no truncation), and a resolved `completionNpc: NpcRefDto \| null`. NPC name resolution accepts both the bare `name` (`"Roxxy"`) and the client-display `"<title> <name>"` form (`"Gatekeeper Roxxy"`). **Honesty note**: this is what the L2 client log shows, not a mechanically-derived walkthrough — consumers should render it as the journal, not as an editorial walkthrough. Ordered by `stepIndex` ascending. Omitted when the DAT carries no step rows for the quest (chronicles without a DAT, or quests without a DAT counterpart). |
+| `primaryRegion?` | `RegionRefDto` | The first start NPC's primary region (mode-of-spawns rule, lowest-id tiebreak — same algorithm as `NpcDetailDto.primaryRegion?`). Answers "where do I start this quest?" without a second round-trip. **Multi-start-NPC caveat**: a handful of saga quests have multiple start NPCs in different regions — this field reflects the **first** start NPC's region only. The full picture is reachable via `startNpcs[]` → NPC-detail → `primaryRegion?`. Omitted when the quest has no start NPCs, the first start NPC has no spawns, every spawn falls outside the upstream `mapRegions.xml` tile grid, or the chronicle ships no `mapRegions.xml`. |
 
 `QuestListDto` (`GET /api/[chronicle]/quests`) is a compact subset of the above: drops
 `scriptFile`, `involvedNpcs`, `involvedMonsters`, `questItems`, and the full `rewards`
@@ -341,6 +343,17 @@ reward list — they're transient quest items by definition (the engine wipes th
 
 Reward extraction is the riskiest mechanical extraction in M3. Snapshot fixtures lock 4
 representative quests so any heuristic regression surfaces visibly.
+
+### `QuestClientJournalEntryDto` — stable fields
+
+| Field | Type | Notes |
+|---|---|---|
+| `stepIndex` | number | 1-based step index, matching the DAT record header. Entries are ordered ascending by this field. |
+| `title` | string | Short journal label the client displays (e.g. `"Delivery of Love Letters"`). |
+| `description` | string | Full prose journal text the client shows when the step is active. **Carried verbatim** — including literal `\n` characters for line breaks. Truncation is a UI concern, not an API one. |
+| `completionNpc` | `NpcRefDto \| null` | Resolved completion NPC for the step. Resolution matches against both the bare NPC `name` (e.g. `"Roxxy"`) and the client-display `"<title> <name>"` form (e.g. `"Gatekeeper Roxxy"`); the index entry that prevails for a given lookup string is documented in `cleanedNpcByName` (see `src/lib/data/indexes.ts`). `null` when the DAT step record has no NPC slot (multi-objective steps occasionally omit it) OR the supplied name doesn't match a known NPC in the chronicle. |
+
+Across the current Interlude dataset: **2049 journal entries across 329 quests, 1857 (~91%) carry a resolved `completionNpc`**. The unresolved ~9% mostly fall into two buckets: multi-objective steps (no NPC slot at all) and DAT names that point at NPCs not present in the cleaned set (e.g. dynamically-spawned story NPCs). Both cases honestly land as `null` rather than guess.
 
 ### Scope notes
 
@@ -493,10 +506,11 @@ in `src/lib/api/dto/*.ts` plus snapshot fixtures under
 OpenAPI spec backed by Zod schemas, but full migration is risky
 to do in one shot and is being staged in three phases.
 
-**Phase A (landed)** — five small DTOs have parallel Zod schemas in
+**Phase A (landed)** — six small DTOs have parallel Zod schemas in
 [`src/lib/api/schemas.ts`](../src/lib/api/schemas.ts):
-`NpcRefDto`, `ClassRefDto`, `QuestRefDto`, plus M4's `RegionRefDto`
-and `EnrichedSpawnDto`. Each schema carries a compile-time
+`NpcRefDto`, `ClassRefDto`, `QuestRefDto`, M4's `RegionRefDto` and
+`EnrichedSpawnDto`, and M5's `QuestClientJournalEntryDto`. Each
+schema carries a compile-time
 `Expect<Equals<z.infer<typeof Schema>, ExistingDto>>` assertion, so
 any drift between the schema and the hand-written interface fails
 `pnpm typecheck`. A stub OpenAPI document

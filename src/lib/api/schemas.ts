@@ -30,7 +30,10 @@ import { z } from "zod";
 
 import type { ClassRefDto } from "./dto/class";
 import type { NpcRefDto } from "./dto/item";
-import type { QuestRefDto } from "./dto/quest";
+import type {
+  QuestClientJournalEntryDto,
+  QuestRefDto,
+} from "./dto/quest";
 import type { RegionRefDto } from "./dto/region";
 import type { EnrichedSpawnDto } from "./dto/spawn";
 
@@ -79,6 +82,18 @@ export const RegionRefSchema = z
   .openapi("RegionRef", {
     description:
       "Compact reference to a named L2 map region (e.g. 'Talking Island Village'). Region ids match the upstream engine's `mapRegions.xml` numbering. The table represents engine 'death-teleport' regions, not strict biome polygons — a coordinate's region is the in-game town it teleports to on death within that tile.",
+  });
+
+export const QuestClientJournalEntrySchema = z
+  .object({
+    stepIndex: z.number().int().min(1),
+    title: z.string(),
+    description: z.string(),
+    completionNpc: NpcRefSchema.nullable(),
+  })
+  .openapi("QuestClientJournalEntry", {
+    description:
+      "One entry in the player's in-game quest log, sourced from the L2 client's `questname-e.dat`. Mirrors what the client actually displays — a short title, the prose journal text, and the completion NPC the player is meant to talk to next. NOT a mechanically-derived walkthrough.",
   });
 
 export const EnrichedSpawnSchema = z
@@ -137,4 +152,11 @@ type _RegionRefSchemaMatchesDto = Expect<
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 type _EnrichedSpawnSchemaMatchesDto = Expect<
   Equals<z.infer<typeof EnrichedSpawnSchema>, EnrichedSpawnDto>
+>;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+type _QuestClientJournalEntrySchemaMatchesDto = Expect<
+  Equals<
+    z.infer<typeof QuestClientJournalEntrySchema>,
+    QuestClientJournalEntryDto
+  >
 >;

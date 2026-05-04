@@ -3,6 +3,44 @@
 exports[`quest 1 (Letters of Love) DTO matches snapshot 1`] = `
 {
   "classRestrictions": [],
+  "clientJournalEntries": [
+    {
+      "completionNpc": {
+        "id": 30006,
+        "name": "Roxxy",
+      },
+      "description": "Darin of Talking Island Village has fallen in love with Gatekeeper Roxxy. He is too shy to express his feelings and asks you to deliver his love letter to her.\\n",
+      "stepIndex": 1,
+      "title": "Delivery of Love Letters",
+    },
+    {
+      "completionNpc": {
+        "id": 30048,
+        "name": "Darin",
+      },
+      "description": "Roxxy reads Darin's letter and tells you that she admires him as well. She asks you to deliver her kerchief to him. Take Roxxy's kerchief to Darin in the village square.\\n",
+      "stepIndex": 2,
+      "title": "Roxxy's Kerchief",
+    },
+    {
+      "completionNpc": {
+        "id": 30033,
+        "name": "Baulro",
+      },
+      "description": "Darin is overjoyed to learn that Roxxy returns his admiration, and says he wants to ask her for a date. He asks you to go and get a love potion promised to him by Magister Baulro at the temple.\\n",
+      "stepIndex": 3,
+      "title": "Baulro's Magic Potion",
+    },
+    {
+      "completionNpc": {
+        "id": 30048,
+        "name": "Darin",
+      },
+      "description": "Magister Baulro admits that he deceived Darin about the potion in order to bolster his courage. He gives you a medicine bottle filled with tap water. Take it to Darin in the village square.\\n",
+      "stepIndex": 4,
+      "title": "Water that Brings Out Courage",
+    },
+  ],
   "description": "Darin, a young man on Talking Island, carries a torch for Gatekeeper Roxxy, who doesn't return his affections. Darin is not so easily dissuaded, however.",
   "id": 1,
   "involvedMonsters": [],
@@ -22,6 +60,10 @@ exports[`quest 1 (Letters of Love) DTO matches snapshot 1`] = `
   ],
   "levelMin": 2,
   "name": "Letters of Love",
+  "primaryRegion": {
+    "id": 0,
+    "name": "Talking Island Village",
+  },
   "questItems": [
     {
       "count": 0,
@@ -76,6 +118,38 @@ exports[`quest 1 (Letters of Love) DTO matches snapshot 1`] = `
 exports[`quest 105 (Skirmish with the Orcs) DTO matches snapshot 1`] = `
 {
   "classRestrictions": [],
+  "clientJournalEntries": [
+    {
+      "completionNpc": null,
+      "description": "Orcs have recently made several attacks upon the Elven Forest. The Elves have decided to take their revenge upon the Kaboo Orcs in the Misty Mountains. Read the order from Sentinel Kendell and hunt the Orcs!\\n",
+      "stepIndex": 1,
+      "title": "Guardian of the Forest",
+    },
+    {
+      "completionNpc": {
+        "id": 30218,
+        "name": "Kendell",
+      },
+      "description": "You have destroyed the Kaboo Orcs! Report to Sentinel Kendell.\\n",
+      "stepIndex": 2,
+      "title": "Return to Sentinel Kendell",
+    },
+    {
+      "completionNpc": null,
+      "description": "The war has not yet been won. Kaboo Orcs are massing around Iris Lake in the southern part of the village and are preparing to launch an invasion! You must follow Sentinel Kendell's orders! Slay the Kaboo Orcs!\\n",
+      "stepIndex": 3,
+      "title": "The Second Order",
+    },
+    {
+      "completionNpc": {
+        "id": 30218,
+        "name": "Kendell",
+      },
+      "description": "You've successfully accomplished Kendell's second order! Return to Sentinel Kendell in the Elven Village and make your report to him.\\n",
+      "stepIndex": 4,
+      "title": "Return to Sentinel Kendell Again",
+    },
+  ],
   "description": "Kaboo Orcs from the Misty Mountains have invaded the Elven Forest again. Help Sentinel Kendell and the Elven Fighters defeat the invaders and take the head of the Orc Captain!",
   "id": 105,
   "involvedMonsters": [
@@ -120,6 +194,10 @@ exports[`quest 105 (Skirmish with the Orcs) DTO matches snapshot 1`] = `
   ],
   "levelMin": 10,
   "name": "Skirmish with the Orcs",
+  "primaryRegion": {
+    "id": 1,
+    "name": "Elven Village",
+  },
   "questItems": [
     {
       "count": 0,
@@ -246,6 +324,77 @@ exports[`quest 105 (Skirmish with the Orcs) DTO matches snapshot 1`] = `
 exports[`quest 211 (Trial of the Challenger) DTO matches snapshot 1`] = `
 {
   "classRestrictions": [],
+  "clientJournalEntries": [
+    {
+      "completionNpc": null,
+      "description": "Kash says that anyone who wants to get the mark of challenger should enter the cave behind the Undine Waterfall in the northern part of the Neutral Zone, destroy Shyslassys and retrieve an old parchment.\\n\\n\\nMonster to Hunt - The Shyslassys",
+      "stepIndex": 1,
+      "title": "Cave of the Shyslassys",
+    },
+    {
+      "completionNpc": {
+        "id": 30644,
+        "name": "Kash",
+      },
+      "description": "You've defeated Shyslassys and retrieved the parchment. Take it to Kash.\\n",
+      "stepIndex": 2,
+      "title": "Return to Kash",
+    },
+    {
+      "completionNpc": {
+        "id": 30645,
+        "name": "Martien",
+      },
+      "description": "Kash tells you to get the mark of challenger from Martien in Giran Castle Town.\\n",
+      "stepIndex": 3,
+      "title": "In search of Martien",
+    },
+    {
+      "completionNpc": null,
+      "description": "Martien says that he will give you the mark of challenger if you defeat an evil spirit known as Gorr that haunts the area around Floran Village.\\n\\n\\n",
+      "stepIndex": 4,
+      "title": "Defeat Gorr",
+    },
+    {
+      "completionNpc": {
+        "id": 30645,
+        "name": "Martien",
+      },
+      "description": "You defeated Gorr and taken the mark of the watcher's eye. Now return to Martien for the mark of challenger.\\n",
+      "stepIndex": 5,
+      "title": "Return to Martien",
+    },
+    {
+      "completionNpc": null,
+      "description": "Gorr's defeat has not made the people of Floran Village any safer. They're now threatened by another evil creature. Find and destroy Baraham in the caves near Gorr's lair.\\n\\nMonster to Hunt -  Baraham\\n",
+      "stepIndex": 6,
+      "title": "Defeat Baraham",
+    },
+    {
+      "completionNpc": null,
+      "description": "You've defeated Baraham. Who is this mysterious stranger? \\n",
+      "stepIndex": 7,
+      "title": "Raldo",
+    },
+    {
+      "completionNpc": null,
+      "description": "Champion Raldo warns of an evil that will be resurrected unless a magic force field remains protected. Speak with Filaur of the Gray Pillar in the Dwarven Village and ask him where the last magic force field was known to exist.\\n",
+      "stepIndex": 8,
+      "title": "The Final Magic Force Field",
+    },
+    {
+      "completionNpc": null,
+      "description": "There's an evil energy in the deepest part of the Mithril Mines and the magic force field is threatened. Why is there earth wyrm blood everywhere? Could that Succubus Queen be their leader? \\n\\nMonster to Hunt - Succubus Queen\\n",
+      "stepIndex": 9,
+      "title": "Protect the Magic Force Field",
+    },
+    {
+      "completionNpc": null,
+      "description": "At the death of the Succubus Queen, Raldo reappears. Speak with him.\\n",
+      "stepIndex": 10,
+      "title": "Raldo's Reappearance",
+    },
+  ],
   "description": "Many Warriors seek the challenger's mark as proof of their valor. A conspiracy of darkness surrounds the mark.",
   "id": 211,
   "involvedMonsters": [
@@ -290,6 +439,10 @@ exports[`quest 211 (Trial of the Challenger) DTO matches snapshot 1`] = `
   ],
   "levelMin": 35,
   "name": "Trial of the Challenger",
+  "primaryRegion": {
+    "id": 7,
+    "name": "Town of Dion",
+  },
   "questItems": [
     {
       "count": 0,
@@ -356,6 +509,50 @@ exports[`quest 401 (Path to a Warrior) DTO matches snapshot 1`] = `
       "professionLevel": 1,
     },
   ],
+  "clientJournalEntries": [
+    {
+      "completionNpc": null,
+      "description": "Quest that must be fulfilled in order to change occupations to a Warrior. Tell Master Aymus that you wish to become a Warrior, and he will tell you to first visit Trader Simplon in the Town of Gludio and find the 'Sword of Trial.'\\n",
+      "stepIndex": 1,
+      "title": "Onward Toward Your Trial",
+    },
+    {
+      "completionNpc": null,
+      "description": "To obtain the Sword of Trial, you must carry out a task for Trader Simplon. Fight the tracker skeletons in the Ruins of Agony and return with 10 of their rusted swords.\\n",
+      "stepIndex": 2,
+      "title": "Test of Spirit",
+    },
+    {
+      "completionNpc": null,
+      "description": "You have obtained 10 rusted swords. Now, take them to Trader Simplon in the Town of Gludio.\\n",
+      "stepIndex": 3,
+      "title": "Return to Trader Simplon",
+    },
+    {
+      "completionNpc": {
+        "id": 30010,
+        "name": "Auron",
+      },
+      "description": "What a surprise! The rusted sword and the sword of trial are the same!  Well, since you have them, take them to Master Auron in Gludin Village.\\n",
+      "stepIndex": 4,
+      "title": "Nature of the Sword of Trial",
+    },
+    {
+      "completionNpc": null,
+      "description": "Using the sword of trial you received from Trader Simplon, you must defeat the poison spiders, then collect and bring back 20 of their legs! They can be found on Windmill Hill in the southern plains of the village. Kill poison spiders and arachnid trackers!\\n",
+      "stepIndex": 5,
+      "title": "Trial of a Warrior",
+    },
+    {
+      "completionNpc": {
+        "id": 30010,
+        "name": "Auron",
+      },
+      "description": "Take the 20 spiders' legs to Master Auron in Gludin Village.\\n",
+      "stepIndex": 6,
+      "title": "Return to Auron",
+    },
+  ],
   "description": "All warriors must be courageous and tenacious. Do you possess these qualities?",
   "id": 401,
   "involvedMonsters": [
@@ -388,6 +585,10 @@ exports[`quest 401 (Path to a Warrior) DTO matches snapshot 1`] = `
   ],
   "levelMin": 19,
   "name": "Path to a Warrior",
+  "primaryRegion": {
+    "id": 6,
+    "name": "Gludin Village",
+  },
   "questItems": [
     {
       "count": 0,

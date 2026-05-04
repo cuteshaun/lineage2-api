@@ -346,6 +346,13 @@ representative quests so any heuristic regression surfaces visibly.
 
 ### `QuestClientJournalEntryDto` — stable fields
 
+These are **client quest log entries** sourced verbatim from the L2 client's
+`questname-e.dat` — the same text the in-game quest journal renders. They are
+**not** an editorial walkthrough and **not** a mechanically-derived action
+checklist. Consumers should render them as the player's journal (which is what
+they are), not as imperative steps. The numbered ordering reflects the DAT's
+`stepIndex` field, not a guaranteed canonical walk path.
+
 | Field | Type | Notes |
 |---|---|---|
 | `stepIndex` | number | 1-based step index, matching the DAT record header. Entries are ordered ascending by this field. |

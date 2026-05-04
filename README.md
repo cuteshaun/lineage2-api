@@ -25,16 +25,45 @@ additional chronicles can be added without endpoint changes.
   engine rule.
 - **NPCs** — both a **cleaned** layer (one record per unique name,
   drops + spawns aggregated across merged ids) and a **raw**, source-faithful
-  layer for callers who need engine-level fidelity.
-- **Monsters** — filtered view over the NPC dataset.
+  layer for callers who need engine-level fidelity. Detail responses
+  carry an optional `primaryRegion` derived from the NPC's spawns.
+- **Monsters** — filtered view over the NPC dataset; same cleaned/raw
+  split, same `primaryRegion` enrichment.
 - **Drops** — enriched with item names, deduped on `(npcId, itemId, min,
   max, chance)`, and reverse-indexed: every item carries `dropped-by` and
   `spoiled-by` lookups.
-- **Spawns** — coordinates per NPC, deduped across merged ids.
+- **Spawns** — coordinates per NPC, deduped across merged ids. Cleaned
+  spawn endpoints attach a resolved `region: RegionRefDto | null` per
+  row (raw endpoints stay unenriched).
 - **Recipes** — exposed inline on item-detail responses (`crafting` for
   recipe scrolls, `craftedBy` for products).
+- **Skills** — full catalog with resolved descriptions, parsed `<for>`
+  effects (literal + `<table>` references), and icon files; consumed
+  inline by item / NPC / class detail.
 - **Armor sets** — full catalog endpoint plus embedded set context on
   every piece (`partOfSets[]`).
+- **Classes** — all 89 Interlude player classes (base + 1st/2nd/3rd
+  profession), with full skill-learn tables, spellbook references, and
+  parent/child cross-links. Spellbook items reverse-link to the skills
+  they teach and the classes that learn them.
+- **Commerce** — merchant `buyLists` (Adena-for-item) and a curated set
+  of multisell exchanges (Mammon, B-grade unseal, Luxury Shop, Apella).
+  Surfaced both per-NPC at `/npcs/[id]/shop` and per-item via `soldBy`,
+  `exchangeFrom`, and `exchangeFor` cross-links.
+- **Quests** — full catalog (329 on Interlude) plus per-quest detail
+  with rewards, involved NPCs/monsters, quest items, and race/class
+  gates extracted from aCis Java scripts. When the L2 client's
+  `questname-e.dat` is present, also surfaces the `description` flavor
+  prose and `clientJournalEntries` (the player's in-game quest log
+  entries — short title + prose + completion NPC per step). Honestly
+  framed as the client journal, not an editorial walkthrough.
+  Cross-linked from item / NPC detail (`rewardOfQuests`, `questItemFor`,
+  `startsQuests`, `involvedInQuests`).
+- **Regions** — full catalog of 19 named map regions (Talking Island
+  Village, Town of Aden, …) sourced from upstream `mapRegions.xml`.
+  These are engine "death-teleport" regions, not biome polygons —
+  `primaryRegion` reads as "the in-game town this NPC is associated
+  with" rather than "this NPC's biome label".
 - **Meta endpoints** — known npc types / item types / item grades, with
   counts, for filter dropdowns.
 
@@ -42,9 +71,9 @@ additional chronicles can be added without endpoint changes.
 
 | | |
 |---|---|
-| `data/datapack/<chronicle>/` | placeholder for upstream XML (untracked) |
+| `data/datapack/<chronicle>/` | placeholder for upstream **L2 client DAT files** consumed at build time (e.g. `*grp.dat` for icons, `questname-e.dat` for quest journal entries) — untracked |
 | `data/manual-fixes/<chronicle>.json` | one file per chronicle, sectioned by entity |
-| `data/generated/<chronicle>/` | build output — `items`, `npcs`, `drops`, `spawns`, `recipes`, `skills`, `armor-sets` JSON |
+| `data/generated/<chronicle>/` | build output — `items`, `npcs`, `drops`, `spawns`, `recipes`, `skills`, `armor-sets`, `classes`, `spellbooks`, `multisells`, `buylists`, `quests`, `questname`, `regions` JSON |
 | `scripts/` | `parse-*.ts` per entity, plus `build-data.ts` orchestrator |
 | `src/lib/data/` | cached JSON loaders + in-memory indexes |
 | `src/lib/api/` | shared route helpers + DTO layer |
@@ -85,6 +114,10 @@ curl 'http://localhost:3000/api/interlude/monsters?npcType=GrandBoss&sort=-level
 curl http://localhost:3000/api/interlude/npcs/22001/drops
 curl http://localhost:3000/api/interlude/armor-sets
 curl http://localhost:3000/api/interlude/meta/item-grades
+curl http://localhost:3000/api/interlude/quests/1
+curl http://localhost:3000/api/interlude/regions
+curl http://localhost:3000/api/interlude/classes
+curl http://localhost:3000/api/interlude/npcs/30001/shop
 ```
 
 ## Adding a new chronicle

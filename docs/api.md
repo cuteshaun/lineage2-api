@@ -52,7 +52,7 @@ Requesting an unknown chronicle returns **404**.
 | GET | `/api/[chronicle]/npcs` | List cleaned NPCs (one record per unique name) |
 | GET | `/api/[chronicle]/npcs/[id]` | Single cleaned NPC; accepts canonical or any merged raw id |
 | GET | `/api/[chronicle]/npcs/[id]/drops` | Aggregated drops for the cleaned NPC |
-| GET | `/api/[chronicle]/npcs/[id]/spawns` | Aggregated spawn points for the cleaned NPC |
+| GET | `/api/[chronicle]/npcs/[id]/spawns` | Aggregated spawn points for the cleaned NPC. Each row is an `EnrichedSpawnDto` and includes a resolved `region: RegionRefDto \| null` (M4); the raw equivalent at `/api/[chronicle]/raw/monsters/[id]/spawns` does **not** carry the region field. |
 | GET | `/api/[chronicle]/npcs/[id]/shop` | Merchant's direct-buy products + curated multisell exchanges |
 | GET | `/api/[chronicle]/monsters` | List monsters (cleaned NPC subset) |
 | GET | `/api/[chronicle]/monsters/[id]` | Single monster by cleaned id |
@@ -561,6 +561,9 @@ GET /api/interlude/raw/npcs?levelMin=20&levelMax=25
 
 # Full armor-set catalog (rich, all 51 sets in one response)
 GET /api/interlude/armor-sets
+
+# Full region catalog (19 named map regions on Interlude)
+GET /api/interlude/regions
 
 # Full quest catalog (329 on Interlude)
 GET /api/interlude/quests

@@ -7,7 +7,10 @@ import type {
   ItemQuantityDto,
   NpcRefDto,
 } from "@/lib/api/dto/item";
-import type { QuestDetailDto } from "@/lib/api/dto/quest";
+import type {
+  QuestClientJournalEntryDto,
+  QuestDetailDto,
+} from "@/lib/api/dto/quest";
 
 export default async function QuestDetailPage({
   params,
@@ -62,6 +65,16 @@ export default async function QuestDetailPage({
             </span>
           )}
         </div>
+        {q.primaryRegion && (
+          <p className="font-mono text-[11px] uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+            {q.primaryRegion.name}
+          </p>
+        )}
+        {q.description && (
+          <p className="max-w-prose pt-1 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+            {q.description}
+          </p>
+        )}
       </header>
 
       <Section title="Facts">
@@ -101,6 +114,18 @@ export default async function QuestDetailPage({
               </li>
             ))}
           </ul>
+        </Section>
+      )}
+
+      {q.clientJournalEntries && q.clientJournalEntries.length > 0 && (
+        <Section title="Quest Log">
+          <p className="-mt-2 mb-4 font-mono text-[10px] uppercase tracking-wide text-zinc-400 dark:text-zinc-500">
+            steps from the game client
+          </p>
+          <JournalEntries
+            chronicle={chronicle}
+            entries={q.clientJournalEntries}
+          />
         </Section>
       )}
 
@@ -225,6 +250,54 @@ function ItemRowList({
         </li>
       ))}
     </ul>
+  );
+}
+
+function JournalEntries({
+  chronicle,
+  entries,
+}: {
+  chronicle: string;
+  entries: QuestClientJournalEntryDto[];
+}) {
+  return (
+    <ol className="flex flex-col gap-3">
+      {entries.map((e) => (
+        <li
+          key={e.stepIndex}
+          className="flex gap-3 rounded border border-zinc-100 bg-zinc-50 p-3 dark:border-zinc-800 dark:bg-zinc-900"
+        >
+          <span className="flex-none rounded-full bg-zinc-200 px-2 py-0.5 font-mono text-[10px] font-semibold text-zinc-600 dark:bg-zinc-700 dark:text-zinc-300">
+            {e.stepIndex}
+          </span>
+          <div className="flex min-w-0 flex-col gap-1">
+            <div className="flex flex-wrap items-baseline gap-2">
+              <span className="font-medium text-zinc-900 dark:text-zinc-100">
+                {e.title}
+              </span>
+              {e.completionNpc && (
+                <Link
+                  href={`/${chronicle}/npcs/${e.completionNpc.id}`}
+                  className="font-mono text-[11px] text-indigo-600 hover:underline dark:text-indigo-400"
+                >
+                  → {e.completionNpc.name}
+                </Link>
+              )}
+            </div>
+            {/*
+              The DAT carries literal `\\n` characters (two-char
+              backslash-n, not a control byte) for line breaks. Rendering
+              them as native newlines via `whitespace-pre-line` after a
+              one-pass replace gives the player-facing layout the L2
+              client uses, without truncation in the API.
+            */}
+            <p className="whitespace-pre-line text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+              {e.description.replace(/\\n/g, "\n").trim()}
+            </p>
+          </div>
+        </li>
+      ))}
+    </ol>
   );
 }
 

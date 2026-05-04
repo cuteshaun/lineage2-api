@@ -65,9 +65,28 @@ export default async function QuestDetailPage({
             </span>
           )}
         </div>
-        {q.primaryRegion && (
-          <p className="font-mono text-[11px] uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-            {q.primaryRegion.name}
+        {(q.primaryLocation || q.primaryRegion) && (
+          <p className="flex flex-wrap items-baseline gap-x-3 gap-y-1 font-mono text-[11px] uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+            {q.primaryLocation && (
+              <span>
+                <span className="text-zinc-400 dark:text-zinc-500">
+                  Location ·{" "}
+                </span>
+                <span className="text-zinc-700 dark:text-zinc-300">
+                  {q.primaryLocation.name}
+                </span>
+              </span>
+            )}
+            {q.primaryRegion && (
+              <span>
+                <span className="text-zinc-400 dark:text-zinc-500">
+                  Region ·{" "}
+                </span>
+                <span className="text-zinc-700 dark:text-zinc-300">
+                  {q.primaryRegion.name}
+                </span>
+              </span>
+            )}
           </p>
         )}
         {q.description && (

@@ -12,7 +12,8 @@ export function ChronicleNav({
     | "monsters"
     | "armor-sets"
     | "classes"
-    | "quests";
+    | "quests"
+    | "locations";
 }) {
   const links: Array<{ href: string; label: string; key: typeof section }> = [
     { href: `/${chronicle}/items`, label: "Items", key: "items" },
@@ -25,6 +26,7 @@ export function ChronicleNav({
     { href: `/${chronicle}/quests`, label: "Quests", key: "quests" },
     { href: `/${chronicle}/npcs`, label: "NPCs", key: "npcs" },
     { href: `/${chronicle}/monsters`, label: "Monsters", key: "monsters" },
+    { href: `/${chronicle}/locations`, label: "Locations", key: "locations" },
   ];
 
   return (

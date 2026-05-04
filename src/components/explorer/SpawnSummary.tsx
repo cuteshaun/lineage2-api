@@ -28,20 +28,25 @@ function formatPeriod(spawns: EnrichedSpawnDto[]): string {
 }
 
 /**
- * Renders the per-region spawn breakdown. When every spawn shares
- * the same region, shows just the name. When spawns split across
- * regions, shows each region with its count. When no spawn carries
- * a resolved region (out-of-grid coords), shows "—".
+ * Renders a per-anchor spawn breakdown — used for both `region` and
+ * `location` columns since both are `{ id, name } | null`. When every
+ * spawn shares the same anchor, shows just the name. When spawns
+ * split, shows each with its count. `—` when no spawn carries a
+ * resolved value.
  */
-function formatRegions(spawns: EnrichedSpawnDto[]): string {
+function formatRefBreakdown(
+  spawns: EnrichedSpawnDto[],
+  pick: (s: EnrichedSpawnDto) => { id: number; name: string } | null
+): string {
   const counts = new Map<number, { name: string; count: number }>();
   for (const s of spawns) {
-    if (!s.region) continue;
-    const existing = counts.get(s.region.id);
+    const ref = pick(s);
+    if (!ref) continue;
+    const existing = counts.get(ref.id);
     if (existing) {
       existing.count += 1;
     } else {
-      counts.set(s.region.id, { name: s.region.name, count: 1 });
+      counts.set(ref.id, { name: ref.name, count: 1 });
     }
   }
   if (counts.size === 0) return "—";
@@ -68,9 +73,13 @@ export function SpawnSummary({ spawns }: { spawns: EnrichedSpawnDto[] }) {
         <dd className="text-zinc-900 dark:text-zinc-100">
           {formatPeriod(spawns)}
         </dd>
+        <dt className="text-zinc-500 dark:text-zinc-400">Location</dt>
+        <dd className="text-zinc-900 dark:text-zinc-100">
+          {formatRefBreakdown(spawns, (s) => s.location)}
+        </dd>
         <dt className="text-zinc-500 dark:text-zinc-400">Region</dt>
         <dd className="text-zinc-900 dark:text-zinc-100">
-          {formatRegions(spawns)}
+          {formatRefBreakdown(spawns, (s) => s.region)}
         </dd>
       </dl>
 

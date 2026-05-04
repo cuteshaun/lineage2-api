@@ -70,9 +70,28 @@ export function NpcDetails({
             {npc.title}
           </p>
         )}
-        {npc.primaryRegion && (
-          <p className="font-mono text-[11px] uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-            {npc.primaryRegion.name}
+        {(npc.primaryLocation || npc.primaryRegion) && (
+          <p className="flex flex-wrap items-baseline gap-x-3 gap-y-1 font-mono text-[11px] uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+            {npc.primaryLocation && (
+              <span>
+                <span className="text-zinc-400 dark:text-zinc-500">
+                  Location ·{" "}
+                </span>
+                <span className="text-zinc-700 dark:text-zinc-300">
+                  {npc.primaryLocation.name}
+                </span>
+              </span>
+            )}
+            {npc.primaryRegion && (
+              <span>
+                <span className="text-zinc-400 dark:text-zinc-500">
+                  Region ·{" "}
+                </span>
+                <span className="text-zinc-700 dark:text-zinc-300">
+                  {npc.primaryRegion.name}
+                </span>
+              </span>
+            )}
           </p>
         )}
         {npc.raceDescription && (

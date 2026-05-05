@@ -2540,6 +2540,227 @@ exports[`item 2382 (Tallum Plate Armor) DTO matches snapshot 1`] = `
 }
 `;
 
+exports[`item 4445 (Dye of STR (Str+1 Con-3) — symbolId 1) DTO matches snapshot 1`] = `
+{
+  "accCombat": null,
+  "armorType": null,
+  "bodypart": null,
+  "crystalCount": null,
+  "etcItemType": "dye",
+  "grade": "none",
+  "henna": {
+    "displayName": "Symbol of Strength",
+    "dyeItem": {
+      "iconFile": "etc_str_hena_i00.png",
+      "id": 4445,
+      "name": "Dye of STR (Str+1 Con-3)",
+    },
+    "iconFile": "etc_str_symbol_i00.png",
+    "price": 37000,
+    "shortLabel": "Str+1 Con-3",
+    "statChanges": {
+      "CON": -3,
+      "STR": 1,
+    },
+    "symbolId": 1,
+  },
+  "iconFile": "etc_str_hena_i00.png",
+  "id": 4445,
+  "isDropable": null,
+  "isMagical": null,
+  "isSellable": null,
+  "isStackable": true,
+  "isTradable": null,
+  "itemSkill": null,
+  "mAtk": null,
+  "mDef": null,
+  "material": "LIQUID",
+  "mpConsume": null,
+  "name": "Dye of STR (Str+1 Con-3)",
+  "pAtk": null,
+  "pAtkSpd": null,
+  "pDef": null,
+  "price": 5100,
+  "rCrit": null,
+  "rEvas": null,
+  "rShld": null,
+  "reuseDelay": null,
+  "sDef": null,
+  "soldBy": [
+    {
+      "buyListId": 368,
+      "npc": {
+        "id": 30081,
+        "name": "Helvetia",
+      },
+      "price": 5610,
+    },
+    {
+      "buyListId": 9,
+      "npc": {
+        "id": 30093,
+        "name": "Groot",
+      },
+      "price": 5610,
+    },
+    {
+      "buyListId": 370,
+      "npc": {
+        "id": 30180,
+        "name": "Sara",
+      },
+      "price": 5865,
+    },
+    {
+      "buyListId": 367,
+      "npc": {
+        "id": 30063,
+        "name": "Lara",
+      },
+      "price": 6120,
+    },
+    {
+      "buyListId": 57,
+      "npc": {
+        "id": 30209,
+        "name": "Colleen",
+      },
+      "price": 6120,
+    },
+    {
+      "buyListId": 372,
+      "npc": {
+        "id": 30254,
+        "name": "Harmony",
+      },
+      "price": 6120,
+    },
+    {
+      "buyListId": 375,
+      "npc": {
+        "id": 30841,
+        "name": "Carson",
+      },
+      "price": 6120,
+    },
+    {
+      "buyListId": 378,
+      "npc": {
+        "id": 30893,
+        "name": "Payel",
+      },
+      "price": 6120,
+    },
+    {
+      "buyListId": 116,
+      "npc": {
+        "id": 31263,
+        "name": "Liesel",
+      },
+      "price": 6120,
+    },
+    {
+      "buyListId": 134,
+      "npc": {
+        "id": 31307,
+        "name": "Weber",
+      },
+      "price": 6120,
+    },
+    {
+      "buyListId": 190,
+      "npc": {
+        "id": 31952,
+        "name": "Pele",
+      },
+      "price": 6120,
+    },
+    {
+      "buyListId": 379,
+      "npc": {
+        "id": 30166,
+        "name": "Wesley",
+      },
+      "price": 6630,
+    },
+    {
+      "buyListId": 374,
+      "npc": {
+        "id": 30301,
+        "name": "Hally",
+      },
+      "price": 6630,
+    },
+  ],
+  "soulshots": null,
+  "spiritshots": null,
+  "type": "etcitem",
+  "weaponType": null,
+  "weight": 150,
+}
+`;
+
+exports[`item 4624 (Dye of MEN (Men-4 Wit+4) — symbolId 180) DTO matches snapshot 1`] = `
+{
+  "accCombat": null,
+  "armorType": null,
+  "bodypart": null,
+  "craftedBy": [
+    {
+      "recipeItemId": 7013,
+      "recipeName": "Recipe: Greater Dye of WIT (Wit+4 Men-4) (100%)",
+      "successRate": 100,
+    },
+  ],
+  "crystalCount": null,
+  "etcItemType": "dye",
+  "grade": "none",
+  "henna": {
+    "displayName": null,
+    "dyeItem": {
+      "iconFile": "etc_wit_hena_i02.png",
+      "id": 4624,
+      "name": "Greater Dye of WIT (Wit+4 Men-4)",
+    },
+    "iconFile": null,
+    "price": 628000,
+    "shortLabel": null,
+    "statChanges": {
+      "MEN": -4,
+      "WIT": 4,
+    },
+    "symbolId": 180,
+  },
+  "iconFile": "etc_wit_hena_i02.png",
+  "id": 4624,
+  "isDropable": null,
+  "isMagical": null,
+  "isSellable": null,
+  "isStackable": true,
+  "isTradable": null,
+  "itemSkill": null,
+  "mAtk": null,
+  "mDef": null,
+  "material": "LIQUID",
+  "mpConsume": null,
+  "name": "Greater Dye of WIT (Wit+4 Men-4)",
+  "pAtk": null,
+  "pAtkSpd": null,
+  "pDef": null,
+  "price": 174000,
+  "rCrit": null,
+  "rEvas": null,
+  "rShld": null,
+  "reuseDelay": null,
+  "sDef": null,
+  "soulshots": null,
+  "spiritshots": null,
+  "type": "etcitem",
+  "weaponType": null,
+  "weight": 150,
+}
+`;
+
 exports[`item 5293 (Sealed Tallum Plate Armor) DTO matches snapshot 1`] = `
 {
   "accCombat": null,

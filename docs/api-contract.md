@@ -66,6 +66,7 @@ be `null` per type; the field itself is always emitted.
 | `soldBy?: ShopOfferDto[]` | Direct merchants selling this item for Adena. Sourced from `buyLists.xml`. Sorted by `price` ascending then NPC id. Distinct from `exchangeFrom` (multi-ingredient exchange) — the two never overlap. |
 | `rewardOfQuests?: QuestRefDto[]` | Quests that grant this item as a final reward. Sorted by quest id. Adena (item id 57) is excluded — quest adena lives on `QuestRewards.adena`, not in this list. |
 | `questItemFor?: QuestRefDto[]` | Quests that register this item via `setItemsIds(...)` — engine-tracked transient items. An item is rarely both `rewardOfQuests` and `questItemFor`. |
+| `henna?: HennaSummaryDto` | Present only when the item is a henna dye (entry in upstream `hennas.xml`, indexed by `dyeItemId`). Single-valued — every dye maps 1:1 to a single symbol in source data. Carries the resolved `HennaSummaryDto` with display fields, stat deltas, price, and the dye-item ref. See "`HennaSummaryDto` — stable fields" below. |
 | `specialAbilityOptions[].saveMechanic?` | Variant has `mp_consume_reduce` or `reduced_soulshot` in its raw `properties` |
 | `specialAbilityOptions[].statDelta?` | Variant is a Light (weight delta) or Quick Recovery (reuseDelay delta) SA |
 
@@ -260,6 +261,7 @@ engine-truthful even if the class XML files are reorganised.
 | `parentClassId` | number \| null | Direct parent class id; `null` for base classes. |
 | `childClassIds` | number[] | Direct children — sorted by id, empty for 3rd-profession leaves. |
 | `skills` | `ClassSkillLearnDto[]` | Sorted by `(skillId, skillLevel, minPlayerLevel)`. |
+| `allowedHennas?` | `HennaSummaryDto[]` | Henna symbols this class is permitted to engrave at a Symbol Maker. Sorted by `symbolId` ascending. **Plural** — most Interlude classes have ~36 (Human Fighter) to ~50+ (multi-stat eligible classes) hennas in their allow-list. Omitted entirely when the chronicle ships no `hennas.xml`. See "`HennaSummaryDto` — stable fields" below. |
 
 ### `ClassSkillLearnDto` — stable fields
 
@@ -498,6 +500,53 @@ Same shape as `primaryRegion?`, applied against the M7 hunting-zone catalog inst
 
 Read `primaryLocation` as "the player-facing hunting ground this NPC is most-often found in" — *Cruma Tower*, *Ant Nest*, *Sea of Spores*, etc. Complementary to `primaryRegion?`, which still answers "the in-game town this NPC is associated with".
 
+## `HennaSummaryDto` — stable fields
+
+Returned by:
+
+- `GET /api/[chronicle]/hennas` — full catalog (180 entries on Interlude).
+- `ItemDetailDto.henna?` — the henna engraved by a dye item (singular, 1:1 with `symbolId`).
+- `ClassDetailDto.allowedHennas?` — every henna the class can engrave, sorted by `symbolId`.
+
+| Field | Type | Notes |
+|---|---|---|
+| `symbolId` | number | Source XML symbol id (1..N). Stable across builds; **the canonical key** for hennas — `dyeItemId` collisions are not expected but `symbolId` is what consumers should pin to. |
+| `displayName` | string \| null | Player-facing name from the L2 client's `hennagrp-e.dat` (e.g. `"Symbol of Strength"`). **Nullable**: `null` for the 9 +/− 4 "Greater II" tier symbols (Interlude `symbolId` 172–180), whose DAT records use a shared-prefix string compression that this build does not decode. We do **not** synthesize the name from `statChanges` or from the dye item — the field is honestly `null` rather than fabricated. |
+| `iconFile` | string \| null | Resolved PNG basename inside `public/icons/` (e.g. `"etc_str_symbol_i00.png"`). Same convention as `Item.iconFile`. **Nullable** for the same Greater II symbols and for any symbol whose DAT slug fails to resolve to a file on disk. **Distinct from** `dyeItem.iconFile` — that's the dye *item* icon (`etc_str_hena_i00.png`); this is the *symbol* icon (`etc_str_symbol_i00.png`). |
+| `shortLabel` | string \| null | Short stat label from the DAT, verbatim (e.g. `"Str+1 Con-3"`). **Nullable** for the same reasons as `displayName`. We do **not** synthesize this from `statChanges` even when the DAT lacks it. |
+| `statChanges` | `HennaStatChangesDto` | Six-attribute object with optional `STR`/`CON`/`DEX`/`INT`/`MEN`/`WIT` signed integers. **Always populated** from `hennas.xml`. Missing keys mean "no change to this stat" — current Interlude data ships exactly two non-zero deltas per symbol. |
+| `price` | number | Adena price the engraver charges. Always populated from XML. |
+| `dyeItem` | `DyeItemRefDto` | The dye item the player buys and consumes. Resolved against `items.json` at request time. Carries `id`, `name`, and `iconFile` (the dye item icon, *not* the symbol icon). 1:1 with `symbolId` — the cross-validation step at parse time fails the build if a dye id does not resolve. |
+
+**Honesty contract**. Hennas are **dye/symbol mechanics**, not cosmetic tattoos: a stat-altering engraving consumed at the Symbol Maker. The name "henna" survives from the original Korean client and the `hennas.xml` filename, so we keep it; the documentation strings in this DTO and the surrounding routes spell out the semantics.
+
+### `HennaDetailDto` — stable fields
+
+Same shape as `HennaSummaryDto` plus:
+
+| Field | Type | Notes |
+|---|---|---|
+| `allowedClasses` | `ClassRefDto[]` | Classes permitted to engrave this symbol, resolved from the XML's `classes="…"` attribute. Sorted by class id ascending. **Always non-empty** in source data. Each entry is a compact `{ id, name, professionLevel }` reference; not a full `ClassDetailDto` — that would recurse. |
+
+### What deliberately is NOT on the henna DTO
+
+- **Symbol Maker NPC linkage.** The L2 client encodes the engraver / engraver-NPC mapping only in HTML dialogues, which we keep internal per the AGENTS.md hard rule. We do not curate a hand-written list either.
+- **Cancellation cost.** The price to *remove* a henna (`dyeId/3` Adena, engine constant) is not surfaced. It's not in `hennas.xml` and not in the DAT.
+- **Slot model.** The "max 3 hennas equipped" rule is an engine constant. Out of scope.
+- **`HennaStatChangesDto.X = 0` keys.** Source data never carries zero deltas; we omit the key entirely when the source attribute is absent rather than emitting `0`.
+
+Reference fixtures (`tests/hennas.snapshot.test.ts`):
+- **`symbolId=1`** — first base-tier henna; broad fighter class allow-list; full DAT display.
+- **`symbolId=7`** — Mystic-only (`Int+1 Men-3`), narrow class list.
+- **`symbolId=37`** — first "Greater" tier; wide class list spanning multiple races.
+- **`symbolId=171`** — last symbol with clean DAT display.
+- **`symbolId=172`** — first Greater II tier symbol; honestly emits `displayName/iconFile/shortLabel: null`.
+- **`symbolId=180`** — last Greater II tier symbol; same nullable display.
+
+Item-side cross-link fixtures (in `tests/items.snapshot.test.ts`):
+- **Item 4445** (Dye of STR (Str+1 Con-3)) — locks `henna?` cross-link with full display.
+- **Item 4624** (Dye of MEN (Men-4 Wit+4)) — locks `henna?` with nullable display fields.
+
 ## Engine-rule fields (not derived from a single skill / item)
 
 - **`pvpBonus`** — applied to every A/S-grade weapon with SA variants. Encodes the soul-crystal augmentation rule rather than per-variant data. Always `{ damageMultiplier: 1.05, display: "+5% PvP Damage" }` when present.
@@ -551,11 +600,12 @@ in `src/lib/api/dto/*.ts` plus snapshot fixtures under
 OpenAPI spec backed by Zod schemas, but full migration is risky
 to do in one shot and is being staged in three phases.
 
-**Phase A (landed)** — seven small DTOs have parallel Zod schemas in
+**Phase A (landed)** — eight small DTOs have parallel Zod schemas in
 [`src/lib/api/schemas.ts`](../src/lib/api/schemas.ts):
 `NpcRefDto`, `ClassRefDto`, `QuestRefDto`, M4's `RegionRefDto` and
-`EnrichedSpawnDto`, M5's `QuestClientJournalEntryDto`, and M7's
-`LocationRefDto`. Each schema carries a compile-time
+`EnrichedSpawnDto`, M5's `QuestClientJournalEntryDto`, M7's
+`LocationRefDto`, and M8's `HennaSummaryDto`. Each schema carries a
+compile-time
 `Expect<Equals<z.infer<typeof Schema>, ExistingDto>>` assertion, so
 any drift between the schema and the hand-written interface fails
 `pnpm typecheck`. A stub OpenAPI document

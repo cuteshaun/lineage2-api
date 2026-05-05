@@ -74,6 +74,14 @@ additional chronicles can be added without endpoint changes.
   containment. Complementary to `primaryRegion`, not a replacement:
   regions name the death-teleport town, locations name the local
   hunting ground.
+- **Hennas** — 180 Symbol Maker engravings with stat changes,
+  dye item, price, and class allow-list, joined from upstream
+  `hennas.xml` (mechanics) and the L2 client's `hennagrp-e.dat`
+  (display name + icon + short label). Embedded on dye-item detail
+  (`henna?`) and class detail (`allowedHennas?`); also reachable
+  as a standalone catalog at `/hennas` and `/hennas/[symbolId]`.
+  Hennas are dye/symbol mechanics — a stat-altering engraving
+  consumed at the Symbol Maker, **not** a cosmetic tattoo.
 - **Meta endpoints** — known npc types / item types / item grades, with
   counts, for filter dropdowns.
 
@@ -83,7 +91,7 @@ additional chronicles can be added without endpoint changes.
 |---|---|
 | `data/datapack/<chronicle>/` | placeholder for upstream **L2 client DAT files** consumed at build time (e.g. `*grp.dat` for icons, `questname-e.dat` for quest journal entries) — untracked |
 | `data/manual-fixes/<chronicle>.json` | one file per chronicle, sectioned by entity |
-| `data/generated/<chronicle>/` | build output — `items`, `npcs`, `drops`, `spawns`, `recipes`, `skills`, `armor-sets`, `classes`, `spellbooks`, `multisells`, `buylists`, `quests`, `questname`, `regions`, `huntingzones` JSON |
+| `data/generated/<chronicle>/` | build output — `items`, `npcs`, `drops`, `spawns`, `recipes`, `skills`, `armor-sets`, `classes`, `spellbooks`, `multisells`, `buylists`, `quests`, `questname`, `regions`, `huntingzones`, `hennas` JSON |
 | `scripts/` | `parse-*.ts` per entity, plus `build-data.ts` orchestrator |
 | `src/lib/data/` | cached JSON loaders + in-memory indexes |
 | `src/lib/api/` | shared route helpers + DTO layer |
@@ -127,6 +135,8 @@ curl http://localhost:3000/api/interlude/meta/item-grades
 curl http://localhost:3000/api/interlude/quests/1
 curl http://localhost:3000/api/interlude/regions
 curl http://localhost:3000/api/interlude/locations
+curl http://localhost:3000/api/interlude/hennas
+curl http://localhost:3000/api/interlude/hennas/1
 curl http://localhost:3000/api/interlude/classes
 curl http://localhost:3000/api/interlude/npcs/30001/shop
 ```

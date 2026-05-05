@@ -100,6 +100,17 @@ Requesting an unknown chronicle returns **404**.
 |---|---|---|
 | GET | `/api/[chronicle]/locations` | Full player-facing location catalog (209 spatial entries on Interlude — *Cruma Tower*, *Ant Nest*, *Sea of Spores*, *Tower of Insolence*, …). Source: L2 client's `huntingzone-e.dat` center anchors. **Not polygon-accurate** — each entry carries a single `(x, y, z)` center, and spawn / detail resolution uses **nearest-anchor with a fixed 10000-unit 2D threshold**. Coordinates outside that radius from every anchor resolve to `null`. Cleaned `/npcs/[id]/spawns` adds `location: LocationRefDto \| null` per row. `NpcDetailDto` / `MonsterDetailDto` / `QuestDetailDto` carry an optional `primaryLocation` (mode-of-spawns rule, lowest-id tiebreak). **Complementary to** `primaryRegion`, not a replacement: region is the coarse death-teleport anchor; location is the fine player-facing area. Territory catch-alls (*Dion Territory*, etc.) are excluded — they overlap `mapRegions`. |
 
+### Hennas
+
+| Method | Path | Description |
+|---|---|---|
+| GET | `/api/[chronicle]/hennas` | Full henna catalog (180 symbols on Interlude). Each entry is a `HennaSummary` — `symbolId`, `displayName`, `iconFile`, `shortLabel`, `statChanges`, `price`, and the `dyeItem` ref. Sorted by `symbolId`. |
+| GET | `/api/[chronicle]/hennas/[symbolId]` | Per-symbol detail. Same fields as the catalog plus the resolved `allowedClasses: ClassRefDto[]`. |
+
+Hennas are **dye/symbol mechanics**, not cosmetic tattoos: the player buys a dye item, takes it to a Symbol Maker NPC, pays the listed `price`, and engraves a symbol that applies the listed `statChanges` to their character. The mechanical fields (`statChanges`, `price`, `dyeItem`, `allowedClassIds`) come from upstream `hennas.xml` and are always populated. The display fields (`displayName`, `iconFile`, `shortLabel`) come from the L2 client's `hennagrp-e.dat`. For 9 of 180 symbols (the +/− 4 "Greater II" tier — Interlude `symbolId` 172–180), the DAT records use a shared-prefix string compression that this build does not decode; those rows honestly emit `displayName`/`iconFile`/`shortLabel: null` rather than synthesize values.
+
+The same `HennaSummary` shape appears as a cross-link from item detail (`ItemDetailDto.henna?` on dye items, 1:1 with `symbolId`) and class detail (`ClassDetailDto.allowedHennas?`, sorted by `symbolId`). Symbol Maker NPC linkage is intentionally **not** surfaced — the L2 client carries it only in HTML dialogue, which we keep internal.
+
 ### Meta (filter dropdowns)
 
 | Method | Path | Description |

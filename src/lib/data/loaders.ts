@@ -6,6 +6,7 @@ import type {
   ArmorSet,
   BuyList,
   ClassRecord,
+  Henna,
   HuntingZone,
   Item,
   Multisell,
@@ -56,6 +57,13 @@ interface ChronicleDataset {
    * at parse time; only spatial (real `(x, y, z)`) zones land here.
    */
   huntingZones: HuntingZone[];
+  /**
+   * Henna symbol catalog joined from `hennas.xml` (mechanics) and
+   * `hennagrp-e.dat` (display). Empty array when the chronicle
+   * doesn't ship a hennas XML — in that case `HennaRefDto` cross-
+   * links on items / classes are all omitted.
+   */
+  hennas: Henna[];
 }
 
 const datasetCache = new Map<Chronicle, ChronicleDataset>();
@@ -105,6 +113,12 @@ function readHuntingZonesIfPresent(filePath: string): HuntingZone[] {
   return JSON.parse(fs.readFileSync(filePath, "utf-8")) as HuntingZone[];
 }
 
+/** Optional, like questname / regions. Empty array when absent. */
+function readHennasIfPresent(filePath: string): Henna[] {
+  if (!fs.existsSync(filePath)) return [];
+  return JSON.parse(fs.readFileSync(filePath, "utf-8")) as Henna[];
+}
+
 export function loadChronicleDataset(chronicle: Chronicle): ChronicleDataset {
   const cached = datasetCache.get(chronicle);
   if (cached) return cached;
@@ -151,6 +165,7 @@ export function loadChronicleDataset(chronicle: Chronicle): ChronicleDataset {
     huntingZones: readHuntingZonesIfPresent(
       path.join(config.generatedDir, "huntingzones.json")
     ),
+    hennas: readHennasIfPresent(path.join(config.generatedDir, "hennas.json")),
   };
 
   datasetCache.set(chronicle, dataset);

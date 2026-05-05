@@ -3,10 +3,12 @@ import type { ClassRecord } from "../../types";
 import {
   getChildClassIds,
   getClassById,
+  getHennasByClassId,
   getItemById,
   getSkillByKey,
   getSpellbookItemBySkillId,
 } from "../../data/indexes";
+import { toHennaSummaryDto, type HennaSummaryDto } from "./henna";
 
 /**
  * Compact reference used in cross-links from items/skills back to the
@@ -76,6 +78,14 @@ export interface ClassListDto {
 export interface ClassDetailDto extends ClassListDto {
   childClassIds: number[];
   skills: ClassSkillLearnDto[];
+  /**
+   * Henna symbols this class is permitted to engrave at a Symbol
+   * Maker, fully resolved — display name, icon, stat changes,
+   * price, and dye item ref. Sorted by `symbolId` ascending.
+   * Omitted entirely when the chronicle ships no `hennas.xml` or
+   * the class has no allowed hennas.
+   */
+  allowedHennas?: HennaSummaryDto[];
 }
 
 export function toClassListDto(c: ClassRecord): ClassListDto {
@@ -141,9 +151,17 @@ export function toClassDetailDto(
     return dto;
   });
 
-  return {
+  const allowedHennas = getHennasByClassId(chronicle, c.id);
+
+  const dto: ClassDetailDto = {
     ...toClassListDto(c),
     childClassIds: getChildClassIds(chronicle, c.id),
     skills,
   };
+  if (allowedHennas.length > 0) {
+    dto.allowedHennas = allowedHennas.map((h) =>
+      toHennaSummaryDto(h, chronicle)
+    );
+  }
+  return dto;
 }

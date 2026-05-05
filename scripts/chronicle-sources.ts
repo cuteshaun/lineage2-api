@@ -79,6 +79,24 @@ export interface ChronicleSources {
    * build loud.
    */
   huntingZoneDatFile?: string;
+  /**
+   * Absolute path to `hennas.xml` — the upstream mechanical table
+   * for henna symbols (`symbolId`, `dyeId`, `price`, stat deltas,
+   * allowed class ids).
+   * **Optional**: chronicles that don't ship a hennas XML omit this
+   * field. When set, `parse-hennas.ts` runs and the file is required.
+   */
+  hennasXmlFile?: string;
+  /**
+   * Absolute path to `hennagrp-e.dat` — the encrypted L2 client
+   * table of henna display fields (display name, icon slug, short
+   * stat label). Joined to `hennas.xml` by `dyeItemId`.
+   * **Optional**: chronicles that don't ship a hennagrp DAT omit
+   * this field. When set, `parse-hennas.ts` reads what it can; any
+   * symbols whose display fields fail to decode are emitted with
+   * nullable display fields rather than failing the build.
+   */
+  hennaGrpDatFile?: string;
 }
 
 interface SourceSpec {
@@ -108,6 +126,10 @@ interface SourceSpec {
   mapRegionsXmlFile?: string[];
   /** Optional — chronicles without a hunting-zone DAT omit this. */
   huntingZoneDatFile?: string[];
+  /** Optional — chronicles without a hennas XML omit this. */
+  hennasXmlFile?: string[];
+  /** Optional — chronicles without a hennagrp DAT omit this. */
+  hennaGrpDatFile?: string[];
 }
 
 const SOURCE_SPECS: Record<Chronicle, SourceSpec> = {
@@ -249,6 +271,17 @@ const SOURCE_SPECS: Record<Chronicle, SourceSpec> = {
     ],
     // Configured for Interlude → huntingzone-e.dat is required at build time.
     huntingZoneDatFile: ["data", "datapack", "interlude", "huntingzone-e.dat"],
+    // Configured for Interlude → hennas.xml is required at build time.
+    hennasXmlFile: [
+      "..",
+      "aCis_382_LATEST_STABLE",
+      "aCis_datapack",
+      "data",
+      "xml",
+      "hennas.xml",
+    ],
+    // Configured for Interlude → hennagrp-e.dat supplies display fields.
+    hennaGrpDatFile: ["data", "datapack", "interlude", "hennagrp-e.dat"],
   },
 };
 
@@ -290,6 +323,12 @@ export function getChronicleSources(chronicle: Chronicle): ChronicleSources {
       : undefined,
     huntingZoneDatFile: spec.huntingZoneDatFile
       ? path.join(root, ...spec.huntingZoneDatFile)
+      : undefined,
+    hennasXmlFile: spec.hennasXmlFile
+      ? path.join(root, ...spec.hennasXmlFile)
+      : undefined,
+    hennaGrpDatFile: spec.hennaGrpDatFile
+      ? path.join(root, ...spec.hennaGrpDatFile)
       : undefined,
   };
 }

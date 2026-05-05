@@ -202,6 +202,82 @@
           "completionNpc"
         ],
         "description": "One entry in the player's in-game quest log, sourced from the L2 client's `questname-e.dat`. Mirrors what the client actually displays — a short title, the prose journal text, and the completion NPC the player is meant to talk to next. NOT a mechanically-derived walkthrough."
+      },
+      "HennaSummary": {
+        "type": "object",
+        "properties": {
+          "symbolId": {
+            "type": "integer"
+          },
+          "displayName": {
+            "type": "string",
+            "nullable": true
+          },
+          "iconFile": {
+            "type": "string",
+            "nullable": true
+          },
+          "shortLabel": {
+            "type": "string",
+            "nullable": true
+          },
+          "statChanges": {
+            "type": "object",
+            "properties": {
+              "STR": {
+                "type": "integer"
+              },
+              "CON": {
+                "type": "integer"
+              },
+              "DEX": {
+                "type": "integer"
+              },
+              "INT": {
+                "type": "integer"
+              },
+              "MEN": {
+                "type": "integer"
+              },
+              "WIT": {
+                "type": "integer"
+              }
+            }
+          },
+          "price": {
+            "type": "integer"
+          },
+          "dyeItem": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "name": {
+                "type": "string"
+              },
+              "iconFile": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "iconFile"
+            ]
+          }
+        },
+        "required": [
+          "symbolId",
+          "displayName",
+          "iconFile",
+          "shortLabel",
+          "statChanges",
+          "price",
+          "dyeItem"
+        ],
+        "description": "Compact henna symbol — the engraving a player buys at a Symbol Maker (a stat-altering dye, not a cosmetic tattoo). Mechanical fields (`statChanges`, `price`, `dyeItem`) come from `hennas.xml` and are always populated. Display fields (`displayName`, `iconFile`, `shortLabel`) come from the L2 client's `hennagrp-e.dat` and are honestly `null` for the 9 +/- 4 'Greater II' tier symbols (Interlude `symbolId` 172–180), whose DAT records use a shared-prefix encoding the parser does not decode."
       }
     },
     "parameters": {}

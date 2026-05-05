@@ -616,6 +616,79 @@ export interface Skill {
   effects?: SkillEffect[];
 }
 
+/**
+ * Per-stat delta block for a henna symbol. Keys correspond to the
+ * six base attributes; missing keys mean "no change to this stat".
+ * Values are the raw signed integers from `hennas.xml` — typically
+ * `+1..+4` or `-1..-5` in Interlude.
+ */
+export interface HennaStatChanges {
+  STR?: number;
+  CON?: number;
+  DEX?: number;
+  INT?: number;
+  MEN?: number;
+  WIT?: number;
+}
+
+/**
+ * One henna symbol — the engraving a player buys from a Symbol Maker
+ * to alter a base stat (Str/Con/Dex/Int/Men/Wit) at the cost of an
+ * opposing stat.
+ *
+ * Mechanical fields (`symbolId`, `dyeItemId`, `price`, `statChanges`,
+ * `allowedClassIds`) come from upstream `hennas.xml`. Display fields
+ * (`displayName`, `iconName`, `iconFile`, `shortLabel`) come from the
+ * client's `hennagrp-e.dat`. The two are joined by `dyeItemId`.
+ *
+ * In Interlude the DAT carries reliable display data for the first
+ * 171 of 180 symbols; the trailing 9 are the +/- 4 tier "Greater II"
+ * series whose DAT records use a non-standard shared-prefix encoding
+ * that we do not attempt to decode. Those symbols are emitted with
+ * mechanical data only and `displayName`/`iconName`/`iconFile`/
+ * `shortLabel` set to `null` — same honest-fallback pattern as
+ * `Quest.description`.
+ */
+export interface Henna {
+  /** Source XML symbol id (1..N). Stable across builds. */
+  symbolId: number;
+  /** Item id of the dye that engraves this symbol (e.g. 4445). 1:1 with `symbolId`. */
+  dyeItemId: number;
+  /** Adena price the engraver charges. */
+  price: number;
+  /** Stat deltas applied while the symbol is engraved. */
+  statChanges: HennaStatChanges;
+  /**
+   * Class ids permitted to engrave this symbol (from XML `classes="…"`).
+   * Sorted ascending. Always non-empty in source data.
+   */
+  allowedClassIds: number[];
+  /**
+   * Player-facing display name from the client DAT (e.g. "Symbol of
+   * Strength"). `null` when the DAT does not carry a clean record for
+   * this symbol (Greater II tier).
+   */
+  displayName: string | null;
+  /**
+   * Client icon slug from the DAT (e.g. `"etc_str_symbol_i00"`). The
+   * source DAT prefixes these with `"icon."` which is stripped at
+   * parse time. `null` when the DAT does not carry the field.
+   */
+  iconName: string | null;
+  /**
+   * Resolved PNG basename inside `public/icons/` (e.g.
+   * `"etc_str_symbol_i00.png"`). `null` when `iconName` is `null` or
+   * the file is missing on disk. Same convention as `Item.iconFile`.
+   */
+  iconFile: string | null;
+  /**
+   * Short stat label from the DAT (e.g. `"Str+1 Con-3"`). Verbatim —
+   * we do NOT synthesize this from `statChanges` even when the DAT
+   * lacks it, to keep raw display strings honest. `null` when missing.
+   */
+  shortLabel: string | null;
+}
+
 export interface ManualFixes {
   items: Record<string, Partial<Item>>;
   npcs: Record<string, Partial<Npc>>;

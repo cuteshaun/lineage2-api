@@ -12,6 +12,7 @@ import { parseQuests } from "./parse-quests";
 import { parseQuestName } from "./parse-questname";
 import { parseRegions } from "./parse-regions";
 import { parseHuntingZones } from "./parse-huntingzones";
+import { parseHennas } from "./parse-hennas";
 import { getChronicleSources } from "./chronicle-sources";
 import {
   isChronicle,
@@ -97,6 +98,13 @@ async function main() {
     ? await parseHuntingZones(chronicle)
     : null;
 
+  // hennas.json — M8. Joins hennas.xml (mechanics) with hennagrp-e.dat
+  // (display fields). XML drives canonical row set; DAT decorates.
+  console.log();
+  const hennas = questNameSources.hennasXmlFile
+    ? await parseHennas(chronicle)
+    : null;
+
   let totalCategories = 0;
   let totalDropEntries = 0;
   for (const npc of drops) {
@@ -173,6 +181,12 @@ async function main() {
   if (huntingZones) {
     console.log(
       `  Hunting locations:    ${huntingZones.length} (spatial; catch-alls dropped)`
+    );
+  }
+  if (hennas) {
+    const withDisplay = hennas.filter((h) => h.displayName != null).length;
+    console.log(
+      `  Hennas:               ${hennas.length} (${withDisplay} with DAT display, ${hennas.length - withDisplay} mechanics-only)`
     );
   }
   console.log(`  Completed in ${elapsed}s`);

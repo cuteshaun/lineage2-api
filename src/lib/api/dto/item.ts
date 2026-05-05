@@ -24,6 +24,8 @@ import {
   toArmorSetDetailDto,
   type ArmorSetDetailDto,
 } from "./armor-set";
+import { toHennaSummaryDto, type HennaSummaryDto } from "./henna";
+import { getHennaByDyeItemId } from "../../data/indexes";
 
 export type { SkillSummaryDto };
 
@@ -254,6 +256,13 @@ export interface ItemDetailDto {
    * `rewardOfQuests`; an item is rarely both.
    */
   questItemFor?: QuestRefDto[];
+  /**
+   * When this item is a henna dye, the symbol it engraves at a Symbol
+   * Maker — display name, icon, stat changes, price, and class allow-
+   * list summary. Singular by source-data contract: every dye item
+   * maps 1:1 to a single symbol. Omitted when the item is not a dye.
+   */
+  henna?: HennaSummaryDto;
 }
 
 const BODYPART_LABELS: Record<string, string> = {
@@ -582,6 +591,14 @@ export function toItemDetailDto(
       offers.sort((a, b) => a.price - b.price || a.npc.id - b.npc.id);
       dto.soldBy = offers;
     }
+  }
+
+  // Henna cross-link: when this item is a dye that engraves a henna
+  // symbol, embed the resolved summary. 1:1 — every dye maps to one
+  // symbol in source data.
+  const henna = getHennaByDyeItemId(chronicle, item.id);
+  if (henna) {
+    dto.henna = toHennaSummaryDto(henna, chronicle);
   }
 
   return dto;

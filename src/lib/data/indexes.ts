@@ -3,6 +3,7 @@ import type {
   ArmorSet,
   BuyList,
   ClassRecord,
+  Henna,
   Item,
   Multisell,
   Npc,
@@ -193,6 +194,25 @@ interface ChronicleIndexes {
   huntingZones: HuntingZone[];
   /** Lookup by source DAT id. */
   huntingZonesById: Map<number, HuntingZone>;
+  /**
+   * M8: henna symbols from `hennas.xml` joined with `hennagrp-e.dat`.
+   * Sorted by `symbolId`. Empty when the chronicle ships no
+   * `hennas.xml`.
+   */
+  hennas: Henna[];
+  /** Lookup by `symbolId`. */
+  hennasBySymbolId: Map<number, Henna>;
+  /**
+   * Lookup by `dyeItemId` — 1:1 with `symbolId` in source data.
+   * Powers the `ItemDetailDto.henna?` cross-link on dye items.
+   */
+  hennasByDyeItemId: Map<number, Henna>;
+  /**
+   * Reverse cross-link: classId → every henna whose `allowedClassIds`
+   * includes that class. Sorted by `symbolId` ascending so consumers
+   * get a deterministic order. Powers `ClassDetailDto.allowedHennas?`.
+   */
+  hennasByClassId: Map<number, Henna[]>;
 }
 
 export interface BuyListProductRef {
@@ -633,6 +653,30 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
     huntingZones.map((z) => [z.id, z])
   );
 
+  // Henna (M8) indexes. Empty when no hennas XML configured.
+  const hennas: Henna[] = [...dataset.hennas].sort(
+    (a, b) => a.symbolId - b.symbolId
+  );
+  const hennasBySymbolId = new Map<number, Henna>(
+    hennas.map((h) => [h.symbolId, h])
+  );
+  const hennasByDyeItemId = new Map<number, Henna>(
+    hennas.map((h) => [h.dyeItemId, h])
+  );
+  const hennasByClassId = new Map<number, Henna[]>();
+  for (const henna of hennas) {
+    for (const classId of henna.allowedClassIds) {
+      let arr = hennasByClassId.get(classId);
+      if (!arr) {
+        arr = [];
+        hennasByClassId.set(classId, arr);
+      }
+      arr.push(henna);
+    }
+  }
+  // Already sorted by inserting in symbolId-ascending order (hennas
+  // is sorted above), so per-class lists are also symbolId-ascending.
+
   // BuyList indexes (forward by NPC, reverse by item).
   const buyListsByNpcId = new Map<number, BuyList[]>();
   const buyListsByItemId = new Map<number, BuyListProductRef[]>();
@@ -724,6 +768,10 @@ function buildIndexes(chronicle: Chronicle): ChronicleIndexes {
     regionGrid,
     huntingZones,
     huntingZonesById,
+    hennas,
+    hennasBySymbolId,
+    hennasByDyeItemId,
+    hennasByClassId,
   };
 }
 
@@ -1537,4 +1585,47 @@ export function resolveLocationForSpawn(
   spawn: Spawn
 ): HuntingZone | null {
   return resolveLocationForCoordinate(chronicle, spawn.x, spawn.y, spawn.z);
+}
+
+// --- Henna lookups (M8) ---
+
+/** Returns the chronicle's henna catalog, sorted by `symbolId`. */
+export function getHennas(chronicle: Chronicle): Henna[] {
+  return getChronicleIndexes(chronicle).hennas;
+}
+
+/**
+ * Returns one henna by `symbolId`, or `undefined` when the id is
+ * unknown or the chronicle ships no `hennas.xml`.
+ */
+export function getHennaBySymbolId(
+  chronicle: Chronicle,
+  symbolId: number
+): Henna | undefined {
+  return getChronicleIndexes(chronicle).hennasBySymbolId.get(symbolId);
+}
+
+/**
+ * Returns the henna engraved by a given dye item, or `undefined`
+ * when the item id is not a known dye. 1:1 with `symbolId` in
+ * source data — powers `ItemDetailDto.henna?` cross-link.
+ */
+export function getHennaByDyeItemId(
+  chronicle: Chronicle,
+  dyeItemId: number
+): Henna | undefined {
+  return getChronicleIndexes(chronicle).hennasByDyeItemId.get(dyeItemId);
+}
+
+/**
+ * Returns every henna a class is permitted to engrave, sorted by
+ * `symbolId` ascending. Empty array when the class id is unknown
+ * or the chronicle ships no hennas. Powers
+ * `ClassDetailDto.allowedHennas?`.
+ */
+export function getHennasByClassId(
+  chronicle: Chronicle,
+  classId: number
+): Henna[] {
+  return getChronicleIndexes(chronicle).hennasByClassId.get(classId) ?? [];
 }

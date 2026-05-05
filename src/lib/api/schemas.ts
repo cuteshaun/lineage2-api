@@ -29,6 +29,7 @@ import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
 
 import type { ClassRefDto } from "./dto/class";
+import type { HennaSummaryDto } from "./dto/henna";
 import type { NpcRefDto } from "./dto/item";
 import type { LocationRefDto } from "./dto/location";
 import type {
@@ -94,6 +95,33 @@ export const RegionRefSchema = z
   .openapi("RegionRef", {
     description:
       "Compact reference to a named L2 map region (e.g. 'Talking Island Village'). Region ids match the upstream engine's `mapRegions.xml` numbering. The table represents engine 'death-teleport' regions, not strict biome polygons — a coordinate's region is the in-game town it teleports to on death within that tile.",
+  });
+
+export const HennaSummarySchema = z
+  .object({
+    symbolId: z.number().int(),
+    displayName: z.string().nullable(),
+    iconFile: z.string().nullable(),
+    shortLabel: z.string().nullable(),
+    statChanges: z
+      .object({
+        STR: z.number().int().optional(),
+        CON: z.number().int().optional(),
+        DEX: z.number().int().optional(),
+        INT: z.number().int().optional(),
+        MEN: z.number().int().optional(),
+        WIT: z.number().int().optional(),
+      }),
+    price: z.number().int(),
+    dyeItem: z.object({
+      id: z.number().int(),
+      name: z.string(),
+      iconFile: z.string().nullable(),
+    }),
+  })
+  .openapi("HennaSummary", {
+    description:
+      "Compact henna symbol — the engraving a player buys at a Symbol Maker (a stat-altering dye, not a cosmetic tattoo). Mechanical fields (`statChanges`, `price`, `dyeItem`) come from `hennas.xml` and are always populated. Display fields (`displayName`, `iconFile`, `shortLabel`) come from the L2 client's `hennagrp-e.dat` and are honestly `null` for the 9 +/- 4 'Greater II' tier symbols (Interlude `symbolId` 172–180), whose DAT records use a shared-prefix encoding the parser does not decode.",
   });
 
 export const QuestClientJournalEntrySchema = z
@@ -176,4 +204,8 @@ type _QuestClientJournalEntrySchemaMatchesDto = Expect<
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 type _LocationRefSchemaMatchesDto = Expect<
   Equals<z.infer<typeof LocationRefSchema>, LocationRefDto>
+>;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+type _HennaSummarySchemaMatchesDto = Expect<
+  Equals<z.infer<typeof HennaSummarySchema>, HennaSummaryDto>
 >;

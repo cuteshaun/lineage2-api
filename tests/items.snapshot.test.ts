@@ -63,6 +63,11 @@ const REPRESENTATIVE_ITEMS: Array<{ id: number; name: string }> = [
   // - Darin's Letter (687) is in `setItemsIds` of Q001 → exercises `questItemFor`.
   { id: 906, name: "Necklace (Q001 reward)" },
   { id: 687, name: "Darin's Letter (Q001 quest item)" },
+  // Henna cross-link fixtures (M8):
+  // - 4445: dye for symbolId=1 (Symbol of Strength) — full DAT display.
+  // - 4624: dye for symbolId=180 (Greater II tier) — `henna.displayName` etc. null.
+  { id: 4445, name: "Dye of STR (Str+1 Con-3) — symbolId 1" },
+  { id: 4624, name: "Dye of MEN (Men-4 Wit+4) — symbolId 180" },
 ];
 
 for (const { id, name } of REPRESENTATIVE_ITEMS) {

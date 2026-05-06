@@ -149,6 +149,20 @@ export interface Npc {
   aiSsRate: number | null;
   aiSpsCount: number | null;
   aiSpsRate: number | null;
+  /**
+   * Engine clan slug from `<ai clan="…">` (e.g. `"queen_ant_clan"`).
+   * Members of the same clan within `aiClanRange` units assist each
+   * other when one is attacked. Internal use only — the slug isn't
+   * meaningful to consumers; only the range is exposed as
+   * `NpcDetailDto.assistRange`.
+   */
+  aiClan: string | null;
+  /**
+   * Clan-assist radius in game units from `<ai clanRange="…">`.
+   * Surfaced publicly as `NpcDetailDto.assistRange`. `null` when no
+   * `<ai clanRange>` attribute exists in the source XML.
+   */
+  aiClanRange: number | null;
 
   skills: NpcSkill[];
   petData: PetData | null;

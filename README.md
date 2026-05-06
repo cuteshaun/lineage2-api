@@ -141,6 +141,7 @@ curl http://localhost:3000/api/interlude/hennas
 curl http://localhost:3000/api/interlude/hennas/1
 curl http://localhost:3000/api/interlude/classes
 curl http://localhost:3000/api/interlude/npcs/30001/shop
+curl http://localhost:3000/api/openapi.json
 ```
 
 ## Adding a new chronicle

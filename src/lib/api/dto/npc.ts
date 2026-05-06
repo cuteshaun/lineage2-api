@@ -44,6 +44,40 @@ export interface NpcDetailDto {
   atkSpd: number | null;
   walkSpd: number | null;
   runSpd: number | null;
+  /**
+   * Base attributes from the source `npc.xml`. Always present (every
+   * npc has each of `<set name="str|dex|con|int|wit|men">` declared
+   * in aCis). Non-combat / passive NPCs use the engine default
+   * `60/73/57/76/70/80` block — same engine-truth values L2Hub and
+   * other Interlude references render. Source-clean, never derived.
+   */
+  str: number | null;
+  dex: number | null;
+  con: number | null;
+  int: number | null;
+  wit: number | null;
+  men: number | null;
+  /**
+   * Sight-aggro radius in game units, from `<ai aggro="…">`. `0`
+   * means the NPC is passive (won't initiate combat on sight); `null`
+   * when the source XML has no `<ai>` block. The boolean
+   * `isAggressive` is `aggroRange != null && aggroRange > 0`.
+   *
+   * **Distinct from `assistRange`** — sight-aggro is *"I see a player
+   * and attack"*; clan-assist is *"a clan member was attacked, I help"*.
+   */
+  aggroRange: number | null;
+  /**
+   * Clan-assist radius in game units, from `<ai clanRange="…">`.
+   * Members of the same engine clan within this distance come help
+   * when this NPC is attacked. `null` when the NPC has no clan or
+   * clan-range declared in source.
+   *
+   * The internal clan slug (e.g. `"queen_ant_clan"`) is **not**
+   * exposed — it isn't meaningful to consumers and isn't
+   * cross-referenced anywhere player-facing.
+   */
+  assistRange: number | null;
   skills: NpcSkillDto[];
   /**
    * Quests that this NPC starts (NPC ∈ `Quest.startNpcIds`). Compact
@@ -240,6 +274,14 @@ export function toNpcDetailDto(npc: Npc, chronicle: Chronicle): NpcDetailDto {
     atkSpd: npc.atkSpd,
     walkSpd: npc.walkSpd,
     runSpd: npc.runSpd,
+    str: npc.str,
+    dex: npc.dex,
+    con: npc.con,
+    int: npc.int,
+    wit: npc.wit,
+    men: npc.men,
+    aggroRange: npc.aiAggro,
+    assistRange: npc.aiClanRange,
     skills: npc.skills
       .filter((s) => !SUPPRESSED_SKILL_IDS.has(s.id))
       .map((s) => {

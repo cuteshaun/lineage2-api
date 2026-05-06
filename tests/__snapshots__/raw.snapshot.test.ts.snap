@@ -6,6 +6,8 @@ exports[`raw monsters detail — Grim Wolf (22001) 1`] = `
     "data": {
       "aiAggro": 0,
       "aiCanMove": true,
+      "aiClan": null,
+      "aiClanRange": null,
       "aiSeedable": true,
       "aiSpsCount": 100,
       "aiSpsRate": 10,
@@ -94,6 +96,8 @@ exports[`raw monsters list — sort=-level, limit=5 1`] = `
       {
         "aiAggro": 0,
         "aiCanMove": true,
+        "aiClan": "andreas_clan",
+        "aiClanRange": 300,
         "aiSeedable": true,
         "aiSpsCount": 0,
         "aiSpsRate": 0,
@@ -171,6 +175,8 @@ exports[`raw monsters list — sort=-level, limit=5 1`] = `
       {
         "aiAggro": 0,
         "aiCanMove": true,
+        "aiClan": "frintessa_clan",
+        "aiClanRange": 0,
         "aiSeedable": false,
         "aiSpsCount": 0,
         "aiSpsRate": 0,
@@ -236,6 +242,8 @@ exports[`raw monsters list — sort=-level, limit=5 1`] = `
       {
         "aiAggro": 0,
         "aiCanMove": true,
+        "aiClan": "frintessa_clan",
+        "aiClanRange": 0,
         "aiSeedable": false,
         "aiSpsCount": 0,
         "aiSpsRate": 0,
@@ -301,6 +309,8 @@ exports[`raw monsters list — sort=-level, limit=5 1`] = `
       {
         "aiAggro": 500,
         "aiCanMove": true,
+        "aiClan": "andreas_clan",
+        "aiClanRange": 300,
         "aiSeedable": false,
         "aiSpsCount": 0,
         "aiSpsRate": 0,
@@ -390,6 +400,8 @@ exports[`raw monsters list — sort=-level, limit=5 1`] = `
       {
         "aiAggro": 500,
         "aiCanMove": true,
+        "aiClan": "andreas_clan",
+        "aiClanRange": 1000,
         "aiSeedable": false,
         "aiSpsCount": 0,
         "aiSpsRate": 0,
@@ -591,6 +603,8 @@ exports[`raw npcs detail — Darin (30048) 1`] = `
     "data": {
       "aiAggro": 0,
       "aiCanMove": true,
+      "aiClan": null,
+      "aiClanRange": null,
       "aiSeedable": false,
       "aiSpsCount": 0,
       "aiSpsRate": 0,
@@ -661,6 +675,8 @@ exports[`raw npcs list — limit=5 1`] = `
       {
         "aiAggro": 0,
         "aiCanMove": true,
+        "aiClan": null,
+        "aiClanRange": null,
         "aiSeedable": false,
         "aiSpsCount": 0,
         "aiSpsRate": 0,
@@ -2188,6 +2204,8 @@ exports[`raw npcs list — limit=5 1`] = `
       {
         "aiAggro": 0,
         "aiCanMove": true,
+        "aiClan": null,
+        "aiClanRange": null,
         "aiSeedable": false,
         "aiSpsCount": 0,
         "aiSpsRate": 0,
@@ -3723,6 +3741,8 @@ exports[`raw npcs list — limit=5 1`] = `
       {
         "aiAggro": 0,
         "aiCanMove": true,
+        "aiClan": null,
+        "aiClanRange": null,
         "aiSeedable": false,
         "aiSpsCount": 0,
         "aiSpsRate": 0,
@@ -5258,6 +5278,8 @@ exports[`raw npcs list — limit=5 1`] = `
       {
         "aiAggro": 0,
         "aiCanMove": true,
+        "aiClan": null,
+        "aiClanRange": null,
         "aiSeedable": false,
         "aiSpsCount": 0,
         "aiSpsRate": 0,
@@ -6785,6 +6807,8 @@ exports[`raw npcs list — limit=5 1`] = `
       {
         "aiAggro": 0,
         "aiCanMove": true,
+        "aiClan": null,
+        "aiClanRange": null,
         "aiSeedable": false,
         "aiSpsCount": 0,
         "aiSpsRate": 0,

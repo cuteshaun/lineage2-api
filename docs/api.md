@@ -12,6 +12,14 @@ the URL path so future chronicles can coexist without endpoint changes.
 - **Backed by aCis Interlude datapack XML.** All current data is generated
   from a local aCis datapack checkout via `pnpm build:data`. The datapack
   itself is not redistributed.
+- **Stat values reflect the bundled aCis Interlude datapack.** Differences vs
+  L2Hub / PTS / other databases are **source/reference differences, not
+  parser bugs.** This API follows aCis as its single source of truth; other
+  references publish numbers derived from different datapacks, formula
+  layers, or runtime computations for the same chronicle. We do not rescale
+  to match those references and we do not synthesize engine-derived stats
+  (cast speed, accuracy, evasion). Only fields present in the source are
+  surfaced.
 - **Response shapes may still evolve** while the project is young. Treat
   field additions as expected and breaking changes as possible until a
   stable version is tagged.
@@ -50,7 +58,7 @@ Requesting an unknown chronicle returns **404**.
 | Method | Path | Description |
 |---|---|---|
 | GET | `/api/[chronicle]/npcs` | List cleaned NPCs (one record per unique name) |
-| GET | `/api/[chronicle]/npcs/[id]` | Single cleaned NPC; accepts canonical or any merged raw id |
+| GET | `/api/[chronicle]/npcs/[id]` | Single cleaned NPC; accepts canonical or any merged raw id. Carries the full source-clean stat block — combat (`hp`, `mp`, `pAtk`, `pDef`, `mAtk`, `mDef`, `crit`, `atkSpd`, `walkSpd`, `runSpd`), base attributes (`str`, `dex`, `con`, `int`, `wit`, `men`), and combat-AI ranges (`aggroRange` for sight-aggro, `assistRange` for clan-assist). Same shape on the monster route below. |
 | GET | `/api/[chronicle]/npcs/[id]/drops` | Aggregated drops for the cleaned NPC |
 | GET | `/api/[chronicle]/npcs/[id]/spawns` | Aggregated spawn points for the cleaned NPC. Each row is an `EnrichedSpawnDto` and includes a resolved `region: RegionRefDto \| null` (M4); the raw equivalent at `/api/[chronicle]/raw/monsters/[id]/spawns` does **not** carry the region field. |
 | GET | `/api/[chronicle]/npcs/[id]/shop` | Merchant's direct-buy products + curated multisell exchanges |

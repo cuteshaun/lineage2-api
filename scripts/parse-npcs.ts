@@ -182,6 +182,8 @@ function parseAi(raw: XmlNode): Pick<
   | "aiSsRate"
   | "aiSpsCount"
   | "aiSpsRate"
+  | "aiClan"
+  | "aiClanRange"
 > {
   const ai = raw["ai"];
   if (!ai || typeof ai !== "object") {
@@ -194,6 +196,8 @@ function parseAi(raw: XmlNode): Pick<
       aiSsRate: null,
       aiSpsCount: null,
       aiSpsRate: null,
+      aiClan: null,
+      aiClanRange: null,
     };
   }
 
@@ -207,6 +211,8 @@ function parseAi(raw: XmlNode): Pick<
     aiSsRate: attrNumber(node, "@_ssRate"),
     aiSpsCount: attrNumber(node, "@_spsCount"),
     aiSpsRate: attrNumber(node, "@_spsRate"),
+    aiClan: node["@_clan"] != null ? String(node["@_clan"]) : null,
+    aiClanRange: attrNumber(node, "@_clanRange"),
   };
 }
 

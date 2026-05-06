@@ -421,6 +421,28 @@ Adena with the per-quest amount as `count`. Sorted by `quest.id`
 ascending. Same heuristic-extraction caveats as `QuestRewardsDto`
 apply.
 
+## `NpcDetailDto` / `MonsterDetailDto` — stat block
+
+Both detail DTOs share the same `toNpcDetailDto` mapper. Stat values
+come straight from the source `npc.xml` `<set name="…" val="…">`
+attributes — **no engine simulation**, no rebalancing, no
+synthesized fields.
+
+| Field | Type | Source attr | Notes |
+|---|---|---|---|
+| `hp`, `mp` | number \| null | `<set name="hp/mp">` | Rounded to integer at the DTO layer (some XML rows store floats like `300.8`); raw NPC routes preserve the float. |
+| `exp`, `sp` | number \| null | `<set name="exp/sp">` | Pass-through. |
+| `pAtk`, `pDef`, `mAtk`, `mDef` | number \| null | `<set name="pAtk/pDef/mAtk/mDef">` | Rounded to integer at the DTO layer. |
+| `crit`, `atkSpd`, `walkSpd`, `runSpd` | number \| null | `<set name="crit/atkSpd/walkSpd/runSpd">` | Pass-through. |
+| `str`, `dex`, `con`, `int`, `wit`, `men` | number \| null | `<set name="str/dex/con/int/wit/men">` | Six base attributes. Most NPCs in aCis ship the engine-default boss block `60/73/57/76/70/80`; ordinary monsters carry per-tier values (e.g. Grim Wolf 22001 ships `40/30/43/21/20/20`). |
+| `aggroRange` | number \| null | `<ai aggro="…">` | Sight-aggro radius in game units. `0` means the NPC is passive (won't auto-attack on sight). `null` when the source XML has no `<ai>` block. The boolean `isAggressive` is `aggroRange != null && aggroRange > 0`. |
+| `assistRange` | number \| null | `<ai clanRange="…">` | Clan-assist radius in game units. Members of the same engine clan within this distance come help when this NPC is attacked. **Distinct from `aggroRange`** — sight-aggro is *"I see a player and attack"*; clan-assist is *"a clan member was attacked, I help"*. The internal clan slug (e.g. `"queen_ant_clan"`) is **not** exposed — it isn't meaningful to consumers and isn't cross-referenced anywhere player-facing. `null` when the NPC has no clan / no clanRange in source. |
+
+### Engine-derived fields we deliberately do NOT surface
+
+- **Cast Speed (`mAtkSpd`)**, **Accuracy**, **Evasion** — not stored on the source XML; some L2 references compute them at render time from base stats × level via engine formulas. We don't simulate engine formulas (would be fabrication). Out of scope per AGENTS.md "no full game-mechanics emulation".
+- **Rescaled HP / P.Atk / P.Def values to match other databases** — references like L2Hub or PTS dumps often publish different numbers for the same chronicle because they pull from a different datapack, a different formula layer, or runtime-computed values. **Differences vs L2Hub/PTS/other databases are source/reference differences, not parser bugs.** This API follows the bundled aCis Interlude datapack and does not rescale or synthesize engine-derived stats to match those references.
+
 ### `NpcDetailDto.startsQuests` vs `involvedInQuests` — dedup rules
 
 `startsQuests` is the unfiltered list of quests where the NPC is in `Quest.startNpcIds`.

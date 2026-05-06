@@ -2,11 +2,16 @@
 
 exports[`npc 27059 (Hatar (Q105 kill target)) DTO matches snapshot 1`] = `
 {
+  "aggroRange": 0,
+  "assistRange": 300,
   "atkSpd": 253,
+  "con": 43,
   "crit": 4,
+  "dex": 30,
   "exp": 0,
   "hp": 185,
   "id": 27059,
+  "int": 21,
   "involvedInQuests": [
     {
       "id": 105,
@@ -21,6 +26,7 @@ exports[`npc 27059 (Hatar (Q105 kill target)) DTO matches snapshot 1`] = `
   "level": 11,
   "mAtk": 14,
   "mDef": 47,
+  "men": 20,
   "mp": 116,
   "name": "Uoph",
   "npcType": "Monster",
@@ -41,22 +47,30 @@ exports[`npc 27059 (Hatar (Q105 kill target)) DTO matches snapshot 1`] = `
   "runSpd": 110,
   "skills": [],
   "sp": 0,
+  "str": 40,
   "title": "Kaboo Chief",
   "walkSpd": 45,
+  "wit": 20,
 }
 `;
 
 exports[`npc 30048 (Darin (Q001 start)) DTO matches snapshot 1`] = `
 {
+  "aggroRange": 0,
+  "assistRange": null,
   "atkSpd": 253,
+  "con": 43,
   "crit": 4,
+  "dex": 30,
   "exp": 0,
   "hp": 2444,
   "id": 30048,
+  "int": 21,
   "isAggressive": false,
   "level": 70,
   "mAtk": 470,
   "mDef": 217,
+  "men": 20,
   "mp": 1346,
   "name": "Darin",
   "npcType": "Folk",
@@ -92,7 +106,9 @@ exports[`npc 30048 (Darin (Q001 start)) DTO matches snapshot 1`] = `
       "name": "Letters of Love",
     },
   ],
+  "str": 40,
   "title": null,
   "walkSpd": 50,
+  "wit": 20,
 }
 `;

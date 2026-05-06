@@ -643,16 +643,60 @@ their TypeScript types to `z.infer<typeof ...>`, making schemas the
 source of truth. Each migration must pass the existing snapshot
 suite without diff. Routes still don't validate at runtime.
 
-**Phase C (deferred)** — register every route's request/response
-in the OpenAPI registry, generate a complete spec, and consider
-publishing it (e.g. at `/api/openapi.json` or as a build artifact).
-At this point the snapshot tests become a safety net rather than
-the primary contract enforcement.
+**Phase C (deferred)** — register every route's request/response in
+the OpenAPI registry and generate a complete spec. The Phase-A stub
+is already published at runtime via `GET /api/openapi.json`, so
+Phase C is purely about widening `components.schemas` and populating
+`paths` — not about distribution.
 
 The roadmap is intentionally conservative: snapshots remain the
 authoritative regression detector through all three phases. A bug
 in the schemas can't ship a wrong response shape because the DTO
 mappers don't consume them yet.
+
+## v1 contract
+
+The DTO surface above is treated as **stable** ahead of a `v1.0.0`
+tag. This section spells out what "stable" means in this repo today
+so consumers and future contributors share one baseline.
+
+### What's locked
+
+- **Field names and types** on every DTO documented in this file are snapshot-locked. Removing or renaming a field, or narrowing its type, is a breaking change requiring a major-version bump.
+- **Response envelopes** are stable: single-entity responses are `{ data: T }`; list responses are `{ data: T[], meta: { total, limit, offset } }`; errors are `{ error: string, status: number }`. The `meta.total` field is always present on list endpoints, even when pagination is disabled (in which case `total === data.length` and `limit === total`).
+- **The raw / public boundary** is stable. Raw endpoints (`/api/[chronicle]/raw/...`) carry no DTO enrichment fields and never gain them in v1.x. Cleaned-layer fields like `region`, `location`, `primaryRegion?`, `primaryLocation?`, `startsQuests` stay on the cleaned layer only.
+- **Optional / nullable disclosure rules** are stable. Documented `null`s are returned as `null`, never silently omitted. Documented optional fields are omitted when their underlying source is empty, never returned as empty arrays or `null`.
+
+### What's allowed without a major bump
+
+- **Adding new optional fields** to existing DTOs.
+- **Adding new endpoints**.
+- **Widening enum-like string sets** (e.g. another `npcType` value if a chronicle introduces one).
+- **Tightening or improving heuristic extraction** (e.g. recovering more quest-reward rows) — the field shape is stable, the *coverage* may grow.
+- **Adding fixtures** to the snapshot suite.
+
+### Honest limitations
+
+Several documented fields inherit limitations from heuristic
+extraction or partial source data. These are **stable behaviors**,
+not bugs to be fixed under v1.x:
+
+- `QuestRewardsDto` and `RewardedByQuestDto` use a lexical-proximity heuristic against `exitQuest()` calls in the Java scripts. Reward rows whose final-grant call doesn't land inside the proximity window are silently absent.
+- `QuestDetailDto.clientJournalEntries[].completionNpc` resolves ~91% of step records on Interlude. The remaining ~9% are honestly `null` (multi-objective steps, or step NPCs absent from the cleaned NPC index).
+- `LocationRefDto` resolution is *nearest-anchor with a fixed 10000-unit 2D threshold*, **not** polygon containment. Coordinates outside the threshold from every anchor resolve to `null`.
+- `HennaSummaryDto.displayName` / `iconFile` / `shortLabel` are honestly `null` for the 9 +/− 4 "Greater II" tier symbols (Interlude `symbolId` 172–180); their DAT records use a shared-prefix string compression this build does not decode.
+
+### What's marked experimental
+
+A small number of fields are documented as passthroughs rather than
+contract guarantees. These can change without a major-version bump
+and should not be pinned by external consumers:
+
+- `SkillSummaryDto.power` and `SkillSummaryDto.skillType` — raw XML attributes whose semantics depend on `skillType`.
+
+### Versioning
+
+`package.json` declares the project version. Pre-v1 (`0.x`) bumps follow the additive rules above. The first stable release is tagged `v1.0.0`; semver applies from that point.
 
 ## Related documents
 

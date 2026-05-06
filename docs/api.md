@@ -119,6 +119,12 @@ The same `HennaSummary` shape appears as a cross-link from item detail (`ItemDet
 | GET | `/api/[chronicle]/meta/item-types` | Known item type values + counts |
 | GET | `/api/[chronicle]/meta/item-grades` | Known item grade values + counts (Lineage rank order) |
 
+### Schema
+
+| Method | Path | Description |
+|---|---|---|
+| GET | `/api/openapi.json` | OpenAPI 3.0 document for the API. Chronicle-agnostic — the document describes `/api/{chronicle}/...` as a parameterised path, with `{chronicle}` exposed as a server-template variable. Phase A: `components.schemas` is populated for the small reusable cross-link DTOs (`NpcRef`, `ClassRef`, `QuestRef`, `RegionRef`, `LocationRef`, `EnrichedSpawn`, `QuestClientJournalEntry`, `HennaSummary`); `paths` is intentionally empty pending Phase C per-route generation (see `docs/api-contract.md`). The document is the committed `docs/openapi.stub.json` build artifact, served as a convenience without an envelope. |
+
 ## Response shapes
 
 ### Single entity

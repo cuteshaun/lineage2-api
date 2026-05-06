@@ -57,8 +57,10 @@ additional chronicles can be added without endpoint changes.
   prose and `clientJournalEntries` (the player's in-game quest log
   entries — short title + prose + completion NPC per step). Honestly
   framed as the client journal, not an editorial walkthrough.
-  Cross-linked from item / NPC detail (`rewardOfQuests`, `questItemFor`,
-  `startsQuests`, `involvedInQuests`).
+  Cross-linked from item / NPC detail (`rewardedByQuests`,
+  `questItemFor`, `startsQuests`, `involvedInQuests`). On items the
+  reward link carries the per-quest count and includes Adena (item
+  57) via the engine-special `q.rewards.adena` scalar.
 - **Regions** — full catalog of 19 named map regions (Talking Island
   Village, Town of Aden, …) sourced from upstream `mapRegions.xml`.
   These are engine "death-teleport" regions, not biome polygons —

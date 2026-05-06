@@ -440,30 +440,45 @@ export default async function ItemDetailsPage({
         </Section>
       )}
 
-      {item.rewardOfQuests && item.rewardOfQuests.length > 0 && (
+      {item.rewardedByQuests && item.rewardedByQuests.length > 0 && (
         <Section
           title={
-            item.rewardOfQuests.length === 1
-              ? "Reward of Quest"
-              : `Reward of Quests (${item.rewardOfQuests.length})`
+            item.rewardedByQuests.length === 1
+              ? "Rewarded by quest"
+              : `Rewarded by quests (${item.rewardedByQuests.length})`
           }
         >
           <ul className="flex flex-col gap-1.5 text-sm">
-            {item.rewardOfQuests.map((q) => (
-              <li key={q.id}>
-                <Link
-                  href={`/${chronicle}/quests/${q.id}`}
-                  className="flex items-baseline justify-between gap-3 hover:underline"
-                >
-                  <span className="text-zinc-900 dark:text-zinc-100">
-                    {q.name}
-                  </span>
-                  <span className="font-mono text-[11px] text-zinc-500 dark:text-zinc-400">
-                    {q.levelMin != null ? `Lv ${q.levelMin}` : "—"}
-                  </span>
-                </Link>
-              </li>
-            ))}
+            {item.rewardedByQuests.map(({ quest, count }) => {
+              // Adena (item 57): `count` is the per-quest
+              // `q.rewards.adena` scalar — render as an Adena amount.
+              // Other items: `count` is `q.rewards.items[].count` —
+              // render as `×N`.
+              const countLabel =
+                item.id === 57
+                  ? `${count.toLocaleString()} a`
+                  : `×${count.toLocaleString()}`;
+              return (
+                <li key={quest.id}>
+                  <Link
+                    href={`/${chronicle}/quests/${quest.id}`}
+                    className="flex items-baseline justify-between gap-3 hover:underline"
+                  >
+                    <span className="text-zinc-900 dark:text-zinc-100">
+                      {quest.name}
+                    </span>
+                    <span className="flex items-baseline gap-3 font-mono text-[11px] text-zinc-500 dark:text-zinc-400">
+                      <span className="text-zinc-700 dark:text-zinc-300">
+                        {countLabel}
+                      </span>
+                      <span>
+                        {quest.levelMin != null ? `Lv ${quest.levelMin}` : "—"}
+                      </span>
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </Section>
       )}

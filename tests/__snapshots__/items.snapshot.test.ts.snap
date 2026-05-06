@@ -2,9 +2,10 @@
 
 exports[`item 17 (Wooden Arrow) DTO matches snapshot 1`] = `
 {
-  "accCombat": null,
-  "armorType": null,
-  "bodypart": "Off-hand",
+  "category": {
+    "bodypart": "Off-hand",
+    "etcItemType": "arrow",
+  },
   "craftedBy": [
     {
       "recipeItemId": 1666,
@@ -12,31 +13,15 @@ exports[`item 17 (Wooden Arrow) DTO matches snapshot 1`] = `
       "successRate": 100,
     },
   ],
-  "crystalCount": null,
-  "etcItemType": "arrow",
+  "flags": {
+    "stackable": true,
+  },
   "grade": "none",
   "iconFile": "etc_wooden_quiver_i00.png",
   "id": 17,
-  "isDropable": null,
-  "isMagical": null,
-  "isSellable": null,
-  "isStackable": true,
-  "isTradable": null,
-  "itemSkill": null,
-  "mAtk": null,
-  "mDef": null,
   "material": "WOOD",
-  "mpConsume": null,
   "name": "Wooden Arrow",
-  "pAtk": null,
-  "pAtkSpd": null,
-  "pDef": null,
   "price": 2,
-  "rCrit": null,
-  "rEvas": null,
-  "rShld": null,
-  "reuseDelay": null,
-  "sDef": null,
   "soldBy": [
     {
       "buyListId": 14,
@@ -343,21 +328,13 @@ exports[`item 17 (Wooden Arrow) DTO matches snapshot 1`] = `
       "price": 3,
     },
   ],
-  "soulshots": null,
-  "spiritshots": null,
   "type": "etcitem",
-  "weaponType": null,
   "weight": 6,
 }
 `;
 
 exports[`item 57 (Adena (rewardedByQuests adena join)) DTO matches snapshot 1`] = `
 {
-  "accCombat": null,
-  "armorType": null,
-  "bodypart": null,
-  "crystalCount": null,
-  "etcItemType": null,
   "exchangeFor": [
     {
       "maintainEnchantment": false,
@@ -700,28 +677,15 @@ exports[`item 57 (Adena (rewardedByQuests adena join)) DTO matches snapshot 1`] 
       ],
     },
   ],
+  "flags": {
+    "stackable": true,
+  },
   "grade": "none",
   "iconFile": "etc_adena_i00.png",
   "id": 57,
-  "isDropable": null,
-  "isMagical": null,
-  "isSellable": null,
-  "isStackable": true,
-  "isTradable": null,
-  "itemSkill": null,
-  "mAtk": null,
-  "mDef": null,
   "material": "GOLD",
-  "mpConsume": null,
   "name": "Adena",
-  "pAtk": null,
-  "pAtkSpd": null,
-  "pDef": null,
   "price": 1,
-  "rCrit": null,
-  "rEvas": null,
-  "rShld": null,
-  "reuseDelay": null,
   "rewardedByQuests": [
     {
       "count": 450,
@@ -1228,45 +1192,27 @@ exports[`item 57 (Adena (rewardedByQuests adena join)) DTO matches snapshot 1`] 
       },
     },
   ],
-  "sDef": null,
-  "soulshots": null,
-  "spiritshots": null,
   "type": "etcitem",
-  "weaponType": null,
   "weight": null,
 }
 `;
 
 exports[`item 68 (Falchion) DTO matches snapshot 1`] = `
 {
-  "accCombat": null,
-  "armorType": null,
-  "bodypart": "One-handed",
-  "crystalCount": null,
-  "etcItemType": null,
+  "category": {
+    "bodypart": "One-handed",
+    "weaponType": "SWORD",
+  },
   "grade": "none",
   "iconFile": "weapon_falchion_i00.png",
   "id": 68,
-  "isDropable": null,
-  "isMagical": null,
-  "isSellable": null,
-  "isStackable": null,
-  "isTradable": null,
-  "itemSkill": null,
-  "mAtk": 21,
-  "mDef": null,
   "material": "BRONZE",
-  "mpConsume": null,
   "name": "Falchion",
-  "pAtk": 31,
-  "pAtkSpd": 379,
-  "pDef": null,
   "price": 244000,
-  "rCrit": 8,
-  "rEvas": null,
-  "rShld": null,
-  "reuseDelay": null,
-  "sDef": null,
+  "shots": {
+    "soulshots": 2,
+    "spiritshots": 2,
+  },
   "soldBy": [
     {
       "buyListId": 25,
@@ -1381,7 +1327,6 @@ exports[`item 68 (Falchion) DTO matches snapshot 1`] = `
       "price": 317200,
     },
   ],
-  "soulshots": 2,
   "specialAbilityOptions": [
     {
       "effectChance": null,
@@ -1392,18 +1337,23 @@ exports[`item 68 (Falchion) DTO matches snapshot 1`] = `
       "skills": [],
     },
   ],
-  "spiritshots": 2,
+  "stats": {
+    "mAtk": 21,
+    "pAtk": 31,
+    "pAtkSpd": 379,
+    "rCrit": 8,
+  },
   "type": "weapon",
-  "weaponType": "SWORD",
   "weight": 1530,
 }
 `;
 
 exports[`item 72 (Stormbringer) DTO matches snapshot 1`] = `
 {
-  "accCombat": null,
-  "armorType": null,
-  "bodypart": "One-handed",
+  "category": {
+    "bodypart": "One-handed",
+    "weaponType": "SWORD",
+  },
   "craftedBy": [
     {
       "recipeItemId": 2298,
@@ -1411,8 +1361,9 @@ exports[`item 72 (Stormbringer) DTO matches snapshot 1`] = `
       "successRate": 100,
     },
   ],
-  "crystalCount": 916,
-  "etcItemType": null,
+  "crystal": {
+    "count": 916,
+  },
   "exchangeFrom": [
     {
       "maintainEnchantment": false,
@@ -1448,27 +1399,13 @@ exports[`item 72 (Stormbringer) DTO matches snapshot 1`] = `
   "grade": "c",
   "iconFile": "weapon_stormbringer_i00.png",
   "id": 72,
-  "isDropable": null,
-  "isMagical": null,
-  "isSellable": null,
-  "isStackable": null,
-  "isTradable": null,
-  "itemSkill": null,
-  "mAtk": 61,
-  "mDef": null,
   "material": "FINE_STEEL",
-  "mpConsume": null,
   "name": "Stormbringer",
-  "pAtk": 107,
-  "pAtkSpd": 379,
-  "pDef": null,
   "price": 2290000,
-  "rCrit": 8,
-  "rEvas": null,
-  "rShld": null,
-  "reuseDelay": null,
-  "sDef": null,
-  "soulshots": 2,
+  "shots": {
+    "soulshots": 2,
+    "spiritshots": 2,
+  },
   "specialAbilityOptions": [
     {
       "effectChance": 10,
@@ -1549,18 +1486,23 @@ exports[`item 72 (Stormbringer) DTO matches snapshot 1`] = `
       },
     },
   ],
-  "spiritshots": 2,
+  "stats": {
+    "mAtk": 61,
+    "pAtk": 107,
+    "pAtkSpd": 379,
+    "rCrit": 8,
+  },
   "type": "weapon",
-  "weaponType": "SWORD",
   "weight": 1430,
 }
 `;
 
 exports[`item 164 (Elysian) DTO matches snapshot 1`] = `
 {
-  "accCombat": 4,
-  "armorType": null,
-  "bodypart": "One-handed",
+  "category": {
+    "bodypart": "One-handed",
+    "weaponType": "BLUNT",
+  },
   "craftedBy": [
     {
       "recipeItemId": 5440,
@@ -1573,36 +1515,23 @@ exports[`item 164 (Elysian) DTO matches snapshot 1`] = `
       "successRate": 100,
     },
   ],
-  "crystalCount": 2160,
-  "etcItemType": null,
+  "crystal": {
+    "count": 2160,
+  },
   "grade": "a",
   "iconFile": "weapon_elysian_i00.png",
   "id": 164,
-  "isDropable": null,
-  "isMagical": null,
-  "isSellable": null,
-  "isStackable": null,
-  "isTradable": null,
-  "itemSkill": null,
-  "mAtk": 114,
-  "mDef": null,
   "material": "ORIHARUKON",
-  "mpConsume": null,
   "name": "Elysian",
-  "pAtk": 232,
-  "pAtkSpd": 379,
-  "pDef": null,
   "price": 27000000,
   "pvpBonus": {
     "damageMultiplier": 1.05,
     "display": "+5% PvP Damage",
   },
-  "rCrit": 4,
-  "rEvas": null,
-  "rShld": null,
-  "reuseDelay": null,
-  "sDef": null,
-  "soulshots": 1,
+  "shots": {
+    "soulshots": 1,
+    "spiritshots": 1,
+  },
   "specialAbilityOptions": [
     {
       "effectChance": null,
@@ -1752,18 +1681,24 @@ exports[`item 164 (Elysian) DTO matches snapshot 1`] = `
       ],
     },
   ],
-  "spiritshots": 1,
+  "stats": {
+    "accCombat": 4,
+    "mAtk": 114,
+    "pAtk": 232,
+    "pAtkSpd": 379,
+    "rCrit": 4,
+  },
   "type": "weapon",
-  "weaponType": "BLUNT",
   "weight": 1580,
 }
 `;
 
 exports[`item 213 (Branch of The Mother Tree) DTO matches snapshot 1`] = `
 {
-  "accCombat": 4,
-  "armorType": null,
-  "bodypart": "Two-handed",
+  "category": {
+    "bodypart": "Two-handed",
+    "weaponType": "BIGBLUNT",
+  },
   "craftedBy": [
     {
       "recipeItemId": 5462,
@@ -1776,36 +1711,26 @@ exports[`item 213 (Branch of The Mother Tree) DTO matches snapshot 1`] = `
       "successRate": 100,
     },
   ],
-  "crystalCount": 2160,
-  "etcItemType": null,
+  "crystal": {
+    "count": 2160,
+  },
+  "flags": {
+    "magical": true,
+  },
   "grade": "a",
   "iconFile": "weapon_worldtrees_branch_i00.png",
   "id": 213,
-  "isDropable": null,
-  "isMagical": true,
-  "isSellable": null,
-  "isStackable": null,
-  "isTradable": null,
-  "itemSkill": null,
-  "mAtk": 152,
-  "mDef": null,
   "material": "WOOD",
-  "mpConsume": null,
   "name": "Branch of The Mother Tree",
-  "pAtk": 226,
-  "pAtkSpd": 325,
-  "pDef": null,
   "price": 27000000,
   "pvpBonus": {
     "damageMultiplier": 1.05,
     "display": "+5% PvP Damage",
   },
-  "rCrit": 4,
-  "rEvas": null,
-  "rShld": null,
-  "reuseDelay": null,
-  "sDef": null,
-  "soulshots": 1,
+  "shots": {
+    "soulshots": 1,
+    "spiritshots": 1,
+  },
   "specialAbilityOptions": [
     {
       "effectChance": null,
@@ -1950,18 +1875,24 @@ exports[`item 213 (Branch of The Mother Tree) DTO matches snapshot 1`] = `
       ],
     },
   ],
-  "spiritshots": 1,
+  "stats": {
+    "accCombat": 4,
+    "mAtk": 152,
+    "pAtk": 226,
+    "pAtkSpd": 325,
+    "rCrit": 4,
+  },
   "type": "weapon",
-  "weaponType": "BIGBLUNT",
   "weight": 900,
 }
 `;
 
 exports[`item 287 (Bow of Peril) DTO matches snapshot 1`] = `
 {
-  "accCombat": 3,
-  "armorType": null,
-  "bodypart": "Two-handed",
+  "category": {
+    "bodypart": "Two-handed",
+    "weaponType": "BOW",
+  },
   "craftedBy": [
     {
       "recipeItemId": 5007,
@@ -1974,32 +1905,20 @@ exports[`item 287 (Bow of Peril) DTO matches snapshot 1`] = `
       "successRate": 100,
     },
   ],
-  "crystalCount": 1746,
-  "etcItemType": null,
+  "crystal": {
+    "count": 1746,
+  },
   "grade": "b",
   "iconFile": "weapon_hazard_bow_i00.png",
   "id": 287,
-  "isDropable": null,
-  "isMagical": null,
-  "isSellable": null,
-  "isStackable": null,
-  "isTradable": null,
-  "itemSkill": null,
-  "mAtk": 99,
-  "mDef": null,
   "material": "BLOOD_STEEL",
-  "mpConsume": 9,
   "name": "Bow of Peril",
-  "pAtk": 400,
-  "pAtkSpd": 293,
-  "pDef": null,
   "price": 13100000,
-  "rCrit": 12,
-  "rEvas": null,
-  "rShld": null,
-  "reuseDelay": 1500,
-  "sDef": null,
-  "soulshots": 3,
+  "shots": {
+    "mpConsume": 9,
+    "soulshots": 3,
+    "spiritshots": 1,
+  },
   "specialAbilityOptions": [
     {
       "effectChance": null,
@@ -2055,18 +1974,27 @@ exports[`item 287 (Bow of Peril) DTO matches snapshot 1`] = `
       "skills": [],
     },
   ],
-  "spiritshots": 1,
+  "stats": {
+    "accCombat": 3,
+    "mAtk": 99,
+    "pAtk": 400,
+    "pAtkSpd": 293,
+    "rCrit": 12,
+  },
+  "timing": {
+    "reuseDelay": 1500,
+  },
   "type": "weapon",
-  "weaponType": "BOW",
   "weight": 1700,
 }
 `;
 
 exports[`item 288 (Carnage Bow) DTO matches snapshot 1`] = `
 {
-  "accCombat": 3,
-  "armorType": null,
-  "bodypart": "Two-handed",
+  "category": {
+    "bodypart": "Two-handed",
+    "weaponType": "BOW",
+  },
   "craftedBy": [
     {
       "recipeItemId": 5444,
@@ -2079,36 +2007,24 @@ exports[`item 288 (Carnage Bow) DTO matches snapshot 1`] = `
       "successRate": 100,
     },
   ],
-  "crystalCount": 1464,
-  "etcItemType": null,
+  "crystal": {
+    "count": 1464,
+  },
   "grade": "a",
   "iconFile": "weapon_carnium_bow_i00.png",
   "id": 288,
-  "isDropable": null,
-  "isMagical": null,
-  "isSellable": null,
-  "isStackable": null,
-  "isTradable": null,
-  "itemSkill": null,
-  "mAtk": 107,
-  "mDef": null,
   "material": "DAMASCUS",
-  "mpConsume": 9,
   "name": "Carnage Bow",
-  "pAtk": 440,
-  "pAtkSpd": 293,
-  "pDef": null,
   "price": 18300000,
   "pvpBonus": {
     "damageMultiplier": 1.05,
     "display": "+5% PvP Damage",
   },
-  "rCrit": 12,
-  "rEvas": null,
-  "rShld": null,
-  "reuseDelay": 1500,
-  "sDef": null,
-  "soulshots": 2,
+  "shots": {
+    "mpConsume": 9,
+    "soulshots": 2,
+    "spiritshots": 1,
+  },
   "specialAbilityOptions": [
     {
       "effectChance": 35,
@@ -2266,18 +2182,27 @@ exports[`item 288 (Carnage Bow) DTO matches snapshot 1`] = `
       },
     },
   ],
-  "spiritshots": 1,
+  "stats": {
+    "accCombat": 3,
+    "mAtk": 107,
+    "pAtk": 440,
+    "pAtkSpd": 293,
+    "rCrit": 12,
+  },
+  "timing": {
+    "reuseDelay": 1500,
+  },
   "type": "weapon",
-  "weaponType": "BOW",
   "weight": 1670,
 }
 `;
 
 exports[`item 305 (Tallum Glaive) DTO matches snapshot 1`] = `
 {
-  "accCombat": 3,
-  "armorType": null,
-  "bodypart": "Two-handed",
+  "category": {
+    "bodypart": "Two-handed",
+    "weaponType": "POLE",
+  },
   "craftedBy": [
     {
       "recipeItemId": 5456,
@@ -2290,35 +2215,24 @@ exports[`item 305 (Tallum Glaive) DTO matches snapshot 1`] = `
       "successRate": 100,
     },
   ],
-  "crystalCount": 2160,
-  "etcItemType": null,
+  "crystal": {
+    "count": 2160,
+  },
   "grade": "a",
   "iconFile": "weapon_tallum_glaive_i00.png",
   "id": 305,
-  "isDropable": null,
-  "isMagical": null,
-  "isSellable": null,
-  "isStackable": null,
-  "isTradable": null,
   "itemSkill": "3599-1",
-  "mAtk": 114,
-  "mDef": null,
   "material": "CHRYSOLITE",
-  "mpConsume": null,
   "name": "Tallum Glaive",
-  "pAtk": 232,
-  "pAtkSpd": 325,
-  "pDef": null,
   "price": 27000000,
   "pvpBonus": {
     "damageMultiplier": 1.05,
     "display": "+5% PvP Damage",
   },
-  "rCrit": 8,
-  "rEvas": null,
-  "rShld": null,
-  "reuseDelay": null,
-  "sDef": null,
+  "shots": {
+    "soulshots": 1,
+    "spiritshots": 1,
+  },
   "skill": {
     "description": "Enables the character to attack multiple opponents.",
     "effects": [
@@ -2337,7 +2251,6 @@ exports[`item 305 (Tallum Glaive) DTO matches snapshot 1`] = `
     "skillType": "BUFF",
     "target": "TARGET_SELF",
   },
-  "soulshots": 1,
   "specialAbilityOptions": [
     {
       "effectChance": null,
@@ -2476,20 +2389,26 @@ exports[`item 305 (Tallum Glaive) DTO matches snapshot 1`] = `
       ],
     },
   ],
-  "spiritshots": 1,
+  "stats": {
+    "accCombat": 3,
+    "mAtk": 114,
+    "pAtk": 232,
+    "pAtkSpd": 325,
+    "rCrit": 8,
+  },
   "type": "weapon",
-  "weaponType": "POLE",
   "weight": 1840,
 }
 `;
 
 exports[`item 547 (Tallum Helmet) DTO matches snapshot 1`] = `
 {
-  "accCombat": null,
-  "armorType": null,
-  "bodypart": "Helmet",
-  "crystalCount": 139,
-  "etcItemType": null,
+  "category": {
+    "bodypart": "Helmet",
+  },
+  "crystal": {
+    "count": 139,
+  },
   "exchangeFrom": [
     {
       "maintainEnchantment": true,
@@ -2525,20 +2444,8 @@ exports[`item 547 (Tallum Helmet) DTO matches snapshot 1`] = `
   "grade": "a",
   "iconFile": "armor_helmet_i00.png",
   "id": 547,
-  "isDropable": null,
-  "isMagical": null,
-  "isSellable": null,
-  "isStackable": null,
-  "isTradable": null,
-  "itemSkill": null,
-  "mAtk": null,
-  "mDef": null,
   "material": "CLOTH",
-  "mpConsume": null,
   "name": "Tallum Helm",
-  "pAtk": null,
-  "pAtkSpd": null,
-  "pDef": 69,
   "partOfSets": [
     {
       "bonusSkill": {
@@ -2778,43 +2685,29 @@ exports[`item 547 (Tallum Helmet) DTO matches snapshot 1`] = `
     },
   ],
   "price": 1740000,
-  "rCrit": null,
-  "rEvas": null,
-  "rShld": null,
-  "reuseDelay": null,
-  "sDef": null,
-  "soulshots": null,
-  "spiritshots": null,
+  "stats": {
+    "pDef": 69,
+  },
   "type": "armor",
-  "weaponType": null,
   "weight": 570,
 }
 `;
 
 exports[`item 687 (Darin's Letter (Q001 quest item)) DTO matches snapshot 1`] = `
 {
-  "accCombat": null,
-  "armorType": null,
-  "bodypart": null,
-  "crystalCount": null,
-  "etcItemType": "quest",
+  "category": {
+    "etcItemType": "quest",
+  },
+  "flags": {
+    "dropable": false,
+    "sellable": false,
+    "tradable": false,
+  },
   "grade": "none",
   "iconFile": "etc_scroll_gray_i00.png",
   "id": 687,
-  "isDropable": false,
-  "isMagical": null,
-  "isSellable": false,
-  "isStackable": null,
-  "isTradable": false,
-  "itemSkill": null,
-  "mAtk": null,
-  "mDef": null,
   "material": "PAPER",
-  "mpConsume": null,
   "name": "Darin's Letter",
-  "pAtk": null,
-  "pAtkSpd": null,
-  "pDef": null,
   "price": null,
   "questItemFor": [
     {
@@ -2823,48 +2716,22 @@ exports[`item 687 (Darin's Letter (Q001 quest item)) DTO matches snapshot 1`] = 
       "name": "Letters of Love",
     },
   ],
-  "rCrit": null,
-  "rEvas": null,
-  "rShld": null,
-  "reuseDelay": null,
-  "sDef": null,
-  "soulshots": null,
-  "spiritshots": null,
   "type": "etcitem",
-  "weaponType": null,
   "weight": null,
 }
 `;
 
 exports[`item 906 (Necklace (Q001 reward)) DTO matches snapshot 1`] = `
 {
-  "accCombat": null,
-  "armorType": null,
-  "bodypart": "Necklace",
-  "crystalCount": null,
-  "etcItemType": null,
+  "category": {
+    "bodypart": "Necklace",
+  },
   "grade": "none",
   "iconFile": "accessary_necklace_of_knowledge_i00.png",
   "id": 906,
-  "isDropable": null,
-  "isMagical": null,
-  "isSellable": null,
-  "isStackable": null,
-  "isTradable": null,
-  "itemSkill": null,
-  "mAtk": null,
-  "mDef": 18,
   "material": "SILVER",
-  "mpConsume": null,
   "name": "Necklace of Knowledge",
-  "pAtk": null,
-  "pAtkSpd": null,
-  "pDef": null,
   "price": 1080,
-  "rCrit": null,
-  "rEvas": null,
-  "rShld": null,
-  "reuseDelay": null,
   "rewardedByQuests": [
     {
       "count": 1,
@@ -2883,7 +2750,6 @@ exports[`item 906 (Necklace (Q001 reward)) DTO matches snapshot 1`] = `
       },
     },
   ],
-  "sDef": null,
   "soldBy": [
     {
       "buyListId": 13,
@@ -2926,44 +2792,22 @@ exports[`item 906 (Necklace (Q001 reward)) DTO matches snapshot 1`] = `
       "price": 1242,
     },
   ],
-  "soulshots": null,
-  "spiritshots": null,
+  "stats": {
+    "mDef": 18,
+  },
   "type": "armor",
-  "weaponType": null,
   "weight": 150,
 }
 `;
 
 exports[`item 1152 (Spellbook: Heal) DTO matches snapshot 1`] = `
 {
-  "accCombat": null,
-  "armorType": null,
-  "bodypart": null,
-  "crystalCount": null,
-  "etcItemType": null,
   "grade": "none",
   "iconFile": "etc_spell_books_white_i00.png",
   "id": 1152,
-  "isDropable": null,
-  "isMagical": null,
-  "isSellable": null,
-  "isStackable": null,
-  "isTradable": null,
-  "itemSkill": null,
-  "mAtk": null,
-  "mDef": null,
   "material": "PAPER",
-  "mpConsume": null,
   "name": "Spellbook: Heal",
-  "pAtk": null,
-  "pAtkSpd": null,
-  "pDef": null,
   "price": 100,
-  "rCrit": null,
-  "rEvas": null,
-  "rShld": null,
-  "reuseDelay": null,
-  "sDef": null,
   "soldBy": [
     {
       "buyListId": 196,
@@ -3238,8 +3082,6 @@ exports[`item 1152 (Spellbook: Heal) DTO matches snapshot 1`] = `
       "price": 130,
     },
   ],
-  "soulshots": null,
-  "spiritshots": null,
   "type": "etcitem",
   "usedAsSpellbook": {
     "iconFile": "skill1011.png",
@@ -3278,18 +3120,19 @@ exports[`item 1152 (Spellbook: Heal) DTO matches snapshot 1`] = `
     "skillId": 1011,
     "skillName": "Heal",
   },
-  "weaponType": null,
   "weight": 120,
 }
 `;
 
 exports[`item 2382 (Tallum Plate Armor) DTO matches snapshot 1`] = `
 {
-  "accCombat": null,
-  "armorType": "HEAVY",
-  "bodypart": "Full Armor",
-  "crystalCount": 541,
-  "etcItemType": null,
+  "category": {
+    "armorType": "HEAVY",
+    "bodypart": "Full Armor",
+  },
+  "crystal": {
+    "count": 541,
+  },
   "exchangeFrom": [
     {
       "maintainEnchantment": true,
@@ -3325,20 +3168,8 @@ exports[`item 2382 (Tallum Plate Armor) DTO matches snapshot 1`] = `
   "grade": "a",
   "iconFile": "armor_t77_ul_i00.png",
   "id": 2382,
-  "isDropable": null,
-  "isMagical": null,
-  "isSellable": null,
-  "isStackable": null,
-  "isTradable": null,
-  "itemSkill": null,
-  "mAtk": null,
-  "mDef": null,
   "material": "LEATHER",
-  "mpConsume": null,
   "name": "Tallum Plate Armor",
-  "pAtk": null,
-  "pAtkSpd": null,
-  "pDef": 278,
   "partOfSets": [
     {
       "bonusSkill": {
@@ -3419,26 +3250,22 @@ exports[`item 2382 (Tallum Plate Armor) DTO matches snapshot 1`] = `
     },
   ],
   "price": 6770000,
-  "rCrit": null,
-  "rEvas": null,
-  "rShld": null,
-  "reuseDelay": null,
-  "sDef": null,
-  "soulshots": null,
-  "spiritshots": null,
+  "stats": {
+    "pDef": 278,
+  },
   "type": "armor",
-  "weaponType": null,
   "weight": 9780,
 }
 `;
 
 exports[`item 4445 (Dye of STR (Str+1 Con-3) — symbolId 1) DTO matches snapshot 1`] = `
 {
-  "accCombat": null,
-  "armorType": null,
-  "bodypart": null,
-  "crystalCount": null,
-  "etcItemType": "dye",
+  "category": {
+    "etcItemType": "dye",
+  },
+  "flags": {
+    "stackable": true,
+  },
   "grade": "none",
   "henna": {
     "displayName": "Symbol of Strength",
@@ -3458,26 +3285,9 @@ exports[`item 4445 (Dye of STR (Str+1 Con-3) — symbolId 1) DTO matches snapsho
   },
   "iconFile": "etc_str_hena_i00.png",
   "id": 4445,
-  "isDropable": null,
-  "isMagical": null,
-  "isSellable": null,
-  "isStackable": true,
-  "isTradable": null,
-  "itemSkill": null,
-  "mAtk": null,
-  "mDef": null,
   "material": "LIQUID",
-  "mpConsume": null,
   "name": "Dye of STR (Str+1 Con-3)",
-  "pAtk": null,
-  "pAtkSpd": null,
-  "pDef": null,
   "price": 5100,
-  "rCrit": null,
-  "rEvas": null,
-  "rShld": null,
-  "reuseDelay": null,
-  "sDef": null,
   "soldBy": [
     {
       "buyListId": 368,
@@ -3584,19 +3394,16 @@ exports[`item 4445 (Dye of STR (Str+1 Con-3) — symbolId 1) DTO matches snapsho
       "price": 6630,
     },
   ],
-  "soulshots": null,
-  "spiritshots": null,
   "type": "etcitem",
-  "weaponType": null,
   "weight": 150,
 }
 `;
 
 exports[`item 4624 (Dye of MEN (Men-4 Wit+4) — symbolId 180) DTO matches snapshot 1`] = `
 {
-  "accCombat": null,
-  "armorType": null,
-  "bodypart": null,
+  "category": {
+    "etcItemType": "dye",
+  },
   "craftedBy": [
     {
       "recipeItemId": 7013,
@@ -3604,8 +3411,9 @@ exports[`item 4624 (Dye of MEN (Men-4 Wit+4) — symbolId 180) DTO matches snaps
       "successRate": 100,
     },
   ],
-  "crystalCount": null,
-  "etcItemType": "dye",
+  "flags": {
+    "stackable": true,
+  },
   "grade": "none",
   "henna": {
     "displayName": null,
@@ -3625,39 +3433,20 @@ exports[`item 4624 (Dye of MEN (Men-4 Wit+4) — symbolId 180) DTO matches snaps
   },
   "iconFile": "etc_wit_hena_i02.png",
   "id": 4624,
-  "isDropable": null,
-  "isMagical": null,
-  "isSellable": null,
-  "isStackable": true,
-  "isTradable": null,
-  "itemSkill": null,
-  "mAtk": null,
-  "mDef": null,
   "material": "LIQUID",
-  "mpConsume": null,
   "name": "Greater Dye of WIT (Wit+4 Men-4)",
-  "pAtk": null,
-  "pAtkSpd": null,
-  "pDef": null,
   "price": 174000,
-  "rCrit": null,
-  "rEvas": null,
-  "rShld": null,
-  "reuseDelay": null,
-  "sDef": null,
-  "soulshots": null,
-  "spiritshots": null,
   "type": "etcitem",
-  "weaponType": null,
   "weight": 150,
 }
 `;
 
 exports[`item 5293 (Sealed Tallum Plate Armor) DTO matches snapshot 1`] = `
 {
-  "accCombat": null,
-  "armorType": "HEAVY",
-  "bodypart": "Full Armor",
+  "category": {
+    "armorType": "HEAVY",
+    "bodypart": "Full Armor",
+  },
   "craftedBy": [
     {
       "recipeItemId": 5418,
@@ -3670,8 +3459,9 @@ exports[`item 5293 (Sealed Tallum Plate Armor) DTO matches snapshot 1`] = `
       "successRate": 100,
     },
   ],
-  "crystalCount": 541,
-  "etcItemType": null,
+  "crystal": {
+    "count": 541,
+  },
   "exchangeFor": [
     {
       "maintainEnchantment": true,
@@ -3707,41 +3497,25 @@ exports[`item 5293 (Sealed Tallum Plate Armor) DTO matches snapshot 1`] = `
   "grade": "a",
   "iconFile": "armor_t77_ul_i02.png",
   "id": 5293,
-  "isDropable": null,
-  "isMagical": null,
-  "isSellable": null,
-  "isStackable": null,
-  "isTradable": null,
-  "itemSkill": null,
-  "mAtk": null,
-  "mDef": null,
   "material": "LEATHER",
-  "mpConsume": null,
   "name": "Sealed Tallum Plate Armor",
-  "pAtk": null,
-  "pAtkSpd": null,
-  "pDef": 278,
   "price": 6770000,
-  "rCrit": null,
-  "rEvas": null,
-  "rShld": null,
-  "reuseDelay": null,
-  "sDef": null,
-  "soulshots": null,
-  "spiritshots": null,
+  "stats": {
+    "pDef": 278,
+  },
   "type": "armor",
-  "weaponType": null,
   "weight": 9780,
 }
 `;
 
 exports[`item 5710 (Zubei's Gauntlets - Heavy Armor) DTO matches snapshot 1`] = `
 {
-  "accCombat": null,
-  "armorType": null,
-  "bodypart": "Gloves",
-  "crystalCount": 69,
-  "etcItemType": null,
+  "category": {
+    "bodypart": "Gloves",
+  },
+  "crystal": {
+    "count": 69,
+  },
   "exchangeFor": [
     {
       "maintainEnchantment": true,
@@ -3901,20 +3675,8 @@ exports[`item 5710 (Zubei's Gauntlets - Heavy Armor) DTO matches snapshot 1`] = 
   "grade": "b",
   "iconFile": "armor_t64_g_i00.png",
   "id": 5710,
-  "isDropable": null,
-  "isMagical": null,
-  "isSellable": null,
-  "isStackable": null,
-  "isTradable": null,
-  "itemSkill": null,
-  "mAtk": null,
-  "mDef": null,
   "material": "MITHRIL",
-  "mpConsume": null,
   "name": "Zubei's Gauntlets - Heavy Armor",
-  "pAtk": null,
-  "pAtkSpd": null,
-  "pDef": 41,
   "partOfSets": [
     {
       "bonusSkill": {
@@ -3995,24 +3757,20 @@ exports[`item 5710 (Zubei's Gauntlets - Heavy Armor) DTO matches snapshot 1`] = 
     },
   ],
   "price": 519000,
-  "rCrit": null,
-  "rEvas": null,
-  "rShld": null,
-  "reuseDelay": null,
-  "sDef": null,
-  "soulshots": null,
-  "spiritshots": null,
+  "stats": {
+    "pDef": 41,
+  },
   "type": "armor",
-  "weaponType": null,
   "weight": 590,
 }
 `;
 
 exports[`item 6367 (Angel Slayer) DTO matches snapshot 1`] = `
 {
-  "accCombat": 3,
-  "armorType": null,
-  "bodypart": "One-handed",
+  "category": {
+    "bodypart": "One-handed",
+    "weaponType": "DAGGER",
+  },
   "craftedBy": [
     {
       "recipeItemId": 6887,
@@ -4025,36 +3783,23 @@ exports[`item 6367 (Angel Slayer) DTO matches snapshot 1`] = `
       "successRate": 100,
     },
   ],
-  "crystalCount": 2440,
-  "etcItemType": null,
+  "crystal": {
+    "count": 2440,
+  },
   "grade": "s",
   "iconFile": "weapon_angel_slayer_i00.png",
   "id": 6367,
-  "isDropable": null,
-  "isMagical": null,
-  "isSellable": null,
-  "isStackable": null,
-  "isTradable": null,
-  "itemSkill": null,
-  "mAtk": 132,
-  "mDef": null,
   "material": "ADAMANTAITE",
-  "mpConsume": null,
   "name": "Angel Slayer",
-  "pAtk": 246,
-  "pAtkSpd": 433,
-  "pDef": null,
   "price": 48800000,
   "pvpBonus": {
     "damageMultiplier": 1.05,
     "display": "+5% PvP Damage",
   },
-  "rCrit": 12,
-  "rEvas": null,
-  "rShld": null,
-  "reuseDelay": null,
-  "sDef": null,
-  "soulshots": 1,
+  "shots": {
+    "soulshots": 1,
+    "spiritshots": 1,
+  },
   "specialAbilityOptions": [
     {
       "effectChance": null,
@@ -4183,18 +3928,24 @@ exports[`item 6367 (Angel Slayer) DTO matches snapshot 1`] = `
       ],
     },
   ],
-  "spiritshots": 1,
+  "stats": {
+    "accCombat": 3,
+    "mAtk": 132,
+    "pAtk": 246,
+    "pAtkSpd": 433,
+    "rCrit": 12,
+  },
   "type": "weapon",
-  "weaponType": "DAGGER",
   "weight": 950,
 }
 `;
 
 exports[`item 6370 (Saint Spear) DTO matches snapshot 1`] = `
 {
-  "accCombat": 3,
-  "armorType": null,
-  "bodypart": "Two-handed",
+  "category": {
+    "bodypart": "Two-handed",
+    "weaponType": "POLE",
+  },
   "craftedBy": [
     {
       "recipeItemId": 6893,
@@ -4207,35 +3958,24 @@ exports[`item 6370 (Saint Spear) DTO matches snapshot 1`] = `
       "successRate": 100,
     },
   ],
-  "crystalCount": 2440,
-  "etcItemType": null,
+  "crystal": {
+    "count": 2440,
+  },
   "grade": "s",
   "iconFile": "weapon_saint_spear_i00.png",
   "id": 6370,
-  "isDropable": null,
-  "isMagical": null,
-  "isSellable": null,
-  "isStackable": null,
-  "isTradable": null,
   "itemSkill": "3599-1",
-  "mAtk": 132,
-  "mDef": null,
   "material": "ADAMANTAITE",
-  "mpConsume": null,
   "name": "Saint Spear",
-  "pAtk": 281,
-  "pAtkSpd": 325,
-  "pDef": null,
   "price": 48800000,
   "pvpBonus": {
     "damageMultiplier": 1.05,
     "display": "+5% PvP Damage",
   },
-  "rCrit": 8,
-  "rEvas": null,
-  "rShld": null,
-  "reuseDelay": null,
-  "sDef": null,
+  "shots": {
+    "soulshots": 1,
+    "spiritshots": 1,
+  },
   "skill": {
     "description": "Enables the character to attack multiple opponents.",
     "effects": [
@@ -4254,7 +3994,6 @@ exports[`item 6370 (Saint Spear) DTO matches snapshot 1`] = `
     "skillType": "BUFF",
     "target": "TARGET_SELF",
   },
-  "soulshots": 1,
   "specialAbilityOptions": [
     {
       "effectChance": null,
@@ -4398,18 +4137,24 @@ exports[`item 6370 (Saint Spear) DTO matches snapshot 1`] = `
       ],
     },
   ],
-  "spiritshots": 1,
+  "stats": {
+    "accCombat": 3,
+    "mAtk": 132,
+    "pAtk": 281,
+    "pAtkSpd": 325,
+    "rCrit": 8,
+  },
   "type": "weapon",
-  "weaponType": "POLE",
   "weight": 1800,
 }
 `;
 
 exports[`item 6372 (Heaven's Divider) DTO matches snapshot 1`] = `
 {
-  "accCombat": null,
-  "armorType": null,
-  "bodypart": "Two-handed",
+  "category": {
+    "bodypart": "Two-handed",
+    "weaponType": "BIGSWORD",
+  },
   "craftedBy": [
     {
       "recipeItemId": 6897,
@@ -4422,36 +4167,23 @@ exports[`item 6372 (Heaven's Divider) DTO matches snapshot 1`] = `
       "successRate": 100,
     },
   ],
-  "crystalCount": 2440,
-  "etcItemType": null,
+  "crystal": {
+    "count": 2440,
+  },
   "grade": "s",
   "iconFile": "weapon_heavens_divider_i00.png",
   "id": 6372,
-  "isDropable": null,
-  "isMagical": null,
-  "isSellable": null,
-  "isStackable": null,
-  "isTradable": null,
-  "itemSkill": null,
-  "mAtk": 132,
-  "mDef": null,
   "material": "ADAMANTAITE",
-  "mpConsume": null,
   "name": "Heaven's Divider",
-  "pAtk": 342,
-  "pAtkSpd": 325,
-  "pDef": null,
   "price": 48800000,
   "pvpBonus": {
     "damageMultiplier": 1.05,
     "display": "+5% PvP Damage",
   },
-  "rCrit": 8,
-  "rEvas": null,
-  "rShld": null,
-  "reuseDelay": null,
-  "sDef": null,
-  "soulshots": 1,
+  "shots": {
+    "soulshots": 1,
+    "spiritshots": 1,
+  },
   "specialAbilityOptions": [
     {
       "effectChance": null,
@@ -4585,18 +4317,23 @@ exports[`item 6372 (Heaven's Divider) DTO matches snapshot 1`] = `
       ],
     },
   ],
-  "spiritshots": 1,
+  "stats": {
+    "mAtk": 132,
+    "pAtk": 342,
+    "pAtkSpd": 325,
+    "rCrit": 8,
+  },
   "type": "weapon",
-  "weaponType": "BIGSWORD",
   "weight": 1380,
 }
 `;
 
 exports[`item 6579 (Arcana Mace) DTO matches snapshot 1`] = `
 {
-  "accCombat": 4,
-  "armorType": null,
-  "bodypart": "One-handed",
+  "category": {
+    "bodypart": "One-handed",
+    "weaponType": "BLUNT",
+  },
   "craftedBy": [
     {
       "recipeItemId": 6899,
@@ -4609,36 +4346,26 @@ exports[`item 6579 (Arcana Mace) DTO matches snapshot 1`] = `
       "successRate": 100,
     },
   ],
-  "crystalCount": 2440,
-  "etcItemType": null,
+  "crystal": {
+    "count": 2440,
+  },
+  "flags": {
+    "magical": true,
+  },
   "grade": "s",
   "iconFile": "weapon_arcana_mace_i00.png",
   "id": 6579,
-  "isDropable": null,
-  "isMagical": true,
-  "isSellable": null,
-  "isStackable": null,
-  "isTradable": null,
-  "itemSkill": null,
-  "mAtk": 175,
-  "mDef": null,
   "material": "ADAMANTAITE",
-  "mpConsume": null,
   "name": "Arcana Mace",
-  "pAtk": 225,
-  "pAtkSpd": 379,
-  "pDef": null,
   "price": 48800000,
   "pvpBonus": {
     "damageMultiplier": 1.05,
     "display": "+5% PvP Damage",
   },
-  "rCrit": 4,
-  "rEvas": null,
-  "rShld": null,
-  "reuseDelay": null,
-  "sDef": null,
-  "soulshots": 1,
+  "shots": {
+    "soulshots": 1,
+    "spiritshots": 1,
+  },
   "specialAbilityOptions": [
     {
       "effectChance": null,
@@ -4767,18 +4494,24 @@ exports[`item 6579 (Arcana Mace) DTO matches snapshot 1`] = `
       ],
     },
   ],
-  "spiritshots": 1,
+  "stats": {
+    "accCombat": 4,
+    "mAtk": 175,
+    "pAtk": 225,
+    "pAtkSpd": 379,
+    "rCrit": 4,
+  },
   "type": "weapon",
-  "weaponType": "BLUNT",
   "weight": 1300,
 }
 `;
 
 exports[`item 7575 (Draconic Bow) DTO matches snapshot 1`] = `
 {
-  "accCombat": 3,
-  "armorType": null,
-  "bodypart": "Two-handed",
+  "category": {
+    "bodypart": "Two-handed",
+    "weaponType": "BOW",
+  },
   "craftedBy": [
     {
       "recipeItemId": 7580,
@@ -4791,36 +4524,24 @@ exports[`item 7575 (Draconic Bow) DTO matches snapshot 1`] = `
       "successRate": 100,
     },
   ],
-  "crystalCount": 2440,
-  "etcItemType": null,
+  "crystal": {
+    "count": 2440,
+  },
   "grade": "s",
   "iconFile": "weapon_draconic_bow_i00.png",
   "id": 7575,
-  "isDropable": null,
-  "isMagical": null,
-  "isSellable": null,
-  "isStackable": null,
-  "isTradable": null,
-  "itemSkill": null,
-  "mAtk": 132,
-  "mDef": null,
   "material": "ADAMANTAITE",
-  "mpConsume": 11,
   "name": "Draconic Bow",
-  "pAtk": 581,
-  "pAtkSpd": 293,
-  "pDef": null,
   "price": 48800000,
   "pvpBonus": {
     "damageMultiplier": 1.05,
     "display": "+5% PvP Damage",
   },
-  "rCrit": 12,
-  "rEvas": null,
-  "rShld": null,
-  "reuseDelay": 1500,
-  "sDef": null,
-  "soulshots": 1,
+  "shots": {
+    "mpConsume": 11,
+    "soulshots": 1,
+    "spiritshots": 1,
+  },
   "specialAbilityOptions": [
     {
       "effectChance": null,
@@ -4965,20 +4686,27 @@ exports[`item 7575 (Draconic Bow) DTO matches snapshot 1`] = `
       ],
     },
   ],
-  "spiritshots": 1,
+  "stats": {
+    "accCombat": 3,
+    "mAtk": 132,
+    "pAtk": 581,
+    "pAtkSpd": 293,
+    "rCrit": 12,
+  },
+  "timing": {
+    "reuseDelay": 1500,
+  },
   "type": "weapon",
-  "weaponType": "BOW",
   "weight": 1650,
 }
 `;
 
 exports[`item 7871 (Sealed Apella Plate Armor) DTO matches snapshot 1`] = `
 {
-  "accCombat": null,
-  "armorType": "HEAVY",
-  "bodypart": "Full Armor",
-  "crystalCount": null,
-  "etcItemType": null,
+  "category": {
+    "armorType": "HEAVY",
+    "bodypart": "Full Armor",
+  },
   "exchangeFor": [
     {
       "maintainEnchantment": true,
@@ -5050,30 +4778,13 @@ exports[`item 7871 (Sealed Apella Plate Armor) DTO matches snapshot 1`] = `
   "grade": "a",
   "iconFile": "armor_t1004_ul_i02.png",
   "id": 7871,
-  "isDropable": null,
-  "isMagical": null,
-  "isSellable": null,
-  "isStackable": null,
-  "isTradable": null,
-  "itemSkill": null,
-  "mAtk": null,
-  "mDef": null,
   "material": "LEATHER",
-  "mpConsume": null,
   "name": "Sealed Apella Plate Armor",
-  "pAtk": null,
-  "pAtkSpd": null,
-  "pDef": 278,
   "price": null,
-  "rCrit": null,
-  "rEvas": null,
-  "rShld": null,
-  "reuseDelay": null,
-  "sDef": null,
-  "soulshots": null,
-  "spiritshots": null,
+  "stats": {
+    "pDef": 278,
+  },
   "type": "armor",
-  "weaponType": null,
   "weight": 9780,
 }
 `;

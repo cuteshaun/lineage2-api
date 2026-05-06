@@ -47,3 +47,5 @@ next-env.d.ts
 /data/datapack/*/*.decoded.bin
 /data/datapack/*/*.decoded.txt
 /data/datapack/*/item-icons-grp.audit.json
+
+/docs/api-response-audit.md

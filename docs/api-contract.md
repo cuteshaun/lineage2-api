@@ -26,9 +26,28 @@ or fabricate text that isn't supported by source data.
 
 ## `ItemDetailDto` — stable fields
 
-All fields listed below appear in every fixture for an item-detail
-response. Their presence and shape are part of the contract. Values may
-be `null` per type; the field itself is always emitted.
+### Null vs absent policy
+
+`ItemDetailDto` distinguishes two kinds of "no value":
+
+- **`null`** — *known missing source data.* The source XML simply
+  carries no value for the field. Reserved for the four
+  always-emitted top-level fields below: `weight`, `price`,
+  `material`, `iconFile`.
+- **Absent** — *not applicable to this item type.* Optional groups
+  (`category`, `stats`, `shots`, `timing`, `flags`, `crystal`) and
+  their inner keys are **omitted entirely** when their underlying
+  source value is null OR when the field doesn't make sense for
+  the item type. Absence ≠ unknown.
+
+This split lets consumers tell "the parser couldn't extract this"
+apart from "this field doesn't apply to currency / dye / armor /
+etc." Adena returns no `stats`, no `shots`, no `category` —
+because none of those things describe a currency item. A weapon
+that the parser couldn't extract a price for returns
+`price: null` — consumers know the value is missing, not absent.
+
+### Always-present top-level fields
 
 | Field | Type | Notes |
 |---|---|---|
@@ -36,20 +55,33 @@ be `null` per type; the field itself is always emitted.
 | `name` | string | Item name |
 | `type` | `"weapon" \| "armor" \| "etcitem"` | |
 | `grade` | `"none" \| "d" \| "c" \| "b" \| "a" \| "s"` | |
-| `weight` | number \| null | |
-| `price` | number \| null | |
-| `material` | string \| null | |
-| `bodypart` | string \| null | Normalized via `BODYPART_LABELS` (e.g. `"rhand"` → `"One-handed"`) |
-| `weaponType`, `armorType`, `etcItemType` | string \| null | One of the three is set per `type` |
-| `isStackable`, `isTradable`, `isDropable`, `isSellable` | boolean \| null | |
-| `soulshots`, `spiritshots`, `mpConsume`, `reuseDelay` | number \| null | |
-| `itemSkill` | string \| null | Raw `"id-level"` reference (or semicolon-joined for items with multiple) |
-| `isMagical` | boolean \| null | |
-| `crystalCount` | number \| null | |
-| `pAtk`, `mAtk`, `pDef`, `mDef`, `rCrit`, `pAtkSpd`, `rShld`, `sDef`, `accCombat`, `rEvas` | number \| null | Combat stats |
-| `iconFile` | string \| null | Filename inside `public/icons/` |
+| `weight` | number \| null | `null` = source missing |
+| `price` | number \| null | `null` = source missing |
+| `material` | string \| null | `null` = source missing |
+| `iconFile` | string \| null | Filename inside `public/icons/`. `null` when no `iconFile` resolves on disk. |
 
-### Optional sections (present only when applicable)
+### Optional groups (omitted when no inner key applies)
+
+Each group is itself optional. Inside a group, individual keys are
+also optional and omitted when the source value is null. Empty
+groups are never emitted.
+
+| Group | Inner keys | When present |
+|---|---|---|
+| `category?: ItemCategoryDto` | `bodypart?`, `weaponType?`, `armorType?`, `etcItemType?` (all `string` when present) | When at least one routing label applies. Weapons set `weaponType`; armor sets `armorType` and (usually) `bodypart`; categorised etcitems set `etcItemType`. `bodypart` is normalized via `BODYPART_LABELS` (e.g. `"rhand"` → `"One-handed"`). |
+| `stats?: ItemStatsDto` | `pAtk?`, `pDef?`, `mAtk?`, `mDef?`, `rCrit?`, `pAtkSpd?`, `rShld?`, `sDef?`, `accCombat?`, `rEvas?` (all `number`) | When the item has any combat stat. Weapons and most armor pieces; absent on jewelry that ships no stat block in source, and on all etcitems / currency. |
+| `shots?: ItemShotsDto` | `soulshots?`, `spiritshots?`, `mpConsume?` (all `number`) | When the item declares per-attack/per-cast consumption. Weapons (shots) and skill-bearing items (`mpConsume`). |
+| `timing?: ItemTimingDto` | `reuseDelay?: number` | When the item declares a reuse cooldown. Currently a single-key group — kept as a group for forward-compatibility with future timing fields. |
+| `flags?: ItemFlagsDto` | `stackable?`, `tradable?`, `dropable?`, `sellable?`, `magical?` (all `boolean`) | When the source declares any of these flags. Inner keys drop the `is` prefix (the grouping makes it redundant). `dropable` keeps the engine spelling. |
+| `crystal?: ItemCrystalDto` | `count: number` (required *inside* the group) | When the item has a non-null `crystalCount` in source. The group is the optional bit; once present, `count` is always set. |
+
+### Other optional top-level fields
+
+| Field | Type | When present |
+|---|---|---|
+| `itemSkill?` | string | Raw `"id-level"` reference (or semicolon-joined for items with multiple). The resolved version lives in `skill?` below. |
+
+### Optional cross-link / detail blocks (present only when applicable)
 
 | Field | When present |
 |---|---|

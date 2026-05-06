@@ -49,7 +49,7 @@ Requesting an unknown chronicle returns **404**.
 | Method | Path | Description |
 |---|---|---|
 | GET | `/api/[chronicle]/items` | List items (filter, sort, paginate) |
-| GET | `/api/[chronicle]/items/[id]` | Single item by id (enriched: skill, SA, recipes, partOfSets) |
+| GET | `/api/[chronicle]/items/[id]` | Single item by id. Common fields (`id`, `name`, `type`, `grade`, `weight`, `price`, `material`, `iconFile`) are top-level; type-specific data is grouped into optional objects (`category`, `stats`, `shots`, `timing`, `flags`, `crystal`) which are **omitted entirely when not applicable** to the item type. Cross-link blocks (`skill`, `specialAbilityOptions`, `partOfSets`, `crafting`, `craftedBy`, `soldBy`, `exchangeFrom`/`exchangeFor`, `rewardedByQuests`, `questItemFor`, `henna`, `usedAsSpellbook`) stay top-level. See `docs/api-contract.md` for the field table and the null-vs-absent policy. |
 | GET | `/api/[chronicle]/items/[id]/dropped-by` | NPCs that drop this item (paginated) |
 | GET | `/api/[chronicle]/items/[id]/spoiled-by` | NPCs that spoil this item (paginated) |
 

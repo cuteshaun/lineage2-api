@@ -171,40 +171,98 @@ export interface ItemListDto {
   iconFile: string | null;
 }
 
+/**
+ * Equipment-slot / category info. One inner key set per item:
+ * `weaponType` for weapons, `armorType` (+ usually `bodypart`) for
+ * armor, `etcItemType` for etcitems with a known subtype. The
+ * group itself is omitted when none of the four keys would be set
+ * (e.g. plain currency like Adena has no category routing).
+ */
+export interface ItemCategoryDto {
+  bodypart?: string;
+  weaponType?: string;
+  armorType?: string;
+  etcItemType?: string;
+}
+
+/**
+ * Combat stats. Populated only when source carries non-null values;
+ * the entire group is omitted on items with no combat profile (most
+ * etcitems, jewelry rings/earrings/necklaces in Interlude).
+ */
+export interface ItemStatsDto {
+  pAtk?: number;
+  pDef?: number;
+  mAtk?: number;
+  mDef?: number;
+  rCrit?: number;
+  pAtkSpd?: number;
+  rShld?: number;
+  sDef?: number;
+  accCombat?: number;
+  rEvas?: number;
+}
+
+/** Per-attack / per-cast consumption. Weapons + magical items. */
+export interface ItemShotsDto {
+  soulshots?: number;
+  spiritshots?: number;
+  mpConsume?: number;
+}
+
+/** Cooldown timing. */
+export interface ItemTimingDto {
+  reuseDelay?: number;
+}
+
+/**
+ * Boolean engine flags. Group is omitted entirely when source
+ * carries no flags. Inner keys drop the `is` prefix — the grouping
+ * makes it redundant. `dropable` keeps the engine spelling.
+ */
+export interface ItemFlagsDto {
+  stackable?: boolean;
+  tradable?: boolean;
+  dropable?: boolean;
+  sellable?: boolean;
+  magical?: boolean;
+}
+
+/** Crystal value. */
+export interface ItemCrystalDto {
+  count: number;
+}
+
 export interface ItemDetailDto {
+  // ── Always present ──
   id: number;
   name: string;
   type: string;
   grade: string;
+  /**
+   * `null` means the source XML carries no value for this field —
+   * "known missing" data. Other absences below (groups omitted,
+   * inner keys absent) mean "not applicable to this item type".
+   * See `docs/api-contract.md` for the full null-vs-absent policy.
+   */
   weight: number | null;
   price: number | null;
   material: string | null;
-  bodypart: string | null;
-  weaponType: string | null;
-  armorType: string | null;
-  etcItemType: string | null;
-  isStackable: boolean | null;
-  isTradable: boolean | null;
-  isDropable: boolean | null;
-  isSellable: boolean | null;
-  soulshots: number | null;
-  spiritshots: number | null;
-  mpConsume: number | null;
-  reuseDelay: number | null;
-  itemSkill: string | null;
-  isMagical: boolean | null;
-  crystalCount: number | null;
-  pAtk: number | null;
-  mAtk: number | null;
-  pDef: number | null;
-  mDef: number | null;
-  rCrit: number | null;
-  pAtkSpd: number | null;
-  rShld: number | null;
-  sDef: number | null;
-  accCombat: number | null;
-  rEvas: number | null;
   iconFile: string | null;
+  // ── Type-specific groups (omitted entirely when no inner key applies) ──
+  category?: ItemCategoryDto;
+  stats?: ItemStatsDto;
+  shots?: ItemShotsDto;
+  timing?: ItemTimingDto;
+  flags?: ItemFlagsDto;
+  crystal?: ItemCrystalDto;
+  /**
+   * Raw `"id-level"` reference (or semicolon-joined for items with
+   * multiple). Resolved version lives in `skill?` below. Omitted
+   * when the item has no embedded skill.
+   */
+  itemSkill?: string;
+  // ── Existing optional cross-links / detail blocks ──
   skill?: SkillSummaryDto;
   specialAbilityOptions?: SaVariantDto[];
   /**
@@ -393,33 +451,57 @@ export function toItemDetailDto(
     weight: item.weight,
     price: item.price,
     material: item.material,
-    bodypart: normalizeBodypart(item.bodypart),
-    weaponType: item.weaponType,
-    armorType: item.armorType,
-    etcItemType: item.etcItemType,
-    isStackable: item.isStackable,
-    isTradable: item.isTradable,
-    isDropable: item.isDropable,
-    isSellable: item.isSellable,
-    soulshots: item.soulshots,
-    spiritshots: item.spiritshots,
-    mpConsume: item.mpConsume,
-    reuseDelay: item.reuseDelay,
-    itemSkill: item.itemSkill,
-    isMagical: item.isMagical,
-    crystalCount: item.crystalCount,
-    pAtk: item.pAtk,
-    mAtk: item.mAtk,
-    pDef: item.pDef,
-    mDef: item.mDef,
-    rCrit: item.rCrit,
-    pAtkSpd: item.pAtkSpd,
-    rShld: item.rShld,
-    sDef: item.sDef,
-    accCombat: item.accCombat,
-    rEvas: item.rEvas,
     iconFile: item.iconFile,
   };
+
+  // Type-specific groups — omit entirely when no inner key applies.
+  // Inner keys are absent when source value is null. Pre-v1 cleanup
+  // distinguishes "not applicable" (absence) from "known missing"
+  // (the four nullable top-level fields above).
+  const bodypart = normalizeBodypart(item.bodypart);
+  const category: ItemCategoryDto = {};
+  if (bodypart != null) category.bodypart = bodypart;
+  if (item.weaponType != null) category.weaponType = item.weaponType;
+  if (item.armorType != null) category.armorType = item.armorType;
+  if (item.etcItemType != null) category.etcItemType = item.etcItemType;
+  if (Object.keys(category).length > 0) dto.category = category;
+
+  const stats: ItemStatsDto = {};
+  if (item.pAtk != null) stats.pAtk = item.pAtk;
+  if (item.pDef != null) stats.pDef = item.pDef;
+  if (item.mAtk != null) stats.mAtk = item.mAtk;
+  if (item.mDef != null) stats.mDef = item.mDef;
+  if (item.rCrit != null) stats.rCrit = item.rCrit;
+  if (item.pAtkSpd != null) stats.pAtkSpd = item.pAtkSpd;
+  if (item.rShld != null) stats.rShld = item.rShld;
+  if (item.sDef != null) stats.sDef = item.sDef;
+  if (item.accCombat != null) stats.accCombat = item.accCombat;
+  if (item.rEvas != null) stats.rEvas = item.rEvas;
+  if (Object.keys(stats).length > 0) dto.stats = stats;
+
+  const shots: ItemShotsDto = {};
+  if (item.soulshots != null) shots.soulshots = item.soulshots;
+  if (item.spiritshots != null) shots.spiritshots = item.spiritshots;
+  if (item.mpConsume != null) shots.mpConsume = item.mpConsume;
+  if (Object.keys(shots).length > 0) dto.shots = shots;
+
+  if (item.reuseDelay != null) {
+    dto.timing = { reuseDelay: item.reuseDelay };
+  }
+
+  const flags: ItemFlagsDto = {};
+  if (item.isStackable != null) flags.stackable = item.isStackable;
+  if (item.isTradable != null) flags.tradable = item.isTradable;
+  if (item.isDropable != null) flags.dropable = item.isDropable;
+  if (item.isSellable != null) flags.sellable = item.isSellable;
+  if (item.isMagical != null) flags.magical = item.isMagical;
+  if (Object.keys(flags).length > 0) dto.flags = flags;
+
+  if (item.crystalCount != null) {
+    dto.crystal = { count: item.crystalCount };
+  }
+
+  if (item.itemSkill != null) dto.itemSkill = item.itemSkill;
 
   const skillSummary = resolveSkill(chronicle, item.itemSkill);
   if (skillSummary) dto.skill = skillSummary;

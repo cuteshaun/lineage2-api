@@ -209,7 +209,7 @@ when applicable:
 | `exchangeFor` | Mammon multisell entries that *consume* this item as an ingredient — present on sealed A/S armor + accessories. Same shape as `exchangeFrom`, viewed from the ingredient side. |
 | `usedAsSpellbook` | Present only when the item is a spellbook. Resolves to a single `SpellbookSkillDto` carrying the taught skill + every class that learns it. |
 | `soldBy` | Present when the item is offered for direct adena purchase by any merchant via `buyLists.xml`. Resolves to `ShopOfferDto[]` (sorted by price ascending then NPC id). |
-| `rewardOfQuests` | Present when the item is granted as a final quest reward. Adena (57) is never in this list — quest adena lives on the quest's `rewards.adena`. |
+| `rewardedByQuests` | Present when the item is granted as a final quest reward. Each row carries `{ quest: QuestRefDto, count }`. Includes Adena (item 57) — for Adena, `count` is the per-quest `rewards.adena` scalar (Adena is the only item where the parser stores rewards as a scalar instead of `rewards.items[]` rows). Sorted by `quest.id` ascending. Inherits the heuristic-extraction limitations documented for the quest-reward parser. |
 | `questItemFor` | Present when the item is registered via a quest's `setItemsIds(...)` (engine-tracked transient items). |
 
 The full field-level contract lives in

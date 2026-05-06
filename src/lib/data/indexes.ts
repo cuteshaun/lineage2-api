@@ -1410,6 +1410,56 @@ export function getQuestsByRewardItemId(
   return getChronicleIndexes(chronicle).questsByRewardItemId.get(itemId) ?? [];
 }
 
+/**
+ * Reverse cross-link with reward count. Returns every quest that
+ * rewards `itemId`, paired with the per-quest count.
+ *
+ *   - For ordinary items: walks `questsByRewardItemId` and recovers
+ *     `count` from the matching `q.rewards.items[]` row. If the same
+ *     `itemId` ever appears multiple times within one quest's
+ *     `rewards.items[]` (no occurrences in current Interlude data),
+ *     counts are summed defensively.
+ *   - For Adena (`itemId === 57`): scans `dataset.quests` for entries
+ *     with `q.rewards.adena != null` and uses that scalar as `count`.
+ *     Adena is intentionally absent from `questsByRewardItemId`; the
+ *     parser stores it on `q.rewards.adena` rather than as an
+ *     `items[]` row.
+ *
+ * Sorted by `quest.id` ascending. Matches the deterministic sort
+ * convention used by other quest-ref cross-links on item / NPC
+ * details.
+ */
+export function getQuestsRewardingItemWithCount(
+  chronicle: Chronicle,
+  itemId: number
+): Array<{ quest: Quest; count: number }> {
+  const idx = getChronicleIndexes(chronicle);
+  const out: Array<{ quest: Quest; count: number }> = [];
+
+  if (itemId === 57) {
+    for (const q of idx.quests) {
+      if (q.rewards.adena != null) {
+        out.push({ quest: q, count: q.rewards.adena });
+      }
+    }
+  } else {
+    const quests = idx.questsByRewardItemId.get(itemId) ?? [];
+    for (const q of quests) {
+      let count = 0;
+      for (const row of q.rewards.items) {
+        if (row.itemId === itemId) count += row.count;
+      }
+      // The reverse-index guarantees at least one matching row, so
+      // count > 0 in practice. Defensively skip the zero case rather
+      // than emit a misleading row.
+      if (count > 0) out.push({ quest: q, count });
+    }
+  }
+
+  out.sort((a, b) => a.quest.id - b.quest.id);
+  return out;
+}
+
 /** Quests where this item is registered via `setItemsIds(...)` (transient quest items). */
 export function getQuestsByQuestItemId(
   chronicle: Chronicle,

@@ -8,7 +8,7 @@ import {
   getExchangesByProductId,
   getItemById,
   getQuestsByQuestItemId,
-  getQuestsByRewardItemId,
+  getQuestsRewardingItemWithCount,
   getRawNpcById,
   getSaVariants,
   getSaBaseWeaponId,
@@ -67,6 +67,16 @@ export interface ItemQuantityDto {
   itemId: number;
   name: string;
   iconFile: string | null;
+  count: number;
+}
+
+/**
+ * Reverse cross-link from an item back to a quest that rewards it,
+ * carrying the per-quest count. See
+ * `ItemDetailDto.rewardedByQuests?` for full semantics.
+ */
+export interface RewardedByQuestDto {
+  quest: QuestRefDto;
   count: number;
 }
 
@@ -244,16 +254,32 @@ export interface ItemDetailDto {
    */
   soldBy?: ShopOfferDto[];
   /**
-   * Quests that grant this item as a final reward (not transient
-   * quest items — those go in `questItemFor?`). Adena rewards are
-   * tracked separately on `QuestRewards.adena`, so item id 57 never
-   * appears here.
+   * Quests that grant this item as a final reward, paired with the
+   * per-quest count. Sorted by quest id ascending.
+   *
+   *   - For ordinary items: `count` is the row's
+   *     `q.rewards.items[].count` (always ≥ 1).
+   *   - For Adena (`itemId === 57`): `count` is the per-quest
+   *     `q.rewards.adena` scalar — the parser stores the adena
+   *     reward as a top-level number rather than an `items[]` row,
+   *     and we surface it through this same cross-link so the
+   *     Adena item page is useful.
+   *
+   * Distinct from `questItemFor?`, which surfaces transient
+   * quest-tracked items registered via `setItemsIds(...)`. An item
+   * is rarely both `rewardedByQuests` and `questItemFor`.
+   *
+   * Inherits the same heuristic-extraction limitations as the
+   * underlying quest-reward parser (lexical proximity to
+   * `exitQuest()` calls). Quests whose final-reward call doesn't
+   * land in the proximity window are silently absent here, same as
+   * on the quest-detail side.
    */
-  rewardOfQuests?: QuestRefDto[];
+  rewardedByQuests?: RewardedByQuestDto[];
   /**
    * Quests that register this item via `setItemsIds(...)` — quest-tracked
    * items consumed and produced during the quest flow. Distinct from
-   * `rewardOfQuests`; an item is rarely both.
+   * `rewardedByQuests`; an item is rarely both.
    */
   questItemFor?: QuestRefDto[];
   /**
@@ -554,16 +580,14 @@ export function toItemDetailDto(
     if (spellbookDto) dto.usedAsSpellbook = spellbookDto;
   }
 
-  // Quest cross-links — final rewards and transient quest items.
-  // Adena (item 57) is excluded from `rewardOfQuests` by parser
-  // design (it lives on `rewards.adena`, not `rewards.items[]`).
-  if (item.id !== 57) {
-    const rewardQuests = getQuestsByRewardItemId(chronicle, item.id);
-    if (rewardQuests.length > 0) {
-      dto.rewardOfQuests = rewardQuests
-        .map((q) => toQuestRefDto(q))
-        .sort((a, b) => a.id - b.id);
-    }
+  // Quest cross-links — final rewards (with per-quest count, incl.
+  // Adena via the q.rewards.adena scalar) and transient quest items.
+  const rewardedBy = getQuestsRewardingItemWithCount(chronicle, item.id);
+  if (rewardedBy.length > 0) {
+    dto.rewardedByQuests = rewardedBy.map(({ quest, count }) => ({
+      quest: toQuestRefDto(quest),
+      count,
+    }));
   }
   const questItemQuests = getQuestsByQuestItemId(chronicle, item.id);
   if (questItemQuests.length > 0) {

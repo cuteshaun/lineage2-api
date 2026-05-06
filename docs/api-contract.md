@@ -64,8 +64,8 @@ be `null` per type; the field itself is always emitted.
 | `exchangeFor?: ExchangeOptionDto[]` | Mammon exchanges that *consume* this item as an ingredient — answers "what can I exchange this for?" Present on sealed A/S armor + accessories. Plural by contract. |
 | `usedAsSpellbook?: SpellbookSkillDto` | Present only when the item is a spellbook (entry in `data/xml/spellbooks.xml`). Single-valued — each spellbook teaches exactly one skill in source data. Carries `skillId`, `skillName`, `iconFile`, and `learnedBy: ClassRefDto[]` (every class that learns *any* level of the skill). |
 | `soldBy?: ShopOfferDto[]` | Direct merchants selling this item for Adena. Sourced from `buyLists.xml`. Sorted by `price` ascending then NPC id. Distinct from `exchangeFrom` (multi-ingredient exchange) — the two never overlap. |
-| `rewardOfQuests?: QuestRefDto[]` | Quests that grant this item as a final reward. Sorted by quest id. Adena (item id 57) is excluded — quest adena lives on `QuestRewards.adena`, not in this list. |
-| `questItemFor?: QuestRefDto[]` | Quests that register this item via `setItemsIds(...)` — engine-tracked transient items. An item is rarely both `rewardOfQuests` and `questItemFor`. |
+| `rewardedByQuests?: RewardedByQuestDto[]` | Quests that grant this item as a final reward, paired with the per-quest count. Each row is `{ quest: QuestRefDto, count: number }`. Sorted by `quest.id` ascending. **Adena (item 57) is included** via the `q.rewards.adena` scalar — when the player opens the Adena item page they see every quest that grants Adena with the per-quest amount as `count`. For ordinary items `count` comes from the matching `q.rewards.items[].count` row (always ≥ 1; current Interlude data ranges 1–500). Inherits the same heuristic-extraction limitations as `QuestRewardsDto` — quests whose final-reward call doesn't land in the proximity window are silently absent. |
+| `questItemFor?: QuestRefDto[]` | Quests that register this item via `setItemsIds(...)` — engine-tracked transient items. An item is rarely both `rewardedByQuests` and `questItemFor`. |
 | `henna?: HennaSummaryDto` | Present only when the item is a henna dye (entry in upstream `hennas.xml`, indexed by `dyeItemId`). Single-valued — every dye maps 1:1 to a single symbol in source data. Carries the resolved `HennaSummaryDto` with display fields, stat deltas, price, and the dye-item ref. See "`HennaSummaryDto` — stable fields" below. |
 | `specialAbilityOptions[].saveMechanic?` | Variant has `mp_consume_reduce` or `reduced_soulshot` in its raw `properties` |
 | `specialAbilityOptions[].statDelta?` | Variant is a Light (weight delta) or Quick Recovery (reuseDelay delta) SA |
@@ -396,8 +396,30 @@ export interface QuestRefDto {
 }
 ```
 
-Used in cross-links from items/NPCs back to quests (`ItemDetailDto.rewardOfQuests`,
-`questItemFor`, `NpcDetailDto.startsQuests`, `involvedInQuests`).
+Used in cross-links from items/NPCs back to quests
+(`ItemDetailDto.rewardedByQuests[].quest`, `ItemDetailDto.questItemFor`,
+`NpcDetailDto.startsQuests`, `involvedInQuests`).
+
+### `RewardedByQuestDto` shape
+
+```ts
+export interface RewardedByQuestDto {
+  quest: QuestRefDto;
+  count: number;
+}
+```
+
+Surfaced as `ItemDetailDto.rewardedByQuests?`.
+
+For ordinary item rewards, `count` is the row's
+`q.rewards.items[].count` (always ≥ 1). Adena (`itemId === 57`) is
+the one engine special-case: the parser stores its reward as the
+top-level scalar `q.rewards.adena` instead of a `rewards.items[]`
+row, so the cross-link reads the scalar directly. This keeps the
+Adena item page useful — opening it shows every quest that grants
+Adena with the per-quest amount as `count`. Sorted by `quest.id`
+ascending. Same heuristic-extraction caveats as `QuestRewardsDto`
+apply.
 
 ### `NpcDetailDto.startsQuests` vs `involvedInQuests` — dedup rules
 

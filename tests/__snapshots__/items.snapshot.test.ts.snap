@@ -351,6 +351,892 @@ exports[`item 17 (Wooden Arrow) DTO matches snapshot 1`] = `
 }
 `;
 
+exports[`item 57 (Adena (rewardedByQuests adena join)) DTO matches snapshot 1`] = `
+{
+  "accCombat": null,
+  "armorType": null,
+  "bodypart": null,
+  "crystalCount": null,
+  "etcItemType": null,
+  "exchangeFor": [
+    {
+      "maintainEnchantment": false,
+      "multisellId": 1235,
+      "npcs": [
+        {
+          "id": 32024,
+          "name": "Mulia",
+        },
+        {
+          "id": 32025,
+          "name": "Ilia",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_helmet_i02.png",
+        "itemId": 7870,
+        "name": "Sealed Apella Helm",
+      },
+      "required": [
+        {
+          "count": 3480,
+          "iconFile": null,
+          "itemId": 65336,
+          "name": "#65336",
+        },
+        {
+          "count": 1914000,
+          "iconFile": "etc_adena_i00.png",
+          "itemId": 57,
+          "name": "Adena",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": false,
+      "multisellId": 1235,
+      "npcs": [
+        {
+          "id": 32024,
+          "name": "Mulia",
+        },
+        {
+          "id": 32025,
+          "name": "Ilia",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t1004_ul_i02.png",
+        "itemId": 7871,
+        "name": "Sealed Apella Plate Armor",
+      },
+      "required": [
+        {
+          "count": 13540,
+          "iconFile": null,
+          "itemId": 65336,
+          "name": "#65336",
+        },
+        {
+          "count": 7337000,
+          "iconFile": "etc_adena_i00.png",
+          "itemId": 57,
+          "name": "Adena",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": false,
+      "multisellId": 1235,
+      "npcs": [
+        {
+          "id": 32024,
+          "name": "Mulia",
+        },
+        {
+          "id": 32025,
+          "name": "Ilia",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t1004_g_i02.png",
+        "itemId": 7872,
+        "name": "Sealed Apella Gauntlet",
+      },
+      "required": [
+        {
+          "count": 2320,
+          "iconFile": null,
+          "itemId": 65336,
+          "name": "#65336",
+        },
+        {
+          "count": 1276000,
+          "iconFile": "etc_adena_i00.png",
+          "itemId": 57,
+          "name": "Adena",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": false,
+      "multisellId": 1235,
+      "npcs": [
+        {
+          "id": 32024,
+          "name": "Mulia",
+        },
+        {
+          "id": 32025,
+          "name": "Ilia",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t1004_b_i02.png",
+        "itemId": 7873,
+        "name": "Sealed Apella Solleret",
+      },
+      "required": [
+        {
+          "count": 2320,
+          "iconFile": null,
+          "itemId": 65336,
+          "name": "#65336",
+        },
+        {
+          "count": 1276000,
+          "iconFile": "etc_adena_i00.png",
+          "itemId": 57,
+          "name": "Adena",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": false,
+      "multisellId": 1235,
+      "npcs": [
+        {
+          "id": 32024,
+          "name": "Mulia",
+        },
+        {
+          "id": 32025,
+          "name": "Ilia",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t1005_ul_i02.png",
+        "itemId": 7874,
+        "name": "Sealed Apella Brigandine",
+      },
+      "required": [
+        {
+          "count": 10160,
+          "iconFile": null,
+          "itemId": 65336,
+          "name": "#65336",
+        },
+        {
+          "count": 5588000,
+          "iconFile": "etc_adena_i00.png",
+          "itemId": 57,
+          "name": "Adena",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": false,
+      "multisellId": 1235,
+      "npcs": [
+        {
+          "id": 32024,
+          "name": "Mulia",
+        },
+        {
+          "id": 32025,
+          "name": "Ilia",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t1005_g_i02.png",
+        "itemId": 7875,
+        "name": "Sealed Apella Leather Gloves",
+      },
+      "required": [
+        {
+          "count": 2320,
+          "iconFile": null,
+          "itemId": 65336,
+          "name": "#65336",
+        },
+        {
+          "count": 1276000,
+          "iconFile": "etc_adena_i00.png",
+          "itemId": 57,
+          "name": "Adena",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": false,
+      "multisellId": 1235,
+      "npcs": [
+        {
+          "id": 32024,
+          "name": "Mulia",
+        },
+        {
+          "id": 32025,
+          "name": "Ilia",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t1005_b_i02.png",
+        "itemId": 7876,
+        "name": "Sealed Apella Boots",
+      },
+      "required": [
+        {
+          "count": 2320,
+          "iconFile": null,
+          "itemId": 65336,
+          "name": "#65336",
+        },
+        {
+          "count": 1276000,
+          "iconFile": "etc_adena_i00.png",
+          "itemId": 57,
+          "name": "Adena",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": false,
+      "multisellId": 1235,
+      "npcs": [
+        {
+          "id": 32024,
+          "name": "Mulia",
+        },
+        {
+          "id": 32025,
+          "name": "Ilia",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t1006_ul_i02.png",
+        "itemId": 7877,
+        "name": "Sealed Apella Doublet",
+      },
+      "required": [
+        {
+          "count": 10160,
+          "iconFile": null,
+          "itemId": 65336,
+          "name": "#65336",
+        },
+        {
+          "count": 5588000,
+          "iconFile": "etc_adena_i00.png",
+          "itemId": 57,
+          "name": "Adena",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": false,
+      "multisellId": 1235,
+      "npcs": [
+        {
+          "id": 32024,
+          "name": "Mulia",
+        },
+        {
+          "id": 32025,
+          "name": "Ilia",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t1006_g_i02.png",
+        "itemId": 7878,
+        "name": "Sealed Apella Silk Gloves",
+      },
+      "required": [
+        {
+          "count": 2320,
+          "iconFile": null,
+          "itemId": 65336,
+          "name": "#65336",
+        },
+        {
+          "count": 1276000,
+          "iconFile": "etc_adena_i00.png",
+          "itemId": 57,
+          "name": "Adena",
+        },
+      ],
+    },
+    {
+      "maintainEnchantment": false,
+      "multisellId": 1235,
+      "npcs": [
+        {
+          "id": 32024,
+          "name": "Mulia",
+        },
+        {
+          "id": 32025,
+          "name": "Ilia",
+        },
+      ],
+      "produces": {
+        "count": 1,
+        "iconFile": "armor_t1006_b_i02.png",
+        "itemId": 7879,
+        "name": "Sealed Apella Sandals",
+      },
+      "required": [
+        {
+          "count": 2320,
+          "iconFile": null,
+          "itemId": 65336,
+          "name": "#65336",
+        },
+        {
+          "count": 1276000,
+          "iconFile": "etc_adena_i00.png",
+          "itemId": 57,
+          "name": "Adena",
+        },
+      ],
+    },
+  ],
+  "grade": "none",
+  "iconFile": "etc_adena_i00.png",
+  "id": 57,
+  "isDropable": null,
+  "isMagical": null,
+  "isSellable": null,
+  "isStackable": true,
+  "isTradable": null,
+  "itemSkill": null,
+  "mAtk": null,
+  "mDef": null,
+  "material": "GOLD",
+  "mpConsume": null,
+  "name": "Adena",
+  "pAtk": null,
+  "pAtkSpd": null,
+  "pDef": null,
+  "price": 1,
+  "rCrit": null,
+  "rEvas": null,
+  "rShld": null,
+  "reuseDelay": null,
+  "rewardedByQuests": [
+    {
+      "count": 450,
+      "quest": {
+        "id": 2,
+        "levelMin": 2,
+        "name": "What Women Want",
+      },
+    },
+    {
+      "count": 82656,
+      "quest": {
+        "id": 13,
+        "levelMin": 74,
+        "name": "Parcel Delivery",
+      },
+    },
+    {
+      "count": 113228,
+      "quest": {
+        "id": 14,
+        "levelMin": 74,
+        "name": "Whereabouts of the Archaeologist",
+      },
+    },
+    {
+      "count": 15000,
+      "quest": {
+        "id": 18,
+        "levelMin": 66,
+        "name": "Meeting with the Golden Ram",
+      },
+    },
+    {
+      "count": 30000,
+      "quest": {
+        "id": 19,
+        "levelMin": 63,
+        "name": "Go to the Pastureland!",
+      },
+    },
+    {
+      "count": 68500,
+      "quest": {
+        "id": 20,
+        "levelMin": 65,
+        "name": "Bring Up With Love",
+      },
+    },
+    {
+      "count": 100000,
+      "quest": {
+        "id": 23,
+        "levelMin": null,
+        "name": "Lidia's Heart",
+      },
+    },
+    {
+      "count": 40000,
+      "quest": {
+        "id": 31,
+        "levelMin": 66,
+        "name": "Secret Buried in the Swamp",
+      },
+    },
+    {
+      "count": 5168,
+      "quest": {
+        "id": 109,
+        "levelMin": null,
+        "name": "In Search of the Nest",
+      },
+    },
+    {
+      "count": 169380,
+      "quest": {
+        "id": 110,
+        "levelMin": 75,
+        "name": "To the Primeval Isle",
+      },
+    },
+    {
+      "count": 1022636,
+      "quest": {
+        "id": 111,
+        "levelMin": 75,
+        "name": "Elrokian Hunter's Proof",
+      },
+    },
+    {
+      "count": 4665,
+      "quest": {
+        "id": 112,
+        "levelMin": 20,
+        "name": "Walk of Fate",
+      },
+    },
+    {
+      "count": 21578,
+      "quest": {
+        "id": 113,
+        "levelMin": 40,
+        "name": "Status of the Beacon Tower",
+      },
+    },
+    {
+      "count": 180120,
+      "quest": {
+        "id": 115,
+        "levelMin": 53,
+        "name": "The Other Side of Truth",
+      },
+    },
+    {
+      "count": 16500,
+      "quest": {
+        "id": 116,
+        "levelMin": 30,
+        "name": "Beyond the Hills of Winter",
+      },
+    },
+    {
+      "count": 68787,
+      "quest": {
+        "id": 119,
+        "levelMin": 74,
+        "name": "Last Imperial Prince",
+      },
+    },
+    {
+      "count": 1695,
+      "quest": {
+        "id": 122,
+        "levelMin": 20,
+        "name": "Ominous News",
+      },
+    },
+    {
+      "count": 71318,
+      "quest": {
+        "id": 124,
+        "levelMin": 75,
+        "name": "Meeting the Elroki",
+      },
+    },
+    {
+      "count": 159100,
+      "quest": {
+        "id": 127,
+        "levelMin": null,
+        "name": "Kamael: A Window to the Future",
+      },
+    },
+    {
+      "count": 18250,
+      "quest": {
+        "id": 159,
+        "levelMin": 12,
+        "name": "Protect the Water Source",
+      },
+    },
+    {
+      "count": 1000,
+      "quest": {
+        "id": 161,
+        "levelMin": 3,
+        "name": "Fruit of the Mothertree",
+      },
+    },
+    {
+      "count": 24000,
+      "quest": {
+        "id": 162,
+        "levelMin": 12,
+        "name": "Curse of the Underground Fortress",
+      },
+    },
+    {
+      "count": 13890,
+      "quest": {
+        "id": 163,
+        "levelMin": 11,
+        "name": "Legacy of the Poet",
+      },
+    },
+    {
+      "count": 42130,
+      "quest": {
+        "id": 164,
+        "levelMin": 21,
+        "name": "Blood Fiend",
+      },
+    },
+    {
+      "count": 500,
+      "quest": {
+        "id": 166,
+        "levelMin": 2,
+        "name": "Mass of Darkness",
+      },
+    },
+    {
+      "count": 25000,
+      "quest": {
+        "id": 167,
+        "levelMin": 15,
+        "name": "Dwarven Kinship",
+      },
+    },
+    {
+      "count": 820,
+      "quest": {
+        "id": 168,
+        "levelMin": 3,
+        "name": "Deliver Supplies",
+      },
+    },
+    {
+      "count": 102680,
+      "quest": {
+        "id": 170,
+        "levelMin": 21,
+        "name": "Dangerous Seduction",
+      },
+    },
+    {
+      "count": 90000,
+      "quest": {
+        "id": 171,
+        "levelMin": 27,
+        "name": "Acts of Evil",
+      },
+    },
+    {
+      "count": 1000,
+      "quest": {
+        "id": 261,
+        "levelMin": 15,
+        "name": "Collector's Dream",
+      },
+    },
+    {
+      "count": 3000,
+      "quest": {
+        "id": 262,
+        "levelMin": 8,
+        "name": "Trade with the Ivory Tower",
+      },
+    },
+    {
+      "count": 1050,
+      "quest": {
+        "id": 264,
+        "levelMin": 3,
+        "name": "Keen Claws",
+      },
+    },
+    {
+      "count": 1500,
+      "quest": {
+        "id": 272,
+        "levelMin": 5,
+        "name": "Wrath of Ancestors",
+      },
+    },
+    {
+      "count": 4200,
+      "quest": {
+        "id": 275,
+        "levelMin": 11,
+        "name": "Dark Winged Spies",
+      },
+    },
+    {
+      "count": 2400,
+      "quest": {
+        "id": 295,
+        "levelMin": 11,
+        "name": "Dreaming of the Skies",
+      },
+    },
+    {
+      "count": 25000,
+      "quest": {
+        "id": 299,
+        "levelMin": 34,
+        "name": "Gather Ingredients for Pie",
+      },
+    },
+    {
+      "count": 30000,
+      "quest": {
+        "id": 300,
+        "levelMin": 34,
+        "name": "Hunting Leto Lizardman",
+      },
+    },
+    {
+      "count": 1000,
+      "quest": {
+        "id": 303,
+        "levelMin": 10,
+        "name": "Collect Arrowheads",
+      },
+    },
+    {
+      "count": 3500,
+      "quest": {
+        "id": 313,
+        "levelMin": 8,
+        "name": "Collect Spores",
+      },
+    },
+    {
+      "count": 3350,
+      "quest": {
+        "id": 319,
+        "levelMin": 11,
+        "name": "Scent of Death",
+      },
+    },
+    {
+      "count": 8470,
+      "quest": {
+        "id": 320,
+        "levelMin": 10,
+        "name": "Bones Tell the Future",
+      },
+    },
+    {
+      "count": 5810,
+      "quest": {
+        "id": 324,
+        "levelMin": 18,
+        "name": "Sweetest Venom",
+      },
+    },
+    {
+      "count": 14600,
+      "quest": {
+        "id": 330,
+        "levelMin": 24,
+        "name": "Adept of Taste",
+      },
+    },
+    {
+      "count": 12400,
+      "quest": {
+        "id": 333,
+        "levelMin": 25,
+        "name": "Hunt Of The Black Lion",
+      },
+    },
+    {
+      "count": 22880,
+      "quest": {
+        "id": 340,
+        "levelMin": 17,
+        "name": "Subjugation of Lizardmen",
+      },
+    },
+    {
+      "count": 3710,
+      "quest": {
+        "id": 341,
+        "levelMin": 20,
+        "name": "Hunting for Wild Beasts",
+      },
+    },
+    {
+      "count": 1000,
+      "quest": {
+        "id": 347,
+        "levelMin": 12,
+        "name": "Go Get the Calculator",
+      },
+    },
+    {
+      "count": 49000,
+      "quest": {
+        "id": 348,
+        "levelMin": 60,
+        "name": "An Arrogant Search",
+      },
+    },
+    {
+      "count": 20950,
+      "quest": {
+        "id": 356,
+        "levelMin": 43,
+        "name": "Dig Up the Sea of Spores!",
+      },
+    },
+    {
+      "count": 10000,
+      "quest": {
+        "id": 362,
+        "levelMin": 15,
+        "name": "Bard's Mandolin",
+      },
+    },
+    {
+      "count": 100,
+      "quest": {
+        "id": 364,
+        "levelMin": 15,
+        "name": "Jovial Accordion",
+      },
+    },
+    {
+      "count": 76000,
+      "quest": {
+        "id": 369,
+        "levelMin": 25,
+        "name": "Collector of Jewels",
+      },
+    },
+    {
+      "count": 3600,
+      "quest": {
+        "id": 370,
+        "levelMin": 28,
+        "name": "An Elder Sows Seeds",
+      },
+    },
+    {
+      "count": 18800,
+      "quest": {
+        "id": 621,
+        "levelMin": 68,
+        "name": "Egg Delivery",
+      },
+    },
+    {
+      "count": 18800,
+      "quest": {
+        "id": 622,
+        "levelMin": 68,
+        "name": "Specialty Liquor Delivery",
+      },
+    },
+    {
+      "count": 188000,
+      "quest": {
+        "id": 623,
+        "levelMin": null,
+        "name": "The Finest Food",
+      },
+    },
+    {
+      "count": 100000,
+      "quest": {
+        "id": 626,
+        "levelMin": 60,
+        "name": "A Dark Twilight",
+      },
+    },
+    {
+      "count": 120000,
+      "quest": {
+        "id": 632,
+        "levelMin": 63,
+        "name": "Necromancer's Request",
+      },
+    },
+    {
+      "count": 21698,
+      "quest": {
+        "id": 649,
+        "levelMin": 30,
+        "name": "A Looter and a Railroad Man",
+      },
+    },
+    {
+      "count": 2883,
+      "quest": {
+        "id": 651,
+        "levelMin": 26,
+        "name": "Runaway Youth",
+      },
+    },
+    {
+      "count": 15026,
+      "quest": {
+        "id": 652,
+        "levelMin": 46,
+        "name": "An Aged Ex-Adventurer",
+      },
+    },
+    {
+      "count": 2883,
+      "quest": {
+        "id": 653,
+        "levelMin": 36,
+        "name": "Wild Maiden",
+      },
+    },
+    {
+      "count": 50000,
+      "quest": {
+        "id": 660,
+        "levelMin": 30,
+        "name": "Aiding the Floran Village",
+      },
+    },
+  ],
+  "sDef": null,
+  "soulshots": null,
+  "spiritshots": null,
+  "type": "etcitem",
+  "weaponType": null,
+  "weight": null,
+}
+`;
+
 exports[`item 68 (Falchion) DTO matches snapshot 1`] = `
 {
   "accCombat": null,
@@ -1979,16 +2865,22 @@ exports[`item 906 (Necklace (Q001 reward)) DTO matches snapshot 1`] = `
   "rEvas": null,
   "rShld": null,
   "reuseDelay": null,
-  "rewardOfQuests": [
+  "rewardedByQuests": [
     {
-      "id": 1,
-      "levelMin": 2,
-      "name": "Letters of Love",
+      "count": 1,
+      "quest": {
+        "id": 1,
+        "levelMin": 2,
+        "name": "Letters of Love",
+      },
     },
     {
-      "id": 5,
-      "levelMin": 2,
-      "name": "Miner's Favor",
+      "count": 1,
+      "quest": {
+        "id": 5,
+        "levelMin": 2,
+        "name": "Miner's Favor",
+      },
     },
   ],
   "sDef": null,

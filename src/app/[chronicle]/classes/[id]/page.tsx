@@ -8,6 +8,10 @@ import type {
   ClassListDto,
   ClassSkillLearnDto,
 } from "@/lib/api/dto/class";
+import type {
+  HennaStatChangesDto,
+  HennaSummaryDto,
+} from "@/lib/api/dto/henna";
 
 const PROFESSION_LABELS = [
   "Base class",
@@ -132,6 +136,82 @@ export default async function ClassDetailPage({
           <SkillsByLevel chronicle={chronicle} skills={cls.skills} />
         )}
       </Section>
+
+      {cls.allowedHennas && cls.allowedHennas.length > 0 && (
+        <Section title="Available Hennas">
+          <AvailableHennasSummary
+            chronicle={chronicle}
+            classId={cls.id}
+            hennas={cls.allowedHennas}
+          />
+        </Section>
+      )}
+    </div>
+  );
+}
+
+const STAT_ORDER: Array<keyof HennaStatChangesDto> = [
+  "STR",
+  "CON",
+  "DEX",
+  "INT",
+  "MEN",
+  "WIT",
+];
+
+function getPrimaryPositiveStat(
+  changes: HennaStatChangesDto
+): keyof HennaStatChangesDto | null {
+  for (const stat of STAT_ORDER) {
+    const v = changes[stat];
+    if (v != null && v > 0) return stat;
+  }
+  return null;
+}
+
+/**
+ * Compact summary card. The full rowed list lives at
+ * `/[chronicle]/hennas?classId=<id>` — class detail only shows the
+ * count, the engageable stats, and a link out, so the henna catalog
+ * doesn't crowd the (already large) Skills section above.
+ */
+function AvailableHennasSummary({
+  chronicle,
+  classId,
+  hennas,
+}: {
+  chronicle: string;
+  classId: number;
+  hennas: HennaSummaryDto[];
+}) {
+  const stats = new Set<keyof HennaStatChangesDto>();
+  for (const h of hennas) {
+    const s = getPrimaryPositiveStat(h.statChanges);
+    if (s) stats.add(s);
+  }
+  const orderedStats = STAT_ORDER.filter((s) => stats.has(s));
+
+  return (
+    <div className="flex flex-col gap-2 text-sm">
+      <p className="text-zinc-700 dark:text-zinc-300">
+        <span className="font-semibold">{hennas.length}</span> symbol
+        {hennas.length === 1 ? "" : "s"} available for this class.
+      </p>
+      {orderedStats.length > 0 && (
+        <p className="font-mono text-xs text-zinc-500 dark:text-zinc-400">
+          {orderedStats.join(" · ")}
+        </p>
+      )}
+      <p className="-mb-1 max-w-prose text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
+        Symbol Maker engravings — stat-altering dyes consumed at the
+        engraver, not cosmetic tattoos.
+      </p>
+      <Link
+        href={`/${chronicle}/hennas?classId=${classId}`}
+        className="self-start font-mono text-xs text-indigo-600 hover:underline dark:text-indigo-400"
+      >
+        View available hennas →
+      </Link>
     </div>
   );
 }

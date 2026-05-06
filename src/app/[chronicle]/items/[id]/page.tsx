@@ -8,6 +8,7 @@ import { ExchangeCard } from "@/components/explorer/ExchangeCard";
 import { PaginatedItemSourceTable } from "@/components/explorer/PaginatedItemSourceTable";
 import type { ItemDetailDto } from "@/lib/api/dto/item";
 import type { ItemSourceEntryDto } from "@/lib/api/dto/drops";
+import type { HennaDetailDto, HennaStatChangesDto } from "@/lib/api/dto/henna";
 import type { SkillEffect } from "@/lib/types";
 
 const SA_STAT_LABELS: Record<string, string> = {
@@ -134,6 +135,19 @@ export default async function ItemDetailsPage({
   const droppedByTotal = droppedByResult.ok ? droppedByResult.meta.total : 0;
   const spoiledBy = spoiledByResult.ok ? spoiledByResult.data : [];
   const spoiledByTotal = spoiledByResult.ok ? spoiledByResult.meta.total : 0;
+
+  // Second-stage fetch only for dye items: HennaDetailDto carries
+  // the allowed-class count so the embedded section can render the
+  // compact "Available to N classes" line. Class detail and excluded-
+  // class enumeration belong on `/hennas?symbolId=…`, not here.
+  const hennaDetail =
+    item.henna != null
+      ? await apiFetch<HennaDetailDto>(
+          `/api/${chronicle}/hennas/${item.henna.symbolId}`
+        )
+      : null;
+  const hennaAllowedCount =
+    hennaDetail && hennaDetail.ok ? hennaDetail.data.allowedClasses.length : null;
 
   const basics = nonNull([
     stat("Weight", item.weight),
@@ -410,6 +424,22 @@ export default async function ItemDetailsPage({
         </Section>
       )}
 
+      {item.henna && (
+        <Section
+          title={
+            item.henna.displayName != null
+              ? "Henna"
+              : "Henna (engine record)"
+          }
+        >
+          <HennaBlock
+            chronicle={chronicle}
+            henna={item.henna}
+            allowedCount={hennaAllowedCount}
+          />
+        </Section>
+      )}
+
       {item.rewardOfQuests && item.rewardOfQuests.length > 0 && (
         <Section
           title={
@@ -621,6 +651,157 @@ export default async function ItemDetailsPage({
         </Section>
       )}
     </div>
+  );
+}
+
+/**
+ * Henna section body for item detail. Honest about nullable display
+ * fields (Greater II tier symbols carry mechanics only).
+ *
+ * Class applicability has three branches, picked by allow-list size:
+ *
+ *   1. `allowedClasses.length <= SHOW_ALL_THRESHOLD` (12): list every
+ *      allowed class as a tag. Compact and complete.
+ *   2. Broad allow-list AND the *excluded* set (= every chronicle
+ *      class minus the allow-list) is shorter than the allow-list:
+ *      flip the framing to *"Available to N classes / Except: …"*
+ *      so the noise scales with whichever side is smaller. The full
+ *      class list is fetched once on the server side at the top of
+ *      this page — see `apiFetchList<ClassListDto>` above.
+ *   3. Otherwise: compact preview of the first `PREVIEW_LIMIT` (8)
+ *      allowed classes plus a `+N more` chip.
+ */
+function HennaBlock({
+  chronicle,
+  henna,
+  allowedCount,
+}: {
+  chronicle: string;
+  henna: NonNullable<ItemDetailDto["henna"]>;
+  allowedCount: number | null;
+}) {
+  const displayName = henna.displayName ?? `Symbol #${henna.symbolId}`;
+  // Henna symbol icon falls back to the dye item icon (different art —
+  // `etc_str_symbol_*` vs `etc_str_hena_*`) only when the DAT didn't
+  // supply a symbol slug. Keeps the section visually anchored without
+  // fabricating data.
+  const iconFile = henna.iconFile ?? henna.dyeItem.iconFile;
+
+  return (
+    <div className="flex flex-col gap-3">
+      <div className="flex items-start gap-3">
+        <ItemIcon iconFile={iconFile} name={displayName} size={36} decorative />
+        <div className="flex min-w-0 flex-col gap-0.5">
+          <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+            <span className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
+              {displayName}
+            </span>
+            <span className="font-mono text-[10px] uppercase tracking-wide text-zinc-400 dark:text-zinc-500">
+              symbol #{henna.symbolId}
+            </span>
+          </div>
+          {henna.shortLabel && (
+            <span className="font-mono text-xs text-zinc-500 dark:text-zinc-400">
+              {henna.shortLabel}
+            </span>
+          )}
+        </div>
+      </div>
+
+      {henna.displayName == null && (
+        <p className="text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
+          Display fields unavailable from the L2 client DAT for this symbol;
+          mechanics shown below.
+        </p>
+      )}
+
+      <StatChangeBadges changes={henna.statChanges} />
+
+      <div className="flex flex-wrap items-baseline gap-x-6 gap-y-1 font-mono text-xs">
+        <div>
+          <span className="text-zinc-400 dark:text-zinc-500">Engrave price · </span>
+          <span className="text-zinc-900 dark:text-zinc-100">
+            {henna.price.toLocaleString()} a
+          </span>
+        </div>
+        <div>
+          <span className="text-zinc-400 dark:text-zinc-500">Dye item · </span>
+          <Link
+            href={`/${chronicle}/items/${henna.dyeItem.id}`}
+            className="text-indigo-600 hover:underline dark:text-indigo-400"
+          >
+            {henna.dyeItem.name}
+          </Link>
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-1 text-xs">
+        <p className="text-zinc-700 dark:text-zinc-300">
+          <span className="font-mono text-[10px] uppercase tracking-wide text-zinc-400 dark:text-zinc-500">
+            Class availability ·{" "}
+          </span>
+          Restricted by class / profession
+          {allowedCount != null && (
+            <>
+              {" "}
+              <span className="text-zinc-500 dark:text-zinc-400">
+                ({allowedCount.toLocaleString()} class
+                {allowedCount === 1 ? "" : "es"})
+              </span>
+            </>
+          )}
+        </p>
+        <Link
+          href={`/${chronicle}/hennas?symbolId=${henna.symbolId}`}
+          className="self-start font-mono text-xs text-indigo-600 hover:underline dark:text-indigo-400"
+        >
+          View eligible classes →
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Renders a compact row of `+/- N STAT` badges. Positive values
+ * render in emerald, negative in red — consistent with the SA
+ * effect coloring rule above. Does not synthesize labels for
+ * missing keys; the source data carries exactly two non-zero
+ * deltas per symbol in current Interlude content.
+ */
+function StatChangeBadges({ changes }: { changes: HennaStatChangesDto }) {
+  const ORDER: Array<keyof HennaStatChangesDto> = [
+    "STR",
+    "CON",
+    "DEX",
+    "INT",
+    "MEN",
+    "WIT",
+  ];
+  const entries = ORDER.flatMap((stat) => {
+    const v = changes[stat];
+    return v == null ? [] : [{ stat, value: v }];
+  });
+  if (entries.length === 0) return null;
+  return (
+    <ul className="flex flex-wrap gap-1.5 font-mono text-xs">
+      {entries.map(({ stat, value }) => {
+        const sign = value > 0 ? "+" : "";
+        const colorClass =
+          value > 0
+            ? "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-300"
+            : "border-red-200 bg-red-50 text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300";
+        return (
+          <li
+            key={stat}
+            className={`rounded border px-2 py-0.5 ${colorClass}`}
+          >
+            {stat} {sign}
+            {value}
+          </li>
+        );
+      })}
+    </ul>
   );
 }
 

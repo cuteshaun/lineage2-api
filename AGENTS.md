@@ -96,14 +96,23 @@ Prefer:
 
 ## Current Data Model
 
-The API currently supports:
+The API ships the following domains (pre-v1):
 
 - Items
-- NPCs / Monsters
+- NPCs / Monsters (cleaned + raw layers)
 - Drops and Spoil, both directions
+- Spawns (cleaned, with region + location enrichment; raw stays unenriched)
 - Recipes
 - Skills
 - Armor sets
+- Classes (with skill-learn tables and spellbook refs)
+- Spellbooks (forward + reverse links between item ↔ skill ↔ class)
+- Shops: merchant `buyLists`, curated multisells, NPC `/shop` view
+- Quests (with optional client journal entries from `questname-e.dat`)
+- Regions (engine death-teleport regions from `mapRegions.xml`)
+- Locations (player-facing hunting zones from `huntingzone-e.dat`)
+- Hennas (joined from `hennas.xml` + `hennagrp-e.dat`)
+- OpenAPI spec at `/api/openapi.json` (chronicle-agnostic)
 
 ### Key Decisions
 
@@ -114,6 +123,8 @@ The API currently supports:
   - exact duplicates collapsed via `rollCount`
   - Adena (`itemId=57`) always has `type="adena"`
   - sorted for readability, not raw category order
+  - reward cross-link `rewardedByQuests` carries per-quest counts;
+    Adena rewards surfaced via `q.rewards.adena` scalar (not `items[]`)
 
 - Skills:
   - primarily parsed from aCis XML
@@ -121,6 +132,56 @@ The API currently supports:
   - enriched at build time with selected client metadata when useful
   - may include `description: string | null` when available
   - `itemSkill` is resolved into DTO summaries
+
+- `ItemDetailDto` shape:
+  - common fields stay top-level (`id`, `name`, `weight`, `price`,
+    `material`, `iconFile`)
+  - type-specific fields are grouped: `category?`, `stats?`, `shots?`,
+    `timing?`, `flags?`, `crystal?`
+  - groups are omitted entirely when no inner key applies
+  - `null` is reserved for the four always-emitted top-level fields;
+    everything else is omit-when-absent
+
+- `NpcDetailDto` / `MonsterDetailDto` shape:
+  - vitals + reward + combat + movement live under `stats`
+  - six base attributes (str/dex/con/int/wit/men) live under `baseStats`
+  - AI fields (`aggroRange`, optional `assistRange`) live under
+    optional `behavior?`; the group is omitted entirely on the few
+    NPCs without an `<ai>` block
+  - `isAggressive` stays top-level for parity with `NpcListDto`
+  - `skills[]` is always emitted; `title`/`race`/etc. are omitted when
+    the source value is null
+
+- Quests:
+  - `QuestDetailDto` does not surface `scriptFile` (Java path is an
+    implementation detail)
+  - `questItems[]` uses `QuestItemRefDto` with no `count` — engine list
+    registers item ids only; a placeholder count would be a lie
+  - `rewards.adena?` / `exp?` / `sp?` are optional; absent ≠ zero
+  - `clientJournalEntries?` is the in-game quest log text, not a
+    mechanically-derived walkthrough; trailing `\n` markers are
+    trimmed at the DTO layer, internal markers preserved verbatim
+
+- Hennas:
+  - mechanics fields (`statChanges`, `engravePrice`, `dyeItem`,
+    `allowedClassIds`) always populated from `hennas.xml`
+  - `engravePrice` (not `price`) is the Symbol Maker's engrave cost,
+    distinct from the dye item's own vendor `ItemDetailDto.price`
+  - display fields (`displayName`, `iconFile`, `shortLabel`) are
+    honestly `null` for the 9 Greater II symbols (172–180) whose DAT
+    record uses an unsupported shared-prefix encoding
+
+- Locations:
+  - resolved by 2D nearest-anchor with a 10000-unit threshold, not
+    polygon containment (`huntingzone-e.dat` carries center anchors
+    only)
+  - public DTO normalizes whitespace (trim + collapse internal runs);
+    raw endpoints surface source spelling
+  - a small audit-justified override map (`PRIMARY_LOCATION_OVERRIDES_BY_NPC_ID`
+    in `src/lib/api/dto/location.ts`) applies only to NPC / Monster
+    detail's `primaryLocation?` for verified heuristic failures
+    (current entry: NPC 29001 Queen Ant → zone 34 The Ant Nest);
+    every other surface uses the unmodified resolver
 
 - NPC skill presentation:
   - public responses may separate clearly derived fields from raw engine-like entries
@@ -131,6 +192,12 @@ The API currently supports:
   - exposed via a single rich catalog endpoint (`GET /api/[chronicle]/armor-sets`)
   - the same per-set shape is embedded into every piece's `ItemDetailDto.partOfSets[]`
   - no separate per-id detail endpoint by design
+
+- Cache-Control contract:
+  - successful responses use
+    `public, max-age=300, s-maxage=86400, stale-while-revalidate=604800`
+  - error responses (`400` / `404` / `5xx`) use `Cache-Control: no-store`
+  - this is part of the v1 contract; clients must not assume errors are cacheable
 
 ---
 
@@ -248,6 +315,17 @@ If unsure: skim the existing code in the repo first. If the project already uses
 - Data must be pre-generated at build time
 - Runtime API routes should read only pre-generated JSON and static assets
 - Do not rely on local datapack files, client DAT files, or external network calls at runtime
+- Successful responses ship the SWR `Cache-Control` header documented
+  above; error responses ship `no-store`. Both are set centrally in
+  `src/lib/api/responses.ts` — do not override per route.
+- Per-IP request-rate abuse should be handled at the platform layer
+  (Vercel Firewall / WAF), not in application code. Default plan for
+  the public deploy: rate-limit `/api/*` and apply a stricter rule to
+  `/api/*/raw/*`; treat `/api/openapi.json` as cacheable / generous.
+  Tune from real traffic, not from imagined traffic.
+- Do not introduce Redis, Upstash, or any external rate-limit store
+  by default. Serverless in-memory counters are unreliable; the
+  platform/WAF layer is the right tool.
 
 ---
 
@@ -292,6 +370,9 @@ Before adding UI-only logic:
 - Do not make raw endpoints more "friendly" by losing engine-like fidelity
 - Do not make the explorer the source of truth
 - Do not add explorer-specific UI/product features to `main`
+- Do not cache error responses; `jsonError` must keep `Cache-Control: no-store`
+- Do not introduce app-layer rate limiting (Redis/Upstash/in-memory/middleware counter) by default — platform/WAF is the v1 path
+- Do not grow `PRIMARY_LOCATION_OVERRIDES_BY_NPC_ID` opportunistically; new entries require audit evidence (anchor distances, proof of resolver mis-match) and a docs link
 
 ---
 
@@ -309,6 +390,15 @@ Before adding UI-only logic:
 - Community submissions
 - Screenshot/media ingestion pipeline
 - Hand-maintained wiki content unless explicitly requested
+- API keys, per-caller quotas, signed requests, application-layer
+  `X-RateLimit-*` headers
+- App-layer rate limiters (Redis/Upstash/in-memory/middleware) — defer
+  to platform/WAF; revisit only on a documented abuse signal
+- Polygon-based location resolution (`zonename-e.dat` polygons aren't
+  decoded; nearest-anchor + narrow override map is the v1 answer)
+- Mechanically-derived quest walkthroughs (we surface the client
+  journal text only)
+- Runtime CMS / content overrides on top of generated data
 
 Limited parsing of skill `<for>` blocks is allowed only for currently supported cases: literal-numeric and `<table>`-referenced `<mul>`/`<add>` entries parsed into `Skill.effects`.
 

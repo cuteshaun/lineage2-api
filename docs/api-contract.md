@@ -463,7 +463,7 @@ synthesized fields.
 ### Null vs absent policy
 
 - **Always present** top-level identity fields: `id`, `name`, `level`, `npcType`, `isAggressive`, `stats`, `baseStats`, `skills`. `level` and `npcType` are typed `… | null` because source occasionally omits them; on a real NPC in current Interlude data both are populated.
-- **Optional identity fields** (`title?`, `race?`, `raceIconFile?`, `raceDescription?`) are **omitted when source carries no value**. About 65% of Interlude NPCs ship no title; race fields are populated only when the NPC carries the engine "race-skill" entry (4416). Absence ≠ unknown.
+- **Optional identity fields** (`title?`, `race?`, `raceIconFile?`, `raceDescription?`) are **omitted when source carries no value**. About 65% of Interlude NPCs ship no title; race fields are populated only when the NPC carries a supported engine race-skill entry. Absence ≠ unknown.
 - **`behavior?` group** is omitted on the 7 Interlude NPCs that have no `<ai>` block in source. When present, `aggroRange` is always set; `assistRange` is omitted on the ~67% of NPCs without a clan / `clanRange`.
 - Within the `stats` and `baseStats` groups every key is required and `number`-typed (no nulls). Verified across all 6,472 Interlude NPCs; the defensive `| null` types in the previous shape never realized.
 

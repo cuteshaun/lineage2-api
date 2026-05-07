@@ -36,9 +36,11 @@ yarn-error.log*
 # vercel
 .vercel
 
-# generated data (rebuild with `pnpm build:data`)
-/data/generated/*
-!/data/generated/.gitkeep
+# Generated dataset is committed intentionally (see README → "Generated
+# data" — it's the source-of-truth artefact the API serves and PR-
+# reviewable). Regenerate with `pnpm build:data`. Local debug /
+# audit artefacts under `data/generated/` should still be gitignored
+# below if they appear.
 
 # typescript
 *.tsbuildinfo

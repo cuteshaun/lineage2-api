@@ -1,8 +1,10 @@
 # Lineage 2 API
 
-A read-only HTTP API over Lineage 2 datapack content (items, NPCs, drops),
-served by a Next.js App Router app from generated JSON. Chronicle is part of
-the URL path so future chronicles can coexist without endpoint changes.
+A read-only HTTP API over Lineage 2 datapack content (items, NPCs, monsters,
+drops, spawns, quests, classes, hennas, locations, regions, armor sets,
+spellbooks, shops, and the OpenAPI spec), served by a Next.js App Router app
+from generated JSON. Chronicle is part of the URL path so future chronicles
+can coexist without endpoint changes.
 
 ## Scope and status
 

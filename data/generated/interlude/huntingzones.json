@@ -1,0 +1,1883 @@
+[
+  {
+    "id": 2,
+    "type": 1,
+    "minLevel": 25,
+    "x": 50568,
+    "y": 152408,
+    "z": -2656,
+    "name": "Execution Grounds"
+  },
+  {
+    "id": 3,
+    "type": 1,
+    "minLevel": 23,
+    "x": 50081,
+    "y": 116859,
+    "z": -2176,
+    "name": "Partisan's Hideaway"
+  },
+  {
+    "id": 4,
+    "type": 1,
+    "minLevel": 25,
+    "x": 5106,
+    "y": 126916,
+    "z": -3664,
+    "name": "Cruma Marshlands"
+  },
+  {
+    "id": 5,
+    "type": 2,
+    "minLevel": 40,
+    "x": 17225,
+    "y": 114173,
+    "z": -3440,
+    "name": "Cruma Tower"
+  },
+  {
+    "id": 6,
+    "type": 1,
+    "minLevel": 20,
+    "x": 38291,
+    "y": 148029,
+    "z": -3696,
+    "name": "Mandragora Farm"
+  },
+  {
+    "id": 7,
+    "type": 3,
+    "minLevel": 0,
+    "x": 16856,
+    "y": 144673,
+    "z": -3000,
+    "name": "Town of Dion"
+  },
+  {
+    "id": 8,
+    "type": 3,
+    "minLevel": 0,
+    "x": 17308,
+    "y": 170368,
+    "z": -3495,
+    "name": "Floran Village"
+  },
+  {
+    "id": 9,
+    "type": 3,
+    "minLevel": 0,
+    "x": 22310,
+    "y": 155917,
+    "z": -2952,
+    "name": "Dion Castle"
+  },
+  {
+    "id": 10,
+    "type": 1,
+    "minLevel": 46,
+    "x": 59170,
+    "y": 164817,
+    "z": -2856,
+    "name": "Tanor Canyon"
+  },
+  {
+    "id": 11,
+    "type": 1,
+    "minLevel": 34,
+    "x": 22944,
+    "y": 182122,
+    "z": -2640,
+    "name": "Bee Hive"
+  },
+  {
+    "id": 12,
+    "type": 1,
+    "minLevel": 20,
+    "x": 29928,
+    "y": 151415,
+    "z": 2392,
+    "name": "Dion Hills"
+  },
+  {
+    "id": 13,
+    "type": 1,
+    "minLevel": 30,
+    "x": 10610,
+    "y": 156322,
+    "z": -2472,
+    "name": "Floran Agricultural Area"
+  },
+  {
+    "id": 14,
+    "type": 1,
+    "minLevel": 23,
+    "x": 630,
+    "y": 179184,
+    "z": -3720,
+    "name": "Plains of Dion"
+  },
+  {
+    "id": 15,
+    "type": 5,
+    "minLevel": 0,
+    "x": 43962,
+    "y": 108861,
+    "z": -2032,
+    "name": "Fortress of Resistance"
+  },
+  {
+    "id": 17,
+    "type": 3,
+    "minLevel": 0,
+    "x": 105918,
+    "y": 109759,
+    "z": -3170,
+    "name": "Hardin's Academy"
+  },
+  {
+    "id": 18,
+    "type": 1,
+    "minLevel": 45,
+    "x": 79745,
+    "y": 115299,
+    "z": -3720,
+    "name": "Dragon Valley"
+  },
+  {
+    "id": 19,
+    "type": 2,
+    "minLevel": 60,
+    "x": 131557,
+    "y": 114509,
+    "z": -3712,
+    "name": "Antharas' Lair "
+  },
+  {
+    "id": 20,
+    "type": 2,
+    "minLevel": 79,
+    "x": 177160,
+    "y": 114922,
+    "z": -7704,
+    "name": "Antharas' Nest"
+  },
+  {
+    "id": 21,
+    "type": 1,
+    "minLevel": 35,
+    "x": 67933,
+    "y": 117045,
+    "z": -3544,
+    "name": "Death Pass"
+  },
+  {
+    "id": 22,
+    "type": 7,
+    "minLevel": 0,
+    "x": 41528,
+    "y": 198358,
+    "z": -4648,
+    "name": "Pirate Tunnel"
+  },
+  {
+    "id": 23,
+    "type": 2,
+    "minLevel": 45,
+    "x": 43408,
+    "y": 206881,
+    "z": -3752,
+    "name": "Devil's Isle"
+  },
+  {
+    "id": 24,
+    "type": 4,
+    "minLevel": 0,
+    "x": 47938,
+    "y": 186864,
+    "z": -3420,
+    "name": "Giran Harbor"
+  },
+  {
+    "id": 25,
+    "type": 3,
+    "minLevel": 0,
+    "x": 83475,
+    "y": 147966,
+    "z": -3404,
+    "name": "Giran Castle Town"
+  },
+  {
+    "id": 26,
+    "type": 6,
+    "minLevel": 0,
+    "x": 73579,
+    "y": 142709,
+    "z": -3768,
+    "name": "Giran Arena"
+  },
+  {
+    "id": 27,
+    "type": 3,
+    "minLevel": 0,
+    "x": 112077,
+    "y": 144869,
+    "z": -2824,
+    "name": "Giran Castle"
+  },
+  {
+    "id": 28,
+    "type": 1,
+    "minLevel": 30,
+    "x": 85546,
+    "y": 131328,
+    "z": -3672,
+    "name": "Breka's Stronghold"
+  },
+  {
+    "id": 29,
+    "type": 1,
+    "minLevel": 31,
+    "x": 113553,
+    "y": 134813,
+    "z": -3540,
+    "name": "Gorgon Flower Garden"
+  },
+  {
+    "id": 31,
+    "type": 1,
+    "minLevel": 15,
+    "x": -19120,
+    "y": 136816,
+    "z": -3762,
+    "name": "Ruins of Despair"
+  },
+  {
+    "id": 32,
+    "type": 1,
+    "minLevel": 15,
+    "x": -42628,
+    "y": 119766,
+    "z": -3528,
+    "name": "Ruins of Agony"
+  },
+  {
+    "id": 33,
+    "type": 1,
+    "minLevel": 25,
+    "x": -22726,
+    "y": 190368,
+    "z": -4304,
+    "name": "Wasteland"
+  },
+  {
+    "id": 34,
+    "type": 2,
+    "minLevel": 29,
+    "x": -9959,
+    "y": 176184,
+    "z": -4160,
+    "name": "The Ant Nest"
+  },
+  {
+    "id": 35,
+    "type": 3,
+    "minLevel": 0,
+    "x": -80684,
+    "y": 149770,
+    "z": -3043,
+    "name": "Gludin Village"
+  },
+  {
+    "id": 36,
+    "type": 4,
+    "minLevel": 0,
+    "x": -91101,
+    "y": 150344,
+    "z": -3624,
+    "name": "Gludin Harbor"
+  },
+  {
+    "id": 37,
+    "type": 3,
+    "minLevel": 0,
+    "x": -12787,
+    "y": 122779,
+    "z": -3114,
+    "name": "Town of Gludio"
+  },
+  {
+    "id": 38,
+    "type": 1,
+    "minLevel": 21,
+    "x": -49853,
+    "y": 147089,
+    "z": -2784,
+    "name": "Abandoned Camp "
+  },
+  {
+    "id": 39,
+    "type": 1,
+    "minLevel": 24,
+    "x": -89763,
+    "y": 105359,
+    "z": -3576,
+    "name": "Orc Barracks"
+  },
+  {
+    "id": 40,
+    "type": 2,
+    "minLevel": 27,
+    "x": -53001,
+    "y": 191425,
+    "z": -3568,
+    "name": "Forgotten Temple"
+  },
+  {
+    "id": 41,
+    "type": 7,
+    "minLevel": 0,
+    "x": -57798,
+    "y": 127629,
+    "z": -2928,
+    "name": "Fellmere Lake"
+  },
+  {
+    "id": 42,
+    "type": 6,
+    "minLevel": 0,
+    "x": -87328,
+    "y": 142266,
+    "z": -3640,
+    "name": "Gludin Arena"
+  },
+  {
+    "id": 43,
+    "type": 3,
+    "minLevel": 0,
+    "x": -18341,
+    "y": 113946,
+    "z": -1268,
+    "name": "Gludio Castle"
+  },
+  {
+    "id": 44,
+    "type": 1,
+    "minLevel": 26,
+    "x": -88539,
+    "y": 83389,
+    "z": -2864,
+    "name": "Windy Hill"
+  },
+  {
+    "id": 45,
+    "type": 1,
+    "minLevel": 30,
+    "x": -44829,
+    "y": 188171,
+    "z": -3256,
+    "name": "Red Rock Ridge"
+  },
+  {
+    "id": 46,
+    "type": 1,
+    "minLevel": 16,
+    "x": -44763,
+    "y": 203497,
+    "z": -3592,
+    "name": "Langk Lizardmen Dwellings"
+  },
+  {
+    "id": 47,
+    "type": 1,
+    "minLevel": 24,
+    "x": -25283,
+    "y": 106820,
+    "z": -3416,
+    "name": "Maille Lizardmen Barracks"
+  },
+  {
+    "id": 48,
+    "type": 7,
+    "minLevel": 0,
+    "x": -84141,
+    "y": 244623,
+    "z": -3729,
+    "name": "Talking Island"
+  },
+  {
+    "id": 49,
+    "type": 3,
+    "minLevel": 0,
+    "x": -84141,
+    "y": 244623,
+    "z": -3729,
+    "name": "Talking Island Village"
+  },
+  {
+    "id": 50,
+    "type": 3,
+    "minLevel": 0,
+    "x": -72674,
+    "y": 256819,
+    "z": -3112,
+    "name": "Cedric's Training Hall"
+  },
+  {
+    "id": 51,
+    "type": 3,
+    "minLevel": 0,
+    "x": -89041,
+    "y": 248907,
+    "z": -3568,
+    "name": "Einhovant's School of Magic"
+  },
+  {
+    "id": 52,
+    "type": 7,
+    "minLevel": 0,
+    "x": -99586,
+    "y": 237637,
+    "z": -3568,
+    "name": "Obelisk of Victory"
+  },
+  {
+    "id": 53,
+    "type": 2,
+    "minLevel": 9,
+    "x": -112367,
+    "y": 234703,
+    "z": -3688,
+    "name": "Elven Ruins"
+  },
+  {
+    "id": 54,
+    "type": 4,
+    "minLevel": 0,
+    "x": -96811,
+    "y": 259153,
+    "z": -3616,
+    "name": "Talking Island Harbor"
+  },
+  {
+    "id": 55,
+    "type": 1,
+    "minLevel": 8,
+    "x": -104344,
+    "y": 226217,
+    "z": -3616,
+    "name": "Talking Island, Western Territory"
+  },
+  {
+    "id": 56,
+    "type": 1,
+    "minLevel": 1,
+    "x": -95336,
+    "y": 240478,
+    "z": -3264,
+    "name": "Talking Island, Eastern Territory"
+  },
+  {
+    "id": 57,
+    "type": 1,
+    "minLevel": 17,
+    "x": -63736,
+    "y": 101522,
+    "z": -3552,
+    "name": "Fellmere Harvesting Grounds"
+  },
+  {
+    "id": 58,
+    "type": 1,
+    "minLevel": 15,
+    "x": -72417,
+    "y": 173629,
+    "z": -3648,
+    "name": "Windmill Hill"
+  },
+  {
+    "id": 59,
+    "type": 1,
+    "minLevel": 19,
+    "x": -50174,
+    "y": 129303,
+    "z": -2912,
+    "name": "Ruins of Agony Bend"
+  },
+  {
+    "id": 60,
+    "type": 1,
+    "minLevel": 14,
+    "x": -6989,
+    "y": 109503,
+    "z": -3040,
+    "name": "Evil Hunting Grounds"
+  },
+  {
+    "id": 61,
+    "type": 1,
+    "minLevel": 19,
+    "x": -36652,
+    "y": 135591,
+    "z": -3160,
+    "name": "Entrance to the Ruins of Despair"
+  },
+  {
+    "id": 62,
+    "type": 1,
+    "minLevel": 22,
+    "x": -24794,
+    "y": 156502,
+    "z": -2880,
+    "name": "Windawood Manor"
+  },
+  {
+    "id": 63,
+    "type": 1,
+    "minLevel": 22,
+    "x": -6661,
+    "y": 201880,
+    "z": -3632,
+    "name": "Ol Mahum Checkpoint"
+  },
+  {
+    "id": 64,
+    "type": 2,
+    "minLevel": 36,
+    "x": -26489,
+    "y": 195307,
+    "z": -3928,
+    "name": "Ant Incubator"
+  },
+  {
+    "id": 65,
+    "type": 7,
+    "minLevel": 0,
+    "x": -111728,
+    "y": 244330,
+    "z": -3448,
+    "name": "Singing Waterfall"
+  },
+  {
+    "id": 66,
+    "type": 1,
+    "minLevel": 15,
+    "x": -10612,
+    "y": 75881,
+    "z": -3592,
+    "name": "The Neutral Zone"
+  },
+  {
+    "id": 68,
+    "type": 1,
+    "minLevel": 8,
+    "x": 21362,
+    "y": 51122,
+    "z": -3688,
+    "name": "Elven Forest"
+  },
+  {
+    "id": 69,
+    "type": 1,
+    "minLevel": 1,
+    "x": 50953,
+    "y": 42105,
+    "z": -3480,
+    "name": "Shadow of the Mother Tree"
+  },
+  {
+    "id": 70,
+    "type": 3,
+    "minLevel": 0,
+    "x": 46951,
+    "y": 51550,
+    "z": -2976,
+    "name": "Elven Village"
+  },
+  {
+    "id": 71,
+    "type": 2,
+    "minLevel": 10,
+    "x": 29294,
+    "y": 74968,
+    "z": -3776,
+    "name": "Elven Fortress"
+  },
+  {
+    "id": 72,
+    "type": 7,
+    "minLevel": 0,
+    "x": 51469,
+    "y": 82600,
+    "z": -3312,
+    "name": "Iris Lake"
+  },
+  {
+    "id": 73,
+    "type": 1,
+    "minLevel": 8,
+    "x": -22224,
+    "y": 14168,
+    "z": -3232,
+    "name": "The Dark Forest"
+  },
+  {
+    "id": 74,
+    "type": 3,
+    "minLevel": 0,
+    "x": 25934,
+    "y": 11037,
+    "z": -3720,
+    "name": "The Shilen Temple"
+  },
+  {
+    "id": 75,
+    "type": 3,
+    "minLevel": 0,
+    "x": 9709,
+    "y": 15566,
+    "z": -4500,
+    "name": "Dark Elf Village"
+  },
+  {
+    "id": 76,
+    "type": 2,
+    "minLevel": 10,
+    "x": -47543,
+    "y": 58478,
+    "z": -3336,
+    "name": "School of Dark Arts"
+  },
+  {
+    "id": 77,
+    "type": 1,
+    "minLevel": 13,
+    "x": -19048,
+    "y": 48198,
+    "z": -3616,
+    "name": "Swampland"
+  },
+  {
+    "id": 78,
+    "type": 7,
+    "minLevel": 0,
+    "x": -44566,
+    "y": 77508,
+    "z": -3736,
+    "name": "Altar of Rites"
+  },
+  {
+    "id": 79,
+    "type": 1,
+    "minLevel": 40,
+    "x": 64328,
+    "y": 26803,
+    "z": -3768,
+    "name": "Sea of Spores"
+  },
+  {
+    "id": 80,
+    "type": 5,
+    "minLevel": 0,
+    "x": 87091,
+    "y": -20354,
+    "z": -2072,
+    "name": "Bandit Stronghold"
+  },
+  {
+    "id": 81,
+    "type": 3,
+    "minLevel": 0,
+    "x": 85391,
+    "y": 16228,
+    "z": -3640,
+    "name": "Ivory Tower"
+  },
+  {
+    "id": 82,
+    "type": 3,
+    "minLevel": 0,
+    "x": 82971,
+    "y": 53207,
+    "z": -1470,
+    "name": "Town of Oren"
+  },
+  {
+    "id": 83,
+    "type": 3,
+    "minLevel": 0,
+    "x": 78189,
+    "y": 36936,
+    "z": -2560,
+    "name": "Oren Castle"
+  },
+  {
+    "id": 84,
+    "type": 1,
+    "minLevel": 35,
+    "x": 87252,
+    "y": 85514,
+    "z": -3103,
+    "name": "Plains of the Lizardmen"
+  },
+  {
+    "id": 85,
+    "type": 1,
+    "minLevel": 54,
+    "x": 89914,
+    "y": 46276,
+    "z": -3616,
+    "name": "Skyshadow Meadow"
+  },
+  {
+    "id": 86,
+    "type": 1,
+    "minLevel": 1,
+    "x": 23863,
+    "y": 11068,
+    "z": -3720,
+    "name": "Shilen's Garden"
+  },
+  {
+    "id": 87,
+    "type": 1,
+    "minLevel": 13,
+    "x": -29466,
+    "y": 66678,
+    "z": -3496,
+    "name": "Black Rock Hill"
+  },
+  {
+    "id": 88,
+    "type": 1,
+    "minLevel": 16,
+    "x": -61095,
+    "y": 75104,
+    "z": -3383,
+    "name": "Spider Nest"
+  },
+  {
+    "id": 89,
+    "type": 1,
+    "minLevel": 40,
+    "x": 67097,
+    "y": 68815,
+    "z": -3648,
+    "name": "Timak Outpost "
+  },
+  {
+    "id": 90,
+    "type": 1,
+    "minLevel": 40,
+    "x": 85391,
+    "y": 16228,
+    "z": -3640,
+    "name": "Ivory Tower Crater"
+  },
+  {
+    "id": 91,
+    "type": 1,
+    "minLevel": 45,
+    "x": 93218,
+    "y": 16969,
+    "z": -3904,
+    "name": "Forest of Evil"
+  },
+  {
+    "id": 92,
+    "type": 1,
+    "minLevel": 50,
+    "x": 91539,
+    "y": -12204,
+    "z": -2440,
+    "name": "Outlaw Forest"
+  },
+  {
+    "id": 93,
+    "type": 7,
+    "minLevel": 0,
+    "x": 61740,
+    "y": 94946,
+    "z": -1488,
+    "name": "Misty Mountains"
+  },
+  {
+    "id": 94,
+    "type": 7,
+    "minLevel": 0,
+    "x": 58502,
+    "y": 53453,
+    "z": -3624,
+    "name": "Starlight Waterfall"
+  },
+  {
+    "id": 95,
+    "type": 7,
+    "minLevel": 0,
+    "x": -7233,
+    "y": 57006,
+    "z": -3520,
+    "name": "Undine Waterfall"
+  },
+  {
+    "id": 96,
+    "type": 7,
+    "minLevel": 0,
+    "x": 70456,
+    "y": 6591,
+    "z": -3632,
+    "name": "The Gods' Falls"
+  },
+  {
+    "id": 98,
+    "type": 2,
+    "minLevel": 60,
+    "x": 114649,
+    "y": 11115,
+    "z": -5100,
+    "name": "Tower of Insolence"
+  },
+  {
+    "id": 99,
+    "type": 1,
+    "minLevel": 65,
+    "x": 159455,
+    "y": -12931,
+    "z": -2872,
+    "name": "Blazing Swamp"
+  },
+  {
+    "id": 100,
+    "type": 5,
+    "minLevel": 0,
+    "x": 178358,
+    "y": -14192,
+    "z": -2256,
+    "name": "Devastated Castle"
+  },
+  {
+    "id": 101,
+    "type": 1,
+    "minLevel": 60,
+    "x": 185319,
+    "y": 20218,
+    "z": -3264,
+    "name": "The Forbidden Gateway"
+  },
+  {
+    "id": 102,
+    "type": 2,
+    "minLevel": 55,
+    "x": 181737,
+    "y": 46469,
+    "z": -4276,
+    "name": "The Giant's Cave"
+  },
+  {
+    "id": 103,
+    "type": 1,
+    "minLevel": 45,
+    "x": 124904,
+    "y": 61992,
+    "z": -3973,
+    "name": "The Enchanted Valley"
+  },
+  {
+    "id": 104,
+    "type": 1,
+    "minLevel": 50,
+    "x": 167047,
+    "y": 20304,
+    "z": -3328,
+    "name": "The Cemetery"
+  },
+  {
+    "id": 105,
+    "type": 1,
+    "minLevel": 40,
+    "x": 142065,
+    "y": 81300,
+    "z": -3000,
+    "name": "The Forest of Mirrors"
+  },
+  {
+    "id": 106,
+    "type": 7,
+    "minLevel": 0,
+    "x": 166304,
+    "y": 91741,
+    "z": -3168,
+    "name": "Anghel Waterfall"
+  },
+  {
+    "id": 107,
+    "type": 3,
+    "minLevel": 0,
+    "x": 146783,
+    "y": 25808,
+    "z": -2000,
+    "name": "Town of Aden"
+  },
+  {
+    "id": 108,
+    "type": 3,
+    "minLevel": 0,
+    "x": 117088,
+    "y": 76931,
+    "z": -2670,
+    "name": "Hunters Village"
+  },
+  {
+    "id": 109,
+    "type": 7,
+    "minLevel": 0,
+    "x": 158141,
+    "y": -24543,
+    "z": -1288,
+    "name": "Eastern Border Outpost"
+  },
+  {
+    "id": 110,
+    "type": 6,
+    "minLevel": 0,
+    "x": 146440,
+    "y": 46723,
+    "z": -3400,
+    "name": "Coliseum"
+  },
+  {
+    "id": 111,
+    "type": 7,
+    "minLevel": 0,
+    "x": 146440,
+    "y": 46723,
+    "z": -3400,
+    "name": "Narsell Lake"
+  },
+  {
+    "id": 112,
+    "type": 3,
+    "minLevel": 0,
+    "x": 147461,
+    "y": 9898,
+    "z": -592,
+    "name": "Aden Castle"
+  },
+  {
+    "id": 113,
+    "type": 1,
+    "minLevel": 64,
+    "x": 106517,
+    "y": -2871,
+    "z": -3454,
+    "name": "Ancient Battleground"
+  },
+  {
+    "id": 114,
+    "type": 1,
+    "minLevel": 55,
+    "x": 167285,
+    "y": 37109,
+    "z": -4008,
+    "name": "Forsaken Plains "
+  },
+  {
+    "id": 115,
+    "type": 1,
+    "minLevel": 74,
+    "x": 170838,
+    "y": 55776,
+    "z": -5280,
+    "name": "Silent Valley"
+  },
+  {
+    "id": 116,
+    "type": 1,
+    "minLevel": 40,
+    "x": 114306,
+    "y": 86573,
+    "z": -3112,
+    "name": "Hunters Valley"
+  },
+  {
+    "id": 117,
+    "type": 1,
+    "minLevel": 45,
+    "x": 135580,
+    "y": 19467,
+    "z": -3424,
+    "name": "Plains of Glory"
+  },
+  {
+    "id": 118,
+    "type": 1,
+    "minLevel": 55,
+    "x": 183543,
+    "y": -14974,
+    "z": -2768,
+    "name": "Fields of Massacre"
+  },
+  {
+    "id": 119,
+    "type": 1,
+    "minLevel": 45,
+    "x": 156898,
+    "y": 11217,
+    "z": -4032,
+    "name": "War-Torn Plains"
+  },
+  {
+    "id": 120,
+    "type": 7,
+    "minLevel": 0,
+    "x": 112405,
+    "y": -16607,
+    "z": -1864,
+    "name": "Western Border Outpost"
+  },
+  {
+    "id": 122,
+    "type": 1,
+    "minLevel": 35,
+    "x": 91088,
+    "y": 182384,
+    "z": -3192,
+    "name": "Field of Silence"
+  },
+  {
+    "id": 123,
+    "type": 1,
+    "minLevel": 35,
+    "x": 74592,
+    "y": 207656,
+    "z": -3032,
+    "name": "Field of Whispers"
+  },
+  {
+    "id": 124,
+    "type": 2,
+    "minLevel": 40,
+    "x": 84413,
+    "y": 234334,
+    "z": -3656,
+    "name": "Garden of Eva"
+  },
+  {
+    "id": 125,
+    "type": 1,
+    "minLevel": 40,
+    "x": 115583,
+    "y": 192261,
+    "z": -3488,
+    "name": "Alligator Island"
+  },
+  {
+    "id": 126,
+    "type": 3,
+    "minLevel": 0,
+    "x": 111455,
+    "y": 219400,
+    "z": -3546,
+    "name": "Heine"
+  },
+  {
+    "id": 127,
+    "type": 3,
+    "minLevel": 0,
+    "x": 115988,
+    "y": 246899,
+    "z": -976,
+    "name": "Innadril Castle"
+  },
+  {
+    "id": 128,
+    "type": 1,
+    "minLevel": 38,
+    "x": 116267,
+    "y": 201177,
+    "z": -3432,
+    "name": "Alligator Beach"
+  },
+  {
+    "id": 129,
+    "type": 6,
+    "minLevel": 0,
+    "x": 12443,
+    "y": 183467,
+    "z": -3560,
+    "name": "Dion Arena"
+  },
+  {
+    "id": 130,
+    "type": 3,
+    "minLevel": 0,
+    "x": -55699,
+    "y": -114967,
+    "z": 2528,
+    "name": "The Pa'agrio Temple"
+  },
+  {
+    "id": 131,
+    "type": 3,
+    "minLevel": 0,
+    "x": -45158,
+    "y": -112583,
+    "z": -236,
+    "name": "Orc Village"
+  },
+  {
+    "id": 132,
+    "type": 7,
+    "minLevel": 0,
+    "x": -8830,
+    "y": -119289,
+    "z": 424,
+    "name": "The Immortal Plateau"
+  },
+  {
+    "id": 133,
+    "type": 2,
+    "minLevel": 10,
+    "x": 9340,
+    "y": -112509,
+    "z": -2536,
+    "name": "Cave of Trials"
+  },
+  {
+    "id": 134,
+    "type": 7,
+    "minLevel": 0,
+    "x": 11810,
+    "y": -139730,
+    "z": -1872,
+    "name": "Frozen Waterfalls"
+  },
+  {
+    "id": 135,
+    "type": 1,
+    "minLevel": 1,
+    "x": -39347,
+    "y": -107274,
+    "z": -2072,
+    "name": "Valley of Heroes"
+  },
+  {
+    "id": 136,
+    "type": 1,
+    "minLevel": 8,
+    "x": -9465,
+    "y": -134046,
+    "z": -2228,
+    "name": "Immortal Plateau, Northern Region"
+  },
+  {
+    "id": 137,
+    "type": 1,
+    "minLevel": 18,
+    "x": -4190,
+    "y": -80040,
+    "z": -2696,
+    "name": "Immortal Plateau, Southern Region"
+  },
+  {
+    "id": 139,
+    "type": 7,
+    "minLevel": 0,
+    "x": 106561,
+    "y": -173949,
+    "z": -400,
+    "name": "Strip Mine"
+  },
+  {
+    "id": 140,
+    "type": 3,
+    "minLevel": 0,
+    "x": 115120,
+    "y": -178224,
+    "z": -917,
+    "name": "Dwarven Village"
+  },
+  {
+    "id": 141,
+    "type": 7,
+    "minLevel": 0,
+    "x": 147493,
+    "y": -200840,
+    "z": 192,
+    "name": "Spine Mountains"
+  },
+  {
+    "id": 142,
+    "type": 2,
+    "minLevel": 10,
+    "x": 139714,
+    "y": -177456,
+    "z": -1536,
+    "name": "Abandoned Coal Mines"
+  },
+  {
+    "id": 143,
+    "type": 2,
+    "minLevel": 23,
+    "x": 171946,
+    "y": -173352,
+    "z": 3440,
+    "name": "Mithril Mines"
+  },
+  {
+    "id": 144,
+    "type": 1,
+    "minLevel": 1,
+    "x": 112971,
+    "y": -174924,
+    "z": -608,
+    "name": "Frozen Valley"
+  },
+  {
+    "id": 145,
+    "type": 1,
+    "minLevel": 8,
+    "x": 128527,
+    "y": -204036,
+    "z": -3408,
+    "name": "Western Mining Zone"
+  },
+  {
+    "id": 146,
+    "type": 1,
+    "minLevel": 18,
+    "x": 175836,
+    "y": -205837,
+    "z": -3384,
+    "name": "Eastern Mining Zone"
+  },
+  {
+    "id": 147,
+    "type": 7,
+    "minLevel": 0,
+    "x": 113826,
+    "y": -171150,
+    "z": -160,
+    "name": "Mining Zone Passage"
+  },
+  {
+    "id": 148,
+    "type": 1,
+    "minLevel": 30,
+    "x": 115298,
+    "y": -160886,
+    "z": -1296,
+    "name": "Plunderous Plains"
+  },
+  {
+    "id": 149,
+    "type": 1,
+    "minLevel": 53,
+    "x": 123037,
+    "y": -118112,
+    "z": -2576,
+    "name": "Frozen Labyrinth"
+  },
+  {
+    "id": 150,
+    "type": 1,
+    "minLevel": 57,
+    "x": 102728,
+    "y": -126242,
+    "z": -2840,
+    "name": "The Ice Queen's Castle"
+  },
+  {
+    "id": 151,
+    "type": 1,
+    "minLevel": 46,
+    "x": 91129,
+    "y": -123951,
+    "z": -4128,
+    "name": "Pavel Ruins"
+  },
+  {
+    "id": 152,
+    "type": 7,
+    "minLevel": 0,
+    "x": 76021,
+    "y": -110477,
+    "z": -1704,
+    "name": "Caron's Dungeon"
+  },
+  {
+    "id": 153,
+    "type": 1,
+    "minLevel": 40,
+    "x": 68693,
+    "y": -110438,
+    "z": -1946,
+    "name": "Den of Evil"
+  },
+  {
+    "id": 154,
+    "type": 1,
+    "minLevel": 25,
+    "x": 47692,
+    "y": -115745,
+    "z": -3744,
+    "name": "Crypts of Disgrace"
+  },
+  {
+    "id": 155,
+    "type": 7,
+    "minLevel": 0,
+    "x": 32173,
+    "y": -122954,
+    "z": -792,
+    "name": "Valley of the Lords"
+  },
+  {
+    "id": 156,
+    "type": 3,
+    "minLevel": 0,
+    "x": 77630,
+    "y": -150885,
+    "z": 368,
+    "name": "Schuttgart Castle"
+  },
+  {
+    "id": 157,
+    "type": 3,
+    "minLevel": 0,
+    "x": 88249,
+    "y": -142713,
+    "z": -1336,
+    "name": "Town of Schuttgart"
+  },
+  {
+    "id": 158,
+    "type": 2,
+    "minLevel": 50,
+    "x": 90418,
+    "y": -107317,
+    "z": -3328,
+    "name": "Archaic Laboratory"
+  },
+  {
+    "id": 159,
+    "type": 7,
+    "minLevel": 0,
+    "x": 108251,
+    "y": -120886,
+    "z": -3744,
+    "name": "Frost Lake"
+  },
+  {
+    "id": 160,
+    "type": 1,
+    "minLevel": 39,
+    "x": 121618,
+    "y": -141554,
+    "z": -1496,
+    "name": "Sky Wagon Relic"
+  },
+  {
+    "id": 161,
+    "type": 2,
+    "minLevel": 21,
+    "x": -41184,
+    "y": 206752,
+    "z": -3357,
+    "name": "Necropolis of Sacrifice"
+  },
+  {
+    "id": 162,
+    "type": 2,
+    "minLevel": 60,
+    "x": -56064,
+    "y": 78720,
+    "z": -3011,
+    "name": "Necropolis of Devotion"
+  },
+  {
+    "id": 163,
+    "type": 2,
+    "minLevel": 52,
+    "x": -25472,
+    "y": 77728,
+    "z": -3446,
+    "name": "The Patriot's Necropolis"
+  },
+  {
+    "id": 164,
+    "type": 2,
+    "minLevel": 72,
+    "x": -22480,
+    "y": 13872,
+    "z": -3174,
+    "name": "Catacomb of Dark Omens"
+  },
+  {
+    "id": 165,
+    "type": 2,
+    "minLevel": 42,
+    "x": 43200,
+    "y": 170688,
+    "z": -3251,
+    "name": "Catacomb of the Branded"
+  },
+  {
+    "id": 166,
+    "type": 2,
+    "minLevel": 30,
+    "x": 39232,
+    "y": 143568,
+    "z": -3651,
+    "name": "Catacomb of the Heretic"
+  },
+  {
+    "id": 167,
+    "type": 2,
+    "minLevel": 32,
+    "x": 45600,
+    "y": 126944,
+    "z": -3686,
+    "name": "The Pilgrim's Necropolis"
+  },
+  {
+    "id": 168,
+    "type": 2,
+    "minLevel": 70,
+    "x": 79296,
+    "y": 209584,
+    "z": -3709,
+    "name": "The Saint's Necropolis"
+  },
+  {
+    "id": 169,
+    "type": 2,
+    "minLevel": 42,
+    "x": 107514,
+    "y": 174329,
+    "z": -3704,
+    "name": "Necropolis of Worship"
+  },
+  {
+    "id": 170,
+    "type": 2,
+    "minLevel": 65,
+    "x": 114496,
+    "y": 132416,
+    "z": -3101,
+    "name": "Necropolis of Martyrdom"
+  },
+  {
+    "id": 171,
+    "type": 2,
+    "minLevel": 51,
+    "x": 74672,
+    "y": 78032,
+    "z": -3398,
+    "name": "Catacomb of the Apostate"
+  },
+  {
+    "id": 172,
+    "type": 2,
+    "minLevel": 72,
+    "x": 110912,
+    "y": 84912,
+    "z": -4816,
+    "name": "Catacomb of the Forbidden Path"
+  },
+  {
+    "id": 173,
+    "type": 2,
+    "minLevel": 60,
+    "x": 136672,
+    "y": 79328,
+    "z": -3702,
+    "name": "Catacomb of the Witch"
+  },
+  {
+    "id": 174,
+    "type": 2,
+    "minLevel": 70,
+    "x": 168560,
+    "y": -17968,
+    "z": -3174,
+    "name": "The Disciple's Necropolis"
+  },
+  {
+    "id": 175,
+    "type": 2,
+    "minLevel": 0,
+    "x": -79184,
+    "y": 111952,
+    "z": -4897,
+    "name": "Oracle of Dawn"
+  },
+  {
+    "id": 176,
+    "type": 2,
+    "minLevel": 0,
+    "x": -80208,
+    "y": 87120,
+    "z": -5153,
+    "name": "Oracle of Dusk"
+  },
+  {
+    "id": 178,
+    "type": 6,
+    "minLevel": 0,
+    "x": -21453,
+    "y": -21058,
+    "z": -3024,
+    "name": "Olympiad Stadium"
+  },
+  {
+    "id": 181,
+    "type": 3,
+    "minLevel": 0,
+    "x": 148024,
+    "y": -55281,
+    "z": -2728,
+    "name": "Town  of Goddard"
+  },
+  {
+    "id": 182,
+    "type": 3,
+    "minLevel": 0,
+    "x": 147450,
+    "y": -47331,
+    "z": -496,
+    "name": "Goddard Castle"
+  },
+  {
+    "id": 183,
+    "type": 1,
+    "minLevel": 67,
+    "x": 132997,
+    "y": -60608,
+    "z": -2960,
+    "name": "Garden of Beasts"
+  },
+  {
+    "id": 184,
+    "type": 1,
+    "minLevel": 73,
+    "x": 151778,
+    "y": -106829,
+    "z": -2888,
+    "name": "Hot Springs"
+  },
+  {
+    "id": 185,
+    "type": 5,
+    "minLevel": 0,
+    "x": 139997,
+    "y": -124860,
+    "z": -1896,
+    "name": "Rainbow Springs Chateau"
+  },
+  {
+    "id": 186,
+    "type": 2,
+    "minLevel": 78,
+    "x": 168902,
+    "y": -116703,
+    "z": -2417,
+    "name": "Forge of the Gods"
+  },
+  {
+    "id": 187,
+    "type": 2,
+    "minLevel": 80,
+    "x": 189964,
+    "y": -116820,
+    "z": -1624,
+    "name": "Hall of Flames"
+  },
+  {
+    "id": 188,
+    "type": 2,
+    "minLevel": 85,
+    "x": 215378,
+    "y": -116635,
+    "z": -1608,
+    "name": "Valakas' Lair"
+  },
+  {
+    "id": 189,
+    "type": 1,
+    "minLevel": 77,
+    "x": 146990,
+    "y": -67128,
+    "z": -3640,
+    "name": "Ketra Orc Outpost"
+  },
+  {
+    "id": 190,
+    "type": 3,
+    "minLevel": 0,
+    "x": 149548,
+    "y": -82014,
+    "z": -5592,
+    "name": "Ketra Orc Village"
+  },
+  {
+    "id": 191,
+    "type": 2,
+    "minLevel": 76,
+    "x": 186699,
+    "y": -75915,
+    "z": -2826,
+    "name": "Imperial Tomb"
+  },
+  {
+    "id": 192,
+    "type": 7,
+    "minLevel": 0,
+    "x": 168982,
+    "y": -86455,
+    "z": -3007,
+    "name": "Pilgrim's Temple"
+  },
+  {
+    "id": 193,
+    "type": 1,
+    "minLevel": 68,
+    "x": 165054,
+    "y": -47861,
+    "z": -3560,
+    "name": "Wall of Argos"
+  },
+  {
+    "id": 194,
+    "type": 1,
+    "minLevel": 73,
+    "x": 190112,
+    "y": -61776,
+    "z": -2944,
+    "name": "Shrine of Loyalty"
+  },
+  {
+    "id": 195,
+    "type": 1,
+    "minLevel": 77,
+    "x": 125740,
+    "y": -40864,
+    "z": -3736,
+    "name": "Varka Silenos Barracks"
+  },
+  {
+    "id": 196,
+    "type": 3,
+    "minLevel": 0,
+    "x": 108155,
+    "y": -53670,
+    "z": -2472,
+    "name": "Varka Silenos Village"
+  },
+  {
+    "id": 197,
+    "type": 2,
+    "minLevel": 83,
+    "x": 178127,
+    "y": -84435,
+    "z": -7215,
+    "name": "Four Sepulchers"
+  },
+  {
+    "id": 198,
+    "type": 1,
+    "minLevel": 60,
+    "x": 102621,
+    "y": -60798,
+    "z": -2144,
+    "name": "Devil's Pass"
+  },
+  {
+    "id": 199,
+    "type": 2,
+    "minLevel": 80,
+    "x": 174141,
+    "y": -88685,
+    "z": -5112,
+    "name": "The Last Imperial Tomb"
+  },
+  {
+    "id": 201,
+    "type": 3,
+    "minLevel": 0,
+    "x": 43835,
+    "y": -47749,
+    "z": -792,
+    "name": "Rune Township"
+  },
+  {
+    "id": 202,
+    "type": 3,
+    "minLevel": 0,
+    "x": 14659,
+    "y": -49230,
+    "z": -160,
+    "name": "Rune Castle"
+  },
+  {
+    "id": 203,
+    "type": 4,
+    "minLevel": 0,
+    "x": 36839,
+    "y": -38435,
+    "z": -3640,
+    "name": "Rune Harbor"
+  },
+  {
+    "id": 204,
+    "type": 7,
+    "minLevel": 0,
+    "x": 40723,
+    "y": -94881,
+    "z": -2096,
+    "name": "Windtail Waterfall"
+  },
+  {
+    "id": 205,
+    "type": 1,
+    "minLevel": 63,
+    "x": 43805,
+    "y": -88010,
+    "z": -2780,
+    "name": "Beast Farm"
+  },
+  {
+    "id": 206,
+    "type": 5,
+    "minLevel": 0,
+    "x": 55133,
+    "y": -93217,
+    "z": -1360,
+    "name": "Wild Beast Reserve"
+  },
+  {
+    "id": 207,
+    "type": 1,
+    "minLevel": 60,
+    "x": 79981,
+    "y": -82301,
+    "z": -3680,
+    "name": "Valley of Saints"
+  },
+  {
+    "id": 208,
+    "type": 1,
+    "minLevel": 63,
+    "x": 52107,
+    "y": -54328,
+    "z": -3158,
+    "name": "Forest of the Dead"
+  },
+  {
+    "id": 209,
+    "type": 3,
+    "minLevel": 0,
+    "x": 57670,
+    "y": -41672,
+    "z": -3154,
+    "name": "Cursed Village"
+  },
+  {
+    "id": 210,
+    "type": 5,
+    "minLevel": 0,
+    "x": 57966,
+    "y": -28378,
+    "z": 584,
+    "name": "Fortress of the Dead"
+  },
+  {
+    "id": 211,
+    "type": 1,
+    "minLevel": 66,
+    "x": 69340,
+    "y": -50203,
+    "z": -3314,
+    "name": "Swamp of Screams"
+  },
+  {
+    "id": 212,
+    "type": 2,
+    "minLevel": 80,
+    "x": 125480,
+    "y": -75834,
+    "z": -2945,
+    "name": "Monastery of Silence"
+  },
+  {
+    "id": 213,
+    "type": 2,
+    "minLevel": 81,
+    "x": 35630,
+    "y": -49748,
+    "z": -760,
+    "name": "The Pagan Temple"
+  },
+  {
+    "id": 214,
+    "type": 2,
+    "minLevel": 72,
+    "x": 90134,
+    "y": -45130,
+    "z": -2168,
+    "name": "Stakato Nest"
+  },
+  {
+    "id": 215,
+    "type": 4,
+    "minLevel": 0,
+    "x": 111418,
+    "y": 225960,
+    "z": -3624,
+    "name": "Tour Boat Dock"
+  },
+  {
+    "id": 216,
+    "type": 7,
+    "minLevel": 0,
+    "x": 113750,
+    "y": -109163,
+    "z": -832,
+    "name": "Ice Merchant Cabin"
+  },
+  {
+    "id": 217,
+    "type": 7,
+    "minLevel": 0,
+    "x": 126272,
+    "y": -159336,
+    "z": -1232,
+    "name": "Brigand Stronghold"
+  },
+  {
+    "id": 218,
+    "type": 1,
+    "minLevel": 83,
+    "x": 8480,
+    "y": -14624,
+    "z": -3693,
+    "name": "Primeval Isle"
+  },
+  {
+    "id": 219,
+    "type": 4,
+    "minLevel": 0,
+    "x": 10448,
+    "y": -24960,
+    "z": -3664,
+    "name": "Primeval Isle Wharf"
+  },
+  {
+    "id": 220,
+    "type": 7,
+    "minLevel": 0,
+    "x": 26240,
+    "y": -7840,
+    "z": -1972,
+    "name": "Anachron's Den"
+  }
+]

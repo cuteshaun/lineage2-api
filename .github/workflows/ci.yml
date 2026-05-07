@@ -1,34 +1,21 @@
-# Lightweight CI — only checks that do not require generated data.
+# CI for the Lineage 2 API.
 #
-# This workflow validates everything we can without running
-# `pnpm build:data`. The data pipeline depends on:
-#   - the upstream aCis datapack (lives outside this repo, GPL but
-#     not vendored here),
-#   - the user-supplied L2 client `questname-e.dat` (proprietary;
-#     not committed and intentionally not uploaded as a CI secret
-#     in this stage).
-# Because tests read `data/generated/<chronicle>/*.json` and that
-# directory is gitignored, `pnpm test` and `pnpm build:data` are
-# DELIBERATELY NOT RUN in CI yet. See the "Future full CI" notes
-# at the bottom of this file for the planned promotion path.
+# The generated dataset (`data/generated/interlude/*.json`) is
+# committed to the repo as the source-of-truth artefact the API
+# serves. CI therefore runs the full check matrix on every PR:
+# typecheck (runtime + build-time parsers), unit tests +
+# snapshots, OpenAPI drift gate, and the Next.js build.
 #
-# What this workflow DOES catch:
-#   - TypeScript regressions in runtime code (`pnpm typecheck`)
-#   - TypeScript regressions in build-time parsers
-#     (`pnpm typecheck:scripts` — added in PR 1, runs against
-#     `tsconfig.scripts.json`, target ES2020)
-#   - Next.js route-handler compilation, NFT trace, and
-#     dynamic/static classification (`pnpm build` — verified to
-#     succeed with `data/generated/*` absent because every route
-#     handler is dynamic and reads JSON only at request time)
+# `pnpm lint` is intentionally omitted for now — the landing page
+# carries pre-existing `@next/next/no-html-link-for-pages` false
+# positives that should be cleaned up separately before lint joins
+# this workflow.
 #
-# What this workflow does NOT yet run, with justification:
-#   - `pnpm test`        — requires generated JSON on disk
-#   - `pnpm build:data`  — requires aCis upstream + questname-e.dat
-#   - `pnpm lint`        — currently has pre-existing false
-#     positives from `@next/next/no-html-link-for-pages` against
-#     the `<a href="/api/...">` examples on the landing page (see
-#     `src/app/page.tsx`); cleaning those up is a separate PR.
+# `pnpm build:data` does NOT run in CI: it requires a local aCis
+# datapack and (optionally) L2 client DAT files, neither of which
+# is vendored or available as a CI secret. PR authors regenerate
+# the JSON locally, commit the diff, and reviewers see the dataset
+# changes alongside the parser changes.
 
 name: CI
 
@@ -39,7 +26,7 @@ on:
 
 jobs:
   validate:
-    name: Typecheck + build (no data required)
+    name: Typecheck + tests + build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -65,8 +52,17 @@ jobs:
       - name: Typecheck (build-time parsers)
         run: pnpm typecheck:scripts
 
-      - name: Next.js build (no data)
-        # Verified locally that `data/generated/*` is not required
-        # at build time — every API route is classified as dynamic
-        # (`ƒ`) and reads JSON only at request time.
+      - name: Unit tests + snapshots
+        run: pnpm test
+
+      - name: OpenAPI drift gate
+        # Regenerates the stub from the Zod schemas and fails if it
+        # differs from the committed artefact at
+        # `docs/openapi.stub.json`. Forces every DTO change to land
+        # together with its spec update.
+        run: |
+          pnpm openapi
+          git diff --exit-code docs/openapi.stub.json
+
+      - name: Next.js build
         run: pnpm build

@@ -1,0 +1,3296 @@
+[
+  {
+    "id": 311262504,
+    "npcIds": [
+      31126
+    ],
+    "maintainEnchantment": true,
+    "entries": [
+      {
+        "ingredients": [
+          {
+            "itemId": 6674,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 1072500
+          }
+        ],
+        "production": {
+          "itemId": 6373,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 6675,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 672000
+          }
+        ],
+        "production": {
+          "itemId": 6374,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 6676,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 268500
+          }
+        ],
+        "production": {
+          "itemId": 6375,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 6677,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 268500
+          }
+        ],
+        "production": {
+          "itemId": 6376,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 6678,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 282000
+          }
+        ],
+        "production": {
+          "itemId": 6377,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 6679,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 402750
+          }
+        ],
+        "production": {
+          "itemId": 6378,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 6680,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 1305000
+          }
+        ],
+        "production": {
+          "itemId": 6379,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 6681,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 268500
+          }
+        ],
+        "production": {
+          "itemId": 6380,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 6682,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 268500
+          }
+        ],
+        "production": {
+          "itemId": 6381,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 6683,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 402750
+          }
+        ],
+        "production": {
+          "itemId": 6382,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 6684,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 1305000
+          }
+        ],
+        "production": {
+          "itemId": 6383,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 6685,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 268500
+          }
+        ],
+        "production": {
+          "itemId": 6384,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 6686,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 268500
+          }
+        ],
+        "production": {
+          "itemId": 6385,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 6687,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 402750
+          }
+        ],
+        "production": {
+          "itemId": 6386,
+          "count": 1
+        }
+      }
+    ]
+  },
+  {
+    "id": 311262505,
+    "npcIds": [
+      31126
+    ],
+    "maintainEnchantment": true,
+    "entries": [
+      {
+        "ingredients": [
+          {
+            "itemId": 6724,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 731441
+          }
+        ],
+        "production": {
+          "itemId": 858,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 6725,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 487627
+          }
+        ],
+        "production": {
+          "itemId": 889,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 6726,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 975255
+          }
+        ],
+        "production": {
+          "itemId": 920,
+          "count": 1
+        }
+      }
+    ]
+  },
+  {
+    "id": 311262506,
+    "npcIds": [
+      31126
+    ],
+    "maintainEnchantment": true,
+    "entries": [
+      {
+        "ingredients": [
+          {
+            "itemId": 5287,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 347250
+          }
+        ],
+        "production": {
+          "itemId": 365,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5288,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 216750
+          }
+        ],
+        "production": {
+          "itemId": 388,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5289,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 130500
+          }
+        ],
+        "production": {
+          "itemId": 512,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5292,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 91500
+          }
+        ],
+        "production": {
+          "itemId": 641,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5308,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 381000
+          }
+        ],
+        "production": {
+          "itemId": 2407,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5297,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 260250
+          }
+        ],
+        "production": {
+          "itemId": 2385,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5298,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 162750
+          }
+        ],
+        "production": {
+          "itemId": 2389,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5293,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 507750
+          }
+        ],
+        "production": {
+          "itemId": 2382,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5294,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 130500
+          }
+        ],
+        "production": {
+          "itemId": 547,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5301,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 381000
+          }
+        ],
+        "production": {
+          "itemId": 2393,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5304,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 260250
+          }
+        ],
+        "production": {
+          "itemId": 2400,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5305,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 162750
+          }
+        ],
+        "production": {
+          "itemId": 2405,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5320,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 579750
+          }
+        ],
+        "production": {
+          "itemId": 2394,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5326,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 579750
+          }
+        ],
+        "production": {
+          "itemId": 2408,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5311,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 772500
+          }
+        ],
+        "production": {
+          "itemId": 374,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5312,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 198000
+          }
+        ],
+        "production": {
+          "itemId": 2418,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5315,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 138750
+          }
+        ],
+        "production": {
+          "itemId": 2498,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5316,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 772500
+          }
+        ],
+        "production": {
+          "itemId": 2383,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5317,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 198000
+          }
+        ],
+        "production": {
+          "itemId": 2419,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5323,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 579750
+          }
+        ],
+        "production": {
+          "itemId": 2395,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5329,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 579750
+          }
+        ],
+        "production": {
+          "itemId": 2409,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5290,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 87000
+          }
+        ],
+        "production": {
+          "itemId": 5765,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5290,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 87000
+          }
+        ],
+        "production": {
+          "itemId": 5766,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5290,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 87000
+          }
+        ],
+        "production": {
+          "itemId": 5767,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5295,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 87000
+          }
+        ],
+        "production": {
+          "itemId": 5768,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5295,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 87000
+          }
+        ],
+        "production": {
+          "itemId": 5769,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5295,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 87000
+          }
+        ],
+        "production": {
+          "itemId": 5770,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5313,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 132000
+          }
+        ],
+        "production": {
+          "itemId": 5771,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5313,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 132000
+          }
+        ],
+        "production": {
+          "itemId": 5772,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5313,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 132000
+          }
+        ],
+        "production": {
+          "itemId": 5773,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5318,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 132000
+          }
+        ],
+        "production": {
+          "itemId": 5774,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5318,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 132000
+          }
+        ],
+        "production": {
+          "itemId": 5775,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5318,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 132000
+          }
+        ],
+        "production": {
+          "itemId": 5776,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5291,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 87000
+          }
+        ],
+        "production": {
+          "itemId": 5777,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5291,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 87000
+          }
+        ],
+        "production": {
+          "itemId": 5778,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5291,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 87000
+          }
+        ],
+        "production": {
+          "itemId": 5779,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5296,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 87000
+          }
+        ],
+        "production": {
+          "itemId": 5780,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5296,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 87000
+          }
+        ],
+        "production": {
+          "itemId": 5781,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5296,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 87000
+          }
+        ],
+        "production": {
+          "itemId": 5782,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5314,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 132000
+          }
+        ],
+        "production": {
+          "itemId": 5783,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5314,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 132000
+          }
+        ],
+        "production": {
+          "itemId": 5784,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5314,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 132000
+          }
+        ],
+        "production": {
+          "itemId": 5785,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5319,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 132000
+          }
+        ],
+        "production": {
+          "itemId": 5786,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5319,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 132000
+          }
+        ],
+        "production": {
+          "itemId": 5787,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5319,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 132000
+          }
+        ],
+        "production": {
+          "itemId": 5788,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 7879,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 132000
+          }
+        ],
+        "production": {
+          "itemId": 7869,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 7870,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 198000
+          }
+        ],
+        "production": {
+          "itemId": 7860,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 7878,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 132000
+          }
+        ],
+        "production": {
+          "itemId": 7868,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 7876,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 132000
+          }
+        ],
+        "production": {
+          "itemId": 7866,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 7873,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 132000
+          }
+        ],
+        "production": {
+          "itemId": 7863,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 7877,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 772500
+          }
+        ],
+        "production": {
+          "itemId": 7867,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 7875,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 132000
+          }
+        ],
+        "production": {
+          "itemId": 7865,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 7874,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 772500
+          }
+        ],
+        "production": {
+          "itemId": 7864,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 7871,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 772500
+          }
+        ],
+        "production": {
+          "itemId": 7861,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 7872,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 132000
+          }
+        ],
+        "production": {
+          "itemId": 7862,
+          "count": 1
+        }
+      }
+    ]
+  },
+  {
+    "id": 311262507,
+    "npcIds": [
+      31126
+    ],
+    "maintainEnchantment": true,
+    "entries": [
+      {
+        "ingredients": [
+          {
+            "itemId": 6323,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 855525
+          }
+        ],
+        "production": {
+          "itemId": 933,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 6324,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 641644
+          }
+        ],
+        "production": {
+          "itemId": 871,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 6325,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 427763
+          }
+        ],
+        "production": {
+          "itemId": 902,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 6326,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 853669
+          }
+        ],
+        "production": {
+          "itemId": 924,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 6327,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 640251
+          }
+        ],
+        "production": {
+          "itemId": 862,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 6328,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 426834
+          }
+        ],
+        "production": {
+          "itemId": 893,
+          "count": 1
+        }
+      }
+    ]
+  },
+  {
+    "id": 311262508,
+    "npcIds": [
+      31126
+    ],
+    "maintainEnchantment": true,
+    "entries": [
+      {
+        "ingredients": [
+          {
+            "itemId": 5765,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 4350
+          }
+        ],
+        "production": {
+          "itemId": 5290,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5766,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 4350
+          }
+        ],
+        "production": {
+          "itemId": 5290,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5767,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 4350
+          }
+        ],
+        "production": {
+          "itemId": 5290,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5777,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 4350
+          }
+        ],
+        "production": {
+          "itemId": 5291,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5778,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 4350
+          }
+        ],
+        "production": {
+          "itemId": 5291,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5779,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 4350
+          }
+        ],
+        "production": {
+          "itemId": 5291,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5768,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 4350
+          }
+        ],
+        "production": {
+          "itemId": 5295,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5769,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 4350
+          }
+        ],
+        "production": {
+          "itemId": 5295,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5770,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 4350
+          }
+        ],
+        "production": {
+          "itemId": 5295,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5780,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 4350
+          }
+        ],
+        "production": {
+          "itemId": 5296,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5781,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 4350
+          }
+        ],
+        "production": {
+          "itemId": 5296,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5782,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 4350
+          }
+        ],
+        "production": {
+          "itemId": 5296,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5771,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 6600
+          }
+        ],
+        "production": {
+          "itemId": 5313,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5772,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 6600
+          }
+        ],
+        "production": {
+          "itemId": 5313,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5773,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 6600
+          }
+        ],
+        "production": {
+          "itemId": 5313,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5783,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 6600
+          }
+        ],
+        "production": {
+          "itemId": 5314,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5784,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 6600
+          }
+        ],
+        "production": {
+          "itemId": 5314,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5785,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 6600
+          }
+        ],
+        "production": {
+          "itemId": 5314,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5774,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 6600
+          }
+        ],
+        "production": {
+          "itemId": 5318,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5775,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 6600
+          }
+        ],
+        "production": {
+          "itemId": 5318,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5776,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 6600
+          }
+        ],
+        "production": {
+          "itemId": 5318,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5786,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 6600
+          }
+        ],
+        "production": {
+          "itemId": 5319,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5787,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 6600
+          }
+        ],
+        "production": {
+          "itemId": 5319,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5788,
+            "count": 1
+          },
+          {
+            "itemId": 5575,
+            "count": 6600
+          }
+        ],
+        "production": {
+          "itemId": 5319,
+          "count": 1
+        }
+      }
+    ]
+  },
+  {
+    "id": 1002,
+    "npcIds": [
+      30298,
+      30300,
+      30317,
+      30458,
+      30471,
+      30678,
+      30688,
+      30846,
+      30898,
+      31271,
+      31316,
+      31583,
+      31960,
+      31990
+    ],
+    "maintainEnchantment": true,
+    "entries": [
+      {
+        "ingredients": [
+          {
+            "itemId": 612,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 5710,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 612,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 5711,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 612,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 5712,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 2464,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 5714,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 2464,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 5715,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 2464,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 5716,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 2487,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 5718,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 2487,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 5719,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 2487,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 5720,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 2475,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 5722,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 2475,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 5723,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 2475,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 5724,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 554,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 5726,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 554,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 5727,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 554,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 5728,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 600,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 5730,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 600,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 5731,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 600,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 5732,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 2439,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 5734,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 2439,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 5735,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 2439,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 5736,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 601,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 5738,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 601,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 5739,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 601,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 5740,
+          "count": 1
+        }
+      }
+    ]
+  },
+  {
+    "id": 1003,
+    "npcIds": [
+      30298,
+      30300,
+      30317,
+      30458,
+      30471,
+      30678,
+      30688,
+      30846,
+      30898,
+      31271,
+      31316,
+      31583,
+      31960,
+      31990
+    ],
+    "maintainEnchantment": true,
+    "entries": [
+      {
+        "ingredients": [
+          {
+            "itemId": 5710,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 612,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5711,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 612,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5712,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 612,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5714,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 2464,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5715,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 2464,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5716,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 2464,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5718,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 2487,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5719,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 2487,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5720,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 2487,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5722,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 2475,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5723,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 2475,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5724,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 2475,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5726,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 554,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5727,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 554,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5728,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 554,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5730,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 600,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5731,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 600,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5732,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 600,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5734,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 2439,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5735,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 2439,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5736,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 2439,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5738,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 601,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5739,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 601,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 5740,
+            "count": 1
+          }
+        ],
+        "production": {
+          "itemId": 601,
+          "count": 1
+        }
+      }
+    ]
+  },
+  {
+    "id": 1235,
+    "npcIds": [
+      32024,
+      32025
+    ],
+    "maintainEnchantment": false,
+    "entries": [
+      {
+        "ingredients": [
+          {
+            "itemId": 65336,
+            "count": 3480
+          },
+          {
+            "itemId": 57,
+            "count": 1914000
+          }
+        ],
+        "production": {
+          "itemId": 7870,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 65336,
+            "count": 13540
+          },
+          {
+            "itemId": 57,
+            "count": 7337000
+          }
+        ],
+        "production": {
+          "itemId": 7871,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 65336,
+            "count": 2320
+          },
+          {
+            "itemId": 57,
+            "count": 1276000
+          }
+        ],
+        "production": {
+          "itemId": 7872,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 65336,
+            "count": 2320
+          },
+          {
+            "itemId": 57,
+            "count": 1276000
+          }
+        ],
+        "production": {
+          "itemId": 7873,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 65336,
+            "count": 10160
+          },
+          {
+            "itemId": 57,
+            "count": 5588000
+          }
+        ],
+        "production": {
+          "itemId": 7874,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 65336,
+            "count": 2320
+          },
+          {
+            "itemId": 57,
+            "count": 1276000
+          }
+        ],
+        "production": {
+          "itemId": 7875,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 65336,
+            "count": 2320
+          },
+          {
+            "itemId": 57,
+            "count": 1276000
+          }
+        ],
+        "production": {
+          "itemId": 7876,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 65336,
+            "count": 10160
+          },
+          {
+            "itemId": 57,
+            "count": 5588000
+          }
+        ],
+        "production": {
+          "itemId": 7877,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 65336,
+            "count": 2320
+          },
+          {
+            "itemId": 57,
+            "count": 1276000
+          }
+        ],
+        "production": {
+          "itemId": 7878,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 65336,
+            "count": 2320
+          },
+          {
+            "itemId": 57,
+            "count": 1276000
+          }
+        ],
+        "production": {
+          "itemId": 7879,
+          "count": 1
+        }
+      }
+    ]
+  },
+  {
+    "id": 300974001,
+    "npcIds": [
+      30097
+    ],
+    "maintainEnchantment": false,
+    "entries": [
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 573
+          },
+          {
+            "itemId": 1458,
+            "count": 2865
+          }
+        ],
+        "production": {
+          "itemId": 71,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 573
+          },
+          {
+            "itemId": 1458,
+            "count": 2865
+          }
+        ],
+        "production": {
+          "itemId": 72,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 1075
+          },
+          {
+            "itemId": 1458,
+            "count": 5375
+          }
+        ],
+        "production": {
+          "itemId": 76,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 573
+          },
+          {
+            "itemId": 1458,
+            "count": 2865
+          }
+        ],
+        "production": {
+          "itemId": 161,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 1075
+          },
+          {
+            "itemId": 1458,
+            "count": 5375
+          }
+        ],
+        "production": {
+          "itemId": 162,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 573
+          },
+          {
+            "itemId": 1458,
+            "count": 2865
+          }
+        ],
+        "production": {
+          "itemId": 192,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 1075
+          },
+          {
+            "itemId": 1458,
+            "count": 5375
+          }
+        ],
+        "production": {
+          "itemId": 200,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 573
+          },
+          {
+            "itemId": 1458,
+            "count": 2865
+          }
+        ],
+        "production": {
+          "itemId": 226,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 1075
+          },
+          {
+            "itemId": 1458,
+            "count": 5375
+          }
+        ],
+        "production": {
+          "itemId": 233,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 573
+          },
+          {
+            "itemId": 1458,
+            "count": 2865
+          }
+        ],
+        "production": {
+          "itemId": 263,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 1075
+          },
+          {
+            "itemId": 1458,
+            "count": 5375
+          }
+        ],
+        "production": {
+          "itemId": 265,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 573
+          },
+          {
+            "itemId": 1458,
+            "count": 2865
+          }
+        ],
+        "production": {
+          "itemId": 281,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 1075
+          },
+          {
+            "itemId": 1458,
+            "count": 5375
+          }
+        ],
+        "production": {
+          "itemId": 283,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 573
+          },
+          {
+            "itemId": 1458,
+            "count": 2865
+          }
+        ],
+        "production": {
+          "itemId": 298,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 1075
+          },
+          {
+            "itemId": 1458,
+            "count": 5375
+          }
+        ],
+        "production": {
+          "itemId": 95,
+          "count": 1
+        }
+      }
+    ]
+  },
+  {
+    "id": 300984001,
+    "npcIds": [
+      30098
+    ],
+    "maintainEnchantment": false,
+    "entries": [
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 127
+          },
+          {
+            "itemId": 1458,
+            "count": 635
+          }
+        ],
+        "production": {
+          "itemId": 354,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 79
+          },
+          {
+            "itemId": 1458,
+            "count": 395
+          }
+        ],
+        "production": {
+          "itemId": 381,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 360
+          },
+          {
+            "itemId": 1458,
+            "count": 1800
+          }
+        ],
+        "production": {
+          "itemId": 60,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 95
+          },
+          {
+            "itemId": 1458,
+            "count": 475
+          }
+        ],
+        "production": {
+          "itemId": 397,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 59
+          },
+          {
+            "itemId": 1458,
+            "count": 295
+          }
+        ],
+        "production": {
+          "itemId": 2387,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 207
+          },
+          {
+            "itemId": 1458,
+            "count": 1035
+          }
+        ],
+        "production": {
+          "itemId": 400,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 129
+          },
+          {
+            "itemId": 1458,
+            "count": 645
+          }
+        ],
+        "production": {
+          "itemId": 420,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 95
+          },
+          {
+            "itemId": 1458,
+            "count": 475
+          }
+        ],
+        "production": {
+          "itemId": 439,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 184
+          },
+          {
+            "itemId": 1458,
+            "count": 920
+          }
+        ],
+        "production": {
+          "itemId": 441,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 59
+          },
+          {
+            "itemId": 1458,
+            "count": 295
+          }
+        ],
+        "production": {
+          "itemId": 471,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 115
+          },
+          {
+            "itemId": 1458,
+            "count": 575
+          }
+        ],
+        "production": {
+          "itemId": 472,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 32
+          },
+          {
+            "itemId": 1458,
+            "count": 160
+          }
+        ],
+        "production": {
+          "itemId": 2429,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 62
+          },
+          {
+            "itemId": 1458,
+            "count": 310
+          }
+        ],
+        "production": {
+          "itemId": 64,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 32
+          },
+          {
+            "itemId": 1458,
+            "count": 160
+          }
+        ],
+        "production": {
+          "itemId": 2452,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 62
+          },
+          {
+            "itemId": 1458,
+            "count": 310
+          }
+        ],
+        "production": {
+          "itemId": 608,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 34
+          },
+          {
+            "itemId": 1458,
+            "count": 170
+          }
+        ],
+        "production": {
+          "itemId": 631,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 65
+          },
+          {
+            "itemId": 1458,
+            "count": 325
+          }
+        ],
+        "production": {
+          "itemId": 103,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 39
+          },
+          {
+            "itemId": 1458,
+            "count": 195
+          }
+        ],
+        "production": {
+          "itemId": 852,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 74
+          },
+          {
+            "itemId": 1458,
+            "count": 370
+          }
+        ],
+        "production": {
+          "itemId": 854,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 26
+          },
+          {
+            "itemId": 1458,
+            "count": 130
+          }
+        ],
+        "production": {
+          "itemId": 883,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 49
+          },
+          {
+            "itemId": 1458,
+            "count": 245
+          }
+        ],
+        "production": {
+          "itemId": 885,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 52
+          },
+          {
+            "itemId": 1458,
+            "count": 260
+          }
+        ],
+        "production": {
+          "itemId": 915,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 99
+          },
+          {
+            "itemId": 1458,
+            "count": 495
+          }
+        ],
+        "production": {
+          "itemId": 917,
+          "count": 1
+        }
+      }
+    ]
+  },
+  {
+    "id": 300984002,
+    "npcIds": [
+      30098
+    ],
+    "maintainEnchantment": false,
+    "entries": [
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 100
+          },
+          {
+            "itemId": 1458,
+            "count": 500
+          }
+        ],
+        "production": {
+          "itemId": 4636,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 100
+          },
+          {
+            "itemId": 1458,
+            "count": 500
+          }
+        ],
+        "production": {
+          "itemId": 4647,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 100
+          },
+          {
+            "itemId": 1458,
+            "count": 500
+          }
+        ],
+        "production": {
+          "itemId": 4658,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 120
+          },
+          {
+            "itemId": 1458,
+            "count": 567
+          }
+        ],
+        "production": {
+          "itemId": 4637,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 120
+          },
+          {
+            "itemId": 1458,
+            "count": 567
+          }
+        ],
+        "production": {
+          "itemId": 4648,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1459,
+            "count": 120
+          },
+          {
+            "itemId": 1458,
+            "count": 567
+          }
+        ],
+        "production": {
+          "itemId": 4659,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1460,
+            "count": 44
+          },
+          {
+            "itemId": 1459,
+            "count": 135
+          }
+        ],
+        "production": {
+          "itemId": 4638,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1460,
+            "count": 44
+          },
+          {
+            "itemId": 1459,
+            "count": 135
+          }
+        ],
+        "production": {
+          "itemId": 4649,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1460,
+            "count": 44
+          },
+          {
+            "itemId": 1459,
+            "count": 135
+          }
+        ],
+        "production": {
+          "itemId": 4660,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1460,
+            "count": 50
+          },
+          {
+            "itemId": 1459,
+            "count": 150
+          }
+        ],
+        "production": {
+          "itemId": 4639,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1460,
+            "count": 50
+          },
+          {
+            "itemId": 1459,
+            "count": 150
+          }
+        ],
+        "production": {
+          "itemId": 4650,
+          "count": 1
+        }
+      },
+      {
+        "ingredients": [
+          {
+            "itemId": 1460,
+            "count": 50
+          },
+          {
+            "itemId": 1459,
+            "count": 150
+          }
+        ],
+        "production": {
+          "itemId": 4661,
+          "count": 1
+        }
+      }
+    ]
+  }
+]

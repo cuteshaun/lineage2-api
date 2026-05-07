@@ -20,13 +20,22 @@ files.
 
 ```bash
 pnpm install
-pnpm build:data            # parse sources → data/generated/interlude/
 pnpm dev                   # http://localhost:3000
 ```
 
-The aCis datapack and client DAT files are not redistributed. Point
-`scripts/chronicle-sources.ts` at local source files before running
-`build:data`.
+The generated JSON dataset (`data/generated/interlude/`) is committed
+to the repo, so a fresh clone runs the full API and test suite without
+a local datapack. Regenerate the dataset only when parsers change:
+
+```bash
+pnpm build:data            # rewrites data/generated/interlude/*.json
+```
+
+`pnpm build:data` reads from a local aCis datapack and (optionally) L2
+client DAT files configured in `scripts/chronicle-sources.ts`; neither
+the datapack nor the DAT files are redistributed here. The resulting
+JSON diff is reviewed in PR alongside any parser change — the dataset
+is the source-of-truth artefact the API actually serves.
 
 ## Examples
 

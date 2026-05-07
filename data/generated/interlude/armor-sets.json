@@ -1,0 +1,642 @@
+[
+  {
+    "id": 1,
+    "name": "Wooden Set",
+    "pieces": {
+      "chest": 23,
+      "legs": 2386,
+      "head": 43
+    },
+    "bonusSkill": "3500-1"
+  },
+  {
+    "id": 2,
+    "name": "Devotion Set",
+    "pieces": {
+      "chest": 1101,
+      "legs": 1104,
+      "head": 44
+    },
+    "bonusSkill": "3501-1"
+  },
+  {
+    "id": 3,
+    "name": "Mithril Robe Set",
+    "pieces": {
+      "chest": 58,
+      "legs": 59,
+      "head": 47
+    },
+    "bonusSkill": "3502-1",
+    "shield": {
+      "itemId": 628,
+      "bonusSkill": "3543-1"
+    },
+    "enchant6BonusSkill": "3611-1"
+  },
+  {
+    "id": 4,
+    "name": "Brigandine Set",
+    "pieces": {
+      "chest": 352,
+      "legs": 2378,
+      "head": 2411
+    },
+    "bonusSkill": "3506-1",
+    "shield": {
+      "itemId": 2493,
+      "bonusSkill": "3544-1"
+    },
+    "enchant6BonusSkill": "3611-1"
+  },
+  {
+    "id": 5,
+    "name": "Reinforced Leather Set",
+    "pieces": {
+      "chest": 394,
+      "legs": 416,
+      "feet": 2422
+    },
+    "bonusSkill": "3503-1",
+    "enchant6BonusSkill": "3612-1"
+  },
+  {
+    "id": 6,
+    "name": "Manticore Skin Set",
+    "pieces": {
+      "chest": 395,
+      "legs": 417,
+      "feet": 2424
+    },
+    "bonusSkill": "3505-1",
+    "enchant6BonusSkill": "3612-1"
+  },
+  {
+    "id": 7,
+    "name": "Knowledge Set",
+    "pieces": {
+      "chest": 436,
+      "legs": 469,
+      "gloves": 2447
+    },
+    "bonusSkill": "3504-1",
+    "enchant6BonusSkill": "3613-1"
+  },
+  {
+    "id": 8,
+    "name": "Mithril Robe Set",
+    "pieces": {
+      "chest": 437,
+      "legs": 470,
+      "gloves": 2450
+    },
+    "bonusSkill": "3507-1",
+    "enchant6BonusSkill": "3613-1"
+  },
+  {
+    "id": 9,
+    "name": "Chain Mail Set",
+    "pieces": {
+      "chest": 354,
+      "legs": 381,
+      "head": 2413
+    },
+    "bonusSkill": "3509-1",
+    "shield": {
+      "itemId": 2495,
+      "bonusSkill": "3545-1"
+    },
+    "enchant6BonusSkill": "3614-1"
+  },
+  {
+    "id": 10,
+    "name": "Composite Set",
+    "pieces": {
+      "chest": 60,
+      "head": 517
+    },
+    "bonusSkill": "3512-1",
+    "shield": {
+      "itemId": 107,
+      "bonusSkill": "3546-1"
+    },
+    "enchant6BonusSkill": "3614-1"
+  },
+  {
+    "id": 11,
+    "name": "Full Plate Set",
+    "pieces": {
+      "chest": 356,
+      "head": 2414
+    },
+    "bonusSkill": "3516-1",
+    "shield": {
+      "itemId": 2497,
+      "bonusSkill": "3547-1"
+    },
+    "enchant6BonusSkill": "3614-1"
+  },
+  {
+    "id": 12,
+    "name": "Mithril Light Set",
+    "pieces": {
+      "chest": 397,
+      "legs": 2387,
+      "feet": 62
+    },
+    "bonusSkill": "3508-1",
+    "enchant6BonusSkill": "3615-1"
+  },
+  {
+    "id": 13,
+    "name": "Plated Leather Set",
+    "pieces": {
+      "chest": 398,
+      "legs": 418,
+      "feet": 2431
+    },
+    "bonusSkill": "3511-1",
+    "enchant6BonusSkill": "3615-1"
+  },
+  {
+    "id": 14,
+    "name": "Theca Leather Set",
+    "pieces": {
+      "chest": 400,
+      "legs": 420,
+      "feet": 2436
+    },
+    "bonusSkill": "3514-1",
+    "enchant6BonusSkill": "3615-1"
+  },
+  {
+    "id": 15,
+    "name": "Drake Leather Set",
+    "pieces": {
+      "chest": 401,
+      "feet": 2437
+    },
+    "bonusSkill": "3515-1",
+    "enchant6BonusSkill": "3615-1"
+  },
+  {
+    "id": 16,
+    "name": "Karmian Set",
+    "pieces": {
+      "chest": 439,
+      "legs": 471,
+      "gloves": 2454
+    },
+    "bonusSkill": "3510-1",
+    "enchant6BonusSkill": "3616-1"
+  },
+  {
+    "id": 17,
+    "name": "Demon Set",
+    "pieces": {
+      "chest": 441,
+      "legs": 472,
+      "gloves": 2459
+    },
+    "bonusSkill": "3513-1",
+    "enchant6BonusSkill": "3616-1"
+  },
+  {
+    "id": 18,
+    "name": "Divine Set",
+    "pieces": {
+      "chest": 442,
+      "legs": 473,
+      "gloves": 2463
+    },
+    "bonusSkill": "3517-1",
+    "enchant6BonusSkill": "3616-1"
+  },
+  {
+    "id": 19,
+    "name": "Zubei Heavy Set",
+    "pieces": {
+      "chest": 357,
+      "legs": 383,
+      "head": 503,
+      "gloves": 5710,
+      "feet": 5726
+    },
+    "bonusSkill": "3518-1",
+    "enchant6BonusSkill": "3617-1"
+  },
+  {
+    "id": 20,
+    "name": "Zubei Light Set",
+    "pieces": {
+      "chest": 2384,
+      "legs": 2388,
+      "head": 503,
+      "gloves": 5711,
+      "feet": 5727
+    },
+    "bonusSkill": "3520-1",
+    "enchant6BonusSkill": "3618-1"
+  },
+  {
+    "id": 21,
+    "name": "Zubei Robe Set",
+    "pieces": {
+      "chest": 2397,
+      "legs": 2402,
+      "head": 503,
+      "gloves": 5712,
+      "feet": 5728
+    },
+    "bonusSkill": "3522-1",
+    "enchant6BonusSkill": "3619-1"
+  },
+  {
+    "id": 22,
+    "name": "Avadon Heavy Set",
+    "pieces": {
+      "chest": 2376,
+      "legs": 2379,
+      "head": 2415,
+      "gloves": 5714,
+      "feet": 5730
+    },
+    "bonusSkill": "3519-1",
+    "shield": {
+      "itemId": 673,
+      "bonusSkill": "3548-1"
+    },
+    "enchant6BonusSkill": "3617-1"
+  },
+  {
+    "id": 23,
+    "name": "Avadon Light Set",
+    "pieces": {
+      "chest": 2390,
+      "head": 2415,
+      "gloves": 5715,
+      "feet": 5731
+    },
+    "bonusSkill": "3521-1",
+    "enchant6BonusSkill": "3618-1"
+  },
+  {
+    "id": 24,
+    "name": "Avadon Robe Set",
+    "pieces": {
+      "chest": 2406,
+      "head": 2415,
+      "gloves": 5716,
+      "feet": 5732
+    },
+    "bonusSkill": "3523-1",
+    "enchant6BonusSkill": "3619-1"
+  },
+  {
+    "id": 25,
+    "name": "Blue Wolf Heavy Set",
+    "pieces": {
+      "chest": 358,
+      "legs": 2380,
+      "head": 2416,
+      "gloves": 5718,
+      "feet": 5734
+    },
+    "bonusSkill": "3524-1",
+    "enchant6BonusSkill": "3617-1"
+  },
+  {
+    "id": 26,
+    "name": "Blue Wolf Light Set",
+    "pieces": {
+      "chest": 2391,
+      "head": 2416,
+      "gloves": 5719,
+      "feet": 5735
+    },
+    "bonusSkill": "3526-1",
+    "enchant6BonusSkill": "3618-1"
+  },
+  {
+    "id": 27,
+    "name": "Blue Wolf Robe Set",
+    "pieces": {
+      "chest": 2398,
+      "legs": 2403,
+      "head": 2416,
+      "gloves": 5720,
+      "feet": 5736
+    },
+    "bonusSkill": "3528-1",
+    "enchant6BonusSkill": "3619-1"
+  },
+  {
+    "id": 28,
+    "name": "Doom Heavy Set",
+    "pieces": {
+      "chest": 2381,
+      "head": 2417,
+      "gloves": 5722,
+      "feet": 5738
+    },
+    "bonusSkill": "3525-1",
+    "shield": {
+      "itemId": 110,
+      "bonusSkill": "3549-1"
+    },
+    "enchant6BonusSkill": "3617-1"
+  },
+  {
+    "id": 29,
+    "name": "Doom Light Set",
+    "pieces": {
+      "chest": 2392,
+      "head": 2417,
+      "gloves": 5723,
+      "feet": 5739
+    },
+    "bonusSkill": "3527-1",
+    "enchant6BonusSkill": "3618-1"
+  },
+  {
+    "id": 30,
+    "name": "Doom Robe Set",
+    "pieces": {
+      "chest": 2399,
+      "legs": 2404,
+      "head": 2417,
+      "gloves": 5724,
+      "feet": 5740
+    },
+    "bonusSkill": "3529-1",
+    "enchant6BonusSkill": "3619-1"
+  },
+  {
+    "id": 31,
+    "name": "Dark Crystal Heavy Set",
+    "pieces": {
+      "chest": 365,
+      "legs": 388,
+      "head": 512,
+      "gloves": 5765,
+      "feet": 5777
+    },
+    "bonusSkill": "3530-1",
+    "shield": {
+      "itemId": 641,
+      "bonusSkill": "3550-1"
+    },
+    "enchant6BonusSkill": "3620-1"
+  },
+  {
+    "id": 32,
+    "name": "Dark Crystal Light Set",
+    "pieces": {
+      "chest": 2385,
+      "legs": 2389,
+      "head": 512,
+      "gloves": 5766,
+      "feet": 5778
+    },
+    "bonusSkill": "3532-1",
+    "enchant6BonusSkill": "3621-1"
+  },
+  {
+    "id": 33,
+    "name": "Dark Crystal Robe Set",
+    "pieces": {
+      "chest": 2407,
+      "head": 512,
+      "gloves": 5767,
+      "feet": 5779
+    },
+    "bonusSkill": "3535-1",
+    "enchant6BonusSkill": "3622-1"
+  },
+  {
+    "id": 34,
+    "name": "Tallum Heavy Set",
+    "pieces": {
+      "chest": 2382,
+      "head": 547,
+      "gloves": 5768,
+      "feet": 5780
+    },
+    "bonusSkill": "3531-1",
+    "enchant6BonusSkill": "3620-1"
+  },
+  {
+    "id": 35,
+    "name": "Tallum Light Set",
+    "pieces": {
+      "chest": 2393,
+      "head": 547,
+      "gloves": 5769,
+      "feet": 5781
+    },
+    "bonusSkill": "3533-1",
+    "enchant6BonusSkill": "3621-1"
+  },
+  {
+    "id": 36,
+    "name": "Tallum Robe Set",
+    "pieces": {
+      "chest": 2400,
+      "legs": 2405,
+      "head": 547,
+      "gloves": 5770,
+      "feet": 5782
+    },
+    "bonusSkill": "3534-1",
+    "enchant6BonusSkill": "3622-1"
+  },
+  {
+    "id": 37,
+    "name": "Nightmare Heavy Set",
+    "pieces": {
+      "chest": 374,
+      "head": 2418,
+      "gloves": 5771,
+      "feet": 5783
+    },
+    "bonusSkill": "3536-1",
+    "shield": {
+      "itemId": 2498,
+      "bonusSkill": "3551-1"
+    },
+    "enchant6BonusSkill": "3620-1"
+  },
+  {
+    "id": 38,
+    "name": "Nightmare Light Set",
+    "pieces": {
+      "chest": 2394,
+      "head": 2418,
+      "gloves": 5772,
+      "feet": 5784
+    },
+    "bonusSkill": "3538-1",
+    "enchant6BonusSkill": "3621-1"
+  },
+  {
+    "id": 39,
+    "name": "Nightmare Robe Set",
+    "pieces": {
+      "chest": 2408,
+      "head": 2418,
+      "gloves": 5773,
+      "feet": 5785
+    },
+    "bonusSkill": "3540-1",
+    "enchant6BonusSkill": "3622-1"
+  },
+  {
+    "id": 40,
+    "name": "Majestic Heavy Set",
+    "pieces": {
+      "chest": 2383,
+      "head": 2419,
+      "gloves": 5774,
+      "feet": 5786
+    },
+    "bonusSkill": "3537-1",
+    "enchant6BonusSkill": "3620-1"
+  },
+  {
+    "id": 41,
+    "name": "Majestic Leather Set",
+    "pieces": {
+      "chest": 2395,
+      "head": 2419,
+      "gloves": 5775,
+      "feet": 5787
+    },
+    "bonusSkill": "3539-1",
+    "enchant6BonusSkill": "3621-1"
+  },
+  {
+    "id": 42,
+    "name": "Majestic Robe Set",
+    "pieces": {
+      "chest": 2409,
+      "head": 2419,
+      "gloves": 5776,
+      "feet": 5788
+    },
+    "bonusSkill": "3541-1",
+    "enchant6BonusSkill": "3622-1"
+  },
+  {
+    "id": 43,
+    "name": "Imperial Crusader Set",
+    "pieces": {
+      "chest": 6373,
+      "legs": 6374,
+      "head": 6378,
+      "gloves": 6375,
+      "feet": 6376
+    },
+    "bonusSkill": "3553-1",
+    "shield": {
+      "itemId": 6377,
+      "bonusSkill": "3554-1"
+    },
+    "enchant6BonusSkill": "3623-1"
+  },
+  {
+    "id": 44,
+    "name": "Draconic Leather Set",
+    "pieces": {
+      "chest": 6379,
+      "head": 6382,
+      "gloves": 6380,
+      "feet": 6381
+    },
+    "bonusSkill": "3555-1",
+    "enchant6BonusSkill": "3624-1"
+  },
+  {
+    "id": 45,
+    "name": "Major Arcana Set",
+    "pieces": {
+      "chest": 6383,
+      "head": 6386,
+      "gloves": 6384,
+      "feet": 6385
+    },
+    "bonusSkill": "3556-1",
+    "enchant6BonusSkill": "3625-1"
+  },
+  {
+    "id": 46,
+    "name": "Clan Oath Heavy Set",
+    "pieces": {
+      "chest": 7851,
+      "head": 7850,
+      "gloves": 7852,
+      "feet": 7853
+    },
+    "bonusSkill": "3605-1",
+    "enchant6BonusSkill": "3611-1"
+  },
+  {
+    "id": 47,
+    "name": "Clan Oath Light Set",
+    "pieces": {
+      "chest": 7854,
+      "head": 7850,
+      "gloves": 7855,
+      "feet": 7856
+    },
+    "bonusSkill": "3606-1",
+    "enchant6BonusSkill": "3612-1"
+  },
+  {
+    "id": 48,
+    "name": "Clan Oath Robe Set",
+    "pieces": {
+      "chest": 7857,
+      "head": 7850,
+      "gloves": 7858,
+      "feet": 7859
+    },
+    "bonusSkill": "3607-1",
+    "enchant6BonusSkill": "3613-1"
+  },
+  {
+    "id": 49,
+    "name": "Apella Heavy Set",
+    "pieces": {
+      "chest": 7861,
+      "head": 7860,
+      "gloves": 7862,
+      "feet": 7863
+    },
+    "bonusSkill": "3608-1",
+    "enchant6BonusSkill": "3620-1"
+  },
+  {
+    "id": 50,
+    "name": "Apella Light Set",
+    "pieces": {
+      "chest": 7864,
+      "head": 7860,
+      "gloves": 7865,
+      "feet": 7866
+    },
+    "bonusSkill": "3609-1",
+    "enchant6BonusSkill": "3621-1"
+  },
+  {
+    "id": 51,
+    "name": "Apella Robe Set",
+    "pieces": {
+      "chest": 7867,
+      "head": 7860,
+      "gloves": 7868,
+      "feet": 7869
+    },
+    "bonusSkill": "3610-1",
+    "enchant6BonusSkill": "3622-1"
+  }
+]

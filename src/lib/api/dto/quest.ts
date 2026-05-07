@@ -29,10 +29,36 @@ export interface QuestRefDto {
 }
 
 export interface QuestRewardsDto {
+  /** Final reward items extracted via the proximity heuristic. Always present (possibly empty). */
   items: ItemQuantityDto[];
-  adena: number | null;
-  exp: number | null;
-  sp: number | null;
+  /**
+   * Adena reward total (sum of `giveItems(57, X)` calls within the
+   * proximity window). **Omitted** when source has no Adena reward
+   * call within the window — absent ≠ zero.
+   */
+  adena?: number;
+  /**
+   * EXP reward (first arg of `rewardExpAndSp` calls within the
+   * proximity window). **Omitted** when source has no EXP reward.
+   */
+  exp?: number;
+  /** SP reward (second arg of `rewardExpAndSp`). Same semantics. */
+  sp?: number;
+}
+
+/**
+ * Compact reference to an item registered by a quest's
+ * `setItemsIds(...)` block — engine-tracked transient items the
+ * quest hands out and consumes during its flow. **Carries no
+ * `count`** because the engine list registers item ids only and
+ * the count would always be a placeholder. Distinct from
+ * `ItemQuantityDto`, which represents items with a real count
+ * (rewards, exchange ingredients, recipe ingredients).
+ */
+export interface QuestItemRefDto {
+  itemId: number;
+  name: string;
+  iconFile: string | null;
 }
 
 /**
@@ -94,7 +120,6 @@ export interface QuestListDto {
 export interface QuestDetailDto {
   id: number;
   name: string;
-  scriptFile: string;
   levelMin: number | null;
   repeatable: boolean | null;
   raceRestrictions: string[];
@@ -103,12 +128,13 @@ export interface QuestDetailDto {
   involvedNpcs: NpcRefDto[];
   involvedMonsters: NpcRefDto[];
   /**
-   * Items registered via `setItemsIds(...)`. Surfaced as
-   * `count = 0` because the engine list doesn't carry quantities —
-   * the field exists for shape parity with `ItemQuantityDto` and to
-   * preserve the item icon/name resolution.
+   * Items registered via the quest's `setItemsIds(...)` block —
+   * engine-tracked transient items the quest hands out and consumes
+   * during its flow. **No `count` field** because the engine list
+   * registers item ids only; the count would always be a placeholder.
+   * Use `rewards.items[]` for actual reward quantities.
    */
-  questItems: ItemQuantityDto[];
+  questItems: QuestItemRefDto[];
   rewards: QuestRewardsDto;
   /**
    * Player-facing flavor prose extracted from the L2 client's
@@ -192,6 +218,22 @@ function resolveItemQuantityRefs(
     .sort((a, b) => a.itemId - b.itemId);
 }
 
+function resolveQuestItemRefs(
+  chronicle: Chronicle,
+  itemIds: number[]
+): QuestItemRefDto[] {
+  return itemIds
+    .map((id) => {
+      const it = getItemById(chronicle, id);
+      return {
+        itemId: id,
+        name: it?.name ?? `#${id}`,
+        iconFile: it?.iconFile ?? null,
+      };
+    })
+    .sort((a, b) => a.itemId - b.itemId);
+}
+
 function resolveNpcRefs(
   chronicle: Chronicle,
   ids: number[]
@@ -259,10 +301,20 @@ export function toQuestDetailDto(
   q: Quest,
   chronicle: Chronicle
 ): QuestDetailDto {
+  // rewards: items always present (possibly empty); adena/exp/sp
+  // are optional and omitted when source carries no matching call
+  // within the proximity window. Same null-vs-absent policy as the
+  // M11/M12 Item / NPC DTO cleanups.
+  const rewards: QuestRewardsDto = {
+    items: resolveItemQuantityRefs(chronicle, q.rewards.items),
+  };
+  if (q.rewards.adena != null) rewards.adena = q.rewards.adena;
+  if (q.rewards.exp != null) rewards.exp = q.rewards.exp;
+  if (q.rewards.sp != null) rewards.sp = q.rewards.sp;
+
   const dto: QuestDetailDto = {
     id: q.id,
     name: q.name,
-    scriptFile: q.scriptFile,
     levelMin: q.levelMin,
     repeatable: q.repeatable,
     raceRestrictions: q.raceRestrictions,
@@ -270,16 +322,8 @@ export function toQuestDetailDto(
     startNpcs: resolveNpcRefs(chronicle, q.startNpcIds),
     involvedNpcs: resolveNpcRefs(chronicle, q.talkNpcIds),
     involvedMonsters: resolveNpcRefs(chronicle, q.killNpcIds),
-    questItems: resolveItemQuantityRefs(
-      chronicle,
-      q.questItemIds.map((itemId) => ({ itemId, count: 0 }))
-    ),
-    rewards: {
-      items: resolveItemQuantityRefs(chronicle, q.rewards.items),
-      adena: q.rewards.adena,
-      exp: q.rewards.exp,
-      sp: q.rewards.sp,
-    },
+    questItems: resolveQuestItemRefs(chronicle, q.questItemIds),
+    rewards,
   };
   const questName = getQuestNameById(chronicle, q.id);
   if (questName && questName.description.length > 0) {
@@ -294,7 +338,14 @@ export function toQuestDetailDto(
         return {
           stepIndex: s.stepIndex,
           title: s.title,
-          description: s.description,
+          // Strip trailing literal `\n` markers (the two-character
+          // sequence backslash + 'n', not a real newline). 98% of
+          // step descriptions in `questname-e.dat` end with one;
+          // they're parser-leakage / engine line-terminators rather
+          // than meaningful prose. Internal `\n` markers are
+          // preserved — they're author-intended line breaks within
+          // multi-line journal entries.
+          description: s.description.replace(/(\\n)+$/, ""),
           completionNpc: npc ? { id: npc.id, name: npc.name } : null,
         };
       })

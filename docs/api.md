@@ -94,7 +94,7 @@ Requesting an unknown chronicle returns **404**.
 | Method | Path | Description |
 |---|---|---|
 | GET | `/api/[chronicle]/quests` | Full quest catalog (329 on Interlude). Compact `QuestListDto` with rewards preview. |
-| GET | `/api/[chronicle]/quests/[id]` | Single quest with rewards, involved NPCs/monsters, quest items, race/class gates. Optional fields from M3B/M5: `description` (player-facing flavor prose from `questname-e.dat`); `clientJournalEntries` (per-step in-game quest log entries with title + prose + completion NPC); `primaryRegion` (the start NPC's region — same `mapRegions.xml` table used by NPC/monster details). Java fields remain authoritative; client/region enrichment is purely additive. |
+| GET | `/api/[chronicle]/quests/[id]` | Single quest with rewards, involved NPCs/monsters, quest items, race/class gates. `rewards.items[]` is always present; `rewards.adena/exp/sp` are optional and omitted when source has no matching reward call. `questItems` carries id-only refs (`QuestItemRefDto` — no count, since the engine list registers item ids only). Optional flavor fields from `questname-e.dat`: `description` (one-paragraph overview); `clientJournalEntries` (per-step in-game quest log with title + prose + completion NPC). Optional derived fields: `primaryRegion` and `primaryLocation` from the start NPC's spawn aggregation. Java fields remain authoritative; client/region enrichment is purely additive. See `docs/api-contract.md` for the field tables and the null-vs-absent policy. |
 
 ### Regions
 

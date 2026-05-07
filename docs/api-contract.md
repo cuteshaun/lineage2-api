@@ -336,27 +336,67 @@ require either narrative-prose extraction or a manual editorial layer, both
 out of scope. The Java fields below are engine-truthful (regex over the
 quest scripts; no AST, no NLP); `description` is purely additive on top.
 
+### Null vs absent policy
+
+- **`null`** — *known missing source data*. Used for fields where the source script genuinely has no value: `levelMin: null` (no `getLevel()` gate), `repeatable: null` (no `exitQuest()` call), `clientJournalEntries[].completionNpc: null` (step has no NPC slot or unresolved name).
+- **Absent** — *not applicable / nothing to say*. Used for optional groups and fields: `description?` (no DAT row), `clientJournalEntries?` (no DAT steps), `primaryRegion?` / `primaryLocation?` (no start NPC or unresolvable spawns), `rewards.adena?` / `exp?` / `sp?` (source has no matching reward call within the proximity window).
+- **Empty array** — *no entries, but the field is always emitted*. Used for `raceRestrictions`, `classRestrictions`, `startNpcs`, `involvedNpcs`, `involvedMonsters`, `questItems`, `rewards.items`. Predictable for iteration; cheaper than absence-vs-empty checks.
+
+### Always-present top-level fields
+
 | Field | Type | Notes |
 |---|---|---|
-| `id`, `name` | number / string | From `super(id, "name")` in the quest's constructor. Always present. |
-| `scriptFile` | string | Source filename for traceability, e.g. `"Q001_LettersOfLove.java"`. |
+| `id`, `name` | number / string | From `super(id, "name")` in the quest's constructor. |
 | `levelMin` | number \| null | Smallest `getLevel() < N` constraint in the quest's `STATE_CREATED` branch. `null` when no level gate is encoded. **`levelMax` is intentionally absent** — `questname-e.dat` does not carry a reliable max-level field on Interlude (the per-record leading uint32 produces values like 138 that don't behave as a level cap), so M3B does not surface one. |
-| `repeatable` | boolean \| null | From `exitQuest(true\|false)`. `null` when the script never calls `exitQuest` (rare). |
-| `raceRestrictions` | string[] | Canonical aCis enum names ("HUMAN", "ELF", "DARK_ELF", "ORC", "DWARF") from positive-form `getRace() == ClassRace.X` checks. Negative-form gates (`!=`) are not surfaced — they're common across many classes and would clutter the public DTO. Empty when no race gate is encoded. |
+| `repeatable` | boolean \| null | From `exitQuest(true\|false)`. `null` when the script never calls `exitQuest` (33 of 329 quests on Interlude). |
+| `raceRestrictions` | string[] | Canonical aCis enum names (`"HUMAN"`, `"ELF"`, `"DARK_ELF"`, `"ORC"`, `"DWARF"`) from positive-form `getRace() == ClassRace.X` checks. Negative-form gates (`!=`) are not surfaced. Empty when no race gate is encoded. |
 | `classRestrictions` | `ClassRefDto[]` | Resolved against `classes.json` from `ClassId.X` enum references in `==` / `equalsOrChildOf` checks. Empty when no class gate is encoded. |
 | `startNpcs` | `NpcRefDto[]` | From `addStartNpc(...)`. Typically 1, plural for the rare multi-start case. |
 | `involvedNpcs` | `NpcRefDto[]` | From `addTalkId(...)`. Player-friendly: "who do I talk to during this quest". |
 | `involvedMonsters` | `NpcRefDto[]` | From `addKillId(...)`. Player-friendly: "what do I kill". |
-| `questItems` | `ItemQuantityDto[]` | From `setItemsIds(...)` declared at top of constructor. **`count` is always 0** — the engine list registers item ids but doesn't carry quantities; the field shape exists for parity with `ItemQuantityDto` and to preserve item icon/name resolution. |
-| `rewards` | `QuestRewardsDto` | See "Reward extraction" below. |
-| `description?` | string | Player-facing flavor prose from the L2 client's `questname-e.dat` (e.g. *"Darin, a young man on Talking Island, carries a torch for Gatekeeper Roxxy, who doesn't return his affections."*). **Additive**: Java-derived fields above are authoritative — `description` is never used to override `name`, `levelMin`, `repeatable`, `raceRestrictions`, `classRestrictions`, `rewards.*`, `startNpcs`, `involvedNpcs`, `involvedMonsters`, `questItems`, or `scriptFile`, even when the DAT carries its own value for them. Omitted when the chronicle doesn't ship a `questname-e.dat` (gated by `questNameDatFile` in `chronicle-sources.ts`) or the quest has no DAT counterpart. |
-| `clientJournalEntries?` | `QuestClientJournalEntryDto[]` | In-game quest journal entries from the L2 client's `questname-e.dat`, one per step. Each entry carries the short journal `title` (e.g. `"Delivery of Love Letters"`), full prose `description` (verbatim from the DAT — no truncation), and a resolved `completionNpc: NpcRefDto \| null`. NPC name resolution accepts both the bare `name` (`"Roxxy"`) and the client-display `"<title> <name>"` form (`"Gatekeeper Roxxy"`). **Honesty note**: this is what the L2 client log shows, not a mechanically-derived walkthrough — consumers should render it as the journal, not as an editorial walkthrough. Ordered by `stepIndex` ascending. Omitted when the DAT carries no step rows for the quest (chronicles without a DAT, or quests without a DAT counterpart). |
-| `primaryRegion?` | `RegionRefDto` | The first start NPC's primary region (mode-of-spawns rule, lowest-id tiebreak — same algorithm as `NpcDetailDto.primaryRegion?`). Answers "where do I start this quest?" without a second round-trip. **Multi-start-NPC caveat**: a handful of saga quests have multiple start NPCs in different regions — this field reflects the **first** start NPC's region only. The full picture is reachable via `startNpcs[]` → NPC-detail → `primaryRegion?`. Omitted when the quest has no start NPCs, the first start NPC has no spawns, every spawn falls outside the upstream `mapRegions.xml` tile grid, or the chronicle ships no `mapRegions.xml`. |
+| `questItems` | `QuestItemRefDto[]` | From `setItemsIds(...)` declared at top of constructor — engine-tracked transient items the quest hands out and consumes. **`QuestItemRefDto = { itemId, name, iconFile }`** carries no `count` because the engine list registers item ids only; for actual reward quantities use `rewards.items[]`. |
+| `rewards` | `QuestRewardsDto` | See below. |
 
-`QuestListDto` (`GET /api/[chronicle]/quests`) is a compact subset of the above: drops
-`scriptFile`, `involvedNpcs`, `involvedMonsters`, `questItems`, and the full `rewards`
-object; instead surfaces `startNpc` (single, first) and `rewardsPreview: { adena, exp, sp,
-itemCount }` for at-a-glance browsing.
+### Optional fields
+
+| Field | Type | Notes |
+|---|---|---|
+| `description?` | string | Player-facing flavor prose from the L2 client's `questname-e.dat` (e.g. *"Darin, a young man on Talking Island, carries a torch for Gatekeeper Roxxy, who doesn't return his affections."*). **Additive**: Java-derived fields above are authoritative — `description` is never used to override `name`, `levelMin`, `repeatable`, `raceRestrictions`, `classRestrictions`, `rewards.*`, `startNpcs`, `involvedNpcs`, `involvedMonsters`, or `questItems`, even when the DAT carries its own value for them. Omitted when the chronicle doesn't ship a `questname-e.dat` (gated by `questNameDatFile` in `chronicle-sources.ts`) or the quest has no DAT counterpart. |
+| `clientJournalEntries?` | `QuestClientJournalEntryDto[]` | In-game quest journal entries from the L2 client's `questname-e.dat`, one per step. Each entry carries the short journal `title` (e.g. `"Delivery of Love Letters"`), prose `description`, and a resolved `completionNpc: NpcRefDto \| null`. NPC name resolution accepts both the bare `name` (`"Roxxy"`) and the client-display `"<title> <name>"` form (`"Gatekeeper Roxxy"`). **`description` normalization**: trailing literal `\n` markers (the two-character backslash-n sequence the L2 client uses as a line terminator at step end) are stripped at the DTO layer; **internal `\n` markers are preserved verbatim** as author-intended line breaks within multi-paragraph entries. **Honesty note**: this is what the L2 client log shows, not a mechanically-derived walkthrough — consumers should render it as the journal, not as an editorial walkthrough. Ordered by `stepIndex` ascending. Omitted when the DAT carries no step rows for the quest. |
+| `primaryRegion?` | `RegionRefDto` | The first start NPC's primary region (mode-of-spawns rule, lowest-id tiebreak — same algorithm as `NpcDetailDto.primaryRegion?`). Answers "where do I start this quest?" without a second round-trip. **Multi-start-NPC caveat**: a handful of saga quests have multiple start NPCs in different regions — this field reflects the **first** start NPC's region only. The full picture is reachable via `startNpcs[]` → NPC-detail → `primaryRegion?`. Omitted when the quest has no start NPCs, the first start NPC has no spawns, every spawn falls outside the upstream `mapRegions.xml` tile grid, or the chronicle ships no `mapRegions.xml`. |
+| `primaryLocation?` | `LocationRefDto` | Same derivation as `primaryRegion?` but against the M7 hunting-zone catalog (`huntingzone-e.dat`). Complementary to region: region = engine death-teleport town; location = player-facing hunting-zone anchor. Omitted under the same conditions, plus when no anchor lies within the 10000-unit threshold of the start NPC's spawns. |
+
+### `QuestItemRefDto` shape
+
+```ts
+export interface QuestItemRefDto {
+  itemId: number;
+  name: string;
+  iconFile: string | null;
+}
+```
+
+Distinct from `ItemQuantityDto` (which is used for items with a real
+count — exchange ingredients, recipe ingredients, reward items).
+Quest-item refs don't have a count because the engine source
+(`setItemsIds(...)`) is an id-only list.
+
+### `QuestListDto`
+
+(`GET /api/[chronicle]/quests`) is a compact subset of the detail
+shape — drops `involvedNpcs`, `involvedMonsters`, `questItems`, and
+the full `rewards` object; instead surfaces `startNpc` (single,
+first; nullable when source has no `addStartNpc()`) and
+`rewardsPreview: { adena, exp, sp, itemCount }` for at-a-glance
+browsing. `repeatable` and `levelMin` keep their nullable form on
+the list for predictable per-row shape.
+
+### Source provenance
+
+Quest detail intentionally **does not** expose the source-tree
+filename (e.g. `"Q001_LettersOfLove.java"`). Consumers should pin
+to `id`. The script-file mapping is internal to the build pipeline
+and may be reorganized without breaking the public contract.
 
 ### `QuestRewardsDto` — proximity heuristic
 
@@ -370,10 +410,10 @@ reward list — they're transient quest items by definition (the engine wipes th
 
 | Field | Type | Notes |
 |---|---|---|
-| `items` | `ItemQuantityDto[]` | Final reward items, deduped by item id with summed counts. Sorted by item id. Adena (57) is excluded — surfaced separately on `adena`. |
-| `adena` | number \| null | Sum of all Adena (`giveItems(57, X)` / `rewardItems(57, X)`) within the proximity window. `null` when none. |
-| `exp` | number \| null | Sum of all `rewardExpAndSp(exp, sp)` first-arg values within the window. |
-| `sp` | number \| null | Same, second arg. |
+| `items` | `ItemQuantityDto[]` | Final reward items, deduped by item id with summed counts. Sorted by item id. Adena (57) is excluded — surfaced separately on `adena`. **Always present** (possibly empty array) for predictable iteration. |
+| `adena?` | number | Sum of all Adena (`giveItems(57, X)` / `rewardItems(57, X)`) within the proximity window. **Omitted when source has no Adena reward call within the window.** Absence ≠ zero. |
+| `exp?` | number | Sum of all `rewardExpAndSp(exp, sp)` first-arg values within the window. **Omitted** when source has none. |
+| `sp?` | number | Same, second arg. **Omitted** when source has none. |
 
 Reward extraction is the riskiest mechanical extraction in M3. Snapshot fixtures lock 4
 representative quests so any heuristic regression surfaces visibly.

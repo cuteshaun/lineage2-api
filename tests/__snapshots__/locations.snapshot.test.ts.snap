@@ -87,7 +87,7 @@ exports[`locations catalog (Interlude, spatial-only) 1`] = `
       {
         "id": 19,
         "minLevel": 60,
-        "name": "Antharas' Lair ",
+        "name": "Antharas' Lair",
       },
       {
         "id": 20,
@@ -177,7 +177,7 @@ exports[`locations catalog (Interlude, spatial-only) 1`] = `
       {
         "id": 38,
         "minLevel": 21,
-        "name": "Abandoned Camp ",
+        "name": "Abandoned Camp",
       },
       {
         "id": 39,
@@ -427,7 +427,7 @@ exports[`locations catalog (Interlude, spatial-only) 1`] = `
       {
         "id": 89,
         "minLevel": 40,
-        "name": "Timak Outpost ",
+        "name": "Timak Outpost",
       },
       {
         "id": 90,
@@ -547,7 +547,7 @@ exports[`locations catalog (Interlude, spatial-only) 1`] = `
       {
         "id": 114,
         "minLevel": 55,
-        "name": "Forsaken Plains ",
+        "name": "Forsaken Plains",
       },
       {
         "id": 115,
@@ -857,7 +857,7 @@ exports[`locations catalog (Interlude, spatial-only) 1`] = `
       {
         "id": 181,
         "minLevel": null,
-        "name": "Town  of Goddard",
+        "name": "Town of Goddard",
       },
       {
         "id": 182,

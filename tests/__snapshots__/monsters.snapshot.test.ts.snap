@@ -68,6 +68,75 @@ exports[`monsters detail — Grim Wolf (22001) 1`] = `
 }
 `;
 
+exports[`monsters detail — Queen Ant (29001), primaryLocation override 1`] = `
+{
+  "body": {
+    "data": {
+      "baseStats": {
+        "con": 57,
+        "dex": 73,
+        "int": 76,
+        "men": 80,
+        "str": 60,
+        "wit": 70,
+      },
+      "behavior": {
+        "aggroRange": 0,
+        "assistRange": 2000,
+      },
+      "id": 29001,
+      "isAggressive": false,
+      "level": 40,
+      "name": "Queen Ant",
+      "npcType": "GrandBoss",
+      "primaryLocation": {
+        "id": 34,
+        "minLevel": 29,
+        "name": "The Ant Nest",
+      },
+      "primaryRegion": {
+        "id": 5,
+        "name": "Town of Gludio",
+      },
+      "race": "Bug",
+      "raceDescription": "They consist of insects, spiders and worms and act upon their highly refined instincts. Sometimes their instincts present themselves in a more developed form than that of humanoid society.",
+      "raceIconFile": "skill4301.png",
+      "skills": [
+        {
+          "description": "Vulnerable to fire attack but possesses great resistance against archery attack.",
+          "iconFile": "skillboss.png",
+          "id": 4021,
+          "level": 1,
+          "name": "Queen Ant",
+        },
+        {
+          "description": "none",
+          "iconFile": "skill0000.png",
+          "id": 4045,
+          "level": 1,
+          "name": "Resist Full Magic Attack",
+        },
+      ],
+      "stats": {
+        "atkSpd": 253,
+        "crit": 4,
+        "exp": 2179535,
+        "hp": 96596,
+        "mAtk": 8,
+        "mDef": 229,
+        "mp": 301,
+        "pAtk": 105,
+        "pDef": 1252,
+        "runSpd": 230,
+        "sp": 140740,
+        "walkSpd": 80,
+      },
+    },
+  },
+  "status": 200,
+}
+`;
+
 exports[`monsters detail — invalid id returns 404 1`] = `
 {
   "body": {

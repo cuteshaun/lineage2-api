@@ -9,7 +9,7 @@ import {
 import { toQuestRefDto, type QuestRefDto } from "./quest";
 import { computePrimaryRegion } from "./spawn";
 import type { RegionRefDto } from "./region";
-import { computePrimaryLocation } from "./location";
+import { resolvePrimaryLocationForNpc } from "./location";
 import type { LocationRefDto } from "./location";
 
 export interface NpcListDto {
@@ -153,9 +153,21 @@ export interface NpcDetailDto {
    * the threshold from every anchor produce `null` here, and the
    * field is **omitted** in that case.
    *
+   * **Audit-justified overrides** apply to a small allow-list of
+   * NPCs where the 2D nearest-anchor rule picks a surface area
+   * over a dungeon the boss actually inhabits. The override
+   * applies only to this field (and the parallel
+   * `MonsterDetailDto.primaryLocation?` — same DTO function); the
+   * raw endpoints, the locations catalog, enriched-spawn rows, and
+   * `QuestDetailDto.primaryLocation?` all use the unmodified
+   * resolver. Current entry: NPC `29001` *Queen Ant* →
+   * *The Ant Nest*. See `PRIMARY_LOCATION_OVERRIDES_BY_NPC_ID` in
+   * `src/lib/api/dto/location.ts` for the policy.
+   *
    * Omitted when:
    *   - the NPC has no spawns,
-   *   - every spawn is too far from any anchor, or
+   *   - every spawn is too far from any anchor *and* the NPC has
+   *     no override entry, or
    *   - the chronicle ships no `huntingzone-e.dat`.
    */
   primaryLocation?: LocationRefDto;
@@ -372,8 +384,15 @@ export function toNpcDetailDto(npc: Npc, chronicle: Chronicle): NpcDetailDto {
 
   // primaryLocation (M7) — nearest-anchor over the same cleaned
   // spawns. Independent of primaryRegion: a spawn might resolve to
-  // a region but no nearby location, or vice versa.
-  const primaryLocation = computePrimaryLocation(spawns, chronicle);
+  // a region but no nearby location, or vice versa. Routed through
+  // the NPC-scoped wrapper so the small overrides map for known
+  // heuristic failures (e.g. Queen Ant → The Ant Nest) applies on
+  // detail responses without touching the general resolver.
+  const primaryLocation = resolvePrimaryLocationForNpc(
+    npc.id,
+    spawns,
+    chronicle
+  );
   if (primaryLocation) {
     dto.primaryLocation = primaryLocation;
   }

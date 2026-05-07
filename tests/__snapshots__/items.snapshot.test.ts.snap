@@ -3274,8 +3274,8 @@ exports[`item 4445 (Dye of STR (Str+1 Con-3) — symbolId 1) DTO matches snapsho
       "id": 4445,
       "name": "Dye of STR (Str+1 Con-3)",
     },
+    "engravePrice": 37000,
     "iconFile": "etc_str_symbol_i00.png",
-    "price": 37000,
     "shortLabel": "Str+1 Con-3",
     "statChanges": {
       "CON": -3,
@@ -3422,8 +3422,8 @@ exports[`item 4624 (Dye of MEN (Men-4 Wit+4) — symbolId 180) DTO matches snaps
       "id": 4624,
       "name": "Greater Dye of WIT (Wit+4 Men-4)",
     },
+    "engravePrice": 628000,
     "iconFile": null,
-    "price": 628000,
     "shortLabel": null,
     "statChanges": {
       "MEN": -4,

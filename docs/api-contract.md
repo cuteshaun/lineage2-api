@@ -297,13 +297,17 @@ engine-truthful even if the class XML files are reorganised.
 
 ### `ClassSkillLearnDto` — stable fields
 
+Class skill rows follow the v1 null-vs-absent policy: `null` is reserved for the four always-emitted top-level item fields (per `ItemDetailDto`); on class skill rows, anything not present in source is **omitted** instead of returning `null`.
+
 | Field | Type | Notes |
 |---|---|---|
 | `skillId`, `skillLevel` | number | Reference into `skills.json` — keyed via the same `"id-level"` convention used by `Item.itemSkill`. |
-| `name`, `description`, `iconFile` | string / string \| null / string \| null | Resolved from the existing skill record. **No new icon parser** — values come straight from `skills.json`. `name` falls back to `#<id>-<lvl>`; `description` and `iconFile` fall back to `null` if the skill fails to resolve or has no source description. |
+| `name` | string | Resolved skill name with `#${id}-${level}` fallback when the source skill record is missing. **Always present** — best-effort, never absent. |
+| `description?` | string | Resolved skill description from `skills.json` (sourced from the L2 client `skillname-e.dat`). **Omitted** when the source carries no description for this skill / level. Absence ≠ unknown — many passive / engine-internal skills legitimately ship no player-facing prose. |
+| `iconFile?` | string | Resolved icon basename inside `public/icons/`, source-backed from `skillgrp.dat`. **Omitted** when no source-resolved icon is available. The public DTO does **not** inject default / fallback icons — consumers can render their own placeholder when the field is absent. (NPC skill rendering is a separate surface and does use fallback icons; that's intentional.) |
 | `minPlayerLevel` | number | Player level required to learn the skill. The aCis source XML deliberately uses tier-of-3 progression — the same skill often has 3 consecutive `skillLevel` entries with the same `minPlayerLevel`. This is engine truth, not duplication. |
 | `spCost` | number | Skill point cost — paid every time the player learns a new level. |
-| `mpConsume` | number \| null | MP consumed each time the skill is cast at this level. `null` for passives/toggles with no MP cost in source data. |
+| `mpConsume?` | number | MP consumed each time the skill is cast at this level. **Omitted** for passive / toggle skills with no MP cost in source data (~42% of skill-learn rows on Interlude). |
 | `spellbook?` | `SpellbookItemRefDto` | Spellbook item required to **first** learn this skill. Surfaced only on the **lowest-skillLevel row per skill** in the class — engine-truth, the book is consumed once per skill family, not once per level. Omitted entirely when no spellbook is required. |
 
 `ClassListDto` (`GET /api/[chronicle]/classes`) is the same shape minus
@@ -668,7 +672,7 @@ Returned by:
 | `iconFile` | string \| null | Resolved PNG basename inside `public/icons/` (e.g. `"etc_str_symbol_i00.png"`). Same convention as `Item.iconFile`. **Nullable** for the same Greater II symbols and for any symbol whose DAT slug fails to resolve to a file on disk. **Distinct from** `dyeItem.iconFile` — that's the dye *item* icon (`etc_str_hena_i00.png`); this is the *symbol* icon (`etc_str_symbol_i00.png`). |
 | `shortLabel` | string \| null | Short stat label from the DAT, verbatim (e.g. `"Str+1 Con-3"`). **Nullable** for the same reasons as `displayName`. We do **not** synthesize this from `statChanges` even when the DAT lacks it. |
 | `statChanges` | `HennaStatChangesDto` | Six-attribute object with optional `STR`/`CON`/`DEX`/`INT`/`MEN`/`WIT` signed integers. **Always populated** from `hennas.xml`. Missing keys mean "no change to this stat" — current Interlude data ships exactly two non-zero deltas per symbol. |
-| `price` | number | Adena price the engraver charges. Always populated from XML. |
+| `engravePrice` | number | Adena cost the **Symbol Maker NPC charges to engrave** this symbol. From upstream `hennas.xml`. **Distinct** from the dye item's vendor-side price — when an item-detail response embeds a `henna?` block on a dye item, `item.price` is the dye's base price and `item.henna.engravePrice` is what the engraver charges to apply the symbol. |
 | `dyeItem` | `DyeItemRefDto` | The dye item the player buys and consumes. Resolved against `items.json` at request time. Carries `id`, `name`, and `iconFile` (the dye item icon, *not* the symbol icon). 1:1 with `symbolId` — the cross-validation step at parse time fails the build if a dye id does not resolve. |
 
 **Honesty contract**. Hennas are **dye/symbol mechanics**, not cosmetic tattoos: a stat-altering engraving consumed at the Symbol Maker. The name "henna" survives from the original Korean client and the `hennas.xml` filename, so we keep it; the documentation strings in this DTO and the surrounding routes spell out the semantics.

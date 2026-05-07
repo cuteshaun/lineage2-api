@@ -42,18 +42,37 @@ export interface SpellbookItemRefDto {
 export interface ClassSkillLearnDto {
   skillId: number;
   skillLevel: number;
+  /**
+   * Resolved skill name with `#${id}-${level}` fallback when the
+   * source skill record is missing. Always present (best-effort).
+   */
   name: string;
-  description: string | null;
-  iconFile: string | null;
+  /**
+   * Resolved skill description from `skills.json` (sourced from the
+   * L2 client `skillname-e.dat`). **Omitted** when the source carries
+   * no description for this skill / level. Absence ≠ unknown — many
+   * passive / engine-internal skills legitimately ship no
+   * player-facing prose.
+   */
+  description?: string;
+  /**
+   * Resolved icon basename inside `public/icons/`, source-backed
+   * from `skillgrp.dat`. **Omitted** when no source-resolved icon
+   * is available — the public DTO does not inject default / fallback
+   * icons, so consumers can render their own placeholder. Distinct
+   * from NPC skill rendering, which uses fallback icons.
+   */
+  iconFile?: string;
   /** Minimum player level required to learn this skill. */
   minPlayerLevel: number;
   /** Skill point cost (one-time, paid every time the player learns a new level). */
   spCost: number;
   /**
    * MP consumed each time the player casts the skill at this level.
-   * `null` for passive / toggle skills with no MP cost in source data.
+   * **Omitted** for passive / toggle skills with no MP cost in
+   * source data (~42% of skill-learn rows on Interlude).
    */
-  mpConsume: number | null;
+  mpConsume?: number;
   /**
    * Spellbook item required to first learn this skill (once per skill,
    * not once per level — the source `spellbooks.xml` is keyed by
@@ -129,12 +148,19 @@ export function toClassDetailDto(
       skillId: s.skillId,
       skillLevel: s.skillLevel,
       name: resolved?.name ?? `#${s.skillId}-${s.skillLevel}`,
-      description: resolved?.description ?? null,
-      iconFile: resolved?.iconFile ?? null,
       minPlayerLevel: s.minPlayerLevel,
       spCost: s.spCost,
-      mpConsume: resolved?.mpConsume ?? null,
     };
+    // description / iconFile / mpConsume use the omit-when-null
+    // policy established by the M11/M12/M13 cleanups. Absence on
+    // the wire means "not present in source", not "unknown". The
+    // public DTO never injects fallback / default icons here —
+    // consumers render their own placeholder when iconFile is
+    // absent. (NPC skill rendering does use fallback icons; that's
+    // a separate surface.)
+    if (resolved?.description != null) dto.description = resolved.description;
+    if (resolved?.iconFile != null) dto.iconFile = resolved.iconFile;
+    if (resolved?.mpConsume != null) dto.mpConsume = resolved.mpConsume;
 
     const isLowestLevel = s.skillLevel === lowestLevelBySkillId.get(s.skillId);
     if (isLowestLevel) {

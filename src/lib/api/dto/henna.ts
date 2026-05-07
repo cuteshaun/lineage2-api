@@ -85,8 +85,15 @@ export interface HennaSummaryDto {
   shortLabel: string | null;
   /** Stat deltas applied while engraved. Always populated from XML. */
   statChanges: HennaStatChangesDto;
-  /** Adena price the engraver charges. Always populated from XML. */
-  price: number;
+  /**
+   * Adena cost the Symbol Maker NPC charges to engrave this symbol.
+   * From upstream `hennas.xml`. **Distinct** from the dye item's
+   * vendor-side item price (`ItemDetailDto.price` on the dye item
+   * itself) — when an item-detail response embeds a `henna?` block,
+   * `item.price` is the dye's base price and `item.henna.engravePrice`
+   * is what the engraver charges to apply the symbol.
+   */
+  engravePrice: number;
   /**
    * The dye item that engraves this symbol. Resolved against
    * `items.json` at request time. 1:1 with `symbolId`.
@@ -142,7 +149,7 @@ export function toHennaSummaryDto(
     iconFile: henna.iconFile,
     shortLabel: henna.shortLabel,
     statChanges: buildStatChanges(henna),
-    price: henna.price,
+    engravePrice: henna.price,
     dyeItem: buildDyeItemRef(dyeItem),
   };
 }

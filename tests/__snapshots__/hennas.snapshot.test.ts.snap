@@ -102,8 +102,8 @@ exports[`henna detail — symbolId=1 (Symbol of Strength, broad fighter list) 1`
         "id": 4445,
         "name": "Dye of STR (Str+1 Con-3)",
       },
+      "engravePrice": 37000,
       "iconFile": "etc_str_symbol_i00.png",
-      "price": 37000,
       "shortLabel": "Str+1 Con-3",
       "statChanges": {
         "CON": -3,
@@ -143,8 +143,8 @@ exports[`henna detail — symbolId=7 (Mystic-only Int+1 Men-3) 1`] = `
         "id": 4451,
         "name": "Dye of INT (Int+1 Men-3)",
       },
+      "engravePrice": 37000,
       "iconFile": "etc_int_symbol_i00.png",
-      "price": 37000,
       "shortLabel": "Int+1 Men-3",
       "statChanges": {
         "INT": 1,
@@ -479,8 +479,8 @@ exports[`henna detail — symbolId=37 (Greater tier) 1`] = `
         "id": 4481,
         "name": "Greater Dye of STR (Str+1 Con-3)",
       },
+      "engravePrice": 87000,
       "iconFile": "etc_str_symbol_i01.png",
-      "price": 87000,
       "shortLabel": "Str+1 Con-3",
       "statChanges": {
         "CON": -3,
@@ -815,8 +815,8 @@ exports[`henna detail — symbolId=171 (last with clean DAT display) 1`] = `
         "id": 4615,
         "name": "Greater Dye of CON (Con+4 Str-4)",
       },
+      "engravePrice": 628000,
       "iconFile": "etc_con_symbol_i01.png",
-      "price": 628000,
       "shortLabel": "Con+4 Str-4",
       "statChanges": {
         "CON": 4,
@@ -1151,8 +1151,8 @@ exports[`henna detail — symbolId=172 (first Greater II, displayName/icon null)
         "id": 4616,
         "name": "Greater Dye of CON (Con+4 Dex-4)",
       },
+      "engravePrice": 628000,
       "iconFile": null,
-      "price": 628000,
       "shortLabel": null,
       "statChanges": {
         "CON": 4,
@@ -1307,8 +1307,8 @@ exports[`henna detail — symbolId=180 (last Greater II, mechanics-only) 1`] = `
         "id": 4624,
         "name": "Greater Dye of WIT (Wit+4 Men-4)",
       },
+      "engravePrice": 628000,
       "iconFile": null,
-      "price": 628000,
       "shortLabel": null,
       "statChanges": {
         "MEN": -4,
@@ -1332,8 +1332,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4445,
           "name": "Dye of STR (Str+1 Con-3)",
         },
+        "engravePrice": 37000,
         "iconFile": "etc_str_symbol_i00.png",
-        "price": 37000,
         "shortLabel": "Str+1 Con-3",
         "statChanges": {
           "CON": -3,
@@ -1348,8 +1348,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4446,
           "name": "Dye of STR (Str+1 Dex-3)",
         },
+        "engravePrice": 37000,
         "iconFile": "etc_str_symbol_i00.png",
-        "price": 37000,
         "shortLabel": "Str+1 Dex-3",
         "statChanges": {
           "DEX": -3,
@@ -1364,8 +1364,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4447,
           "name": "Dye of CON (Con+1 Str-3)",
         },
+        "engravePrice": 37000,
         "iconFile": "etc_con_symbol_i00.png",
-        "price": 37000,
         "shortLabel": "Con+1 Str-3",
         "statChanges": {
           "CON": 1,
@@ -1380,8 +1380,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4448,
           "name": "Dye of CON (Con+1 Dex-3)",
         },
+        "engravePrice": 37000,
         "iconFile": "etc_con_symbol_i00.png",
-        "price": 37000,
         "shortLabel": "Con+1 Dex-3",
         "statChanges": {
           "CON": 1,
@@ -1396,8 +1396,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4449,
           "name": "Dye of DEX (Dex+1 Str-3)",
         },
+        "engravePrice": 37000,
         "iconFile": "etc_dex_symbol_i00.png",
-        "price": 37000,
         "shortLabel": "Dex+1 Str-3",
         "statChanges": {
           "DEX": 1,
@@ -1412,8 +1412,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4450,
           "name": "Dye of DEX (Dex+1 Con-3)",
         },
+        "engravePrice": 37000,
         "iconFile": "etc_dex_symbol_i00.png",
-        "price": 37000,
         "shortLabel": "Dex+1 Con-3",
         "statChanges": {
           "CON": -3,
@@ -1428,8 +1428,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4451,
           "name": "Dye of INT (Int+1 Men-3)",
         },
+        "engravePrice": 37000,
         "iconFile": "etc_int_symbol_i00.png",
-        "price": 37000,
         "shortLabel": "Int+1 Men-3",
         "statChanges": {
           "INT": 1,
@@ -1444,8 +1444,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4452,
           "name": "Dye of INT (Int+1 Wit-3)",
         },
+        "engravePrice": 37000,
         "iconFile": "etc_int_symbol_i00.png",
-        "price": 37000,
         "shortLabel": "Int+1 Wit-3",
         "statChanges": {
           "INT": 1,
@@ -1460,8 +1460,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4453,
           "name": "Dye of MEN (Men+1 Int-3)",
         },
+        "engravePrice": 37000,
         "iconFile": "etc_men_symbol_i00.png",
-        "price": 37000,
         "shortLabel": "Men+1 Int-3",
         "statChanges": {
           "INT": -3,
@@ -1476,8 +1476,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4454,
           "name": "Dye of MEN (Men+1 Wit-3)",
         },
+        "engravePrice": 37000,
         "iconFile": "etc_men_symbol_i00.png",
-        "price": 37000,
         "shortLabel": "Men+1 Wit-3",
         "statChanges": {
           "MEN": 1,
@@ -1492,8 +1492,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4455,
           "name": "Dye of WIT (Wit+1 Int-3)",
         },
+        "engravePrice": 37000,
         "iconFile": "etc_wit_symbol_i00.png",
-        "price": 37000,
         "shortLabel": "Wit+1 Int-3",
         "statChanges": {
           "INT": -3,
@@ -1508,8 +1508,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4456,
           "name": "Dye of WIT (Wit+1 Men-3)",
         },
+        "engravePrice": 37000,
         "iconFile": "etc_wit_symbol_i00.png",
-        "price": 37000,
         "shortLabel": "Wit+1 Men-3",
         "statChanges": {
           "MEN": -3,
@@ -1524,8 +1524,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4457,
           "name": "Dye of STR (Str+1 Con-2)",
         },
+        "engravePrice": 87000,
         "iconFile": "etc_str_symbol_i00.png",
-        "price": 87000,
         "shortLabel": "Str+1 Con-2",
         "statChanges": {
           "CON": -2,
@@ -1540,8 +1540,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4458,
           "name": "Dye of STR (Str+1 Dex-2)",
         },
+        "engravePrice": 87000,
         "iconFile": "etc_str_symbol_i00.png",
-        "price": 87000,
         "shortLabel": "Str+1 Dex-2",
         "statChanges": {
           "DEX": -2,
@@ -1556,8 +1556,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4459,
           "name": "Dye of CON (Con+1 Str-2)",
         },
+        "engravePrice": 87000,
         "iconFile": "etc_con_symbol_i00.png",
-        "price": 87000,
         "shortLabel": "Con+1 Str-2",
         "statChanges": {
           "CON": 1,
@@ -1572,8 +1572,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4460,
           "name": "Dye of CON (Con+1 Dex-2)",
         },
+        "engravePrice": 87000,
         "iconFile": "etc_con_symbol_i00.png",
-        "price": 87000,
         "shortLabel": "Con+1 Dex-2",
         "statChanges": {
           "CON": 1,
@@ -1588,8 +1588,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4461,
           "name": "Dye of DEX (Dex+1 Str-2)",
         },
+        "engravePrice": 87000,
         "iconFile": "etc_dex_symbol_i00.png",
-        "price": 87000,
         "shortLabel": "Dex+1 Str-2",
         "statChanges": {
           "DEX": 1,
@@ -1604,8 +1604,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4462,
           "name": "Dye of DEX (Dex+1 Con-2)",
         },
+        "engravePrice": 87000,
         "iconFile": "etc_dex_symbol_i00.png",
-        "price": 87000,
         "shortLabel": "Dex+1 Con-2",
         "statChanges": {
           "CON": -2,
@@ -1620,8 +1620,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4463,
           "name": "Dye of INT (Int+1 Men-2)",
         },
+        "engravePrice": 87000,
         "iconFile": "etc_int_symbol_i00.png",
-        "price": 87000,
         "shortLabel": "Int+1 Men-2",
         "statChanges": {
           "INT": 1,
@@ -1636,8 +1636,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4464,
           "name": "Dye of INT (Int+1 Wit-2)",
         },
+        "engravePrice": 87000,
         "iconFile": "etc_int_symbol_i00.png",
-        "price": 87000,
         "shortLabel": "Int+1 Wit-2",
         "statChanges": {
           "INT": 1,
@@ -1652,8 +1652,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4465,
           "name": "Dye of MEN (Men+1 Int-2)",
         },
+        "engravePrice": 87000,
         "iconFile": "etc_men_symbol_i00.png",
-        "price": 87000,
         "shortLabel": "Men+1 Int-2",
         "statChanges": {
           "INT": -2,
@@ -1668,8 +1668,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4466,
           "name": "Dye of MEN (Men+1 Wit-2)",
         },
+        "engravePrice": 87000,
         "iconFile": "etc_men_symbol_i00.png",
-        "price": 87000,
         "shortLabel": "Men+1 Wit-2",
         "statChanges": {
           "MEN": 1,
@@ -1684,8 +1684,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4467,
           "name": "Dye of WIT (Wit+1 Int-2)",
         },
+        "engravePrice": 87000,
         "iconFile": "etc_wit_symbol_i00.png",
-        "price": 87000,
         "shortLabel": "Wit+1 Int-2",
         "statChanges": {
           "INT": -2,
@@ -1700,8 +1700,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4468,
           "name": "Dye of WIT (Wit+1 Men-2)",
         },
+        "engravePrice": 87000,
         "iconFile": "etc_wit_symbol_i00.png",
-        "price": 87000,
         "shortLabel": "Wit+1 Men-2",
         "statChanges": {
           "MEN": -2,
@@ -1716,8 +1716,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4469,
           "name": "Dye of STR (Str+1 Con-1)",
         },
+        "engravePrice": 149000,
         "iconFile": "etc_str_symbol_i00.png",
-        "price": 149000,
         "shortLabel": "Str+1 Con-1",
         "statChanges": {
           "CON": -1,
@@ -1732,8 +1732,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4470,
           "name": "Dye of STR (Str+1 Dex-1)",
         },
+        "engravePrice": 149000,
         "iconFile": "etc_str_symbol_i00.png",
-        "price": 149000,
         "shortLabel": "Str+1 Dex-1",
         "statChanges": {
           "DEX": -1,
@@ -1748,8 +1748,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4471,
           "name": "Dye of CON (Con+1 Str-1)",
         },
+        "engravePrice": 149000,
         "iconFile": "etc_con_symbol_i00.png",
-        "price": 149000,
         "shortLabel": "Con+1 Str-1",
         "statChanges": {
           "CON": 1,
@@ -1764,8 +1764,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4472,
           "name": "Dye of CON (Con+1 Dex-1)",
         },
+        "engravePrice": 149000,
         "iconFile": "etc_con_symbol_i00.png",
-        "price": 149000,
         "shortLabel": "Con+1 Dex-1",
         "statChanges": {
           "CON": 1,
@@ -1780,8 +1780,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4473,
           "name": "Dye of DEX (Dex+1 Str-1)",
         },
+        "engravePrice": 149000,
         "iconFile": "etc_dex_symbol_i00.png",
-        "price": 149000,
         "shortLabel": "Dex+1 Str-1",
         "statChanges": {
           "DEX": 1,
@@ -1796,8 +1796,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4474,
           "name": "Dye of DEX (Dex+1 Con-1)",
         },
+        "engravePrice": 149000,
         "iconFile": "etc_dex_symbol_i00.png",
-        "price": 149000,
         "shortLabel": "Dex+1 Con-1",
         "statChanges": {
           "CON": -1,
@@ -1812,8 +1812,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4475,
           "name": "Dye of INT (Int+1 Men-1)",
         },
+        "engravePrice": 149000,
         "iconFile": "etc_int_symbol_i00.png",
-        "price": 149000,
         "shortLabel": "Int+1 Men-1",
         "statChanges": {
           "INT": 1,
@@ -1828,8 +1828,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4476,
           "name": "Dye of INT (Int+1 Wit-1)",
         },
+        "engravePrice": 149000,
         "iconFile": "etc_int_symbol_i00.png",
-        "price": 149000,
         "shortLabel": "Int+1 Wit-1",
         "statChanges": {
           "INT": 1,
@@ -1844,8 +1844,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4477,
           "name": "Dye of MEN (Men+1 Int-1)",
         },
+        "engravePrice": 149000,
         "iconFile": "etc_men_symbol_i00.png",
-        "price": 149000,
         "shortLabel": "Men+1 Int-1",
         "statChanges": {
           "INT": -1,
@@ -1860,8 +1860,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4478,
           "name": "Dye of MEN (Men+1 Wit-1)",
         },
+        "engravePrice": 149000,
         "iconFile": "etc_men_symbol_i00.png",
-        "price": 149000,
         "shortLabel": "Men+1 Wit-1",
         "statChanges": {
           "MEN": 1,
@@ -1876,8 +1876,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4479,
           "name": "Dye of WIT (Wit+1 Int-1)",
         },
+        "engravePrice": 149000,
         "iconFile": "etc_wit_symbol_i00.png",
-        "price": 149000,
         "shortLabel": "Wit+1 Int-1",
         "statChanges": {
           "INT": -1,
@@ -1892,8 +1892,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4480,
           "name": "Dye of WIT (Wit+1 Men-1)",
         },
+        "engravePrice": 149000,
         "iconFile": "etc_wit_symbol_i00.png",
-        "price": 149000,
         "shortLabel": "Wit+1 Men-1",
         "statChanges": {
           "MEN": -1,
@@ -1908,8 +1908,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4481,
           "name": "Greater Dye of STR (Str+1 Con-3)",
         },
+        "engravePrice": 87000,
         "iconFile": "etc_str_symbol_i01.png",
-        "price": 87000,
         "shortLabel": "Str+1 Con-3",
         "statChanges": {
           "CON": -3,
@@ -1924,8 +1924,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4482,
           "name": "Greater Dye of STR (Str+1 Dex-3)",
         },
+        "engravePrice": 87000,
         "iconFile": "etc_str_symbol_i01.png",
-        "price": 87000,
         "shortLabel": "Str+1 Dex-3",
         "statChanges": {
           "DEX": -3,
@@ -1940,8 +1940,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4483,
           "name": "Greater Dye of CON(Con+1 Str-3)",
         },
+        "engravePrice": 87000,
         "iconFile": "etc_con_symbol_i01.png",
-        "price": 87000,
         "shortLabel": "Con+1 Str-3",
         "statChanges": {
           "CON": 1,
@@ -1956,8 +1956,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4484,
           "name": "Greater Dye of CON(Con+1 Dex-3)",
         },
+        "engravePrice": 87000,
         "iconFile": "etc_con_symbol_i01.png",
-        "price": 87000,
         "shortLabel": "Con+1 Dex-3",
         "statChanges": {
           "CON": 1,
@@ -1972,8 +1972,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4485,
           "name": "Greater Dye of DEX (Dex+1 Str-3)",
         },
+        "engravePrice": 87000,
         "iconFile": "etc_dex_symbol_i01.png",
-        "price": 87000,
         "shortLabel": "Dex+1 Str-3",
         "statChanges": {
           "DEX": 1,
@@ -1988,8 +1988,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4486,
           "name": "Greater Dye of DEX (Dex+1 Con-3)",
         },
+        "engravePrice": 87000,
         "iconFile": "etc_dex_symbol_i01.png",
-        "price": 87000,
         "shortLabel": "Dex+1 Con-3",
         "statChanges": {
           "CON": -3,
@@ -2004,8 +2004,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4487,
           "name": "Greater Dye of INT (Int+1 Men-3)",
         },
+        "engravePrice": 87000,
         "iconFile": "etc_int_symbol_i01.png",
-        "price": 87000,
         "shortLabel": "Int+1 Men-3",
         "statChanges": {
           "INT": 1,
@@ -2020,8 +2020,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4488,
           "name": "Greater Dye of INT (Int+1 Wit-3)",
         },
+        "engravePrice": 87000,
         "iconFile": "etc_int_symbol_i01.png",
-        "price": 87000,
         "shortLabel": "Int+1 Wit-3",
         "statChanges": {
           "INT": 1,
@@ -2036,8 +2036,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4489,
           "name": "Greater Dye of MEN (Men+1 Int-3)",
         },
+        "engravePrice": 87000,
         "iconFile": "etc_men_symbol_i01.png",
-        "price": 87000,
         "shortLabel": "Men+1 Int-3",
         "statChanges": {
           "INT": -3,
@@ -2052,8 +2052,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4490,
           "name": "Greater Dye of MEN (Men+1 Wit-3)",
         },
+        "engravePrice": 87000,
         "iconFile": "etc_men_symbol_i01.png",
-        "price": 87000,
         "shortLabel": "Men+1 Wit-3",
         "statChanges": {
           "MEN": 1,
@@ -2068,8 +2068,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4491,
           "name": "Greater Dye of WIT (Wit+1 Int-3)",
         },
+        "engravePrice": 87000,
         "iconFile": "etc_wit_symbol_i01.png",
-        "price": 87000,
         "shortLabel": "Wit+1 Int-3",
         "statChanges": {
           "INT": -3,
@@ -2084,8 +2084,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4492,
           "name": "Greater Dye of WIT (Wit+1 Men-3)",
         },
+        "engravePrice": 87000,
         "iconFile": "etc_wit_symbol_i01.png",
-        "price": 87000,
         "shortLabel": "Wit+1 Men-3",
         "statChanges": {
           "MEN": -3,
@@ -2100,8 +2100,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4493,
           "name": "Greater Dye of STR (Str+1 Con-2)",
         },
+        "engravePrice": 149000,
         "iconFile": "etc_str_symbol_i01.png",
-        "price": 149000,
         "shortLabel": "Str+1 Con-2",
         "statChanges": {
           "CON": -2,
@@ -2116,8 +2116,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4494,
           "name": "Greater Dye of STR (Str+1 Dex-2)",
         },
+        "engravePrice": 149000,
         "iconFile": "etc_str_symbol_i01.png",
-        "price": 149000,
         "shortLabel": "Str+1 Dex-2",
         "statChanges": {
           "DEX": -2,
@@ -2132,8 +2132,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4495,
           "name": "Greater Dye of CON (Con+1 Str-2)",
         },
+        "engravePrice": 149000,
         "iconFile": "etc_con_symbol_i01.png",
-        "price": 149000,
         "shortLabel": "Con+1 Str-2",
         "statChanges": {
           "CON": 1,
@@ -2148,8 +2148,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4496,
           "name": "Greater Dye of CON (Con+1 Dex-2)",
         },
+        "engravePrice": 149000,
         "iconFile": "etc_con_symbol_i01.png",
-        "price": 149000,
         "shortLabel": "Con+1 Dex-2",
         "statChanges": {
           "CON": 1,
@@ -2164,8 +2164,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4497,
           "name": "Greater Dye of DEX (Dex+1 Str-2)",
         },
+        "engravePrice": 149000,
         "iconFile": "etc_dex_symbol_i01.png",
-        "price": 149000,
         "shortLabel": "Dex+1 Str-2",
         "statChanges": {
           "DEX": 1,
@@ -2180,8 +2180,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4498,
           "name": "Greater Dye of DEX (Dex+1 Con-2)",
         },
+        "engravePrice": 149000,
         "iconFile": "etc_dex_symbol_i01.png",
-        "price": 149000,
         "shortLabel": "Dex+1 Con-2",
         "statChanges": {
           "CON": -2,
@@ -2196,8 +2196,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4499,
           "name": "Greater Dye of INT (Int+1 Men-2)",
         },
+        "engravePrice": 149000,
         "iconFile": "etc_int_symbol_i01.png",
-        "price": 149000,
         "shortLabel": "Int+1 Men-2",
         "statChanges": {
           "INT": 1,
@@ -2212,8 +2212,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4500,
           "name": "Greater Dye of INT (Int+1 Wit-2)",
         },
+        "engravePrice": 149000,
         "iconFile": "etc_int_symbol_i01.png",
-        "price": 149000,
         "shortLabel": "Int+1 Wit-2",
         "statChanges": {
           "INT": 1,
@@ -2228,8 +2228,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4501,
           "name": "Greater Dye of MEN (Men+1 Int-2)",
         },
+        "engravePrice": 149000,
         "iconFile": "etc_men_symbol_i01.png",
-        "price": 149000,
         "shortLabel": "Men+1 Int-2",
         "statChanges": {
           "INT": -2,
@@ -2244,8 +2244,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4502,
           "name": "Greater Dye of MEN (Men+1 Wit-2)",
         },
+        "engravePrice": 149000,
         "iconFile": "etc_men_symbol_i01.png",
-        "price": 149000,
         "shortLabel": "Men+1 Wit-2",
         "statChanges": {
           "MEN": 1,
@@ -2260,8 +2260,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4503,
           "name": "Greater Dye of WIT (Wit+1 Int-2)",
         },
+        "engravePrice": 149000,
         "iconFile": "etc_wit_symbol_i01.png",
-        "price": 149000,
         "shortLabel": "Wit+1 Int-2",
         "statChanges": {
           "INT": -2,
@@ -2276,8 +2276,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4504,
           "name": "Greater Dye of WIT (Wit+1 Men-2)",
         },
+        "engravePrice": 149000,
         "iconFile": "etc_wit_symbol_i01.png",
-        "price": 149000,
         "shortLabel": "Wit+1 Men-2",
         "statChanges": {
           "MEN": -2,
@@ -2292,8 +2292,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4505,
           "name": "Greater Dye of STR (Str+2 Con-4)",
         },
+        "engravePrice": 176000,
         "iconFile": "etc_str_symbol_i01.png",
-        "price": 176000,
         "shortLabel": "Str+2 Con-4",
         "statChanges": {
           "CON": -4,
@@ -2308,8 +2308,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4506,
           "name": "Greater Dye of STR (Str+2 Dex-4)",
         },
+        "engravePrice": 176000,
         "iconFile": "etc_str_symbol_i01.png",
-        "price": 176000,
         "shortLabel": "Str+2 Dex-4",
         "statChanges": {
           "DEX": -4,
@@ -2324,8 +2324,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4507,
           "name": "Greater Dye of CON (Con+2 Str-4)",
         },
+        "engravePrice": 176000,
         "iconFile": "etc_con_symbol_i01.png",
-        "price": 176000,
         "shortLabel": "Con+2 Str-4",
         "statChanges": {
           "CON": 2,
@@ -2340,8 +2340,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4508,
           "name": "Greater Dye of CON (Con+2 Dex-4)",
         },
+        "engravePrice": 176000,
         "iconFile": "etc_con_symbol_i01.png",
-        "price": 176000,
         "shortLabel": "Con+2 Dex-4",
         "statChanges": {
           "CON": 2,
@@ -2356,8 +2356,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4509,
           "name": "Greater Dye of DEX (Dex+2 Str-4)",
         },
+        "engravePrice": 176000,
         "iconFile": "etc_dex_symbol_i01.png",
-        "price": 176000,
         "shortLabel": "Dex+2 Str-4",
         "statChanges": {
           "DEX": 2,
@@ -2372,8 +2372,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4510,
           "name": "Greater Dye of DEX (Dex+2 Con-4)",
         },
+        "engravePrice": 176000,
         "iconFile": "etc_dex_symbol_i01.png",
-        "price": 176000,
         "shortLabel": "Dex+2 Con-4",
         "statChanges": {
           "CON": -4,
@@ -2388,8 +2388,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4511,
           "name": "Greater Dye of INT (Int+2 Men-4)",
         },
+        "engravePrice": 176000,
         "iconFile": "etc_int_symbol_i01.png",
-        "price": 176000,
         "shortLabel": "Int+2 Men-4",
         "statChanges": {
           "INT": 2,
@@ -2404,8 +2404,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4512,
           "name": "Greater Dye of INT (Int+2 Wit-4)",
         },
+        "engravePrice": 176000,
         "iconFile": "etc_int_symbol_i01.png",
-        "price": 176000,
         "shortLabel": "Int+2 Wit-4",
         "statChanges": {
           "INT": 2,
@@ -2420,8 +2420,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4513,
           "name": "Greater Dye of MEN (Men+2 Int-4)",
         },
+        "engravePrice": 176000,
         "iconFile": "etc_men_symbol_i01.png",
-        "price": 176000,
         "shortLabel": "Men+2 Int-4",
         "statChanges": {
           "INT": -4,
@@ -2436,8 +2436,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4514,
           "name": "Greater Dye of MEN (Men+2 Wit-4)",
         },
+        "engravePrice": 176000,
         "iconFile": "etc_men_symbol_i01.png",
-        "price": 176000,
         "shortLabel": "Men+2 Wit-4",
         "statChanges": {
           "MEN": 2,
@@ -2452,8 +2452,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4515,
           "name": "Greater Dye of WIT (Wit+2 Int-4)",
         },
+        "engravePrice": 176000,
         "iconFile": "etc_wit_symbol_i01.png",
-        "price": 176000,
         "shortLabel": "Wit+2 Int-4",
         "statChanges": {
           "INT": -4,
@@ -2468,8 +2468,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4516,
           "name": "Greater Dye of WIT (Wit+2 Men-4)",
         },
+        "engravePrice": 176000,
         "iconFile": "etc_wit_symbol_i01.png",
-        "price": 176000,
         "shortLabel": "Wit+2 Men-4",
         "statChanges": {
           "MEN": -4,
@@ -2484,8 +2484,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4517,
           "name": "Greater Dye of STR (Str+2 Con-3)",
         },
+        "engravePrice": 190000,
         "iconFile": "etc_str_symbol_i01.png",
-        "price": 190000,
         "shortLabel": "Str+2 Con-3",
         "statChanges": {
           "CON": -3,
@@ -2500,8 +2500,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4518,
           "name": "Greater Dye of STR (Str+2 Dex-3)",
         },
+        "engravePrice": 190000,
         "iconFile": "etc_str_symbol_i01.png",
-        "price": 190000,
         "shortLabel": "Str+2 Dex-3",
         "statChanges": {
           "DEX": -3,
@@ -2516,8 +2516,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4519,
           "name": "Greater Dye of CON (Con+2 Str-3)",
         },
+        "engravePrice": 190000,
         "iconFile": "etc_con_symbol_i01.png",
-        "price": 190000,
         "shortLabel": "Con+2 Str-3",
         "statChanges": {
           "CON": 2,
@@ -2532,8 +2532,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4520,
           "name": "Greater Dye of CON (Con+2 Dex-3)",
         },
+        "engravePrice": 190000,
         "iconFile": "etc_con_symbol_i01.png",
-        "price": 190000,
         "shortLabel": "Con+2 Dex-3",
         "statChanges": {
           "CON": 2,
@@ -2548,8 +2548,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4521,
           "name": "Greater Dye of DEX (Dex+2 Str-3)",
         },
+        "engravePrice": 190000,
         "iconFile": "etc_dex_symbol_i01.png",
-        "price": 190000,
         "shortLabel": "Dex+2 Str-3",
         "statChanges": {
           "DEX": 2,
@@ -2564,8 +2564,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4522,
           "name": "Greater Dye of DEX (Dex+2 Con-3)",
         },
+        "engravePrice": 190000,
         "iconFile": "etc_dex_symbol_i01.png",
-        "price": 190000,
         "shortLabel": "Dex+2 Con-3",
         "statChanges": {
           "CON": -3,
@@ -2580,8 +2580,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4523,
           "name": "Greater Dye of INT (Int+2 Men-3)",
         },
+        "engravePrice": 190000,
         "iconFile": "etc_int_symbol_i01.png",
-        "price": 190000,
         "shortLabel": "Int+2 Men-3",
         "statChanges": {
           "INT": 2,
@@ -2596,8 +2596,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4524,
           "name": "Greater Dye of INT (Int+2 Wit-3)",
         },
+        "engravePrice": 190000,
         "iconFile": "etc_int_symbol_i01.png",
-        "price": 190000,
         "shortLabel": "Int+2 Wit-3",
         "statChanges": {
           "INT": 2,
@@ -2612,8 +2612,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4525,
           "name": "Greater Dye of MEN (Men+2 Int-3)",
         },
+        "engravePrice": 190000,
         "iconFile": "etc_men_symbol_i01.png",
-        "price": 190000,
         "shortLabel": "Men+2 Int-3",
         "statChanges": {
           "INT": -3,
@@ -2628,8 +2628,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4526,
           "name": "Greater Dye of MEN (Men+2 Wit-3)",
         },
+        "engravePrice": 190000,
         "iconFile": "etc_men_symbol_i01.png",
-        "price": 190000,
         "shortLabel": "Men+2 Wit-3",
         "statChanges": {
           "MEN": 2,
@@ -2644,8 +2644,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4527,
           "name": "Greater Dye of WIT (Wit+2 Int-3)",
         },
+        "engravePrice": 190000,
         "iconFile": "etc_wit_symbol_i01.png",
-        "price": 190000,
         "shortLabel": "Wit+2 Int-3",
         "statChanges": {
           "INT": -3,
@@ -2660,8 +2660,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4528,
           "name": "Greater Dye of WIT (Wit+2 Men-3)",
         },
+        "engravePrice": 190000,
         "iconFile": "etc_wit_symbol_i01.png",
-        "price": 190000,
         "shortLabel": "Wit+2 Men-3",
         "statChanges": {
           "MEN": -3,
@@ -2676,8 +2676,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4529,
           "name": "Greater Dye of STR (Str+3 Con-5)",
         },
+        "engravePrice": 206000,
         "iconFile": "etc_str_symbol_i01.png",
-        "price": 206000,
         "shortLabel": "Str+3 Con-5",
         "statChanges": {
           "CON": -5,
@@ -2692,8 +2692,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4530,
           "name": "Greater Dye of STR (Str+3 Dex-5)",
         },
+        "engravePrice": 206000,
         "iconFile": "etc_str_symbol_i01.png",
-        "price": 206000,
         "shortLabel": "Str+3 Dex-5",
         "statChanges": {
           "DEX": -5,
@@ -2708,8 +2708,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4531,
           "name": "Greater Dye of CON (Con+3 Str-5)",
         },
+        "engravePrice": 206000,
         "iconFile": "etc_con_symbol_i01.png",
-        "price": 206000,
         "shortLabel": "Con+3 Str-5",
         "statChanges": {
           "CON": 3,
@@ -2724,8 +2724,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4532,
           "name": "Greater Dye of CON (Con+3 Dex-5)",
         },
+        "engravePrice": 206000,
         "iconFile": "etc_con_symbol_i01.png",
-        "price": 206000,
         "shortLabel": "Con+3 Dex-5",
         "statChanges": {
           "CON": 3,
@@ -2740,8 +2740,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4533,
           "name": "Greater Dye of DEX (Dex+3 Str-5)",
         },
+        "engravePrice": 206000,
         "iconFile": "etc_dex_symbol_i01.png",
-        "price": 206000,
         "shortLabel": "Dex+3 Str-5",
         "statChanges": {
           "DEX": 3,
@@ -2756,8 +2756,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4534,
           "name": "Greater Dye of DEX (Dex+3 Con-5)",
         },
+        "engravePrice": 206000,
         "iconFile": "etc_dex_symbol_i01.png",
-        "price": 206000,
         "shortLabel": "Dex+3 Con-5",
         "statChanges": {
           "CON": -5,
@@ -2772,8 +2772,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4535,
           "name": "Greater Dye of INT (Int+3 Men-5)",
         },
+        "engravePrice": 206000,
         "iconFile": "etc_int_symbol_i01.png",
-        "price": 206000,
         "shortLabel": "Int+3 Men-5",
         "statChanges": {
           "INT": 3,
@@ -2788,8 +2788,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4536,
           "name": "Greater Dye of INT (Int+3 Wit-5)",
         },
+        "engravePrice": 206000,
         "iconFile": "etc_int_symbol_i01.png",
-        "price": 206000,
         "shortLabel": "Int+3 Wit-5",
         "statChanges": {
           "INT": 3,
@@ -2804,8 +2804,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4537,
           "name": "Greater Dye of MEN (Men+3 Int-5)",
         },
+        "engravePrice": 206000,
         "iconFile": "etc_men_symbol_i01.png",
-        "price": 206000,
         "shortLabel": "Men+3 Int-5",
         "statChanges": {
           "INT": -5,
@@ -2820,8 +2820,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4538,
           "name": "Greater Dye of MEN (Men+3 Wit-5)",
         },
+        "engravePrice": 206000,
         "iconFile": "etc_men_symbol_i01.png",
-        "price": 206000,
         "shortLabel": "Men+3 Wit-5",
         "statChanges": {
           "MEN": 3,
@@ -2836,8 +2836,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4539,
           "name": "Greater Dye of WIT (Wit+3 Int-5)",
         },
+        "engravePrice": 206000,
         "iconFile": "etc_wit_symbol_i01.png",
-        "price": 206000,
         "shortLabel": "Wit+3 Int-5",
         "statChanges": {
           "INT": -5,
@@ -2852,8 +2852,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4540,
           "name": "Greater Dye of WIT (Wit+3 Men-5)",
         },
+        "engravePrice": 206000,
         "iconFile": "etc_wit_symbol_i01.png",
-        "price": 206000,
         "shortLabel": "Wit+3 Men-5",
         "statChanges": {
           "MEN": -5,
@@ -2868,8 +2868,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4541,
           "name": "Greater Dye of STR (Str+3 Con-4)",
         },
+        "engravePrice": 206000,
         "iconFile": "etc_str_symbol_i01.png",
-        "price": 206000,
         "shortLabel": "Str+3 Con-4",
         "statChanges": {
           "CON": -4,
@@ -2884,8 +2884,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4542,
           "name": "Greater Dye of STR (Str+3 Dex-4)",
         },
+        "engravePrice": 206000,
         "iconFile": "etc_str_symbol_i01.png",
-        "price": 206000,
         "shortLabel": "Str+3 Dex-4",
         "statChanges": {
           "DEX": -4,
@@ -2900,8 +2900,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4543,
           "name": "Greater Dye of CON (Con+3 Str-4)",
         },
+        "engravePrice": 206000,
         "iconFile": "etc_con_symbol_i01.png",
-        "price": 206000,
         "shortLabel": "Con+3 Str-4",
         "statChanges": {
           "CON": 3,
@@ -2916,8 +2916,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4544,
           "name": "Greater Dye of CON (Con+3 Dex-4)",
         },
+        "engravePrice": 206000,
         "iconFile": "etc_con_symbol_i01.png",
-        "price": 206000,
         "shortLabel": "Con+3 Dex-4",
         "statChanges": {
           "CON": 3,
@@ -2932,8 +2932,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4545,
           "name": "Greater Dye of DEX (Dex+3 Str-4)",
         },
+        "engravePrice": 206000,
         "iconFile": "etc_dex_symbol_i01.png",
-        "price": 206000,
         "shortLabel": "Dex+3 Str-4",
         "statChanges": {
           "DEX": 3,
@@ -2948,8 +2948,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4546,
           "name": "Greater Dye of DEX (Dex+3 Con-4)",
         },
+        "engravePrice": 206000,
         "iconFile": "etc_dex_symbol_i01.png",
-        "price": 206000,
         "shortLabel": "Dex+3 Con-4",
         "statChanges": {
           "CON": -4,
@@ -2964,8 +2964,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4547,
           "name": "Greater Dye of INT (Int+3 Men-4)",
         },
+        "engravePrice": 206000,
         "iconFile": "etc_int_symbol_i01.png",
-        "price": 206000,
         "shortLabel": "Int+3 Men-4",
         "statChanges": {
           "INT": 3,
@@ -2980,8 +2980,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4548,
           "name": "Greater Dye of INT (Int+3 Wit-4)",
         },
+        "engravePrice": 206000,
         "iconFile": "etc_int_symbol_i01.png",
-        "price": 206000,
         "shortLabel": "Int+3 Wit-4",
         "statChanges": {
           "INT": 3,
@@ -2996,8 +2996,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4549,
           "name": "Greater Dye of MEN (Men+3 Int-4)",
         },
+        "engravePrice": 206000,
         "iconFile": "etc_men_symbol_i01.png",
-        "price": 206000,
         "shortLabel": "Men+3 Int-4",
         "statChanges": {
           "INT": -4,
@@ -3012,8 +3012,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4550,
           "name": "Greater Dye of MEN (Men+3 Wit-4)",
         },
+        "engravePrice": 206000,
         "iconFile": "etc_men_symbol_i01.png",
-        "price": 206000,
         "shortLabel": "Men+3 Wit-4",
         "statChanges": {
           "MEN": 3,
@@ -3028,8 +3028,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4551,
           "name": "Greater Dye of WIT (Wit+3 Int-4)",
         },
+        "engravePrice": 206000,
         "iconFile": "etc_wit_symbol_i01.png",
-        "price": 206000,
         "shortLabel": "Wit+3 Int-4",
         "statChanges": {
           "INT": -4,
@@ -3044,8 +3044,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4552,
           "name": "Greater Dye of WIT (Wit+3 Men-4)",
         },
+        "engravePrice": 206000,
         "iconFile": "etc_wit_symbol_i01.png",
-        "price": 206000,
         "shortLabel": "Wit+3 Men-4",
         "statChanges": {
           "MEN": -4,
@@ -3060,8 +3060,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4553,
           "name": "Greater Dye of STR (Str+1 Con-1)",
         },
+        "engravePrice": 206000,
         "iconFile": "etc_str_symbol_i01.png",
-        "price": 206000,
         "shortLabel": "Str+1 Con-1",
         "statChanges": {
           "CON": -1,
@@ -3076,8 +3076,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4554,
           "name": "Greater Dye of STR (Str+1 Dex-1)",
         },
+        "engravePrice": 206000,
         "iconFile": "etc_str_symbol_i01.png",
-        "price": 206000,
         "shortLabel": "Str+1 Dex-1",
         "statChanges": {
           "DEX": -1,
@@ -3092,8 +3092,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4555,
           "name": "Greater Dye of CON (Con+1 Str-1)",
         },
+        "engravePrice": 206000,
         "iconFile": "etc_con_symbol_i01.png",
-        "price": 206000,
         "shortLabel": "Con+1 Str-1",
         "statChanges": {
           "CON": 1,
@@ -3108,8 +3108,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4556,
           "name": "Greater Dye of CON (Con+1 Dex-1)",
         },
+        "engravePrice": 206000,
         "iconFile": "etc_con_symbol_i01.png",
-        "price": 206000,
         "shortLabel": "Con+1 Dex-1",
         "statChanges": {
           "CON": 1,
@@ -3124,8 +3124,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4557,
           "name": "Greater Dye of DEX (Dex+1 Str-1)",
         },
+        "engravePrice": 206000,
         "iconFile": "etc_dex_symbol_i01.png",
-        "price": 206000,
         "shortLabel": "Dex+1 Str-1",
         "statChanges": {
           "DEX": 1,
@@ -3140,8 +3140,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4558,
           "name": "Greater Dye of DEX (Dex+1 Con-1)",
         },
+        "engravePrice": 206000,
         "iconFile": "etc_dex_symbol_i01.png",
-        "price": 206000,
         "shortLabel": "Dex+1 Con-1",
         "statChanges": {
           "CON": -1,
@@ -3156,8 +3156,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4559,
           "name": "Greater Dye of INT (Int+1 Men-1)",
         },
+        "engravePrice": 206000,
         "iconFile": "etc_int_symbol_i01.png",
-        "price": 206000,
         "shortLabel": "Int+1 Men-1",
         "statChanges": {
           "INT": 1,
@@ -3172,8 +3172,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4560,
           "name": "Greater Dye of INT (Int+1 Wit-1)",
         },
+        "engravePrice": 206000,
         "iconFile": "etc_int_symbol_i01.png",
-        "price": 206000,
         "shortLabel": "Int+1 Wit-1",
         "statChanges": {
           "INT": 1,
@@ -3188,8 +3188,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4561,
           "name": "Greater Dye of MEN (Men+1 Int-1)",
         },
+        "engravePrice": 206000,
         "iconFile": "etc_men_symbol_i01.png",
-        "price": 206000,
         "shortLabel": "Men+1 Int-1",
         "statChanges": {
           "INT": -1,
@@ -3204,8 +3204,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4562,
           "name": "Greater Dye of MEN (Men+1 Wit-1)",
         },
+        "engravePrice": 206000,
         "iconFile": "etc_men_symbol_i01.png",
-        "price": 206000,
         "shortLabel": "Men+1 Wit-1",
         "statChanges": {
           "MEN": 1,
@@ -3220,8 +3220,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4563,
           "name": "Greater Dye of WIT (Wit+1 Int-1)",
         },
+        "engravePrice": 206000,
         "iconFile": "etc_wit_symbol_i01.png",
-        "price": 206000,
         "shortLabel": "Wit+1 Int-1",
         "statChanges": {
           "INT": -1,
@@ -3236,8 +3236,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4564,
           "name": "Greater Dye of WIT (Wit+1 Men-1)",
         },
+        "engravePrice": 206000,
         "iconFile": "etc_wit_symbol_i01.png",
-        "price": 206000,
         "shortLabel": "Wit+1 Men-1",
         "statChanges": {
           "MEN": -1,
@@ -3252,8 +3252,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4565,
           "name": "Greater Dye of STR (Str+4 Con-6)",
         },
+        "engravePrice": 258000,
         "iconFile": "etc_str_symbol_i01.png",
-        "price": 258000,
         "shortLabel": "Str+4 Con-6",
         "statChanges": {
           "CON": -6,
@@ -3268,8 +3268,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4566,
           "name": "Greater Dye of STR (Str+4 Dex-6)",
         },
+        "engravePrice": 258000,
         "iconFile": "etc_str_symbol_i01.png",
-        "price": 258000,
         "shortLabel": "Str+4 Dex-6",
         "statChanges": {
           "DEX": -6,
@@ -3284,8 +3284,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4567,
           "name": "Greater Dye of CON (Con+4 Str-6)",
         },
+        "engravePrice": 258000,
         "iconFile": "etc_con_symbol_i01.png",
-        "price": 258000,
         "shortLabel": "Con+4 Str-6",
         "statChanges": {
           "CON": 4,
@@ -3300,8 +3300,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4568,
           "name": "Greater Dye of CON (Con+4 Dex-6)",
         },
+        "engravePrice": 258000,
         "iconFile": "etc_con_symbol_i01.png",
-        "price": 258000,
         "shortLabel": "Con+4 Dex-6",
         "statChanges": {
           "CON": 4,
@@ -3316,8 +3316,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4569,
           "name": "Greater Dye of DEX (Dex+4 Str-6)",
         },
+        "engravePrice": 258000,
         "iconFile": "etc_dex_symbol_i01.png",
-        "price": 258000,
         "shortLabel": "Dex+4 Str-6",
         "statChanges": {
           "DEX": 4,
@@ -3332,8 +3332,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4570,
           "name": "Greater Dye of DEX (Dex+4 Con-6)",
         },
+        "engravePrice": 258000,
         "iconFile": "etc_dex_symbol_i01.png",
-        "price": 258000,
         "shortLabel": "Dex+4 Con-6",
         "statChanges": {
           "CON": -6,
@@ -3348,8 +3348,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4571,
           "name": "Greater Dye of INT (Int+4 Men-6)",
         },
+        "engravePrice": 258000,
         "iconFile": "etc_int_symbol_i01.png",
-        "price": 258000,
         "shortLabel": "Int+4 Men-6",
         "statChanges": {
           "INT": 4,
@@ -3364,8 +3364,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4572,
           "name": "Greater Dye of INT (Int+4 Wit-6)",
         },
+        "engravePrice": 258000,
         "iconFile": "etc_int_symbol_i01.png",
-        "price": 258000,
         "shortLabel": "Int+4 Wit-6",
         "statChanges": {
           "INT": 4,
@@ -3380,8 +3380,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4573,
           "name": "Greater Dye of MEN (Men+4 Int-6)",
         },
+        "engravePrice": 258000,
         "iconFile": "etc_men_symbol_i01.png",
-        "price": 258000,
         "shortLabel": "Men+4 Int-6",
         "statChanges": {
           "INT": -6,
@@ -3396,8 +3396,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4574,
           "name": "Greater Dye of MEN (Men+4 Wit-6)",
         },
+        "engravePrice": 258000,
         "iconFile": "etc_men_symbol_i01.png",
-        "price": 258000,
         "shortLabel": "Men+4 Wit-6",
         "statChanges": {
           "MEN": 4,
@@ -3412,8 +3412,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4575,
           "name": "Greater Dye of WIT (Wit+4 Int-6)",
         },
+        "engravePrice": 258000,
         "iconFile": "etc_wit_symbol_i01.png",
-        "price": 258000,
         "shortLabel": "Wit+4 Int-6",
         "statChanges": {
           "INT": -6,
@@ -3428,8 +3428,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4576,
           "name": "Greater Dye of WIT (Wit+4 Men-6)",
         },
+        "engravePrice": 258000,
         "iconFile": "etc_wit_symbol_i01.png",
-        "price": 258000,
         "shortLabel": "Wit+4 Men-6",
         "statChanges": {
           "MEN": -6,
@@ -3444,8 +3444,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4577,
           "name": "Greater Dye of STR (Str+4 Con-5)",
         },
+        "engravePrice": 258000,
         "iconFile": "etc_str_symbol_i01.png",
-        "price": 258000,
         "shortLabel": "Str+4 Con-5",
         "statChanges": {
           "CON": -5,
@@ -3460,8 +3460,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4578,
           "name": "Greater Dye of STR (Str+4 Dex-5)",
         },
+        "engravePrice": 258000,
         "iconFile": "etc_str_symbol_i01.png",
-        "price": 258000,
         "shortLabel": "Str+4 Dex-5",
         "statChanges": {
           "DEX": -5,
@@ -3476,8 +3476,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4579,
           "name": "Greater Dye of CON (Con+4 Str-5)",
         },
+        "engravePrice": 258000,
         "iconFile": "etc_con_symbol_i01.png",
-        "price": 258000,
         "shortLabel": "Con+4 Str-5",
         "statChanges": {
           "CON": 4,
@@ -3492,8 +3492,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4580,
           "name": "Greater Dye of CON (Con+4 Dex-5)",
         },
+        "engravePrice": 258000,
         "iconFile": "etc_con_symbol_i01.png",
-        "price": 258000,
         "shortLabel": "Con+4 Dex-5",
         "statChanges": {
           "CON": 4,
@@ -3508,8 +3508,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4581,
           "name": "Greater Dye of DEX (Dex+4 Str-5)",
         },
+        "engravePrice": 258000,
         "iconFile": "etc_dex_symbol_i01.png",
-        "price": 258000,
         "shortLabel": "Dex+4 Str-5",
         "statChanges": {
           "DEX": 4,
@@ -3524,8 +3524,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4582,
           "name": "Greater Dye of DEX (Dex+4 Con-5)",
         },
+        "engravePrice": 258000,
         "iconFile": "etc_dex_symbol_i01.png",
-        "price": 258000,
         "shortLabel": "Dex+4 Con-5",
         "statChanges": {
           "CON": -5,
@@ -3540,8 +3540,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4583,
           "name": "Greater Dye of INT (Int+4 Men-5)",
         },
+        "engravePrice": 258000,
         "iconFile": "etc_int_symbol_i01.png",
-        "price": 258000,
         "shortLabel": "Int+4 Men-5",
         "statChanges": {
           "INT": 4,
@@ -3556,8 +3556,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4584,
           "name": "Greater Dye of INT (Int+4 Wit-5)",
         },
+        "engravePrice": 258000,
         "iconFile": "etc_int_symbol_i01.png",
-        "price": 258000,
         "shortLabel": "Int+4 Wit-5",
         "statChanges": {
           "INT": 4,
@@ -3572,8 +3572,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4585,
           "name": "Greater Dye of MEN (Men+4 Int-5)",
         },
+        "engravePrice": 258000,
         "iconFile": "etc_men_symbol_i01.png",
-        "price": 258000,
         "shortLabel": "Men+4 Int-5",
         "statChanges": {
           "INT": -5,
@@ -3588,8 +3588,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4586,
           "name": "Greater Dye of MEN (Men+4 Wit-5)",
         },
+        "engravePrice": 258000,
         "iconFile": "etc_men_symbol_i01.png",
-        "price": 258000,
         "shortLabel": "Men+4 Wit-5",
         "statChanges": {
           "MEN": 4,
@@ -3604,8 +3604,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4587,
           "name": "Greater Dye of WIT (Wit+4 Int-5)",
         },
+        "engravePrice": 258000,
         "iconFile": "etc_wit_symbol_i01.png",
-        "price": 258000,
         "shortLabel": "Wit+4 Int-5",
         "statChanges": {
           "INT": -5,
@@ -3620,8 +3620,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4588,
           "name": "Greater Dye of WIT (Wit+4 Men-5)",
         },
+        "engravePrice": 258000,
         "iconFile": "etc_wit_symbol_i01.png",
-        "price": 258000,
         "shortLabel": "Wit+4 Men-5",
         "statChanges": {
           "MEN": -5,
@@ -3636,8 +3636,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4589,
           "name": "Greater Dye of STR (Str+2 Con-2)",
         },
+        "engravePrice": 258000,
         "iconFile": "etc_str_symbol_i01.png",
-        "price": 258000,
         "shortLabel": "Str+2 Con-2",
         "statChanges": {
           "CON": -2,
@@ -3652,8 +3652,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4590,
           "name": "Greater Dye of STR (Str+2 Dex-2)",
         },
+        "engravePrice": 258000,
         "iconFile": "etc_str_symbol_i01.png",
-        "price": 258000,
         "shortLabel": "Str+2 Dex-2",
         "statChanges": {
           "DEX": -2,
@@ -3668,8 +3668,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4591,
           "name": "Greater Dye of CON (Con+2 Str-2)",
         },
+        "engravePrice": 258000,
         "iconFile": "etc_con_symbol_i01.png",
-        "price": 258000,
         "shortLabel": "Con+2 Str-2",
         "statChanges": {
           "CON": 2,
@@ -3684,8 +3684,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4592,
           "name": "Greater Dye of CON (Con+2 Dex-2)",
         },
+        "engravePrice": 258000,
         "iconFile": "etc_con_symbol_i01.png",
-        "price": 258000,
         "shortLabel": "Con+2 Dex-2",
         "statChanges": {
           "CON": 2,
@@ -3700,8 +3700,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4593,
           "name": "Greater Dye of DEX (Dex+2 Str-2)",
         },
+        "engravePrice": 258000,
         "iconFile": "etc_dex_symbol_i01.png",
-        "price": 258000,
         "shortLabel": "Dex+2 Str-2",
         "statChanges": {
           "DEX": 2,
@@ -3716,8 +3716,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4594,
           "name": "Greater Dye of DEX (Dex+2 Con-2)",
         },
+        "engravePrice": 258000,
         "iconFile": "etc_dex_symbol_i01.png",
-        "price": 258000,
         "shortLabel": "Dex+2 Con-2",
         "statChanges": {
           "CON": -2,
@@ -3732,8 +3732,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4595,
           "name": "Greater Dye of INT (Int+2 Men-2)",
         },
+        "engravePrice": 258000,
         "iconFile": "etc_int_symbol_i01.png",
-        "price": 258000,
         "shortLabel": "Int+2 Men-2",
         "statChanges": {
           "INT": 2,
@@ -3748,8 +3748,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4596,
           "name": "Greater Dye of INT (Int+2 Wit-2)",
         },
+        "engravePrice": 258000,
         "iconFile": "etc_int_symbol_i01.png",
-        "price": 258000,
         "shortLabel": "Int+2 Wit-2",
         "statChanges": {
           "INT": 2,
@@ -3764,8 +3764,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4597,
           "name": "Greater Dye of MEN (Men+2 Int-2)",
         },
+        "engravePrice": 258000,
         "iconFile": "etc_men_symbol_i01.png",
-        "price": 258000,
         "shortLabel": "Men+2 Int-2",
         "statChanges": {
           "INT": -2,
@@ -3780,8 +3780,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4598,
           "name": "Greater Dye of MEN (Men+2 Wit-2)",
         },
+        "engravePrice": 258000,
         "iconFile": "etc_men_symbol_i01.png",
-        "price": 258000,
         "shortLabel": "Men+2 Wit-2",
         "statChanges": {
           "MEN": 2,
@@ -3796,8 +3796,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4599,
           "name": "Greater Dye of WIT (Wit+2 Int-2)",
         },
+        "engravePrice": 258000,
         "iconFile": "etc_wit_symbol_i01.png",
-        "price": 258000,
         "shortLabel": "Wit+2 Int-2",
         "statChanges": {
           "INT": -2,
@@ -3812,8 +3812,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4600,
           "name": "Greater Dye of WIT (Wit+2 Men-2)",
         },
+        "engravePrice": 258000,
         "iconFile": "etc_wit_symbol_i01.png",
-        "price": 258000,
         "shortLabel": "Wit+2 Men-2",
         "statChanges": {
           "MEN": -2,
@@ -3828,8 +3828,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4601,
           "name": "Greater Dye of STR (Str+3 Con-3)",
         },
+        "engravePrice": 387000,
         "iconFile": "etc_str_symbol_i01.png",
-        "price": 387000,
         "shortLabel": "Str+3 Con-3",
         "statChanges": {
           "CON": -3,
@@ -3844,8 +3844,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4602,
           "name": "Greater Dye of STR (Str+3 Dex-3)",
         },
+        "engravePrice": 387000,
         "iconFile": "etc_str_symbol_i01.png",
-        "price": 387000,
         "shortLabel": "Str+3 Dex-3",
         "statChanges": {
           "DEX": -3,
@@ -3860,8 +3860,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4603,
           "name": "Greater Dye of CON (Con+3 Str-3)",
         },
+        "engravePrice": 387000,
         "iconFile": "etc_con_symbol_i01.png",
-        "price": 387000,
         "shortLabel": "Con+3 Str-3",
         "statChanges": {
           "CON": 3,
@@ -3876,8 +3876,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4604,
           "name": "Greater Dye of CON (Con+3 Dex-3)",
         },
+        "engravePrice": 387000,
         "iconFile": "etc_con_symbol_i01.png",
-        "price": 387000,
         "shortLabel": "Con+3 Dex-3",
         "statChanges": {
           "CON": 3,
@@ -3892,8 +3892,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4605,
           "name": "Greater Dye of DEX (Dex+3 Str-3)",
         },
+        "engravePrice": 387000,
         "iconFile": "etc_dex_symbol_i01.png",
-        "price": 387000,
         "shortLabel": "Dex+3 Str-3",
         "statChanges": {
           "DEX": 3,
@@ -3908,8 +3908,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4606,
           "name": "Greater Dye of DEX (Dex+3 Con-3)",
         },
+        "engravePrice": 387000,
         "iconFile": "etc_dex_symbol_i01.png",
-        "price": 387000,
         "shortLabel": "Dex+3 Con-3",
         "statChanges": {
           "CON": -3,
@@ -3924,8 +3924,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4607,
           "name": "Greater Dye of INT (Int+3 Men-3)",
         },
+        "engravePrice": 387000,
         "iconFile": "etc_int_symbol_i01.png",
-        "price": 387000,
         "shortLabel": "Int+3 Men-3",
         "statChanges": {
           "INT": 3,
@@ -3940,8 +3940,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4608,
           "name": "Greater Dye of INT (Int+3 Wit-3)",
         },
+        "engravePrice": 387000,
         "iconFile": "etc_int_symbol_i01.png",
-        "price": 387000,
         "shortLabel": "Int+3 Wit-3",
         "statChanges": {
           "INT": 3,
@@ -3956,8 +3956,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4609,
           "name": "Greater Dye of MEN (Men+3 Int-3)",
         },
+        "engravePrice": 387000,
         "iconFile": "etc_men_symbol_i01.png",
-        "price": 387000,
         "shortLabel": "Men+3 Int-3",
         "statChanges": {
           "INT": -3,
@@ -3972,8 +3972,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4610,
           "name": "Greater Dye of MEN (Men+3 Wit-3)",
         },
+        "engravePrice": 387000,
         "iconFile": "etc_men_symbol_i01.png",
-        "price": 387000,
         "shortLabel": "Men+3 Wit-3",
         "statChanges": {
           "MEN": 3,
@@ -3988,8 +3988,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4611,
           "name": "Greater Dye of WIT (Wit+3 Int-3)",
         },
+        "engravePrice": 387000,
         "iconFile": "etc_wit_symbol_i01.png",
-        "price": 387000,
         "shortLabel": "Wit+3 Int-3",
         "statChanges": {
           "INT": -3,
@@ -4004,8 +4004,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4612,
           "name": "Greater Dye of WIT (Wit+3 Men-3)",
         },
+        "engravePrice": 387000,
         "iconFile": "etc_wit_symbol_i01.png",
-        "price": 387000,
         "shortLabel": "Wit+3 Men-3",
         "statChanges": {
           "MEN": -3,
@@ -4020,8 +4020,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4613,
           "name": "Greater Dye of STR (Str+4 Con-4)",
         },
+        "engravePrice": 628000,
         "iconFile": "etc_str_symbol_i01.png",
-        "price": 628000,
         "shortLabel": "Str+4 Con-4",
         "statChanges": {
           "CON": -4,
@@ -4036,8 +4036,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4614,
           "name": "Greater Dye of STR (Str+4 Dex-4)",
         },
+        "engravePrice": 628000,
         "iconFile": "etc_str_symbol_i01.png",
-        "price": 628000,
         "shortLabel": "Str+4 Dex-4",
         "statChanges": {
           "DEX": -4,
@@ -4052,8 +4052,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4615,
           "name": "Greater Dye of CON (Con+4 Str-4)",
         },
+        "engravePrice": 628000,
         "iconFile": "etc_con_symbol_i01.png",
-        "price": 628000,
         "shortLabel": "Con+4 Str-4",
         "statChanges": {
           "CON": 4,
@@ -4068,8 +4068,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4616,
           "name": "Greater Dye of CON (Con+4 Dex-4)",
         },
+        "engravePrice": 628000,
         "iconFile": null,
-        "price": 628000,
         "shortLabel": null,
         "statChanges": {
           "CON": 4,
@@ -4084,8 +4084,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4617,
           "name": "Greater Dye of DEX (Dex+4 Str-4)",
         },
+        "engravePrice": 628000,
         "iconFile": null,
-        "price": 628000,
         "shortLabel": null,
         "statChanges": {
           "DEX": 4,
@@ -4100,8 +4100,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4618,
           "name": "Greater Dye of DEX (Dex+4 Con-4)",
         },
+        "engravePrice": 628000,
         "iconFile": null,
-        "price": 628000,
         "shortLabel": null,
         "statChanges": {
           "CON": -4,
@@ -4116,8 +4116,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4619,
           "name": "Greater Dye of INT (Int+4 Men-4)",
         },
+        "engravePrice": 628000,
         "iconFile": null,
-        "price": 628000,
         "shortLabel": null,
         "statChanges": {
           "INT": 4,
@@ -4132,8 +4132,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4620,
           "name": "Greater Dye of INT (Int+4 Wit-4)",
         },
+        "engravePrice": 628000,
         "iconFile": null,
-        "price": 628000,
         "shortLabel": null,
         "statChanges": {
           "INT": 4,
@@ -4148,8 +4148,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4621,
           "name": "Greater Dye of MEN (Men+4 Int-4)",
         },
+        "engravePrice": 628000,
         "iconFile": null,
-        "price": 628000,
         "shortLabel": null,
         "statChanges": {
           "INT": -4,
@@ -4164,8 +4164,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4622,
           "name": "Greater Dye of MEN (Men+4 Wit-4)",
         },
+        "engravePrice": 628000,
         "iconFile": null,
-        "price": 628000,
         "shortLabel": null,
         "statChanges": {
           "MEN": 4,
@@ -4180,8 +4180,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4623,
           "name": "Greater Dye of WIT (Wit+4 Int-4)",
         },
+        "engravePrice": 628000,
         "iconFile": null,
-        "price": 628000,
         "shortLabel": null,
         "statChanges": {
           "INT": -4,
@@ -4196,8 +4196,8 @@ exports[`hennas catalog (Interlude, 180 symbols) 1`] = `
           "id": 4624,
           "name": "Greater Dye of WIT (Wit+4 Men-4)",
         },
+        "engravePrice": 628000,
         "iconFile": null,
-        "price": 628000,
         "shortLabel": null,
         "statChanges": {
           "MEN": -4,

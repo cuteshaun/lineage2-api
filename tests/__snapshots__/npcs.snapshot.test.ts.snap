@@ -2,16 +2,19 @@
 
 exports[`npc 27059 (Hatar (Q105 kill target)) DTO matches snapshot 1`] = `
 {
-  "aggroRange": 0,
-  "assistRange": 300,
-  "atkSpd": 253,
-  "con": 43,
-  "crit": 4,
-  "dex": 30,
-  "exp": 0,
-  "hp": 185,
+  "baseStats": {
+    "con": 43,
+    "dex": 30,
+    "int": 21,
+    "men": 20,
+    "str": 40,
+    "wit": 20,
+  },
+  "behavior": {
+    "aggroRange": 0,
+    "assistRange": 300,
+  },
   "id": 27059,
-  "int": 21,
   "involvedInQuests": [
     {
       "id": 105,
@@ -24,14 +27,8 @@ exports[`npc 27059 (Hatar (Q105 kill target)) DTO matches snapshot 1`] = `
   ],
   "isAggressive": false,
   "level": 11,
-  "mAtk": 14,
-  "mDef": 47,
-  "men": 20,
-  "mp": 116,
   "name": "Uoph",
   "npcType": "Monster",
-  "pAtk": 21,
-  "pDef": 64,
   "primaryLocation": {
     "id": 68,
     "minLevel": 8,
@@ -44,38 +41,43 @@ exports[`npc 27059 (Hatar (Q105 kill target)) DTO matches snapshot 1`] = `
   "race": "Humanoid",
   "raceDescription": "They have two arms, two legs, and they walk upright. Culture and communal life varies by race.",
   "raceIconFile": "skill4295.png",
-  "runSpd": 110,
   "skills": [],
-  "sp": 0,
-  "str": 40,
+  "stats": {
+    "atkSpd": 253,
+    "crit": 4,
+    "exp": 0,
+    "hp": 185,
+    "mAtk": 14,
+    "mDef": 47,
+    "mp": 116,
+    "pAtk": 21,
+    "pDef": 64,
+    "runSpd": 110,
+    "sp": 0,
+    "walkSpd": 45,
+  },
   "title": "Kaboo Chief",
-  "walkSpd": 45,
-  "wit": 20,
 }
 `;
 
 exports[`npc 30048 (Darin (Q001 start)) DTO matches snapshot 1`] = `
 {
-  "aggroRange": 0,
-  "assistRange": null,
-  "atkSpd": 253,
-  "con": 43,
-  "crit": 4,
-  "dex": 30,
-  "exp": 0,
-  "hp": 2444,
+  "baseStats": {
+    "con": 43,
+    "dex": 30,
+    "int": 21,
+    "men": 20,
+    "str": 40,
+    "wit": 20,
+  },
+  "behavior": {
+    "aggroRange": 0,
+  },
   "id": 30048,
-  "int": 21,
   "isAggressive": false,
   "level": 70,
-  "mAtk": 470,
-  "mDef": 217,
-  "men": 20,
-  "mp": 1346,
   "name": "Darin",
   "npcType": "Folk",
-  "pAtk": 689,
-  "pDef": 296,
   "primaryLocation": {
     "id": 48,
     "minLevel": null,
@@ -88,7 +90,6 @@ exports[`npc 30048 (Darin (Q001 start)) DTO matches snapshot 1`] = `
   "race": "Human",
   "raceDescription": "The last race created by the gods, Humans won the race war for domination of the entire world. Their strong desire for domination is perhaps fueled by the fact that their life span is the shortest among all the races.",
   "raceIconFile": "skill4416_human.png",
-  "runSpd": 120,
   "skills": [
     {
       "description": "none",
@@ -98,7 +99,6 @@ exports[`npc 30048 (Darin (Q001 start)) DTO matches snapshot 1`] = `
       "name": "Resist Full Magic Attack",
     },
   ],
-  "sp": 0,
   "startsQuests": [
     {
       "id": 1,
@@ -106,9 +106,19 @@ exports[`npc 30048 (Darin (Q001 start)) DTO matches snapshot 1`] = `
       "name": "Letters of Love",
     },
   ],
-  "str": 40,
-  "title": null,
-  "walkSpd": 50,
-  "wit": 20,
+  "stats": {
+    "atkSpd": 253,
+    "crit": 4,
+    "exp": 0,
+    "hp": 2444,
+    "mAtk": 470,
+    "mDef": 217,
+    "mp": 1346,
+    "pAtk": 689,
+    "pDef": 296,
+    "runSpd": 120,
+    "sp": 0,
+    "walkSpd": 50,
+  },
 }
 `;

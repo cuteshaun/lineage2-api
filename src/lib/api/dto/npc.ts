@@ -22,62 +22,89 @@ export interface NpcListDto {
   isAggressive: boolean;
 }
 
-export interface NpcDetailDto {
-  id: number;
-  name: string;
-  title: string | null;
-  level: number | null;
-  npcType: string | null;
-  isAggressive: boolean;
-  race: string | null;
-  raceIconFile: string | null;
-  raceDescription: string | null;
-  hp: number | null;
-  mp: number | null;
-  exp: number | null;
-  sp: number | null;
-  pAtk: number | null;
-  pDef: number | null;
-  mAtk: number | null;
-  mDef: number | null;
-  crit: number | null;
-  atkSpd: number | null;
-  walkSpd: number | null;
-  runSpd: number | null;
+/**
+ * Vitals + reward + combat + movement stats. Always present on
+ * `NpcDetailDto` — every NPC in source ships these 12 values
+ * (verified across all 6,472 Interlude NPCs; zero have a null in
+ * any of them). Source-clean from `npc.xml` `<set name="…">`. No
+ * engine simulation, no rebalancing.
+ */
+export interface NpcStatsDto {
+  hp: number;
+  mp: number;
+  exp: number;
+  sp: number;
+  pAtk: number;
+  pDef: number;
+  mAtk: number;
+  mDef: number;
+  crit: number;
+  atkSpd: number;
+  walkSpd: number;
+  runSpd: number;
+}
+
+/**
+ * Six base attributes from `<set name="str|dex|con|int|wit|men">`.
+ * Always present. Most NPCs ship the engine default boss block
+ * `60/73/57/76/70/80`; ordinary monsters carry per-tier values.
+ */
+export interface NpcBaseStatsDto {
+  str: number;
+  dex: number;
+  con: number;
+  int: number;
+  wit: number;
+  men: number;
+}
+
+/**
+ * Combat AI ranges. Group is omitted entirely on the 7 NPCs that
+ * have no `<ai>` block at all. When present, `aggroRange` is
+ * always set (including the meaningful `0` = passive); `assistRange`
+ * is omitted on the ~67% of NPCs without a clan / `clanRange`.
+ */
+export interface NpcBehaviorDto {
   /**
-   * Base attributes from the source `npc.xml`. Always present (every
-   * npc has each of `<set name="str|dex|con|int|wit|men">` declared
-   * in aCis). Non-combat / passive NPCs use the engine default
-   * `60/73/57/76/70/80` block — same engine-truth values L2Hub and
-   * other Interlude references render. Source-clean, never derived.
+   * Sight-aggro radius in game units, from `<ai aggro="…">`. `0` is
+   * meaningful — the NPC is passive (won't initiate combat on sight).
+   * Always present when this group is present.
    */
-  str: number | null;
-  dex: number | null;
-  con: number | null;
-  int: number | null;
-  wit: number | null;
-  men: number | null;
-  /**
-   * Sight-aggro radius in game units, from `<ai aggro="…">`. `0`
-   * means the NPC is passive (won't initiate combat on sight); `null`
-   * when the source XML has no `<ai>` block. The boolean
-   * `isAggressive` is `aggroRange != null && aggroRange > 0`.
-   *
-   * **Distinct from `assistRange`** — sight-aggro is *"I see a player
-   * and attack"*; clan-assist is *"a clan member was attacked, I help"*.
-   */
-  aggroRange: number | null;
+  aggroRange: number;
   /**
    * Clan-assist radius in game units, from `<ai clanRange="…">`.
    * Members of the same engine clan within this distance come help
-   * when this NPC is attacked. `null` when the NPC has no clan or
-   * clan-range declared in source.
-   *
-   * The internal clan slug (e.g. `"queen_ant_clan"`) is **not**
-   * exposed — it isn't meaningful to consumers and isn't
-   * cross-referenced anywhere player-facing.
+   * when this NPC is attacked. **Distinct from `aggroRange`** —
+   * sight-aggro is *"I see a player and attack"*; clan-assist is
+   * *"a clan member was attacked, I help"*. The internal clan slug
+   * (e.g. `"queen_ant_clan"`) is **not** exposed.
    */
-  assistRange: number | null;
+  assistRange?: number;
+}
+
+export interface NpcDetailDto {
+  // ── Always present ──
+  id: number;
+  name: string;
+  level: number | null;
+  npcType: string | null;
+  /**
+   * Convenience boolean derived from `behavior?.aggroRange`. Mirrors
+   * `NpcListDto.isAggressive` for parity across list and detail.
+   * `true` when the NPC has an `<ai aggro="N">` with `N > 0`.
+   */
+  isAggressive: boolean;
+  // ── Optional identity ── (omitted when source value is null)
+  title?: string;
+  race?: string;
+  raceIconFile?: string;
+  raceDescription?: string;
+  // ── Always-present stat groups ──
+  stats: NpcStatsDto;
+  baseStats: NpcBaseStatsDto;
+  // ── Optional behavior group ── (omitted when no <ai> block in source)
+  behavior?: NpcBehaviorDto;
+  // ── Always-emitted skills array ──
   skills: NpcSkillDto[];
   /**
    * Quests that this NPC starts (NPC ∈ `Quest.startNpcIds`). Compact
@@ -252,36 +279,42 @@ export function toNpcDetailDto(npc: Npc, chronicle: Chronicle): NpcDetailDto {
     involvedRefs.push(toQuestRefDto(q, roles));
   }
 
+  // Stats / baseStats are required groups — every NPC in source ships
+  // every key (verified across 6,472 Interlude NPCs). The defensive
+  // `| null` types in the old DTO never realized in practice, so the
+  // groups type as `number` (no nulls) and we fall back to `0` only as
+  // a last-resort safety net for hypothetical future drift.
+  const stats: NpcStatsDto = {
+    hp: npc.hp != null ? Math.round(npc.hp) : 0,
+    mp: npc.mp != null ? Math.round(npc.mp) : 0,
+    exp: npc.exp ?? 0,
+    sp: npc.sp ?? 0,
+    pAtk: npc.pAtk != null ? Math.round(npc.pAtk) : 0,
+    pDef: npc.pDef != null ? Math.round(npc.pDef) : 0,
+    mAtk: npc.mAtk != null ? Math.round(npc.mAtk) : 0,
+    mDef: npc.mDef != null ? Math.round(npc.mDef) : 0,
+    crit: npc.crit ?? 0,
+    atkSpd: npc.atkSpd ?? 0,
+    walkSpd: npc.walkSpd ?? 0,
+    runSpd: npc.runSpd ?? 0,
+  };
+  const baseStats: NpcBaseStatsDto = {
+    str: npc.str ?? 0,
+    dex: npc.dex ?? 0,
+    con: npc.con ?? 0,
+    int: npc.int ?? 0,
+    wit: npc.wit ?? 0,
+    men: npc.men ?? 0,
+  };
+
   const dto: NpcDetailDto = {
     id: npc.id,
     name: npc.name,
-    title: npc.title,
     level: npc.level,
     npcType: npc.npcType,
     isAggressive: (npc.aiAggro ?? 0) > 0,
-    race,
-    raceIconFile,
-    raceDescription,
-    hp: npc.hp != null ? Math.round(npc.hp) : null,
-    mp: npc.mp != null ? Math.round(npc.mp) : null,
-    exp: npc.exp,
-    sp: npc.sp,
-    pAtk: npc.pAtk != null ? Math.round(npc.pAtk) : null,
-    pDef: npc.pDef != null ? Math.round(npc.pDef) : null,
-    mAtk: npc.mAtk != null ? Math.round(npc.mAtk) : null,
-    mDef: npc.mDef != null ? Math.round(npc.mDef) : null,
-    crit: npc.crit,
-    atkSpd: npc.atkSpd,
-    walkSpd: npc.walkSpd,
-    runSpd: npc.runSpd,
-    str: npc.str,
-    dex: npc.dex,
-    con: npc.con,
-    int: npc.int,
-    wit: npc.wit,
-    men: npc.men,
-    aggroRange: npc.aiAggro,
-    assistRange: npc.aiClanRange,
+    stats,
+    baseStats,
     skills: npc.skills
       .filter((s) => !SUPPRESSED_SKILL_IDS.has(s.id))
       .map((s) => {
@@ -299,6 +332,24 @@ export function toNpcDetailDto(npc: Npc, chronicle: Chronicle): NpcDetailDto {
         };
       }),
   };
+
+  // Optional identity fields — omit when source value is null, rather
+  // than emitting `null`. Reduces noise on the ~65% of NPCs without a
+  // title / race-skill assignment.
+  if (npc.title != null) dto.title = npc.title;
+  if (race != null) dto.race = race;
+  if (raceIconFile != null) dto.raceIconFile = raceIconFile;
+  if (raceDescription != null) dto.raceDescription = raceDescription;
+
+  // Optional behavior group — omit entirely on the 7 NPCs without an
+  // <ai> block in source. When present, `aggroRange` is always set
+  // (including the meaningful `0` = passive); `assistRange` is omitted
+  // on the ~67% of NPCs without a clan / clanRange.
+  if (npc.aiAggro != null) {
+    const behavior: NpcBehaviorDto = { aggroRange: npc.aiAggro };
+    if (npc.aiClanRange != null) behavior.assistRange = npc.aiClanRange;
+    dto.behavior = behavior;
+  }
 
   if (startQuests.length > 0) {
     dto.startsQuests = startQuests

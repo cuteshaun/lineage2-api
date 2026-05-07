@@ -453,22 +453,59 @@ Adena with the per-quest amount as `count`. Sorted by `quest.id`
 ascending. Same heuristic-extraction caveats as `QuestRewardsDto`
 apply.
 
-## `NpcDetailDto` / `MonsterDetailDto` — stat block
+## `NpcDetailDto` / `MonsterDetailDto` — stable fields
 
 Both detail DTOs share the same `toNpcDetailDto` mapper. Stat values
 come straight from the source `npc.xml` `<set name="…" val="…">`
 attributes — **no engine simulation**, no rebalancing, no
 synthesized fields.
 
-| Field | Type | Source attr | Notes |
-|---|---|---|---|
-| `hp`, `mp` | number \| null | `<set name="hp/mp">` | Rounded to integer at the DTO layer (some XML rows store floats like `300.8`); raw NPC routes preserve the float. |
-| `exp`, `sp` | number \| null | `<set name="exp/sp">` | Pass-through. |
-| `pAtk`, `pDef`, `mAtk`, `mDef` | number \| null | `<set name="pAtk/pDef/mAtk/mDef">` | Rounded to integer at the DTO layer. |
-| `crit`, `atkSpd`, `walkSpd`, `runSpd` | number \| null | `<set name="crit/atkSpd/walkSpd/runSpd">` | Pass-through. |
-| `str`, `dex`, `con`, `int`, `wit`, `men` | number \| null | `<set name="str/dex/con/int/wit/men">` | Six base attributes. Most NPCs in aCis ship the engine-default boss block `60/73/57/76/70/80`; ordinary monsters carry per-tier values (e.g. Grim Wolf 22001 ships `40/30/43/21/20/20`). |
-| `aggroRange` | number \| null | `<ai aggro="…">` | Sight-aggro radius in game units. `0` means the NPC is passive (won't auto-attack on sight). `null` when the source XML has no `<ai>` block. The boolean `isAggressive` is `aggroRange != null && aggroRange > 0`. |
-| `assistRange` | number \| null | `<ai clanRange="…">` | Clan-assist radius in game units. Members of the same engine clan within this distance come help when this NPC is attacked. **Distinct from `aggroRange`** — sight-aggro is *"I see a player and attack"*; clan-assist is *"a clan member was attacked, I help"*. The internal clan slug (e.g. `"queen_ant_clan"`) is **not** exposed — it isn't meaningful to consumers and isn't cross-referenced anywhere player-facing. `null` when the NPC has no clan / no clanRange in source. |
+### Null vs absent policy
+
+- **Always present** top-level identity fields: `id`, `name`, `level`, `npcType`, `isAggressive`, `stats`, `baseStats`, `skills`. `level` and `npcType` are typed `… | null` because source occasionally omits them; on a real NPC in current Interlude data both are populated.
+- **Optional identity fields** (`title?`, `race?`, `raceIconFile?`, `raceDescription?`) are **omitted when source carries no value**. About 65% of Interlude NPCs ship no title; race fields are populated only when the NPC carries the engine "race-skill" entry (4416). Absence ≠ unknown.
+- **`behavior?` group** is omitted on the 7 Interlude NPCs that have no `<ai>` block in source. When present, `aggroRange` is always set; `assistRange` is omitted on the ~67% of NPCs without a clan / `clanRange`.
+- Within the `stats` and `baseStats` groups every key is required and `number`-typed (no nulls). Verified across all 6,472 Interlude NPCs; the defensive `| null` types in the previous shape never realized.
+
+### Always-present top-level fields
+
+| Field | Type | Notes |
+|---|---|---|
+| `id` | number | Cleaned NPC id (canonical id of the merged group). |
+| `name` | string | NPC name from source. |
+| `level` | number \| null | NPC level. |
+| `npcType` | string \| null | Source `npc/[range]/.xml` `<set name="type">` (e.g. `"GrandBoss"`, `"RaidBoss"`, `"Folk"`, `"Merchant"`, `"Monster"`). |
+| `isAggressive` | boolean | Derived from `behavior?.aggroRange > 0`. Top-level for parity with `NpcListDto.isAggressive`. |
+| `skills` | `NpcSkillDto[]` | Always present. Empty array when the NPC has no skills (or all are filtered as engine-internal — e.g. the `4416` race-skill entry is consumed into the `race` field rather than surfaced here). |
+
+### Optional identity fields
+
+Each is omitted when the source value is `null`.
+
+| Field | Type | Notes |
+|---|---|---|
+| `title?` | string | NPC title (e.g. `"Weapon Merchant"`). Present on ~35% of Interlude NPCs. |
+| `race?` | string | Player-facing race label (e.g. `"Human"`, `"Undead"`, `"Beast"`). Resolved from the engine's race-skill (`skill 4416`) at level → race table — not source XML directly. Absent when the NPC has no race-skill entry. |
+| `raceIconFile?` | string | Resolved icon for the race. Same provenance as `race`. |
+| `raceDescription?` | string | Source description from `skill 4416-LEVEL`. Same provenance as `race`. |
+
+### Required stat groups
+
+Every NPC in source ships every key in both groups. **Source values, no engine simulation.**
+
+| Group | Inner keys | Notes |
+|---|---|---|
+| `stats: NpcStatsDto` | `hp`, `mp`, `exp`, `sp`, `pAtk`, `pDef`, `mAtk`, `mDef`, `crit`, `atkSpd`, `walkSpd`, `runSpd` (all `number`) | `hp`/`mp`/`pAtk`/`pDef`/`mAtk`/`mDef` are rounded to integer at the DTO layer (some XML rows store floats like `300.8`); raw NPC routes preserve the float. Other keys pass through. |
+| `baseStats: NpcBaseStatsDto` | `str`, `dex`, `con`, `int`, `wit`, `men` (all `number`) | Six base attributes from `<set name="str/dex/con/int/wit/men">`. Most NPCs in aCis ship the engine-default boss block `60/73/57/76/70/80`; ordinary monsters carry per-tier values (e.g. Grim Wolf 22001 ships `40/30/43/21/20/20`). |
+
+### Optional `behavior?` group
+
+| Field | Type | Notes |
+|---|---|---|
+| `behavior?.aggroRange` | number | Sight-aggro radius in game units, from `<ai aggro="…">`. **`0` is meaningful** — the NPC is passive (won't auto-attack on sight). Always present when the `behavior` group is present. |
+| `behavior?.assistRange?` | number | Clan-assist radius in game units, from `<ai clanRange="…">`. Members of the same engine clan within this distance come help when this NPC is attacked. **Distinct from `aggroRange`** — sight-aggro is *"I see a player and attack"*; clan-assist is *"a clan member was attacked, I help"*. The internal clan slug (e.g. `"queen_ant_clan"`) is **not** exposed — it isn't meaningful to consumers and isn't cross-referenced anywhere player-facing. Omitted when the NPC has no clan / no `clanRange` in source. |
+
+The `behavior` group itself is omitted on the 7 Interlude NPCs that ship no `<ai>` block in source — for those, the boolean `isAggressive` is `false`.
 
 ### Engine-derived fields we deliberately do NOT surface
 

@@ -58,7 +58,7 @@ Requesting an unknown chronicle returns **404**.
 | Method | Path | Description |
 |---|---|---|
 | GET | `/api/[chronicle]/npcs` | List cleaned NPCs (one record per unique name) |
-| GET | `/api/[chronicle]/npcs/[id]` | Single cleaned NPC; accepts canonical or any merged raw id. Carries the full source-clean stat block — combat (`hp`, `mp`, `pAtk`, `pDef`, `mAtk`, `mDef`, `crit`, `atkSpd`, `walkSpd`, `runSpd`), base attributes (`str`, `dex`, `con`, `int`, `wit`, `men`), and combat-AI ranges (`aggroRange` for sight-aggro, `assistRange` for clan-assist). Same shape on the monster route below. |
+| GET | `/api/[chronicle]/npcs/[id]` | Single cleaned NPC; accepts canonical or any merged raw id. Identity (`id`, `name`, `level`, `npcType`, `isAggressive`) is top-level; type-specific data is grouped: required `stats` (hp/mp/exp/sp + combat + movement) and `baseStats` (str/dex/con/int/wit/men), plus an optional `behavior?` group (`aggroRange` always when present, `assistRange?` for clan-assist). Optional identity fields (`title?`, `race?`, `raceIconFile?`, `raceDescription?`) are **omitted when source has no value**. See `docs/api-contract.md` for the full field table and the null-vs-absent policy. Same shape on the monster route below. |
 | GET | `/api/[chronicle]/npcs/[id]/drops` | Aggregated drops for the cleaned NPC |
 | GET | `/api/[chronicle]/npcs/[id]/spawns` | Aggregated spawn points for the cleaned NPC. Each row is an `EnrichedSpawnDto` and includes a resolved `region: RegionRefDto \| null` (M4); the raw equivalent at `/api/[chronicle]/raw/monsters/[id]/spawns` does **not** carry the region field. |
 | GET | `/api/[chronicle]/npcs/[id]/shop` | Merchant's direct-buy products + curated multisell exchanges |

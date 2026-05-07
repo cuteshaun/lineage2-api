@@ -74,6 +74,11 @@ dedupe, normalize, and cross-link records for consumers.
   computations.
 - Full skill-effect simulation, AI scripts, geodata, and runtime engine
   behaviour are out of scope.
+- List endpoints paginate at default 50, max 200 per page. Catalogs and
+  detail relations return single-page responses bounded by source data.
+- Successful responses are CDN-cacheable; errors return `no-store`.
+  Production deployments are expected to enforce per-IP rate limits at
+  the platform layer.
 
 ## Disclaimer
 

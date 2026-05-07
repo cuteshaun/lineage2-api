@@ -629,7 +629,30 @@ GET /api/interlude/meta/item-grades
 - **Caching:** datasets are loaded from disk once per chronicle on first
   request and cached in memory; ID lookups, list filters, and meta summaries
   all read from the cached indexes.
-- **Response headers:** all routes set `Cache-Control: public, max-age=86400`.
+
+### Limits and caching
+
+- List endpoints accept `limit` and `offset`. `limit` defaults to 50 and is
+  clamped at 200; `offset` must be ≥ 0. Out-of-range values produce `400`.
+- Catalog endpoints (`/quests`, `/locations`, `/regions`, `/hennas`,
+  `/classes`, `/armor-sets`) are intentionally single-page; the catalog is
+  small and stable per chronicle.
+- Detail endpoints (e.g. `/npcs/[id]/spawns`, `/npcs/[id]/drops`,
+  `/npcs/[id]/shop`) are bounded by source data and do not paginate.
+  Inline cross-link arrays on detail responses (`soldBy`, `exchangeFor`,
+  `rewardedByQuests`, `partOfSets`, `startsQuests`, `involvedInQuests`,
+  …) are bounded by source data the same way.
+- **Cache-Control on success:**
+  `public, max-age=300, s-maxage=86400, stale-while-revalidate=604800`.
+  Browsers revalidate after 5 minutes; shared CDN holds for 24 hours
+  and may serve stale up to a week while revalidating in the background.
+- **Cache-Control on errors (`400` / `404` / `5xx`):** `no-store`.
+  Errors are never cached — typo'd ids, malformed params, and missing
+  resources always re-hit the origin.
+- **Production rate limiting.** Production deployments are expected to
+  enforce per-IP rate limits at the platform layer (e.g. Vercel Firewall
+  / WAF). There are no application-layer rate-limit headers in v1, no
+  API keys, and no per-caller quotas.
 
 ## Related documents
 

@@ -14,8 +14,34 @@ export interface ListMeta {
   offset: number;
 }
 
+/**
+ * Successful responses: CDN-friendly stale-while-revalidate.
+ *   - `max-age=300` — browser revalidates after 5 minutes.
+ *   - `s-maxage=86400` — shared CDN holds for 24 hours.
+ *   - `stale-while-revalidate=604800` — CDN may serve stale up to a
+ *     week while revalidating in the background.
+ *
+ * Data is immutable per deploy (regenerated only via `pnpm build:data`),
+ * so a long shared cache + short browser TTL gives correctness on
+ * post-deploy revalidation without hammering the origin.
+ */
+export const SUCCESS_CACHE_CONTROL =
+  "public, max-age=300, s-maxage=86400, stale-while-revalidate=604800";
+
+/**
+ * Error responses: never cache. A 4xx/5xx is a client- or
+ * server-state signal, not a content artefact — letting a CDN cache
+ * "not found" or "bad request" for any duration would tomb-stone
+ * typo'd ids on every edge that touched them.
+ */
+export const ERROR_CACHE_CONTROL = "no-store";
+
 const baseHeaders: HeadersInit = {
-  "Cache-Control": "public, max-age=86400",
+  "Cache-Control": SUCCESS_CACHE_CONTROL,
+};
+
+const errorHeaders: HeadersInit = {
+  "Cache-Control": ERROR_CACHE_CONTROL,
 };
 
 export function jsonOk<T>(data: T, status = 200): Response {
@@ -33,7 +59,7 @@ export function jsonList<T>(
 export function jsonError(error: string, status: number): Response {
   return Response.json(
     { error, status },
-    { status, headers: baseHeaders }
+    { status, headers: errorHeaders }
   );
 }
 

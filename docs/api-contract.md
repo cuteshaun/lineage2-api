@@ -24,6 +24,22 @@ DTOs are allowed to: deduplicate, normalize (round / collapse), reshape,
 and enrich with already-generated metadata. DTOs must not invent mechanics
 or fabricate text that isn't supported by source data.
 
+## Cache-Control contract
+
+- **Successful responses** (`200`) carry
+  `Cache-Control: public, max-age=300, s-maxage=86400, stale-while-revalidate=604800`.
+  Data is immutable per deploy, so a long shared CDN window with a short
+  browser revalidation window gives correctness on post-deploy fixes
+  without hammering the origin.
+- **Error responses** (`400` / `404` / `5xx`) carry
+  `Cache-Control: no-store`. Errors are never cached — typo'd ids,
+  malformed params, and missing resources always re-hit the origin.
+  Clients must not assume errors are cacheable.
+
+This is part of the v1 contract. Production deployments are expected
+to add per-IP rate limits at the platform layer (e.g. Vercel Firewall
+/ WAF); there are no application-layer rate-limit headers in v1.
+
 ## `ItemDetailDto` — stable fields
 
 ### Null vs absent policy

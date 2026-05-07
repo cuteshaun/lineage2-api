@@ -1,6 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import { SUCCESS_CACHE_CONTROL } from "@/lib/api/responses";
+
 /**
  * Public OpenAPI document.
  *
@@ -31,7 +33,7 @@ const document: unknown = JSON.parse(fs.readFileSync(STUB_PATH, "utf-8"));
 
 const headers: HeadersInit = {
   "Content-Type": "application/json",
-  "Cache-Control": "public, max-age=86400",
+  "Cache-Control": SUCCESS_CACHE_CONTROL,
 };
 
 export async function GET(): Promise<Response> {

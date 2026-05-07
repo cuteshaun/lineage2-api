@@ -62,6 +62,7 @@ dedupe, normalize, and cross-link records for consumers.
 - [API reference](docs/api.md)
 - [API contract](docs/api-contract.md)
 - OpenAPI: `/api/openapi.json`
+Deployment notes live in [docs/deployment.md](docs/deployment.md).
 
 ## Limitations
 
@@ -85,6 +86,7 @@ dedupe, normalize, and cross-link records for consumers.
 Unofficial fan project. Not affiliated with NCSoft. *Lineage* and
 *Lineage II* are trademarks of their respective owners. This repository
 ships no game client or datapack content.
+
 
 ## License
 

@@ -1,159 +1,147 @@
 # Lineage 2 API
 
-A read-only HTTP API over Lineage 2 datapack content — items, NPCs, drops,
-spawns, recipes, skills, and armor sets — built with Next.js (App Router)
-and served from generated JSON. Chronicle is part of every URL path so
-additional chronicles can be added without endpoint changes.
+A read-only HTTP API over Lineage 2 game data — items, NPCs, monsters,
+drops, spawns, quests, classes, hennas, locations, and more.
 
-> **Status**
->
-> | | |
-> |---|---|
-> | Currently supported chronicle | **Interlude** |
-> | Backing data | aCis Interlude datapack XML |
-> | Chronicle-aware architecture | yes — designed for more chronicles later |
-> | API stability | early — response shapes may still evolve |
->
-> Unofficial project. Not affiliated with or endorsed by NCSoft. Lineage
-> and Lineage 2 are trademarks of their respective owners.
+## Overview
 
-## What's in the box
+The API is generated from an aCis Interlude datapack and a small set of
+Lineage 2 client DAT files. There is no database and no XML/DAT parsing
+at runtime: a build step turns the upstream sources into JSON, and the
+runtime serves DTOs over those files.
 
-- **Items** — full detail with combat stats, weapon/armor properties,
-  resolved item skill (description + parsed effects), and Special Ability
-  (SA) variants for A/S-grade weapons including the `+5% PvP Damage`
-  engine rule.
-- **NPCs** — both a **cleaned** layer (one record per unique name,
-  drops + spawns aggregated across merged ids) and a **raw**, source-faithful
-  layer for callers who need engine-level fidelity. Detail responses
-  carry an optional `primaryRegion` derived from the NPC's spawns.
-- **Monsters** — filtered view over the NPC dataset; same cleaned/raw
-  split, same `primaryRegion` enrichment.
-- **Drops** — enriched with item names, deduped on `(npcId, itemId, min,
-  max, chance)`, and reverse-indexed: every item carries `dropped-by` and
-  `spoiled-by` lookups.
-- **Spawns** — coordinates per NPC, deduped across merged ids. Cleaned
-  spawn endpoints attach a resolved `region: RegionRefDto | null` per
-  row (raw endpoints stay unenriched).
-- **Recipes** — exposed inline on item-detail responses (`crafting` for
-  recipe scrolls, `craftedBy` for products).
-- **Skills** — full catalog with resolved descriptions, parsed `<for>`
-  effects (literal + `<table>` references), and icon files; consumed
-  inline by item / NPC / class detail.
-- **Armor sets** — full catalog endpoint plus embedded set context on
-  every piece (`partOfSets[]`).
-- **Classes** — all 89 Interlude player classes (base + 1st/2nd/3rd
-  profession), with full skill-learn tables, spellbook references, and
-  parent/child cross-links. Spellbook items reverse-link to the skills
-  they teach and the classes that learn them.
-- **Commerce** — merchant `buyLists` (Adena-for-item) and a curated set
-  of multisell exchanges (Mammon, B-grade unseal, Luxury Shop, Apella).
-  Surfaced both per-NPC at `/npcs/[id]/shop` and per-item via `soldBy`,
-  `exchangeFrom`, and `exchangeFor` cross-links.
-- **Quests** — full catalog (329 on Interlude) plus per-quest detail
-  with rewards, involved NPCs/monsters, quest items, and race/class
-  gates extracted from aCis Java scripts. When the L2 client's
-  `questname-e.dat` is present, also surfaces the `description` flavor
-  prose and `clientJournalEntries` (the player's in-game quest log
-  entries — short title + prose + completion NPC per step). Honestly
-  framed as the client journal, not an editorial walkthrough.
-  Cross-linked from item / NPC detail (`rewardedByQuests`,
-  `questItemFor`, `startsQuests`, `involvedInQuests`). On items the
-  reward link carries the per-quest count and includes Adena (item
-  57) via the engine-special `q.rewards.adena` scalar.
-- **Regions** — full catalog of 19 named map regions (Talking Island
-  Village, Town of Aden, …) sourced from upstream `mapRegions.xml`.
-  These are engine "death-teleport" regions, not biome polygons —
-  `primaryRegion` reads as "the in-game town this NPC is associated
-  with" rather than "this NPC's biome label".
-- **Locations** — full catalog of 209 player-facing hunting / map
-  locations (Cruma Tower, Ant Nest, Sea of Spores, Tower of Insolence,
-  …) sourced from the L2 client's `huntingzone-e.dat`. Each entry
-  carries a `(x, y, z)` center anchor and a recommended `minLevel`.
-  Spawn rows and NPC / monster / quest detail responses get an
-  optional `location` / `primaryLocation` resolved by **nearest
-  anchor within a 10000 game-unit 2D threshold** — *not* polygon
-  containment. Complementary to `primaryRegion`, not a replacement:
-  regions name the death-teleport town, locations name the local
-  hunting ground.
-- **Hennas** — 180 Symbol Maker engravings with stat changes,
-  dye item, price, and class allow-list, joined from upstream
-  `hennas.xml` (mechanics) and the L2 client's `hennagrp-e.dat`
-  (display name + icon + short label). Embedded on dye-item detail
-  (`henna?`) and class detail (`allowedHennas?`); also reachable
-  as a standalone catalog at `/hennas` and `/hennas/[symbolId]`.
-  Hennas are dye/symbol mechanics — a stat-altering engraving
-  consumed at the Symbol Maker, **not** a cosmetic tattoo.
-- **Meta endpoints** — known npc types / item types / item grades, with
-  counts, for filter dropdowns.
+Every route is chronicle-aware and lives under `/api/[chronicle]/...`,
+so additional chronicles can be added without changing endpoints.
 
-## Where things live
+## Status
 
 | | |
 |---|---|
-| `data/datapack/<chronicle>/` | placeholder for upstream **L2 client DAT files** consumed at build time (e.g. `*grp.dat` for icons, `questname-e.dat` for quest journal entries) — untracked |
-| `data/manual-fixes/<chronicle>.json` | one file per chronicle, sectioned by entity |
-| `data/generated/<chronicle>/` | build output — `items`, `npcs`, `drops`, `spawns`, `recipes`, `skills`, `armor-sets`, `classes`, `spellbooks`, `multisells`, `buylists`, `quests`, `questname`, `regions`, `huntingzones`, `hennas` JSON |
-| `scripts/` | `parse-*.ts` per entity, plus `build-data.ts` orchestrator |
-| `src/lib/data/` | cached JSON loaders + in-memory indexes |
-| `src/lib/api/` | shared route helpers + DTO layer |
-| `src/app/api/[chronicle]/...` | route handlers |
-| `docs/api.md` | full API reference — start here |
-| `docs/api-contract.md` | DTO field-level stability contract |
+| Supported chronicle | `interlude` |
+| Source data | aCis Interlude datapack + selected client DAT files |
+| Storage | generated JSON on disk (no database) |
+| Stability | pre-v1 — public response shapes are locked by snapshot tests |
+| OpenAPI | served at `/api/openapi.json` |
+| License | MIT |
 
-## Build the dataset
+## Getting started
 
 ```bash
 pnpm install
-pnpm build:data                       # defaults to interlude
-pnpm build:data --chronicle=interlude # explicit
+pnpm build:data            # parse sources → data/generated/interlude/
+pnpm dev                   # http://localhost:3000
 ```
 
-This reads upstream XML and writes
-`data/generated/<chronicle>/*.json`. The XML source path lives in
-[scripts/chronicle-sources.ts](scripts/chronicle-sources.ts). The datapack
-itself is not redistributed in this repo — you need a local checkout.
-
-## Run the API
+For production:
 
 ```bash
-pnpm dev                  # development
-pnpm build && pnpm start  # production
+pnpm build && pnpm start
 ```
 
-Mounted at `/api/[chronicle]/...`. See **[docs/api.md](docs/api.md)** for
-the full reference: endpoints, query params, sort options, response
-shapes, and examples.
+The aCis datapack is not redistributed here. Point `scripts/chronicle-sources.ts`
+at a local checkout before running `pnpm build:data`.
 
 ## Quick examples
 
 ```bash
+# Item — Adena
 curl http://localhost:3000/api/interlude/items/57
-curl 'http://localhost:3000/api/interlude/items?type=weapon&grade=a&sort=name&limit=10'
-curl 'http://localhost:3000/api/interlude/monsters?npcType=GrandBoss&sort=-level'
-curl http://localhost:3000/api/interlude/npcs/22001/drops
-curl http://localhost:3000/api/interlude/armor-sets
-curl http://localhost:3000/api/interlude/meta/item-grades
+
+# Item — a henna dye, with embedded henna mechanics
+curl http://localhost:3000/api/interlude/items/4445
+
+# Monster — Queen Ant
+curl http://localhost:3000/api/interlude/monsters/29001
+
+# Quest
 curl http://localhost:3000/api/interlude/quests/1
-curl http://localhost:3000/api/interlude/regions
+
+# Player class — Warrior
+curl http://localhost:3000/api/interlude/classes/2
+
+# Player-facing hunting locations catalog
 curl http://localhost:3000/api/interlude/locations
-curl http://localhost:3000/api/interlude/hennas
-curl http://localhost:3000/api/interlude/hennas/1
-curl http://localhost:3000/api/interlude/classes
-curl http://localhost:3000/api/interlude/npcs/30001/shop
+
+# Machine-readable contract
 curl http://localhost:3000/api/openapi.json
 ```
 
-## Adding a new chronicle
+List endpoints accept `limit`, `offset`, `q`, and entity-specific filters
+(`type`, `grade`, `npcType`, level ranges) plus `sort`. See
+[docs/api.md](docs/api.md) for the full grammar.
 
-1. Register it in [src/lib/chronicles.ts](src/lib/chronicles.ts) and add a
-   runtime data spec in [src/lib/chronicle-config.ts](src/lib/chronicle-config.ts).
-2. Add a build-only XML source spec in [scripts/chronicle-sources.ts](scripts/chronicle-sources.ts).
-3. Create `data/manual-fixes/<chronicle>.json` with sections for each entity.
-4. Run `pnpm build:data --chronicle=<chronicle>`.
+## API surface
 
-No route, loader, parser, or API change is required — every endpoint
-becomes available at `/api/<chronicle>/...` automatically.
+| Group | Routes |
+|---|---|
+| Items | `/items`, `/items/[id]` |
+| NPCs | `/npcs`, `/npcs/[id]`, `/npcs/[id]/drops`, `/npcs/[id]/spawns`, `/npcs/[id]/shop` |
+| Monsters | `/monsters`, `/monsters/[id]` (filtered NPC view) |
+| Quests | `/quests`, `/quests/[id]` |
+| Classes | `/classes`, `/classes/[id]` |
+| Hennas | `/hennas`, `/hennas/[symbolId]` |
+| Regions | `/regions` (engine death-teleport regions) |
+| Locations | `/locations` (player-facing hunting zones) |
+| Armor sets | `/armor-sets` |
+| Recipes | `/recipes` |
+| Meta | `/meta/item-types`, `/meta/item-grades`, `/meta/npc-types` |
+| Spec | `/api/openapi.json` |
+
+Item, NPC, and quest detail responses cross-link aggressively — items
+carry `droppedBy`, `spoiledBy`, `rewardedByQuests`, `craftedBy`,
+`partOfSets`, `soldBy`, `henna`; NPCs carry `startsQuests`,
+`involvedInQuests`, `primaryRegion?`, `primaryLocation?`; classes carry
+their full skill-learn table and allowed hennas. The full list lives in
+[docs/api.md](docs/api.md).
+
+## Public vs raw endpoints
+
+The API exposes two layers, side by side:
+
+- **Public** (`/api/[chronicle]/...`) — cleaned, deduped, cross-linked.
+  Snapshot-locked. NPCs are merged on display name, drops are deduped
+  across merged ids, locations / regions / quest journal entries are
+  resolved into compact refs. This is the layer you want for tools and
+  UIs.
+- **Raw** (`/api/[chronicle]/raw/...`) — source-faithful. One row per
+  upstream record, no merging, no enrichment. Useful when you need to
+  audit the original engine data or compare against another datapack.
+
+Raw routes never gain enrichment fields, and public routes never lose
+them — that boundary is part of the contract.
+
+## Data sources and limitations
+
+- **aCis Interlude datapack** — items, NPCs, drops, spawns, quests,
+  classes, recipes, armor sets, multisells, buylists, hennas, regions.
+- **L2 client DAT files** — display names, icons, journal entries,
+  hunting-zone anchors. Optional per chronicle; missing DATs surface as
+  `null` on the affected fields rather than silently filled.
+- Differences against L2Hub, PTS, or other databases are
+  source/reference differences, not parser bugs.
+- Hunting-zone resolution is **nearest 2D anchor within 10000 game
+  units**, not polygon containment — `huntingzone-e.dat` carries center
+  anchors only. A small audit-justified override map handles known
+  failures (e.g. Queen Ant → *The Ant Nest*) on NPC and monster detail.
+- Spell effects, AI scripts, geodata, and runtime engine behaviour are
+  out of scope.
+
+## Documentation
+
+- [docs/api.md](docs/api.md) — full route reference: paths, query
+  params, sort options, response shapes, examples.
+- [docs/api-contract.md](docs/api-contract.md) — DTO field-level
+  stability contract, the null-vs-absent policy, and the public/raw
+  boundary.
+- `/api/openapi.json` — machine-readable spec, generated from the same
+  Zod schemas the typecheck uses.
+
+## Disclaimer
+
+Unofficial fan project. Not affiliated with, endorsed by, or sponsored
+by NCSoft. *Lineage* and *Lineage II* are trademarks of their respective
+owners. This repository ships no game client or datapack content; you
+supply your own copy of the upstream sources.
 
 ## License
 

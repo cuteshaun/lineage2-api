@@ -1,0 +1,135 @@
+---
+title: Response Format
+description: Understand API response structure, pagination, caching, and cross-origin access
+---
+
+## Response envelope
+
+All successful API responses follow a consistent envelope:
+
+```json
+{
+  "data": {
+    "id": 57,
+    "name": "Adena",
+    "type": "etcitem",
+    "grade": "none",
+    "weight": 0,
+    "price": null,
+    "material": null,
+    "iconFile": "etc_coin_copper_i00"
+  }
+}
+```
+
+The top-level `data` field contains the resource. Use the `data` field to extract results—never rely on root-level keys.
+
+## List responses
+
+List endpoints return multiple records in a `data` array:
+
+```json
+{
+  "data": [
+    { "id": 57, "name": "Adena", "type": "etcitem" },
+    { "id": 58, "name": "Coin", "type": "etcitem" }
+  ],
+  "meta": {
+    "limit": 50,
+    "offset": 0,
+    "total": 2
+  }
+}
+```
+
+The `meta` object appears only on list endpoints and contains pagination info.
+
+## Error responses
+
+When a request fails, the response includes an `error` object and a `status` code:
+
+```json
+{
+  "error": {
+    "message": "Item not found",
+    "code": "ITEM_NOT_FOUND"
+  },
+  "status": 404
+}
+```
+
+Common status codes:
+- **200:** Success
+- **400:** Bad request (invalid parameters)
+- **404:** Resource not found
+- **500:** Server error
+
+## Pagination
+
+List endpoints support limit and offset pagination:
+
+```
+GET /api/interlude/items?limit=10&offset=20
+```
+
+**Parameters:**
+- `limit`: number of records per page (default: 50, max: 100)
+- `offset`: number of records to skip (default: 0)
+
+**Meta response:**
+```json
+{
+  "meta": {
+    "limit": 10,
+    "offset": 20,
+    "total": 8542
+  }
+}
+```
+
+Use `total` to calculate the number of pages: `Math.ceil(total / limit)`.
+
+## Caching
+
+The API uses HTTP caching headers to reduce bandwidth:
+
+**Success responses (2xx):**
+```
+Cache-Control: public, max-age=3600, s-maxage=86400
+```
+
+- `max-age=3600`: browsers cache for 1 hour
+- `s-maxage=86400`: CDN caches for 24 hours
+- Full refresh on next deploy (data is immutable per deploy)
+
+**Error responses (4xx, 5xx):**
+```
+Cache-Control: no-store
+```
+
+Error responses are never cached, so transient issues don't stick.
+
+## CORS
+
+The API has CORS enabled for all origins. No authentication is required.
+
+**Headers sent:**
+```
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET, OPTIONS
+Access-Control-Allow-Headers: Content-Type
+```
+
+You can use the API directly from browser-based applications without a proxy.
+
+## Rate limiting
+
+The API does not enforce rate limits. Fair use is expected.
+
+## Content-Type
+
+All responses are JSON:
+
+```
+Content-Type: application/json; charset=utf-8
+```

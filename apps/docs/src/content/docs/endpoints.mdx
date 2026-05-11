@@ -1,0 +1,123 @@
+---
+title: Endpoints Overview
+description: Complete reference of all available API endpoints
+---
+
+The API is organized by resource type. All routes require a chronicle (currently `interlude`).
+
+## Items
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/[chronicle]/items` | GET | List all items with pagination |
+| `/api/[chronicle]/items/:id` | GET | Get a single item by ID |
+
+## NPCs
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/[chronicle]/npcs` | GET | List all NPCs with pagination |
+| `/api/[chronicle]/npcs/:id` | GET | Get a single NPC by ID |
+
+## Monsters
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/[chronicle]/monsters` | GET | List all monsters with pagination |
+| `/api/[chronicle]/monsters/:id` | GET | Get a single monster by ID |
+
+## Drops
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/[chronicle]/drops` | GET | List all drop records with pagination |
+| `/api/[chronicle]/drops/:id` | GET | Get a single drop record by ID |
+
+## Spoils
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/[chronicle]/spoils` | GET | List all spoil records with pagination |
+| `/api/[chronicle]/spoils/:id` | GET | Get a single spoil record by ID |
+
+## Quests
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/[chronicle]/quests` | GET | List all quests with pagination |
+| `/api/[chronicle]/quests/:id` | GET | Get a single quest by ID |
+
+## Classes
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/[chronicle]/classes` | GET | List all classes with pagination |
+| `/api/[chronicle]/classes/:id` | GET | Get a single class by ID |
+
+## Hennas
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/[chronicle]/hennas` | GET | List all hennas with pagination |
+| `/api/[chronicle]/hennas/:id` | GET | Get a single henna by ID |
+
+## Locations
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/[chronicle]/locations` | GET | List all locations with pagination |
+| `/api/[chronicle]/locations/:id` | GET | Get a single location by ID |
+
+## Regions
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/[chronicle]/regions` | GET | List all regions with pagination |
+| `/api/[chronicle]/regions/:id` | GET | Get a single region by ID |
+
+## Armor Sets
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/[chronicle]/armor-sets` | GET | List all armor sets with pagination |
+| `/api/[chronicle]/armor-sets/:id` | GET | Get a single armor set by ID |
+
+## Shops
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/[chronicle]/shops` | GET | List all shops with pagination |
+| `/api/[chronicle]/shops/:id` | GET | Get a single shop by ID |
+
+## Raw endpoints
+
+Raw endpoints return one-to-one source records without deduplication or normalization. Useful for data auditing and parser verification.
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/[chronicle]/raw/npcs` | GET | All raw NPC records |
+| `/api/[chronicle]/raw/monsters` | GET | All raw monster records |
+| `/api/[chronicle]/raw/items` | GET | All raw item records |
+| `/api/[chronicle]/raw/drops` | GET | All raw drop records |
+
+## Metadata
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/openapi.json` | GET | OpenAPI 3.0.3 specification (stub) |
+
+## Using the API
+
+**Example: Fetch an item**
+```bash
+curl https://l2api.dev/api/interlude/items/57
+```
+
+**Example: List items with pagination**
+```bash
+curl 'https://l2api.dev/api/interlude/items?limit=10&offset=0'
+```
+
+See the **Response Format** page for envelope structure, pagination details, caching headers, and error codes.
+
+For detailed per-endpoint documentation and request/response schemas, see the **OpenAPI specification** at `https://l2api.dev/api/openapi.json`.

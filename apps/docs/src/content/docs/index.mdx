@@ -1,0 +1,65 @@
+---
+title: Welcome
+description: A read-only HTTP API over Lineage 2 game data
+template: splash
+hero:
+  tagline: Read-only HTTP API for Lineage 2 Interlude game data
+  actions:
+    - text: Get Started
+      link: /getting-started/
+      icon: right-arrow
+    - text: View on GitHub
+      link: https://github.com/cuteshaun/lineage2-api
+      icon: external
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## About this API
+
+**Lineage 2 API** is a read-only HTTP API serving **Interlude** game data—items, NPCs, monsters, drops, spawns, quests, classes, hennas, locations, regions, armor sets, and shops.
+
+Generated from an aCis Interlude datapack and Lineage 2 client DAT files. No database, no runtime XML parsing—a build step turns upstream sources into JSON, and the runtime serves DTOs over those files.
+
+### Key facts
+
+<CardGrid>
+  <Card title="No authentication" icon="lock">
+    Public API. No API keys, no credentials required. CORS enabled.
+  </Card>
+  <Card title="Interlude only" icon="rocket">
+    Currently supports Interlude chronicle. Architecture is chronicle-aware for future expansion.
+  </Card>
+  <Card title="aCis is truth" icon="approve">
+    Data is faithful to the aCis datapack. Differences vs other databases are source/reference differences, not bugs.
+  </Card>
+  <Card title="Immutable per deploy" icon="none">
+    Data is static JSON committed to git. Full deploy → full dataset refresh.
+  </Card>
+</CardGrid>
+
+### Quick example
+
+```bash
+curl https://l2api.dev/api/interlude/items/57
+```
+
+```json
+{
+  "data": {
+    "id": 57,
+    "name": "Adena",
+    "type": "etcitem",
+    "grade": "none",
+    "weight": 0,
+    "price": null,
+    "material": null,
+    "iconFile": "etc_coin_copper_i00"
+  }
+}
+```
+
+## Unofficial project
+
+Not affiliated with or endorsed by NCSoft. Lineage and Lineage 2 are trademarks of their respective owners.

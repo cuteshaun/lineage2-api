@@ -1,0 +1,100 @@
+---
+title: Limitations
+description: Scope, known limitations, and important caveats
+---
+
+## Interlude only
+
+The API currently serves **Interlude chronicle data only**. Future chronicles (Awakening, etc.) may be supported, but are not planned yet.
+
+Other Lineage 2 chronicles (C1, C2, etc.) are not supported.
+
+## Unofficial project
+
+This project is **not affiliated with or endorsed by NCSoft**. Lineage and Lineage 2 are trademarks of their respective owners.
+
+It is a fan project for data reference and exploration.
+
+## Data source is aCis
+
+The API is **faithful to the aCis Interlude datapack**. If you find differences compared to other databases (L2Hub, PTS, L2Wiki, etc.):
+
+- Those sources may use different datapacks, version branches, or runtime formulas
+- The API surfaces what aCis provides; it does not synthesize, rescale, or reconcile values
+- Differences are **source differences**, not bugs
+
+If you believe aCis has a data error, that is outside the scope of this API—report it to the aCis project.
+
+## DAT files may be incomplete
+
+Selected Lineage 2 client **DAT files** are optionally used for enhanced data extraction (icon filenames, descriptions, etc.). These files are sourced from the public game client download.
+
+If DAT files are unavailable or unresolved:
+- The API still serves complete records from the datapack alone
+- DAT-only fields remain `null`
+- This is expected and not a bug
+
+## Locations are spatial hints, not authority
+
+Location data represents the **nearest spawn anchor point**, not a full polygon or traversable area. Locations are a reference point to find a spawn or NPC in the game world, not a complete spatial model.
+
+For game navigation or pathfinding, do not rely solely on location coordinates.
+
+## No editorial walkthroughs
+
+The API serves **raw game data only**. It does not include:
+- Quest guides or walkthroughs
+- Strategy advice
+- Item build recommendations
+- Damage calculations or formulas
+
+The API is a reference, not a game strategy resource.
+
+## No runtime formula evaluation
+
+Item bonuses, NPC stats, and damage calculations are **stored values from the datapack**, not computed formulas. The API does not evaluate runtime formulas or scaling.
+
+For example:
+- Weapon attack speed is a static value, not computed from item attributes
+- Monster stats are as-stored, not dynamically calculated
+
+If you need formulas or dynamic values, consult the Lineage 2 server source or community wikis.
+
+## Response shape may evolve
+
+The **public API response shape** (DTOs) is stable and locked by snapshot tests. However, future DTO versions may:
+- Add optional fields (backwards-compatible)
+- Reorganize optional sections
+- Change pagination defaults
+
+Never rely on field ordering or absence—always check for null and missing fields.
+
+See **Core Concepts** for the distinction between public API (stable contract) and raw API (may change as parsing improves).
+
+## No rate limits, no authentication
+
+The API has **no rate limits** and requires **no authentication**. Fair use is expected.
+
+If you need guaranteed uptime or higher throughput, run a local copy of the API using the published instructions.
+
+## Cached data
+
+The API serves **build-time generated, committed JSON files**. Data changes only on deploy, never mid-request. If you need real-time data or fresh parses, regenerate the dataset locally with `pnpm build:data`.
+
+## Known gaps
+
+- **Spawns:** Location spawn lists are not yet indexed by API endpoints (use raw data or external references)
+- **Item descriptions:** Many DAT-sourced descriptions are incomplete or missing
+- **NPC dialogue:** Quest dialogue and NPC interactions are not included
+- **Client data:** Game client UI strings, skill animations, and graphics are not served
+
+These gaps may be addressed in future updates, but are not prioritized.
+
+## Feedback and reporting
+
+This is an open-source, community-driven project. Issues and pull requests are welcome on [GitHub](https://github.com/cuteshaun/lineage2-api).
+
+For data corrections or parser improvements, contributions are appreciated. However, keep in mind:
+- The project is aCis-faithful by design
+- Scope is limited to Interlude currently
+- Major feature requests may not align with the project vision

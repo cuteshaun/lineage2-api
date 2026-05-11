@@ -1,0 +1,82 @@
+---
+title: Core Concepts
+description: Understand how the API is structured
+---
+
+## Chronicles
+
+A **chronicle** is a game version. The API is chronicle-aware: every route requires a chronicle in the URL path.
+
+```
+/api/[chronicle]/items
+/api/[chronicle]/npcs
+/api/[chronicle]/quests
+```
+
+Currently, `interlude` is the only supported chronicle. Future additions (like `glory_days`, `awakening`, etc.) will coexist at the same API paths without route changes.
+
+## Public vs. raw API
+
+Two layers exist side-by-side, each with a different purpose:
+
+### Public API (DTO layer)
+
+- **What:** Cleaned, deduplicated, normalized data
+- **Where:** `/api/[chronicle]/items`, `/api/[chronicle]/npcs`, etc.
+- **For:** Consumer applications
+- **Shape:** Stable contract, locked by snapshot tests
+- **Example:** `GET /api/interlude/items/57` returns a cleaned `ItemDetailDto`
+
+The public API applies:
+- **Deduplication:** Multiple raw NPC records with the same name merge into one
+- **Normalization:** Whitespace trimming, rounding, null-vs-absent distinction
+- **Enrichment:** Cross-link blocks (drops, shops, quests, sets, etc.) attached to items and NPCs
+- **Grouping:** Type-specific data grouped into optional sections (category, stats, shots, etc.)
+
+### Raw API (source-faithful layer)
+
+- **What:** One-to-one mapping of source records
+- **Where:** `/api/[chronicle]/raw/npcs`, `/api/[chronicle]/raw/monsters`, etc.
+- **For:** Data auditing, understanding the source, parser verification
+- **Shape:** Not a contract; may change if parsing improves
+- **Example:** `GET /api/interlude/raw/npcs` returns every raw NPC row from the source
+
+## Build-time generated data
+
+The API does **not parse XML or DAT files at runtime**. Instead:
+
+1. **Build time:** Parsers in `scripts/` read aCis XML and client DAT files
+2. **Generate:** Output to `data/generated/interlude/*.json`
+3. **Commit:** JSON files are committed to git as artifacts
+4. **Runtime:** Serve those pre-computed JSON files as DTOs
+
+Benefits:
+- **Fast API:** No runtime parsing, no disk I/O on request path
+- **Auditable:** All data changes are visible in git diffs
+- **Immutable per deploy:** Data changes only on deploy, never mid-request
+- **Testable:** Snapshot tests verify the contract for each record shape
+
+## Data sources
+
+### aCis Interlude datapack
+
+The **aCis Interlude datapack** is the primary source of truth. All records come from its XML files (npcdata, itemdata, skilldata, etc.).
+
+This API treats aCis as canonical. If you find differences vs. other databases (L2Hub, PTS, L2Wiki, etc.):
+- Those references may use different datapacks, runtime formulas, or corrections
+- The API surfaces what aCis provides; it does not synthesize or rescale values
+
+### Lineage 2 client DAT files
+
+Selected client DAT files (unencrypted binary data files from the game client) are optionally used for enhanced extraction—for example, icon filenames or item descriptions. These are sourced from the public game client download, not distributed here.
+
+If DAT files are unavailable, the API still serves complete records from the datapack alone; DAT fields simply remain null.
+
+## DTOs vs. raw source records
+
+A **DTO** (Data Transfer Object) is what the public API serves. It is distinct from the source record:
+
+- **Raw record:** `{ npc_id, npc_name, hp, mp, ..., [many merged rows] }`
+- **DTO:** `{ id, name, stats: { hp, mp, ... }, primaryLocation: { name, ... } }`
+
+DTOs are created at build time from the raw data and are frozen in `src/lib/api/dto/`. Changing a DTO shape is a contract change and requires snapshot test updates.

@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Lineage 2 API",
-    "version": "0.1.0",
+    "version": "0.9.0",
     "description": "Public read-only API over Lineage 2 Interlude datapack content. This document is a STUB: only a small set of shared reference schemas are registered. Full per-route coverage lands in a later phase of the Zod migration — see docs/api-contract.md."
   },
   "servers": [

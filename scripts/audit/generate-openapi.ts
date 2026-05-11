@@ -32,6 +32,10 @@ import {
   RegionRefSchema,
 } from "../../src/lib/api/schemas";
 
+const pkgPath = path.join(process.cwd(), "package.json");
+const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf-8"));
+const apiVersion = pkg.version;
+
 const registry = new OpenAPIRegistry();
 registry.register("NpcRef", NpcRefSchema);
 registry.register("ClassRef", ClassRefSchema);
@@ -47,7 +51,7 @@ const document = generator.generateDocument({
   openapi: "3.0.3",
   info: {
     title: "Lineage 2 API",
-    version: "0.1.0",
+    version: apiVersion,
     description:
       "Public read-only API over Lineage 2 Interlude datapack content. " +
       "This document is a STUB: only a small set of shared reference " +

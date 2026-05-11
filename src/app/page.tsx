@@ -22,6 +22,7 @@ export default function Home() {
           </h2>
           <ul className="flex flex-col gap-2 font-mono text-sm">
             <li>
+              {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
               <a
                 className="text-zinc-900 underline-offset-4 hover:underline dark:text-zinc-100"
                 href="/api/interlude/items/57"
@@ -30,6 +31,7 @@ export default function Home() {
               </a>
             </li>
             <li>
+              {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
               <a
                 className="text-zinc-900 underline-offset-4 hover:underline dark:text-zinc-100"
                 href="/api/interlude/monsters?npcType=GrandBoss&sort=-level"
@@ -38,6 +40,7 @@ export default function Home() {
               </a>
             </li>
             <li>
+              {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
               <a
                 className="text-zinc-900 underline-offset-4 hover:underline dark:text-zinc-100"
                 href="/api/interlude/npcs/22001/drops"
@@ -46,6 +49,7 @@ export default function Home() {
               </a>
             </li>
             <li>
+              {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
               <a
                 className="text-zinc-900 underline-offset-4 hover:underline dark:text-zinc-100"
                 href="/api/interlude/meta/npc-types"

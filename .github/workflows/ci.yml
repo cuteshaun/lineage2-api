@@ -3,13 +3,8 @@
 # The generated dataset (`data/generated/interlude/*.json`) is
 # committed to the repo as the source-of-truth artefact the API
 # serves. CI therefore runs the full check matrix on every PR:
-# typecheck (runtime + build-time parsers), unit tests +
+# lint, typecheck (runtime + build-time parsers), unit tests +
 # snapshots, OpenAPI drift gate, and the Next.js build.
-#
-# `pnpm lint` is intentionally omitted for now — the landing page
-# carries pre-existing `@next/next/no-html-link-for-pages` false
-# positives that should be cleaned up separately before lint joins
-# this workflow.
 #
 # `pnpm build:data` does NOT run in CI: it requires a local aCis
 # datapack and (optionally) L2 client DAT files, neither of which
@@ -51,6 +46,9 @@ jobs:
 
       - name: Typecheck (build-time parsers)
         run: pnpm typecheck:scripts
+
+      - name: Lint
+        run: pnpm lint
 
       - name: Unit tests + snapshots
         run: pnpm test

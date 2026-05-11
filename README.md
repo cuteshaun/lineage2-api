@@ -12,7 +12,7 @@ files.
 |---|---|
 | Supported chronicle | `interlude` |
 | Storage | generated JSON on disk |
-| Stability | pre-v1 — response shapes locked by snapshot tests |
+| Stability | v1.0.0 release candidate — public API contract is frozen unless a release-blocking issue is found |
 | OpenAPI | `/api/openapi.json` |
 | License | MIT |
 

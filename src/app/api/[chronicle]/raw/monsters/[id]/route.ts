@@ -1,5 +1,8 @@
 import { getRawMonsterById } from "@/lib/data/indexes";
-import { jsonError, jsonOk, parseEntityParams } from "@/lib/api/responses";
+import {
+  handleCorsOptions,
+  jsonError, jsonOk, parseEntityParams
+} from "@/lib/api/responses";
 
 // Raw monster detail — looks up a single raw monster by its source-faithful
 // id. The cleaned equivalent lives at `/api/[chronicle]/monsters/[id]`, which
@@ -18,4 +21,7 @@ export async function GET(
   }
 
   return jsonOk(monster);
+}
+export async function OPTIONS(): Promise<Response> {
+  return handleCorsOptions();
 }

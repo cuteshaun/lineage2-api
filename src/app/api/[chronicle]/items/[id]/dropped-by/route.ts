@@ -1,6 +1,7 @@
 import { getItemDroppedBy } from "@/lib/data/indexes";
 import { toItemSourcesPageDto } from "@/lib/api/dto/drops";
 import {
+  handleCorsOptions,
   jsonList,
   parseEntityParams,
   parsePagination,
@@ -29,4 +30,7 @@ export async function GET(
   const result = toItemSourcesPageDto(sources, limit, offset);
 
   return jsonList(result.data, { total: result.total, limit, offset });
+}
+export async function OPTIONS(): Promise<Response> {
+  return handleCorsOptions();
 }

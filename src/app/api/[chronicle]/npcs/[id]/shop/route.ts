@@ -1,5 +1,8 @@
 import { buildShopResponse } from "@/lib/api/dto/shop";
-import { jsonError, jsonOk, parseEntityParams } from "@/lib/api/responses";
+import {
+  handleCorsOptions,
+  jsonError, jsonOk, parseEntityParams
+} from "@/lib/api/responses";
 
 export async function GET(
   _request: Request,
@@ -14,4 +17,7 @@ export async function GET(
   }
 
   return jsonOk(response);
+}
+export async function OPTIONS(): Promise<Response> {
+  return handleCorsOptions();
 }

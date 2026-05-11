@@ -1,5 +1,8 @@
 import { getRawNpcById } from "@/lib/data/indexes";
-import { jsonError, jsonOk, parseEntityParams } from "@/lib/api/responses";
+import {
+  handleCorsOptions,
+  jsonError, jsonOk, parseEntityParams
+} from "@/lib/api/responses";
 
 // Raw NPC detail — looks up a single raw NPC by its source-faithful id.
 // The cleaned equivalent at `/api/[chronicle]/npcs/[id]` accepts either the
@@ -18,4 +21,7 @@ export async function GET(
   }
 
   return jsonOk(npc);
+}
+export async function OPTIONS(): Promise<Response> {
+  return handleCorsOptions();
 }

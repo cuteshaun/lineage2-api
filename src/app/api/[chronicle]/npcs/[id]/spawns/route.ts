@@ -1,6 +1,9 @@
 import { getNpcById, getNpcSpawns } from "@/lib/data/indexes";
 import { toEnrichedSpawnDto } from "@/lib/api/dto/spawn";
-import { jsonError, jsonOk, parseEntityParams } from "@/lib/api/responses";
+import {
+  handleCorsOptions,
+  jsonError, jsonOk, parseEntityParams
+} from "@/lib/api/responses";
 
 // Cleaned spawn points for a given NPC id. Each row is enriched with
 // a resolved `region: RegionRefDto | null` (M4 Stage 2). Returns
@@ -26,4 +29,7 @@ export async function GET(
 
   const spawns = getNpcSpawns(parsed.chronicle, parsed.id);
   return jsonOk(spawns.map((s) => toEnrichedSpawnDto(s, parsed.chronicle)));
+}
+export async function OPTIONS(): Promise<Response> {
+  return handleCorsOptions();
 }

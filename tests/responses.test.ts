@@ -4,6 +4,7 @@ import { GET as itemDetailGET } from "@/app/api/[chronicle]/items/[id]/route";
 import {
   ERROR_CACHE_CONTROL,
   SUCCESS_CACHE_CONTROL,
+  handleCorsOptions,
   jsonError,
   jsonList,
   jsonOk,
@@ -33,6 +34,54 @@ describe("response cache headers", () => {
     const response = jsonError("nope", 404);
     expect(response.headers.get("Cache-Control")).toBe(ERROR_CACHE_CONTROL);
     expect(response.headers.get("Cache-Control")).toBe("no-store");
+  });
+});
+
+describe("CORS headers", () => {
+  test("jsonOk includes CORS headers", () => {
+    const response = jsonOk({ id: 1 });
+    expect(response.headers.get("Access-Control-Allow-Origin")).toBe("*");
+    expect(response.headers.get("Access-Control-Allow-Methods")).toBe(
+      "GET, OPTIONS"
+    );
+    expect(response.headers.get("Access-Control-Allow-Headers")).toBe(
+      "Content-Type"
+    );
+  });
+
+  test("jsonList includes CORS headers", () => {
+    const response = jsonList([], { total: 0, limit: 50, offset: 0 });
+    expect(response.headers.get("Access-Control-Allow-Origin")).toBe("*");
+    expect(response.headers.get("Access-Control-Allow-Methods")).toBe(
+      "GET, OPTIONS"
+    );
+    expect(response.headers.get("Access-Control-Allow-Headers")).toBe(
+      "Content-Type"
+    );
+  });
+
+  test("jsonError includes CORS headers even when using no-store", () => {
+    const response = jsonError("nope", 404);
+    expect(response.headers.get("Cache-Control")).toBe("no-store");
+    expect(response.headers.get("Access-Control-Allow-Origin")).toBe("*");
+    expect(response.headers.get("Access-Control-Allow-Methods")).toBe(
+      "GET, OPTIONS"
+    );
+    expect(response.headers.get("Access-Control-Allow-Headers")).toBe(
+      "Content-Type"
+    );
+  });
+
+  test("handleCorsOptions returns 204 with CORS headers", () => {
+    const response = handleCorsOptions();
+    expect(response.status).toBe(204);
+    expect(response.headers.get("Access-Control-Allow-Origin")).toBe("*");
+    expect(response.headers.get("Access-Control-Allow-Methods")).toBe(
+      "GET, OPTIONS"
+    );
+    expect(response.headers.get("Access-Control-Allow-Headers")).toBe(
+      "Content-Type"
+    );
   });
 });
 
@@ -86,5 +135,6 @@ describe("error responses end-to-end", () => {
     );
     expect(response.status).toBe(404);
     expect(response.headers.get("Cache-Control")).toBe(ERROR_CACHE_CONTROL);
+    expect(response.headers.get("Access-Control-Allow-Origin")).toBe("*");
   });
 });

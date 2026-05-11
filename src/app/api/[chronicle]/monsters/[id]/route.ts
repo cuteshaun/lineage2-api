@@ -1,6 +1,11 @@
 import { getMonsterById } from "@/lib/data/indexes";
 import { toNpcDetailDto } from "@/lib/api/dto/npc";
-import { jsonError, jsonOk, parseEntityParams } from "@/lib/api/responses";
+import {
+  handleCorsOptions,
+  jsonError,
+  jsonOk,
+  parseEntityParams,
+} from "@/lib/api/responses";
 
 // Public monster detail — cleaned view. The `[id]` parameter accepts either:
 //   - the canonical id (= the cleaned NPC's `id`), or
@@ -22,4 +27,8 @@ export async function GET(
   }
 
   return jsonOk(toNpcDetailDto(monster, parsed.chronicle));
+}
+
+export async function OPTIONS(): Promise<Response> {
+  return handleCorsOptions();
 }

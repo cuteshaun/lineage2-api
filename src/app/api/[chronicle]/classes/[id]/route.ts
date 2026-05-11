@@ -1,6 +1,9 @@
 import { getClassById } from "@/lib/data/indexes";
 import { toClassDetailDto } from "@/lib/api/dto/class";
-import { jsonError, jsonOk, parseChronicleParam } from "@/lib/api/responses";
+import {
+  handleCorsOptions,
+  jsonError, jsonOk, parseChronicleParam
+} from "@/lib/api/responses";
 
 export async function GET(
   _request: Request,
@@ -23,4 +26,7 @@ export async function GET(
   }
 
   return jsonOk(toClassDetailDto(cls, parsed.chronicle));
+}
+export async function OPTIONS(): Promise<Response> {
+  return handleCorsOptions();
 }

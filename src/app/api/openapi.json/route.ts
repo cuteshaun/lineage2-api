@@ -1,4 +1,8 @@
-import { SUCCESS_CACHE_CONTROL } from "@/lib/api/responses";
+import {
+  CORS_HEADERS,
+  SUCCESS_CACHE_CONTROL,
+  handleCorsOptions,
+} from "@/lib/api/responses";
 import openApiStub from "../../../../docs/openapi.stub.json";
 
 /**
@@ -25,10 +29,15 @@ import openApiStub from "../../../../docs/openapi.stub.json";
 const headers: HeadersInit = {
   "Content-Type": "application/json",
   "Cache-Control": SUCCESS_CACHE_CONTROL,
+  ...CORS_HEADERS,
 };
 
 const body = JSON.stringify(openApiStub);
 
 export async function GET(): Promise<Response> {
   return new Response(body, { status: 200, headers });
+}
+
+export async function OPTIONS(): Promise<Response> {
+  return handleCorsOptions();
 }

@@ -1,6 +1,9 @@
 import { getHennaBySymbolId } from "@/lib/data/indexes";
 import { toHennaDetailDto } from "@/lib/api/dto/henna";
-import { jsonError, jsonOk, parseChronicleParam } from "@/lib/api/responses";
+import {
+  handleCorsOptions,
+  jsonError, jsonOk, parseChronicleParam
+} from "@/lib/api/responses";
 
 // Per-symbol detail (M8). Path id is the source XML `symbolId` (1..N).
 // Returns the same fields as the catalog plus the resolved
@@ -25,4 +28,7 @@ export async function GET(
   }
 
   return jsonOk(toHennaDetailDto(henna, parsed.chronicle));
+}
+export async function OPTIONS(): Promise<Response> {
+  return handleCorsOptions();
 }

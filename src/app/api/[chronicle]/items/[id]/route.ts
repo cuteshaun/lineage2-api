@@ -1,6 +1,11 @@
 import { getItemById } from "@/lib/data/indexes";
 import { toItemDetailDto } from "@/lib/api/dto/item";
-import { jsonError, jsonOk, parseEntityParams } from "@/lib/api/responses";
+import {
+  handleCorsOptions,
+  jsonError,
+  jsonOk,
+  parseEntityParams,
+} from "@/lib/api/responses";
 
 export async function GET(
   _request: Request,
@@ -15,4 +20,8 @@ export async function GET(
   }
 
   return jsonOk(toItemDetailDto(item, parsed.chronicle));
+}
+
+export async function OPTIONS(): Promise<Response> {
+  return handleCorsOptions();
 }

@@ -1,6 +1,9 @@
 import { getEnrichedNpcDrops } from "@/lib/api/drops";
 import { toNpcDropsDto } from "@/lib/api/dto/drops";
-import { jsonError, jsonOk, parseEntityParams } from "@/lib/api/responses";
+import {
+  handleCorsOptions,
+  jsonError, jsonOk, parseEntityParams
+} from "@/lib/api/responses";
 
 export async function GET(
   _request: Request,
@@ -15,4 +18,7 @@ export async function GET(
   }
 
   return jsonOk(toNpcDropsDto(enriched));
+}
+export async function OPTIONS(): Promise<Response> {
+  return handleCorsOptions();
 }

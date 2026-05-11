@@ -1,6 +1,9 @@
 import { getAllQuests } from "@/lib/data/indexes";
 import { toQuestListDto } from "@/lib/api/dto/quest";
-import { jsonList, parseChronicleParam } from "@/lib/api/responses";
+import {
+  handleCorsOptions,
+  jsonList, parseChronicleParam
+} from "@/lib/api/responses";
 
 export async function GET(
   _request: Request,
@@ -18,4 +21,7 @@ export async function GET(
     limit: dtos.length,
     offset: 0,
   });
+}
+export async function OPTIONS(): Promise<Response> {
+  return handleCorsOptions();
 }

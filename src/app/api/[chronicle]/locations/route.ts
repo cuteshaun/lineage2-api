@@ -1,6 +1,9 @@
 import { getHuntingZones } from "@/lib/data/indexes";
 import { toLocationRefDto } from "@/lib/api/dto/location";
-import { jsonList, parseChronicleParam } from "@/lib/api/responses";
+import {
+  handleCorsOptions,
+  jsonList, parseChronicleParam
+} from "@/lib/api/responses";
 
 // Public catalog of player-facing hunting / map locations for the
 // chronicle (M7 Stage 1). For Interlude that's 209 spatial entries
@@ -34,4 +37,7 @@ export async function GET(
     limit: locations.length,
     offset: 0,
   });
+}
+export async function OPTIONS(): Promise<Response> {
+  return handleCorsOptions();
 }

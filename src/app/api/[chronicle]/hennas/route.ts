@@ -1,6 +1,9 @@
 import { getHennas } from "@/lib/data/indexes";
 import { toHennaSummaryDto } from "@/lib/api/dto/henna";
-import { jsonList, parseChronicleParam } from "@/lib/api/responses";
+import {
+  handleCorsOptions,
+  jsonList, parseChronicleParam
+} from "@/lib/api/responses";
 
 // Public catalog of henna symbols for the chronicle (M8). For Interlude
 // that's 180 entries from upstream `hennas.xml`, with 171 of them
@@ -29,4 +32,7 @@ export async function GET(
     limit: hennas.length,
     offset: 0,
   });
+}
+export async function OPTIONS(): Promise<Response> {
+  return handleCorsOptions();
 }

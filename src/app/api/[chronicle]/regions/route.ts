@@ -1,6 +1,9 @@
 import { getRegions } from "@/lib/data/indexes";
 import { toRegionRefDto } from "@/lib/api/dto/region";
-import { jsonList, parseChronicleParam } from "@/lib/api/responses";
+import {
+  handleCorsOptions,
+  jsonList, parseChronicleParam
+} from "@/lib/api/responses";
 
 // Public catalog of named map regions for the chronicle (M4). Returns
 // the upstream `mapRegions.xml` table — for Interlude that's the 19
@@ -23,4 +26,7 @@ export async function GET(
     limit: regions.length,
     offset: 0,
   });
+}
+export async function OPTIONS(): Promise<Response> {
+  return handleCorsOptions();
 }

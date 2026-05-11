@@ -36,12 +36,22 @@ export const SUCCESS_CACHE_CONTROL =
  */
 export const ERROR_CACHE_CONTROL = "no-store";
 
+export const CORS_HEADERS: HeadersInit = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type",
+};
+
+const corsHeaders = CORS_HEADERS;
+
 const baseHeaders: HeadersInit = {
   "Cache-Control": SUCCESS_CACHE_CONTROL,
+  ...corsHeaders,
 };
 
 const errorHeaders: HeadersInit = {
   "Cache-Control": ERROR_CACHE_CONTROL,
+  ...corsHeaders,
 };
 
 export function jsonOk<T>(data: T, status = 200): Response {
@@ -241,4 +251,12 @@ export function parseSortParam<F extends string>(
   }
 
   return { ok: true, value: { field: field as F, direction } };
+}
+
+/**
+ * Handle CORS preflight OPTIONS requests.
+ * Returns 204 No Content with appropriate CORS headers.
+ */
+export function handleCorsOptions(): Response {
+  return new Response(null, { status: 204, headers: CORS_HEADERS });
 }

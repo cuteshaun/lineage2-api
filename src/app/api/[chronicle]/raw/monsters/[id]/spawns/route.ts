@@ -1,5 +1,8 @@
 import { getRawMonsterById, getRawNpcSpawns } from "@/lib/data/indexes";
-import { jsonError, jsonOk, parseEntityParams } from "@/lib/api/responses";
+import {
+  handleCorsOptions,
+  jsonError, jsonOk, parseEntityParams
+} from "@/lib/api/responses";
 
 // Raw spawn points for a given raw monster id. Same monster-type
 // gatekeeping as `/api/[chronicle]/raw/monsters/[id]`: an id that points at
@@ -21,4 +24,7 @@ export async function GET(
 
   const spawns = getRawNpcSpawns(parsed.chronicle, parsed.id);
   return jsonOk(spawns);
+}
+export async function OPTIONS(): Promise<Response> {
+  return handleCorsOptions();
 }

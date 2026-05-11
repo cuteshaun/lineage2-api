@@ -4,6 +4,7 @@ import {
   type NpcSortField,
 } from "@/lib/data/indexes";
 import {
+  handleCorsOptions,
   jsonError,
   jsonList,
   parseChronicleParam,
@@ -67,4 +68,7 @@ export async function GET(
     limit: pagination.pagination.limit,
     offset: pagination.pagination.offset,
   });
+}
+export async function OPTIONS(): Promise<Response> {
+  return handleCorsOptions();
 }

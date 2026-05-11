@@ -1,5 +1,8 @@
 import { getItemGradeSummary } from "@/lib/data/indexes";
-import { jsonOk, parseChronicleParam } from "@/lib/api/responses";
+import {
+  handleCorsOptions,
+  jsonOk, parseChronicleParam
+} from "@/lib/api/responses";
 
 export async function GET(
   _request: Request,
@@ -9,4 +12,7 @@ export async function GET(
   if (!parsed.ok) return parsed.response;
 
   return jsonOk(getItemGradeSummary(parsed.chronicle));
+}
+export async function OPTIONS(): Promise<Response> {
+  return handleCorsOptions();
 }

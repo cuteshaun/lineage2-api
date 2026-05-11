@@ -1,6 +1,9 @@
 import { getAllArmorSets } from "@/lib/data/indexes";
 import { toArmorSetDetailDto } from "@/lib/api/dto/armor-set";
-import { jsonList, parseChronicleParam } from "@/lib/api/responses";
+import {
+  handleCorsOptions,
+  jsonList, parseChronicleParam
+} from "@/lib/api/responses";
 
 export async function GET(
   _request: Request,
@@ -18,4 +21,7 @@ export async function GET(
     limit: sets.length,
     offset: 0,
   });
+}
+export async function OPTIONS(): Promise<Response> {
+  return handleCorsOptions();
 }

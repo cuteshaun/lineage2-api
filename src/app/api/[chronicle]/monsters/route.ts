@@ -5,6 +5,7 @@ import {
 } from "@/lib/data/indexes";
 import { toNpcListDto } from "@/lib/api/dto/npc";
 import {
+  handleCorsOptions,
   jsonError,
   jsonList,
   parseChronicleParam,
@@ -70,4 +71,7 @@ export async function GET(
     limit: pagination.pagination.limit,
     offset: pagination.pagination.offset,
   });
+}
+export async function OPTIONS(): Promise<Response> {
+  return handleCorsOptions();
 }

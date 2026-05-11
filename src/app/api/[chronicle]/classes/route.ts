@@ -1,6 +1,9 @@
 import { getAllClasses } from "@/lib/data/indexes";
 import { toClassListDto } from "@/lib/api/dto/class";
-import { jsonList, parseChronicleParam } from "@/lib/api/responses";
+import {
+  handleCorsOptions,
+  jsonList, parseChronicleParam
+} from "@/lib/api/responses";
 
 export async function GET(
   _request: Request,
@@ -16,4 +19,7 @@ export async function GET(
     limit: list.length,
     offset: 0,
   });
+}
+export async function OPTIONS(): Promise<Response> {
+  return handleCorsOptions();
 }

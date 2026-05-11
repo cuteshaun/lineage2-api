@@ -286,7 +286,7 @@ async function SymbolDetailMode({
           <div>
             <span className="text-zinc-400 dark:text-zinc-500">Engrave price · </span>
             <span className="text-zinc-900 dark:text-zinc-100">
-              {henna.price.toLocaleString()} a
+              {henna.engravePrice.toLocaleString()} a
             </span>
           </div>
           <div>
@@ -543,7 +543,7 @@ function HennaRow({
         </span>
       </div>
       <span className="flex-none font-mono text-[11px] text-zinc-700 dark:text-zinc-300">
-        {henna.price.toLocaleString()} a
+        {henna.engravePrice.toLocaleString()} a
       </span>
       <Link
         href={`/${chronicle}/items/${henna.dyeItem.id}`}

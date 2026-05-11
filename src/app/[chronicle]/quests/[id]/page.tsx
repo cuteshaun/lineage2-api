@@ -115,7 +115,6 @@ export default async function QuestDetailPage({
                 : null
             }
           />
-          <Fact label="Source" value={q.scriptFile} />
         </dl>
       </Section>
 
@@ -168,7 +167,7 @@ export default async function QuestDetailPage({
 
       {q.questItems.length > 0 && (
         <Section title={`Quest Items (${q.questItems.length})`}>
-          <ItemRowList chronicle={chronicle} items={q.questItems} hideCount />
+          <ItemRowList chronicle={chronicle} items={q.questItems} />
         </Section>
       )}
 
@@ -239,11 +238,17 @@ function NpcList({
 function ItemRowList({
   chronicle,
   items,
-  hideCount = false,
 }: {
   chronicle: string;
-  items: ItemQuantityDto[];
-  hideCount?: boolean;
+  // Accepts both `ItemQuantityDto` (rewards rows, always carry `count`)
+  // and `QuestItemRefDto` (questItems rows, no count). The `× N` badge
+  // renders only when `count` is present and greater than 1.
+  items: ReadonlyArray<{
+    itemId: number;
+    name: string;
+    iconFile: string | null;
+    count?: number;
+  }>;
 }) {
   return (
     <ul className="flex flex-col gap-1.5">
@@ -260,7 +265,7 @@ function ItemRowList({
               decorative
             />
             <span className="text-zinc-900 dark:text-zinc-100">{it.name}</span>
-            {!hideCount && it.count > 1 && (
+            {it.count != null && it.count > 1 && (
               <span className="font-mono text-xs text-zinc-500 dark:text-zinc-400">
                 × {it.count.toLocaleString()}
               </span>

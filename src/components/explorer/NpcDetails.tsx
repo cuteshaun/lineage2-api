@@ -105,18 +105,18 @@ export function NpcDetails({
         <dl className="grid grid-cols-2 gap-x-8 gap-y-2 font-mono text-xs sm:grid-cols-3 md:grid-cols-4">
           <Stat label="Level" value={npc.level} />
           <Stat label="Type" value={npc.npcType} />
-          <Stat label="HP" value={npc.hp} />
-          <Stat label="MP" value={npc.mp} />
-          <Stat label="EXP" value={npc.exp} />
-          <Stat label="SP" value={npc.sp} />
-          <Stat label="P.Atk" value={npc.pAtk} />
-          <Stat label="P.Def" value={npc.pDef} />
-          <Stat label="M.Atk" value={npc.mAtk} />
-          <Stat label="M.Def" value={npc.mDef} />
-          <Stat label="Crit" value={npc.crit} />
-          <Stat label="Atk.Spd" value={npc.atkSpd} />
-          <Stat label="Walk Spd" value={npc.walkSpd} />
-          <Stat label="Run Spd" value={npc.runSpd} />
+          <Stat label="HP" value={npc.stats.hp} />
+          <Stat label="MP" value={npc.stats.mp} />
+          <Stat label="EXP" value={npc.stats.exp} />
+          <Stat label="SP" value={npc.stats.sp} />
+          <Stat label="P.Atk" value={npc.stats.pAtk} />
+          <Stat label="P.Def" value={npc.stats.pDef} />
+          <Stat label="M.Atk" value={npc.stats.mAtk} />
+          <Stat label="M.Def" value={npc.stats.mDef} />
+          <Stat label="Crit" value={npc.stats.crit} />
+          <Stat label="Atk.Spd" value={npc.stats.atkSpd} />
+          <Stat label="Walk Spd" value={npc.stats.walkSpd} />
+          <Stat label="Run Spd" value={npc.stats.runSpd} />
         </dl>
       </Section>
 

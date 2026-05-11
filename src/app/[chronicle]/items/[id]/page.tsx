@@ -153,31 +153,31 @@ export default async function ItemDetailsPage({
     stat("Weight", item.weight),
     stat("Price", item.price),
     stat("Material", item.material),
-    stat("Body Slot", item.bodypart),
+    stat("Body Slot", item.category?.bodypart ?? null),
   ]);
 
   const combat = nonNull([
-    stat("P. Attack", item.pAtk),
-    stat("M. Attack", item.mAtk),
-    stat("P. Defense", item.pDef),
-    stat("M. Defense", item.mDef),
-    stat("Crit Rate", item.rCrit),
-    stat("Atk. Speed", item.pAtkSpd),
-    stat("Shield Rate", item.rShld),
-    stat("Shield Def.", item.sDef),
-    stat("Accuracy", item.accCombat),
-    stat("Evasion", item.rEvas),
-    stat("Soulshots", item.soulshots),
-    stat("Spiritshots", item.spiritshots),
-    stat("MP Consume", item.mpConsume),
-    stat("Reuse Delay", item.reuseDelay),
+    stat("P. Attack", item.stats?.pAtk ?? null),
+    stat("M. Attack", item.stats?.mAtk ?? null),
+    stat("P. Defense", item.stats?.pDef ?? null),
+    stat("M. Defense", item.stats?.mDef ?? null),
+    stat("Crit Rate", item.stats?.rCrit ?? null),
+    stat("Atk. Speed", item.stats?.pAtkSpd ?? null),
+    stat("Shield Rate", item.stats?.rShld ?? null),
+    stat("Shield Def.", item.stats?.sDef ?? null),
+    stat("Accuracy", item.stats?.accCombat ?? null),
+    stat("Evasion", item.stats?.rEvas ?? null),
+    stat("Soulshots", item.shots?.soulshots ?? null),
+    stat("Spiritshots", item.shots?.spiritshots ?? null),
+    stat("MP Consume", item.shots?.mpConsume ?? null),
+    stat("Reuse Delay", item.timing?.reuseDelay ?? null),
   ]);
 
   const info = nonNull([
-    stat("Weapon Type", item.weaponType),
-    stat("Armor Type", item.armorType),
-    stat("Item Category", item.etcItemType),
-    stat("Crystal Count", item.crystalCount),
+    stat("Weapon Type", item.category?.weaponType ?? null),
+    stat("Armor Type", item.category?.armorType ?? null),
+    stat("Item Category", item.category?.etcItemType ?? null),
+    stat("Crystal Count", item.crystal?.count ?? null),
     stat(
       "Skill",
       item.skill?.name?.replace("Special Ability: ", "SA: ") ?? null
@@ -185,10 +185,10 @@ export default async function ItemDetailsPage({
   ]);
 
   const trade = nonNull([
-    stat("Stackable", item.isStackable),
-    stat("Tradable", item.isTradable),
-    stat("Dropable", item.isDropable),
-    stat("Sellable", item.isSellable),
+    stat("Stackable", item.flags?.stackable ?? null),
+    stat("Tradable", item.flags?.tradable ?? null),
+    stat("Dropable", item.flags?.dropable ?? null),
+    stat("Sellable", item.flags?.sellable ?? null),
   ]);
 
   const typeBadge =
@@ -736,7 +736,7 @@ function HennaBlock({
         <div>
           <span className="text-zinc-400 dark:text-zinc-500">Engrave price · </span>
           <span className="text-zinc-900 dark:text-zinc-100">
-            {henna.price.toLocaleString()} a
+            {henna.engravePrice.toLocaleString()} a
           </span>
         </div>
         <div>

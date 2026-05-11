@@ -274,7 +274,7 @@ function SkillRow({
   return (
     <li className="flex items-start gap-3">
       <ItemIcon
-        iconFile={skill.iconFile}
+        iconFile={skill.iconFile ?? null}
         name={skill.name}
         size={28}
         decorative

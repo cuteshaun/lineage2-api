@@ -17,8 +17,7 @@ export default defineConfig({
         },
       ],
       sidebar: [
-        { label: 'Introduction', slug: '' },
-        { label: 'Getting Started', slug: 'getting-started' },
+        { label: 'Getting Started', slug: '' },
         { label: 'Core Concepts', slug: 'core-concepts' },
         { label: 'Response Format', slug: 'response-format' },
         { label: 'Endpoints', slug: 'endpoints' },

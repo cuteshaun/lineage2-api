@@ -1,65 +1,81 @@
 ---
-title: Welcome
-description: A read-only HTTP API over Lineage 2 game data
-template: splash
-hero:
-  tagline: Read-only HTTP API for Lineage 2 Interlude game data
-  actions:
-    - text: Get Started
-      link: /getting-started/
-      icon: right-arrow
-    - text: View on GitHub
-      link: https://github.com/cuteshaun/lineage2-api
-      icon: external
-      variant: minimal
+title: Getting Started
+description: Quick start guide with examples
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+## Making your first API call
 
-## About this API
+The API is hosted at **https://l2api.dev** and all routes live under `/api/[chronicle]/...`.
 
-**Lineage 2 API** is a read-only HTTP API serving **Interlude** game data—items, NPCs, monsters, drops, spawns, quests, classes, hennas, locations, regions, armor sets, and shops.
+### Example requests
 
-Generated from an aCis Interlude datapack and Lineage 2 client DAT files. No database, no runtime XML parsing—a build step turns upstream sources into JSON, and the runtime serves DTOs over those files.
+Here are four quick curl examples to get a feel for the API:
 
-### Key facts
-
-<CardGrid>
-  <Card title="No authentication" icon="lock">
-    Public API. No API keys, no credentials required. CORS enabled.
-  </Card>
-  <Card title="Interlude only" icon="rocket">
-    Currently supports Interlude chronicle. Architecture is chronicle-aware for future expansion.
-  </Card>
-  <Card title="aCis is truth" icon="approve">
-    Data is faithful to the aCis datapack. Differences vs other databases are source/reference differences, not bugs.
-  </Card>
-  <Card title="Immutable per deploy" icon="none">
-    Data is static JSON committed to git. Full deploy → full dataset refresh.
-  </Card>
-</CardGrid>
-
-### Quick example
-
+**Fetch an item (Adena):**
 ```bash
 curl https://l2api.dev/api/interlude/items/57
 ```
 
-```json
-{
-  "data": {
-    "id": 57,
-    "name": "Adena",
-    "type": "etcitem",
-    "grade": "none",
-    "weight": 0,
-    "price": null,
-    "material": null,
-    "iconFile": "etc_coin_copper_i00"
-  }
-}
+**Fetch a monster (Queen Ant):**
+```bash
+curl https://l2api.dev/api/interlude/monsters/29001
 ```
 
-## Unofficial project
+**Fetch a quest (Letters of Love):**
+```bash
+curl https://l2api.dev/api/interlude/quests/1
+```
 
-Not affiliated with or endorsed by NCSoft. Lineage and Lineage 2 are trademarks of their respective owners.
+**Fetch the OpenAPI spec:**
+```bash
+curl https://l2api.dev/api/openapi.json
+```
+
+All examples use the `interlude` chronicle. The chronicle is a required URL segment on every endpoint.
+
+## Running the API locally
+
+The generated dataset (`data/generated/interlude/`) is committed to the repository, so a fresh clone runs the full API without needing a local datapack.
+
+```bash
+# Clone and install
+git clone https://github.com/cuteshaun/lineage2-api
+cd lineage2-api
+pnpm install
+
+# Start the development server
+pnpm dev
+```
+
+The API will be available at **http://localhost:3000/api/interlude/...**.
+
+## Building for production
+
+```bash
+pnpm build
+pnpm start
+```
+
+## Regenerating the dataset
+
+The `data/generated/interlude/` JSON files are the source of truth the API serves. To regenerate them:
+
+```bash
+pnpm build:data
+```
+
+This command requires:
+- A local **aCis Interlude datapack** checkout configured in `scripts/chronicle-sources.ts`
+- Optionally, Lineage 2 client **DAT files** for enhanced data extraction
+
+The datapack and DAT files are not redistributed. After regenerating, the JSON diff is reviewed in PR alongside any parser changes—the dataset is an audited artifact.
+
+## OpenAPI spec
+
+The machine-readable **OpenAPI 3.0.3** specification is available at:
+
+```
+GET https://l2api.dev/api/openapi.json
+```
+
+This is a Phase-A stub covering shared reference schemas but not full per-route coverage. See `docs/api-contract.md` in the repository for the detailed contract.

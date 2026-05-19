@@ -1,0 +1,1 @@
+Individual icons extracted from the approved icon-pack screenshot. Contains transparent PNG icons plus @2x nearest-neighbor versions. flat_offwhite/ contains non-transparent raw crops for reference. These are raster extractions, not true vector SVG redraws.

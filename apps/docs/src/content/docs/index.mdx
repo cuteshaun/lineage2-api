@@ -1,24 +1,89 @@
 ---
-title: Getting Started
-description: Quick start guide with examples
+title: Lineage 2 API
+description: A read-only HTTP API for Lineage 2 Interlude game data
 ---
 
-## Making your first API call
+A public, read-only API for **Lineage 2 Interlude** game data.
 
-The API is hosted at **https://l2api.dev** and all routes live under `/api/[chronicle]/...`.
+Fetch items, monsters, NPCs, drops, quests, classes, armor sets, locations, hennas, and more. Perfect for wikis, guides, price checkers, loot tables, and data exploration tools.
 
-### Example requests
+## Base URL
 
-Here are four quick curl examples to get a feel for the API:
-
-**Fetch an item (Adena):**
-```bash
-curl https://l2api.dev/api/interlude/items/57
+```
+https://l2api.dev/api/interlude
 ```
 
-**Fetch a monster (Queen Ant):**
+All game-data routes are scoped by **chronicle**. Currently, `interlude` is the only supported chronicle.
+
+## Your first request
+
+Fetch the Bloody Orchid (Grade A dagger):
+
 ```bash
-curl https://l2api.dev/api/interlude/monsters/29001
+curl https://l2api.dev/api/interlude/items/235
+```
+
+```json
+{
+  "data": {
+    "id": 235,
+    "name": "Bloody Orchid",
+    "type": "weapon",
+    "grade": "a",
+    "weight": 960,
+    "price": 18300000,
+    "material": "BLOOD_STEEL",
+    "iconFile": "weapon_bloody_orchid_i00.png",
+    "category": {
+      "bodypart": "One-handed",
+      "weaponType": "DAGGER"
+    },
+    "stats": {
+      "pAtk": 186,
+      "mAtk": 107,
+      "rCrit": 12,
+      "pAtkSpd": 433,
+      "accCombat": 3
+    },
+    "shots": {
+      "soulshots": 1,
+      "spiritshots": 1
+    },
+    "crystal": {
+      "count": 1464
+    },
+    "specialAbilityOptions": [
+      {
+        "itemId": 4783,
+        "name": "Bloody Orchid - Evasion",
+        "saName": "Evasion",
+        "effectChance": null
+      },
+      {
+        "itemId": 5614,
+        "name": "Bloody Orchid - Focus",
+        "saName": "Focus",
+        "effectChance": null
+      }
+    ],
+    "pvpBonus": {
+      "damageMultiplier": 1.05,
+      "display": "+5% PvP Damage"
+    }
+  }
+}
+```
+
+## Popular requests
+
+**Fetch a boss (Queen Ant):**
+```bash
+curl https://l2api.dev/api/interlude/npcs/29001
+```
+
+**List items with pagination:**
+```bash
+curl 'https://l2api.dev/api/interlude/items?limit=10&offset=0'
 ```
 
 **Fetch a quest (Letters of Love):**
@@ -26,56 +91,72 @@ curl https://l2api.dev/api/interlude/monsters/29001
 curl https://l2api.dev/api/interlude/quests/1
 ```
 
-**Fetch the OpenAPI spec:**
+**List an armor set:**
+```bash
+curl https://l2api.dev/api/interlude/armor-sets/1
+```
+
+**Search the OpenAPI spec:**
 ```bash
 curl https://l2api.dev/api/openapi.json
 ```
 
-All examples use the `interlude` chronicle. The chronicle is a required URL segment on every endpoint.
+## Main resources
 
-## Running the API locally
+| Resource | Description |
+|----------|-------------|
+| **items** | Weapons, armor, consumables, quest items, spellbooks, recipes |
+| **npcs** | Non-player characters: merchants, guards, quest givers |
+| **monsters** | Combat mobs: regular enemies, bosses, raid bosses |
+| **drops** | Monster drop and spoil rates by item |
+| **quests** | Quest catalog, objectives, rewards |
+| **classes** | Player classes and skill-learn progression |
+| **armor-sets** | Armor set pieces and set bonuses |
+| **locations** | Hunting zones and map locations |
+| **hennas** | Dye and symbol cosmetic and stat items |
+| **regions** | Geographic regions and zone groupings |
 
-The generated dataset (`data/generated/interlude/`) is committed to the repository, so a fresh clone runs the full API without needing a local datapack.
+## Response format
 
-```bash
-# Clone and install
-git clone https://github.com/cuteshaun/lineage2-api
-cd lineage2-api
-pnpm install
-
-# Start the development server
-pnpm dev
+**Single resource:**
+```json
+{
+  "data": { }
+}
 ```
 
-The API will be available at **http://localhost:3000/api/interlude/...**.
-
-## Building for production
-
-```bash
-pnpm build
-pnpm start
+**List of resources:**
+```json
+{
+  "data": [ ],
+  "meta": {
+    "total": 9206,
+    "limit": 50,
+    "offset": 0
+  }
+}
 ```
 
-## Regenerating the dataset
+Use the `limit` and `offset` parameters to paginate. See **Response Format** for full details on pagination, caching headers, and error handling.
 
-The `data/generated/interlude/` JSON files are the source of truth the API serves. To regenerate them:
+## Public vs raw data
 
-```bash
-pnpm build:data
-```
+The API exposes two layers:
 
-This command requires:
-- A local **aCis Interlude datapack** checkout configured in `scripts/chronicle-sources.ts`
-- Optionally, Lineage 2 client **DAT files** for enhanced data extraction
+- **Public endpoints:** Cleaned, deduplicated, cross-linked data for players and developers
+- **Raw endpoints:** One-to-one source records for auditing and data verification
 
-The datapack and DAT files are not redistributed. After regenerating, the JSON diff is reviewed in PR alongside any parser changes—the dataset is an audited artifact.
+Example: `/api/interlude/items` (public) vs `/api/interlude/raw/items` (raw)
 
-## OpenAPI spec
+Learn more in **Core Concepts**.
 
-The machine-readable **OpenAPI 3.0.3** specification is available at:
+## No authentication required
 
-```
-GET https://l2api.dev/api/openapi.json
-```
+The API is public. No API keys or credentials needed. CORS is enabled for browser-based requests.
 
-This is a Phase-A stub covering shared reference schemas but not full per-route coverage. See `docs/api-contract.md` in the repository for the detailed contract.
+## Next steps
+
+- **Making requests?** → [Response Format](/response-format/) (envelopes, pagination, errors, caching)
+- **Understanding the data?** → [Core Concepts](/core-concepts/) (chronicles, DTOs, how data is built)
+- **Browsing all endpoints?** → [Endpoints](/endpoints/) (complete reference)
+- **Know the limits?** → [Limitations](/limitations/) (scope, Interlude-only, data source)

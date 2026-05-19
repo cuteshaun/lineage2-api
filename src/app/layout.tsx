@@ -1,21 +1,25 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Jersey_25 } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const jersey25 = Jersey_25({
+  variable: "--font-jersey-25",
   subsets: ["latin"],
+  weight: ["400"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const departureMono = localFont({
+  src: "../../public/fonts/DepartureMono-Regular.woff2",
+  variable: "--font-departure-mono",
+  display: "swap",
+  weight: "400",
 });
 
 export const metadata: Metadata = {
   title: "Lineage 2 API",
   description:
-    "A read-only HTTP API over Lineage 2 datapack content (items, NPCs, drops). Currently supports the Interlude chronicle.",
+    "A clean, read-only HTTP API for Lineage 2 Interlude game data: items, NPCs, monsters, drops, quests, classes, locations, and more.",
 };
 
 export default function RootLayout({
@@ -26,9 +30,11 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${jersey25.variable} ${departureMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col bg-[var(--bg)] text-[var(--ink)]">
+        {children}
+      </body>
     </html>
   );
 }

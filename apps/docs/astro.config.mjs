@@ -8,7 +8,7 @@ export default defineConfig({
     starlight({
       title: 'Lineage 2 API',
       description:
-        'Documentation for the Lineage 2 read-only HTTP API — items, NPCs, monsters, drops, quests, classes, and more.',
+        'A read-only HTTP API for Lineage 2 Interlude game data — items, NPCs, monsters, drops, quests, classes, armor sets, and more.',
       social: [
         {
           icon: 'github',
@@ -17,11 +17,33 @@ export default defineConfig({
         },
       ],
       sidebar: [
-        { label: 'Getting Started', slug: '' },
-        { label: 'Core Concepts', slug: 'core-concepts' },
-        { label: 'Response Format', slug: 'response-format' },
-        { label: 'Endpoints', slug: 'endpoints' },
-        { label: 'Limitations', slug: 'limitations' },
+        {
+          label: 'Getting Started',
+          items: [
+            { label: 'Overview', slug: '' },
+            { label: 'Response Format', slug: 'response-format' },
+          ],
+        },
+        {
+          label: 'Understanding the API',
+          items: [
+            { label: 'Core Concepts', slug: 'core-concepts' },
+          ],
+        },
+        {
+          label: 'Reference',
+          items: [
+            { label: 'All Endpoints', slug: 'endpoints' },
+            { label: 'OpenAPI Spec', link: 'https://l2api.dev/api/openapi.json' },
+          ],
+        },
+        {
+          label: 'More Info',
+          items: [
+            { label: 'Limitations', slug: 'limitations' },
+            { label: 'Local Development', slug: 'local-development' },
+          ],
+        },
       ],
       customCss: [],
       head: [],

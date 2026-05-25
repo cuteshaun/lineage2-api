@@ -339,7 +339,16 @@ function Disclaimer() {
         className="flex justify-between w-full text-[14px] leading-[1.5]"
         style={{ color: "var(--muted)" }}
       >
-        <p>© 2026 Built by <a href="https://tsapko.me/">cuteshaun</a></p>
+        <p>
+          © 2026 Built by{" "}
+          <a
+            href="https://tsapko.me/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            cuteshaun
+          </a>
+        </p>
 
         <p>Not affiliated with NCSoft</p>
       </div>

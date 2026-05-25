@@ -195,8 +195,8 @@ body {
 
 @media (min-width: 1024px) {
     .hero-grid {
-        grid-template-columns: minmax(0, 1fr) 520px;
-        column-gap: 84px;
+        grid-template-columns: minmax(0, 1fr) 515px;
+        column-gap: 48px;
         row-gap: 0;
         align-items: center;
     }

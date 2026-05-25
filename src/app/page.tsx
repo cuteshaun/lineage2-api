@@ -172,7 +172,7 @@ function Hero() {
         </div>
       </div>
 
-      <div className="w-full lg:w-[520px]">
+      <div className="w-full lg:w-[515px] lg:justify-self-end lg:ml-auto">
         <BloodyOrchidCard />
       </div>
     </section>
@@ -186,9 +186,12 @@ function BloodyOrchidCard() {
     <article
       className="relative border-[3px] border-[var(--border)] bg-[var(--surface)] shadow-card-gold"
       style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
         borderRadius: "var(--radius)",
         padding: "28px 32px",
-        minHeight: "280px",
+        minHeight: "320px",
       }}
     >
       <div
@@ -197,12 +200,12 @@ function BloodyOrchidCard() {
       >
         <div
           className="flex shrink-0 items-center justify-center border-2 border-[var(--border-soft)] bg-[var(--bg)]"
-          style={{ width: "132px", height: "132px", borderRadius: "4px" }}
+          style={{ width: "142px", height: "142px", borderRadius: "4px" }}
         >
           <Image
             src={`${ICON_BASE}/bloody1-orchid.png`}
-            width={88}
-            height={120}
+            width={110}
+            height={130}
             alt="Bloody Orchid"
           />
         </div>
@@ -248,7 +251,7 @@ function BloodyOrchidCard() {
         href="https://docs.l2api.dev/"
         className="inline-flex items-center gap-2 text-[15px] font-extrabold uppercase tracking-[0.12em] text-[var(--blue)] hover:underline"
       >
-        View Example
+        Open JSON
         <ArrowRightIcon className="h-4 w-4" />
       </a>
     </article>

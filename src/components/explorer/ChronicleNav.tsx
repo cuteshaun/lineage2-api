@@ -13,19 +13,21 @@ export function ChronicleNav({
     | "armor-sets"
     | "classes"
     | "quests"
+    | "hennas"
     | "locations";
 }) {
   const links: Array<{ href: string; label: string; key: typeof section }> = [
     { href: `/${chronicle}/items`, label: "Items", key: "items" },
+    { href: `/${chronicle}/npcs`, label: "NPCs", key: "npcs" },
+    { href: `/${chronicle}/monsters`, label: "Monsters", key: "monsters" },
+    { href: `/${chronicle}/quests`, label: "Quests", key: "quests" },
+    { href: `/${chronicle}/classes`, label: "Classes", key: "classes" },
     {
       href: `/${chronicle}/armor-sets`,
       label: "Armor Sets",
       key: "armor-sets",
     },
-    { href: `/${chronicle}/classes`, label: "Classes", key: "classes" },
-    { href: `/${chronicle}/quests`, label: "Quests", key: "quests" },
-    { href: `/${chronicle}/npcs`, label: "NPCs", key: "npcs" },
-    { href: `/${chronicle}/monsters`, label: "Monsters", key: "monsters" },
+    { href: `/${chronicle}/hennas`, label: "Hennas", key: "hennas" },
     { href: `/${chronicle}/locations`, label: "Locations", key: "locations" },
   ];
 

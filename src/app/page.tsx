@@ -240,7 +240,7 @@ function BloodyOrchidCard() {
             className="mt-[14px] text-[15px] font-extrabold"
             style={{ color: "var(--blue)" }}
           >
-            <span>GET</span> <span>/api/interlude/items/8689</span>
+            <span>GET</span> <span>/api/interlude/items/235</span>
           </p>
         </div>
       </div>

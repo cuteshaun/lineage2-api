@@ -184,14 +184,14 @@ function Hero() {
 function BloodyOrchidCard() {
   return (
     <article
-      className="relative border-[3px] border-[var(--border)] bg-[var(--surface)] shadow-card-gold"
+      className="relative border-[3px] mb-5 border-[var(--border)] bg-[var(--surface)] shadow-card-gold"
       style={{
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
         borderRadius: "var(--radius)",
         padding: "28px 32px",
-        minHeight: "320px",
+        minHeight: "300px",
       }}
     >
       <div
@@ -229,18 +229,18 @@ function BloodyOrchidCard() {
             Weapon
           </span>
 
-          <p
-            className="mt-[22px] text-[15px] font-extrabold"
-            style={{ color: "var(--blue)" }}
-          >
-            <span>GET</span> <span>/api/interlude/items/8689</span>
-          </p>
-
-          <p
-            className="mt-[18px] text-[15px] leading-relaxed"
+          <span
+            className="mt-[14px] text-[15px] leading-relaxed"
             style={{ color: "var(--ink)" }}
           >
             A-grade dagger
+          </span>
+
+          <p
+            className="mt-[14px] text-[15px] font-extrabold"
+            style={{ color: "var(--blue)" }}
+          >
+            <span>GET</span> <span>/api/interlude/items/8689</span>
           </p>
         </div>
       </div>

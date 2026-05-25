@@ -55,7 +55,7 @@ function SiteHeader() {
           </a>
         </nav>
 
-        <a href="https://github.com/sponsors/cuteshaun" className="btn-sponsor">
+        <a href="https://buymeacoffee.com/cuteshaun" target="_blank" rel="noreferrer" className="btn-sponsor">
           Sponsor
           <Image
             src={`${ICON_BASE}/07_sponsor_heart.png`}
@@ -144,7 +144,7 @@ function Hero() {
             />
             Docs
           </a>
-          <a href="#knowledge-base" className="btn-brutal btn-brutal-secondary">
+          <a href="https://explorer.l2api.dev/interlude" className="btn-brutal btn-brutal-secondary">
             <Image
               src={`${ICON_BASE}/04_knowledge_q_circle.png`}
               width={20}
@@ -155,7 +155,7 @@ function Hero() {
             />
             Knowledge Base
           </a>
-          <a
+          {/* <a
             href="#download"
             className="inline-flex items-center gap-2.5 text-[15px] font-extrabold uppercase tracking-[0.1em] text-[var(--ink)]"
           >
@@ -167,8 +167,8 @@ function Hero() {
               style={pixel}
               unoptimized
             />
-            <span className="link-download">Download Dataset</span>
-          </a>
+            <span className="link-download">Download Datapack</span>
+          </a> */}
         </div>
       </div>
 
@@ -248,7 +248,7 @@ function BloodyOrchidCard() {
       <div className="my-[26px] divider-dashed-soft" />
 
       <a
-        href="https://docs.l2api.dev/"
+        href="https://l2api.dev//api/interlude/items/235"
         className="inline-flex items-center gap-2 text-[15px] font-extrabold uppercase tracking-[0.12em] text-[var(--blue)] hover:underline"
       >
         Open JSON
@@ -336,10 +336,12 @@ function Disclaimer() {
         }}
       />
       <div
-        className="text-[14px] leading-[1.5]"
+        className="flex justify-between w-full text-[14px] leading-[1.5]"
         style={{ color: "var(--muted)" }}
       >
-        <p>Unofficial project. Not affiliated with or endorsed by NCSoft.</p>
+        <p>© 2026 Built by <a href="https://tsapko.me/">cuteshaun</a></p>
+
+        <p>Not affiliated with NCSoft</p>
       </div>
     </footer>
   );

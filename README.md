@@ -92,9 +92,7 @@ Deployment notes live in [docs/deployment.md](docs/deployment.md).
 
 ## Disclaimer
 
-Unofficial fan project. Not affiliated with NCSoft. *Lineage* and
-*Lineage II* are trademarks of their respective owners. This repository
-ships no game client or datapack content.
+Unofficial fan project. Not affiliated with NCSoft.
 
 
 ## License

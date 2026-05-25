@@ -77,12 +77,10 @@ function Hero() {
   return (
     <section className="hero-grid pt-12 lg:pt-[72px]">
       <div className="flex flex-col">
-        <span
-          className="inline-flex w-fit border border-[var(--gold-strong)] bg-[var(--gold-soft)] px-3 py-[7px] text-[13px] font-extrabold uppercase tracking-[0.16em]"
-          style={{ color: "var(--ink)" }}
-        >
-          Unofficial · Interlude · Read-Only
-        </span>
+        <div className="chronicle-badge" aria-label="Current chronicle">
+          <span className="chronicle-badge__label">Chronicle</span>
+          <span className="chronicle-badge__value">Interlude</span>
+        </div>
 
         <h1
           className="font-display mt-8 uppercase lg:whitespace-nowrap"
@@ -121,8 +119,8 @@ function Hero() {
           className="mt-9 max-w-[590px] text-[18px] font-medium leading-[1.55]"
           style={{ color: "var(--ink-soft)" }}
         >
-          A clean, read-only HTTP API for Interlude game data: items, NPCs,
-          monsters, drops, quests, classes, locations, and more.
+          A clean HTTP API for Interlude game data: items, NPCs, monsters,
+          drops, quests, classes, locations, and more.
         </p>
         <p
           className="mt-[22px] max-w-[590px] text-[18px] font-medium leading-[1.55]"
@@ -271,13 +269,13 @@ const STATS: Stat[] = [
   { iconFile: "11_monster_skull.png", value: "3,150", label: "Monsters" },
   { iconFile: "12_droplet.png", value: "40,878", label: "Drops & Spoil" },
   { iconFile: "13_scroll_document.png", value: "329", label: "Quests" },
-  { iconFile: "14_chronicle_compass.png", value: "Interlude", label: "Chronicle" },
+  // { iconFile: "14_chronicle_compass.png", value: "Interlude", label: "Chronicle" },
 ];
 
 function StatsRow() {
   return (
     <section
-      className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6"
+      className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5"
       style={{
         marginTop: "44px",
         padding: "28px 0 30px",
@@ -330,7 +328,7 @@ function Disclaimer() {
         className="shrink-0"
         style={{
           width: "2px",
-          height: "48px",
+          height: "24px",
           background: "var(--gold-strong)",
         }}
       />
@@ -339,9 +337,6 @@ function Disclaimer() {
         style={{ color: "var(--muted)" }}
       >
         <p>Unofficial project. Not affiliated with or endorsed by NCSoft.</p>
-        <p>
-          Lineage and Lineage 2 are trademarks of their respective owners.
-        </p>
       </div>
     </footer>
   );

@@ -54,7 +54,7 @@ export default function AboutPage() {
             className={`${iaWriterQuattro.className} mt-7 text-[18px] leading-[1.6]`}
             style={bodyTextStyle}
           >
-            I started playing when I was 11, at a computer club called EXE in
+            I started playing in 2004 when I was 11, at a computer club called EXE in
             Odesa, Ukraine. My first chronicle was C1 on TeNeT, a local server
             where everything felt mysterious. I barely spoke English, there were
             almost no guides, and we learned the game by exploring, asking each

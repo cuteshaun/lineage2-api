@@ -1,11 +1,28 @@
 import type { Metadata } from "next";
+import localFont from "next/font/local";
 import { SiteHeader } from "@/components/landing/SiteHeader";
+
+const iaWriterQuattro = localFont({
+  src: "../../../public/fonts/ia-writer-quattro-latin-400-normal.woff2",
+  weight: "400",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "About — Lineage 2 API",
   description:
     "About the Lineage 2 API project: its origins, motivation, and the community it was built for.",
 };
+
+const bodyTextStyle = {
+  letterSpacing: "0",
+  color: "var(--ink-soft)",
+} as const;
+
+const leadTextStyle = {
+  letterSpacing: "0",
+  color: "var(--ink)",
+} as const;
 
 export default function AboutPage() {
   return (
@@ -26,16 +43,16 @@ export default function AboutPage() {
           </h1>
 
           <p
-            className="mt-10 text-[20px] leading-[1.6]"
-            style={{ color: "var(--ink)" }}
+            className={`${iaWriterQuattro.className} mt-9 text-[20px] leading-[1.7]`}
+            style={leadTextStyle}
           >
             Lineage 2 API is my tribute to the community, old servers, and the
             nostalgia of exploring this world together.
           </p>
 
           <p
-            className="mt-6 text-[18px] leading-[1.65]"
-            style={{ color: "var(--ink-soft)" }}
+            className={`${iaWriterQuattro.className} mt-7 text-[18px] leading-[1.6]`}
+            style={bodyTextStyle}
           >
             I started playing when I was 11, at a computer club called EXE in
             Odesa, Ukraine. My first chronicle was C1 on TeNeT, a local server
@@ -45,8 +62,8 @@ export default function AboutPage() {
           </p>
 
           <p
-            className="mt-6 text-[18px] leading-[1.65]"
-            style={{ color: "var(--ink-soft)" }}
+            className={`${iaWriterQuattro.className} mt-7 text-[18px] leading-[1.6]`}
+            style={bodyTextStyle}
           >
             That was the magic for me: not just the game, but the people.
             Intrigues, clan wars, sieges, epic bosses, love stories, and
@@ -56,8 +73,8 @@ export default function AboutPage() {
           </p>
 
           <p
-            className="mt-6 text-[18px] leading-[1.65]"
-            style={{ color: "var(--ink-soft)" }}
+            className={`${iaWriterQuattro.className} mt-7 text-[18px] leading-[1.6]`}
+            style={bodyTextStyle}
           >
             Years later, I wanted to build something the 11-year-old version of
             me would have loved: a better way to explore the world of Lineage 2.
@@ -67,8 +84,8 @@ export default function AboutPage() {
           </p>
 
           <p
-            className="mt-6 text-[18px] leading-[1.65]"
-            style={{ color: "var(--ink-soft)" }}
+            className={`${iaWriterQuattro.className} mt-7 text-[18px] leading-[1.6]`}
+            style={bodyTextStyle}
           >
             I looked for a public API for Lineage 2 data and could not find one.
             There were datapacks, scattered XML files, SQL dumps, client files,
@@ -77,15 +94,15 @@ export default function AboutPage() {
           </p>
 
           <p
-            className="mt-6 text-[18px] leading-[1.65]"
-            style={{ color: "var(--ink-soft)" }}
+            className={`${iaWriterQuattro.className} mt-7 text-[18px] leading-[1.6]`}
+            style={bodyTextStyle}
           >
             So I did the boring part.
           </p>
 
           <p
-            className="mt-6 text-[18px] leading-[1.65]"
-            style={{ color: "var(--ink-soft)" }}
+            className={`${iaWriterQuattro.className} mt-7 text-[18px] leading-[1.6]`}
+            style={bodyTextStyle}
           >
             This API parses the source data, normalizes it, deduplicates noisy
             records, enriches entities with useful cross-links, and exposes
@@ -94,8 +111,8 @@ export default function AboutPage() {
           </p>
 
           <p
-            className="mt-6 text-[18px] leading-[1.65]"
-            style={{ color: "var(--ink-soft)" }}
+            className={`${iaWriterQuattro.className} mt-7 text-[18px] leading-[1.6]`}
+            style={bodyTextStyle}
           >
             The current focus is Interlude, the chronicle closest to my own
             memories and the one many players still recognize instantly. More
@@ -103,23 +120,16 @@ export default function AboutPage() {
           </p>
 
           <p
-            className="mt-6 text-[18px] leading-[1.65]"
-            style={{ color: "var(--ink-soft)" }}
+            className={`${iaWriterQuattro.className} mt-7 text-[18px] leading-[1.6]`}
+            style={bodyTextStyle}
           >
             Use it to build an item explorer, drop calculator, Discord bot,
             knowledge base, or anything that brings this old world back to life.
           </p>
 
           <p
-            className="mt-6 text-[18px] leading-[1.65]"
-            style={{ color: "var(--ink-soft)" }}
-          >
-            This is an unofficial fan project. Not affiliated with NCSoft.
-          </p>
-
-          <p
-            className="mt-6 text-[18px] leading-[1.65]"
-            style={{ color: "var(--ink-soft)" }}
+            className={`${iaWriterQuattro.className} mt-7 text-[18px] leading-[1.6]`}
+            style={bodyTextStyle}
           >
             I built it because I wanted something like this to exist.
           </p>

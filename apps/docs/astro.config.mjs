@@ -24,6 +24,7 @@ export default defineConfig({
             { label: 'Response Format', slug: 'response-format' },
           ],
         },
+        { label: 'Recipes', slug: 'recipes' },
         {
           label: 'Reference',
           items: [

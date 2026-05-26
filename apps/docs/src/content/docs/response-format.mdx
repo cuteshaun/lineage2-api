@@ -3,6 +3,8 @@ title: Response Format
 description: Understand API response structure, pagination, caching, and cross-origin access
 ---
 
+**Always read from `data`.** Don't rely on root-level keys — they're not part of the contract.
+
 ## Response envelope
 
 All successful API responses follow a consistent envelope:
@@ -88,6 +90,10 @@ GET /api/interlude/items?limit=10&offset=20
 ```
 
 Use `total` to calculate the number of pages: `Math.ceil(total / limit)`.
+
+### Endpoints that don't paginate
+
+`armor-sets`, `locations`, and `regions` return every record in a single response and ignore `limit` and `offset`. They still wrap the result in `{ "data": [ ] }` for consistency.
 
 ## Caching
 

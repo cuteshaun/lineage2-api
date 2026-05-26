@@ -1,11 +1,11 @@
 ---
 title: Core Concepts
-description: Understand how the API is structured
+description: Three things to know before you build
 ---
 
 ## Chronicles
 
-A **chronicle** is a game version. The API is chronicle-aware: every route requires a chronicle in the URL path.
+A **chronicle** is a game version. Every API route includes the chronicle in the URL path:
 
 ```
 /api/[chronicle]/items
@@ -13,70 +13,49 @@ A **chronicle** is a game version. The API is chronicle-aware: every route requi
 /api/[chronicle]/quests
 ```
 
-Currently, `interlude` is the only supported chronicle. Future additions (like `glory_days`, `awakening`, etc.) will coexist at the same API paths without route changes.
+Today only `interlude` is supported. When more chronicles ship later, they'll coexist at the same URL shape — your code will work with a different chronicle by changing the path segment.
 
-## Public vs. raw API
+## Public vs raw
 
-Two layers exist side-by-side, each with a different purpose:
+Two layers, side by side, with different purposes:
 
-### Public API (DTO layer)
+### Public endpoints
 
-- **What:** Cleaned, deduplicated, normalized data
-- **Where:** `/api/[chronicle]/items`, `/api/[chronicle]/npcs`, etc.
-- **For:** Consumer applications
-- **Shape:** Stable contract, locked by snapshot tests
-- **Example:** `GET /api/interlude/items/57` returns a cleaned `ItemDetailDto`
+Cleaned, deduplicated, and cross-linked. This is what you should use to build.
 
-The public API applies:
-- **Deduplication:** Multiple raw NPC records with the same name merge into one
-- **Normalization:** Whitespace trimming, rounding, null-vs-absent distinction
-- **Enrichment:** Cross-link blocks (drops, shops, quests, sets, etc.) attached to items and NPCs
-- **Grouping:** Type-specific data grouped into optional sections (category, stats, shots, etc.)
+- **Where:** `/api/[chronicle]/items`, `/api/[chronicle]/npcs`, `/api/[chronicle]/quests`, etc.
+- **What it does for you:**
+  - **Deduplication** — multiple source NPC rows with the same name are merged into one record
+  - **Normalization** — trimmed whitespace, sensible rounding, consistent null vs missing
+  - **Enrichment** — cross-links to related drops, shops, quests, and sets
+  - **Grouping** — type-specific blocks (category, stats, shots, etc.)
+- **Stability:** treat the response shape as a stable contract. Field additions are possible; renames or removals are not done lightly.
 
-### Raw API (source-faithful layer)
+### Raw endpoints
 
-- **What:** One-to-one mapping of source records
-- **Where:** `/api/[chronicle]/raw/npcs`, `/api/[chronicle]/raw/monsters`, etc.
-- **For:** Data auditing, understanding the source, parser verification
-- **Shape:** Not a contract; may change if parsing improves
-- **Example:** `GET /api/interlude/raw/npcs` returns every raw NPC row from the source
+Source-faithful records, useful for auditing, debugging, or comparing against the upstream datapack.
 
-## Build-time generated data
+- **Where:** `/api/[chronicle]/raw/npcs`, `/api/[chronicle]/raw/monsters`, plus their `:id` and spawn variants.
+- **Shape:** mirrors the source data closely. Treat it as best-effort, not as a stable contract — parser improvements may change field names.
 
-The API does **not parse XML or DAT files at runtime**. Instead:
+## Where the data comes from
 
-1. **Build time:** Parsers in `scripts/` read aCis XML and client DAT files
-2. **Generate:** Output to `data/generated/interlude/*.json`
-3. **Commit:** JSON files are committed to git as artifacts
-4. **Runtime:** Serve those pre-computed JSON files as DTOs
+The API doesn't parse XML or game files at request time. Instead:
 
-Benefits:
-- **Fast API:** No runtime parsing, no disk I/O on request path
-- **Auditable:** All data changes are visible in git diffs
-- **Immutable per deploy:** Data changes only on deploy, never mid-request
-- **Testable:** Snapshot tests verify the contract for each record shape
+1. A build step parses the **aCis Interlude datapack** (XML) and optional **Lineage 2 client DAT files**.
+2. Output is written to `data/generated/interlude/*.json`.
+3. Those JSON files are committed to the repo and served as-is.
 
-## Data sources
+Practical implications:
 
-### aCis Interlude datapack
+- **Fast** — no parsing on the request path.
+- **Stable between deploys** — data only changes when the JSON is regenerated and shipped.
+- **Auditable** — every data change is visible in git diffs.
 
-The **aCis Interlude datapack** is the primary source of truth. All records come from its XML files (npcdata, itemdata, skilldata, etc.).
+### aCis as the source of truth
 
-This API treats aCis as canonical. If you find differences vs. other databases (L2Hub, PTS, L2Wiki, etc.):
-- Those references may use different datapacks, runtime formulas, or corrections
-- The API surfaces what aCis provides; it does not synthesize or rescale values
+The API surfaces what aCis provides — it doesn't synthesize values or reconcile with other databases. If you see a difference from L2Hub, PTS, L2Wiki, or another source, that's a source difference, not an API bug. Other references may use different datapacks or apply their own corrections.
 
-### Lineage 2 client DAT files
+### Optional client DAT files
 
-Selected client DAT files (unencrypted binary data files from the game client) are optionally used for enhanced extraction—for example, icon filenames or item descriptions. These are sourced from the public game client download, not distributed here.
-
-If DAT files are unavailable, the API still serves complete records from the datapack alone; DAT fields simply remain null.
-
-## DTOs vs. raw source records
-
-A **DTO** (Data Transfer Object) is what the public API serves. It is distinct from the source record:
-
-- **Raw record:** `{ npc_id, npc_name, hp, mp, ..., [many merged rows] }`
-- **DTO:** `{ id, name, stats: { hp, mp, ... }, primaryLocation: { name, ... } }`
-
-DTOs are created at build time from the raw data and are frozen in `src/lib/api/dto/`. Changing a DTO shape is a contract change and requires snapshot test updates.
+Selected DAT files (icon filenames, descriptions) are pulled from the public game client when available. When they're not, those fields are simply `null`. The dataset still covers everything the datapack itself contains.

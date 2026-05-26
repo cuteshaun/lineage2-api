@@ -1,100 +1,51 @@
 ---
-title: Limitations
-description: Scope, known limitations, and important caveats
+title: Scope
+description: Scope, source, and known gaps
 ---
+
+What this API covers, and what it doesn't.
 
 ## Interlude only
 
-The API currently serves **Interlude chronicle data only**. Future chronicles (Awakening, etc.) may be supported, but are not planned yet.
-
-Other Lineage 2 chronicles (C1, C2, etc.) are not supported.
+The chronicle is Interlude. Other chronicles aren't supported today, and earlier ones (C1, C2, etc.) aren't planned.
 
 ## Unofficial project
 
-This project is **not affiliated with or endorsed by NCSoft**. Lineage and Lineage 2 are trademarks of their respective owners.
+Not affiliated with or endorsed by NCSoft. Lineage and Lineage 2 are trademarks of their respective owners.
 
-It is a fan project for data reference and exploration.
+## aCis is the source
 
-## Data source is aCis
-
-The API is **faithful to the aCis Interlude datapack**. If you find differences compared to other databases (L2Hub, PTS, L2Wiki, etc.):
-
-- Those sources may use different datapacks, version branches, or runtime formulas
-- The API surfaces what aCis provides; it does not synthesize, rescale, or reconcile values
-- Differences are **source differences**, not bugs
-
-If you believe aCis has a data error, that is outside the scope of this API—report it to the aCis project.
+Records come from the **aCis Interlude datapack**. If you see a difference vs L2Hub, PTS, L2Wiki, or another reference, that's a source difference — those projects may use different datapacks or apply their own corrections. The API doesn't synthesize, rescale, or reconcile values.
 
 ## DAT files may be incomplete
 
-Selected Lineage 2 client **DAT files** are optionally used for enhanced data extraction (icon filenames, descriptions, etc.). These files are sourced from the public game client download.
+Selected client DAT files are pulled from the public game client when available. When they're not, DAT-sourced fields (icon filenames, descriptions) are `null`. The dataset still covers everything in the datapack itself.
 
-If DAT files are unavailable or unresolved:
-- The API still serves complete records from the datapack alone
-- DAT-only fields remain `null`
-- This is expected and not a bug
+## Locations are anchor hints, not polygons
 
-## Locations are spatial hints, not authority
+A location's coordinates are the nearest spawn anchor point — a reference point you can use to find an NPC in the world. It is not a polygon, region boundary, or pathfinding model.
 
-Location data represents the **nearest spawn anchor point**, not a full polygon or traversable area. Locations are a reference point to find a spawn or NPC in the game world, not a complete spatial model.
+## No walkthroughs or formulas
 
-For game navigation or pathfinding, do not rely solely on location coordinates.
-
-## No editorial walkthroughs
-
-The API serves **raw game data only**. It does not include:
-- Quest guides or walkthroughs
-- Strategy advice
-- Item build recommendations
-- Damage calculations or formulas
-
-The API is a reference, not a game strategy resource.
-
-## No runtime formula evaluation
-
-Item bonuses, NPC stats, and damage calculations are **stored values from the datapack**, not computed formulas. The API does not evaluate runtime formulas or scaling.
-
-For example:
-- Weapon attack speed is a static value, not computed from item attributes
-- Monster stats are as-stored, not dynamically calculated
-
-If you need formulas or dynamic values, consult the Lineage 2 server source or community wikis.
+The API serves data, not strategy. There are no quest guides, build recommendations, or damage formulas. Item bonuses and NPC stats are stored values from the datapack, not computed at request time.
 
 ## Response shape may evolve
 
-The **public API response shape** (DTOs) is stable and locked by snapshot tests. However, future DTO versions may:
-- Add optional fields (backwards-compatible)
-- Reorganize optional sections
-- Change pagination defaults
+Public response shapes are intended to be stable across deploys. Backwards-compatible additions (new optional fields, new sections) are possible. Always check for null and missing fields rather than relying on order.
 
-Never rely on field ordering or absence—always check for null and missing fields.
-
-See **Core Concepts** for the distinction between public API (stable contract) and raw API (may change as parsing improves).
+Raw endpoints are looser — see [Core Concepts](/core-concepts/) for the distinction.
 
 ## No rate limits, no authentication
 
-The API has **no rate limits** and requires **no authentication**. Fair use is expected.
-
-If you need guaranteed uptime or higher throughput, run a local copy of the API using the published instructions.
-
-## Cached data
-
-The API serves **build-time generated, committed JSON files**. Data changes only on deploy, never mid-request. If you need real-time data or fresh parses, regenerate the dataset locally with `pnpm build:data`.
+The API is public. No keys, no rate limits. Fair use is expected. If you need guaranteed throughput or uptime, run a local copy — see [Local Development](/local-development/).
 
 ## Known gaps
 
-- **Spawns:** Location spawn lists are not yet indexed by API endpoints (use raw data or external references)
-- **Item descriptions:** Many DAT-sourced descriptions are incomplete or missing
-- **NPC dialogue:** Quest dialogue and NPC interactions are not included
-- **Client data:** Game client UI strings, skill animations, and graphics are not served
+- **Spawn lookups by location** aren't indexed yet.
+- **Item descriptions** sourced from DAT files are partial.
+- **NPC dialogue** and quest text aren't included.
+- **Client assets** (UI strings, skill animations, graphics) aren't served.
 
-These gaps may be addressed in future updates, but are not prioritized.
+## Feedback
 
-## Feedback and reporting
-
-This is an open-source, community-driven project. Issues and pull requests are welcome on [GitHub](https://github.com/cuteshaun/lineage2-api).
-
-For data corrections or parser improvements, contributions are appreciated. However, keep in mind:
-- The project is aCis-faithful by design
-- Scope is limited to Interlude currently
-- Major feature requests may not align with the project vision
+Issues and PRs welcome on [GitHub](https://github.com/cuteshaun/lineage2-api). The project is aCis-faithful by design and currently scoped to Interlude — keep that in mind when proposing changes.

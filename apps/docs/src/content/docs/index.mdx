@@ -3,9 +3,7 @@ title: Lineage 2 API
 description: A read-only HTTP API for Lineage 2 Interlude game data
 ---
 
-A public, read-only API for **Lineage 2 Interlude** game data.
-
-Fetch items, monsters, NPCs, drops, quests, classes, armor sets, locations, hennas, and more. Perfect for wikis, guides, price checkers, loot tables, and data exploration tools.
+A public, read-only HTTP API for **Lineage 2 Interlude** game data — items, NPCs, monsters, drops, quests, classes, armor sets, locations, hennas, and more. Useful for wikis, guides, price checkers, loot tables, Discord bots, and exploration tools.
 
 ## Base URL
 
@@ -13,11 +11,11 @@ Fetch items, monsters, NPCs, drops, quests, classes, armor sets, locations, henn
 https://l2api.dev/api/interlude
 ```
 
-All game-data routes are scoped by **chronicle**. Currently, `interlude` is the only supported chronicle.
+Every route is scoped by **chronicle**. Today the only supported chronicle is `interlude`.
 
 ## Your first request
 
-Fetch the Bloody Orchid (Grade A dagger):
+Fetch the Bloody Orchid (a Grade A dagger):
 
 ```bash
 curl https://l2api.dev/api/interlude/items/235
@@ -32,8 +30,6 @@ curl https://l2api.dev/api/interlude/items/235
     "grade": "a",
     "weight": 960,
     "price": 18300000,
-    "material": "BLOOD_STEEL",
-    "iconFile": "weapon_bloody_orchid_i00.png",
     "category": {
       "bodypart": "One-handed",
       "weaponType": "DAGGER"
@@ -41,47 +37,22 @@ curl https://l2api.dev/api/interlude/items/235
     "stats": {
       "pAtk": 186,
       "mAtk": 107,
-      "rCrit": 12,
-      "pAtkSpd": 433,
-      "accCombat": 3
-    },
-    "shots": {
-      "soulshots": 1,
-      "spiritshots": 1
-    },
-    "crystal": {
-      "count": 1464
-    },
-    "specialAbilityOptions": [
-      {
-        "itemId": 4783,
-        "name": "Bloody Orchid - Evasion",
-        "saName": "Evasion",
-        "effectChance": null
-      },
-      {
-        "itemId": 5614,
-        "name": "Bloody Orchid - Focus",
-        "saName": "Focus",
-        "effectChance": null
-      }
-    ],
-    "pvpBonus": {
-      "damageMultiplier": 1.05,
-      "display": "+5% PvP Damage"
+      "rCrit": 12
     }
   }
 }
 ```
 
-## Popular requests
+The real response includes more fields (special abilities, crystal, PvP bonus, etc.). Browse the full shape with the [Endpoints](/endpoints/) reference or the OpenAPI spec.
+
+## A few more requests
 
 **Fetch a boss (Queen Ant):**
 ```bash
 curl https://l2api.dev/api/interlude/npcs/29001
 ```
 
-**List items with pagination:**
+**List items, ten at a time:**
 ```bash
 curl 'https://l2api.dev/api/interlude/items?limit=10&offset=0'
 ```
@@ -91,72 +62,66 @@ curl 'https://l2api.dev/api/interlude/items?limit=10&offset=0'
 curl https://l2api.dev/api/interlude/quests/1
 ```
 
-**List an armor set:**
+**List all armor sets in one response:**
 ```bash
-curl https://l2api.dev/api/interlude/armor-sets/1
+curl https://l2api.dev/api/interlude/armor-sets
 ```
 
-**Search the OpenAPI spec:**
+**Grab the OpenAPI spec:**
 ```bash
 curl https://l2api.dev/api/openapi.json
 ```
 
 ## Main resources
 
-| Resource | Description |
-|----------|-------------|
+| Resource | What's there |
+|----------|--------------|
 | **items** | Weapons, armor, consumables, quest items, spellbooks, recipes |
 | **npcs** | Non-player characters: merchants, guards, quest givers |
 | **monsters** | Combat mobs: regular enemies, bosses, raid bosses |
-| **drops** | Monster drop and spoil rates by item |
 | **quests** | Quest catalog, objectives, rewards |
-| **classes** | Player classes and skill-learn progression |
+| **classes** | Player classes and skill progression |
 | **armor-sets** | Armor set pieces and set bonuses |
 | **locations** | Hunting zones and map locations |
-| **hennas** | Dye and symbol cosmetic and stat items |
+| **hennas** | Dye and symbol items |
 | **regions** | Geographic regions and zone groupings |
+
+NPC-scoped sub-resources also expose drops, shops, and spawns — see [Endpoints](/endpoints/).
 
 ## Response format
 
 **Single resource:**
 ```json
-{
-  "data": { }
-}
+{ "data": { } }
 ```
 
 **List of resources:**
 ```json
 {
   "data": [ ],
-  "meta": {
-    "total": 9206,
-    "limit": 50,
-    "offset": 0
-  }
+  "meta": { "total": 9206, "limit": 50, "offset": 0 }
 }
 ```
 
-Use the `limit` and `offset` parameters to paginate. See **Response Format** for full details on pagination, caching headers, and error handling.
+Always read from `data`. Use `limit` and `offset` to paginate. See [Response Format](/response-format/) for the full envelope, error shape, and caching headers.
 
-## Public vs raw data
+## Public vs raw
 
-The API exposes two layers:
+Two layers, side by side:
 
-- **Public endpoints:** Cleaned, deduplicated, cross-linked data for players and developers
-- **Raw endpoints:** One-to-one source records for auditing and data verification
+- **Public endpoints** — cleaned, deduplicated, and cross-linked. Use these to build.
+- **Raw endpoints** — source-faithful records, useful for auditing or debugging.
 
-Example: `/api/interlude/items` (public) vs `/api/interlude/raw/items` (raw)
-
-Learn more in **Core Concepts**.
+Example: `/api/interlude/npcs` (public) vs `/api/interlude/raw/npcs` (raw). More in [Core Concepts](/core-concepts/).
 
 ## No authentication required
 
-The API is public. No API keys or credentials needed. CORS is enabled for browser-based requests.
+The API is public. No keys, no credentials. CORS is enabled, so you can call it directly from a browser.
 
 ## Next steps
 
-- **Making requests?** → [Response Format](/response-format/) (envelopes, pagination, errors, caching)
-- **Understanding the data?** → [Core Concepts](/core-concepts/) (chronicles, DTOs, how data is built)
-- **Browsing all endpoints?** → [Endpoints](/endpoints/) (complete reference)
-- **Know the limits?** → [Limitations](/limitations/) (scope, Interlude-only, data source)
+- [Response Format](/response-format/) — envelope, pagination, errors, caching
+- [Endpoints](/endpoints/) — full reference with copy-paste examples
+- [Core Concepts](/core-concepts/) — chronicles, public vs raw
+- **OpenAPI Spec** — `https://l2api.dev/api/openapi.json`
+- [Limitations](/limitations/) — scope, source, known gaps

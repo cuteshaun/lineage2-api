@@ -25,22 +25,17 @@ export default defineConfig({
           ],
         },
         {
-          label: 'Understanding the API',
-          items: [
-            { label: 'Core Concepts', slug: 'core-concepts' },
-          ],
-        },
-        {
           label: 'Reference',
           items: [
-            { label: 'All Endpoints', slug: 'endpoints' },
+            { label: 'Endpoints', slug: 'endpoints' },
             { label: 'OpenAPI Spec', link: 'https://l2api.dev/api/openapi.json' },
+            { label: 'Core Concepts', slug: 'core-concepts' },
           ],
         },
         {
           label: 'More Info',
           items: [
-            { label: 'Limitations', slug: 'limitations' },
+            { label: 'Scope', slug: 'limitations' },
             { label: 'Local Development', slug: 'local-development' },
           ],
         },

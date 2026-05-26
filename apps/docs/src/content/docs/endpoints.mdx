@@ -1,123 +1,145 @@
 ---
 title: Endpoints Overview
-description: Complete reference of all available API endpoints
+description: Reference of every available API endpoint with copy-paste examples
 ---
 
-The API is organized by resource type. All routes require a chronicle (currently `interlude`).
+Every route is scoped by chronicle. Today the only supported chronicle is `interlude`.
+
+Most list endpoints support `limit` and `offset` for pagination. There are no other query filters at the moment. `armor-sets`, `locations`, and `regions` return all records in a single response — `limit` and `offset` are ignored on those.
+
+## Common requests
+
+Five tasks people typically want to do:
+
+**Get an item by ID**
+```bash
+curl https://l2api.dev/api/interlude/items/8689
+```
+
+**List items, ten at a time**
+```bash
+curl 'https://l2api.dev/api/interlude/items?limit=10&offset=0'
+```
+
+**Who drops this item?**
+```bash
+curl https://l2api.dev/api/interlude/items/8689/dropped-by
+```
+
+**Who spoils this item?**
+```bash
+curl https://l2api.dev/api/interlude/items/8689/spoiled-by
+```
+
+**What does this NPC drop, sell, and where does it spawn?**
+```bash
+curl https://l2api.dev/api/interlude/npcs/29001/drops
+curl https://l2api.dev/api/interlude/npcs/29001/shop
+curl https://l2api.dev/api/interlude/npcs/29001/spawns
+```
+
+**The OpenAPI spec**
+```bash
+curl https://l2api.dev/api/openapi.json
+```
 
 ## Items
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `/api/[chronicle]/items` | GET | List all items with pagination |
-| `/api/[chronicle]/items/:id` | GET | Get a single item by ID |
+| `/api/[chronicle]/items` | GET | List items. Supports `limit` and `offset`. |
+| `/api/[chronicle]/items/:id` | GET | Get a single item by ID. |
+| `/api/[chronicle]/items/:id/dropped-by` | GET | NPCs that drop this item, with rates. |
+| `/api/[chronicle]/items/:id/spoiled-by` | GET | NPCs that spoil this item, with rates. |
 
 ## NPCs
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `/api/[chronicle]/npcs` | GET | List all NPCs with pagination |
-| `/api/[chronicle]/npcs/:id` | GET | Get a single NPC by ID |
+| `/api/[chronicle]/npcs` | GET | List NPCs. Supports `limit` and `offset`. |
+| `/api/[chronicle]/npcs/:id` | GET | Get a single NPC by ID. |
+| `/api/[chronicle]/npcs/:id/drops` | GET | Drop table for this NPC. |
+| `/api/[chronicle]/npcs/:id/shop` | GET | Items this NPC sells (if any). |
+| `/api/[chronicle]/npcs/:id/spawns` | GET | Where this NPC spawns. |
+| `/api/[chronicle]/drops/npc/:id` | GET | Alternative enriched drop view for an NPC. |
 
 ## Monsters
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/[chronicle]/monsters` | GET | List all monsters with pagination |
-| `/api/[chronicle]/monsters/:id` | GET | Get a single monster by ID |
-
-## Drops
+A filtered view over NPCs.
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `/api/[chronicle]/drops` | GET | List all drop records with pagination |
-| `/api/[chronicle]/drops/:id` | GET | Get a single drop record by ID |
-
-## Spoils
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/[chronicle]/spoils` | GET | List all spoil records with pagination |
-| `/api/[chronicle]/spoils/:id` | GET | Get a single spoil record by ID |
+| `/api/[chronicle]/monsters` | GET | List monsters. Supports `limit` and `offset`. |
+| `/api/[chronicle]/monsters/:id` | GET | Get a single monster by ID. |
 
 ## Quests
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `/api/[chronicle]/quests` | GET | List all quests with pagination |
-| `/api/[chronicle]/quests/:id` | GET | Get a single quest by ID |
+| `/api/[chronicle]/quests` | GET | List quests. Supports `limit` and `offset`. |
+| `/api/[chronicle]/quests/:id` | GET | Get a single quest by ID. |
 
 ## Classes
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `/api/[chronicle]/classes` | GET | List all classes with pagination |
-| `/api/[chronicle]/classes/:id` | GET | Get a single class by ID |
+| `/api/[chronicle]/classes` | GET | List classes. Supports `limit` and `offset`. |
+| `/api/[chronicle]/classes/:id` | GET | Get a single class by ID. |
 
 ## Hennas
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `/api/[chronicle]/hennas` | GET | List all hennas with pagination |
-| `/api/[chronicle]/hennas/:id` | GET | Get a single henna by ID |
-
-## Locations
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/[chronicle]/locations` | GET | List all locations with pagination |
-| `/api/[chronicle]/locations/:id` | GET | Get a single location by ID |
-
-## Regions
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/[chronicle]/regions` | GET | List all regions with pagination |
-| `/api/[chronicle]/regions/:id` | GET | Get a single region by ID |
+| `/api/[chronicle]/hennas` | GET | List hennas. Supports `limit` and `offset`. |
+| `/api/[chronicle]/hennas/:id` | GET | Get a single henna by ID. |
 
 ## Armor Sets
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/[chronicle]/armor-sets` | GET | List all armor sets with pagination |
-| `/api/[chronicle]/armor-sets/:id` | GET | Get a single armor set by ID |
-
-## Shops
+Returned as a single response — no detail route, no pagination.
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `/api/[chronicle]/shops` | GET | List all shops with pagination |
-| `/api/[chronicle]/shops/:id` | GET | Get a single shop by ID |
+| `/api/[chronicle]/armor-sets` | GET | All armor sets in one response. |
+
+## Locations
+
+Returned as a single response — no detail route, no pagination.
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/[chronicle]/locations` | GET | All locations in one response. |
+
+## Regions
+
+Returned as a single response — no detail route, no pagination.
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/[chronicle]/regions` | GET | All regions in one response. |
 
 ## Raw endpoints
 
-Raw endpoints return one-to-one source records without deduplication or normalization. Useful for data auditing and parser verification.
+Raw endpoints return source-faithful records without deduplication or grouping. Useful for auditing, debugging, or comparing against the upstream datapack.
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `/api/[chronicle]/raw/npcs` | GET | All raw NPC records |
-| `/api/[chronicle]/raw/monsters` | GET | All raw monster records |
-| `/api/[chronicle]/raw/items` | GET | All raw item records |
-| `/api/[chronicle]/raw/drops` | GET | All raw drop records |
+| `/api/[chronicle]/raw/npcs` | GET | All raw NPC records. |
+| `/api/[chronicle]/raw/npcs/:id` | GET | A single raw NPC record. |
+| `/api/[chronicle]/raw/monsters` | GET | All raw monster records. |
+| `/api/[chronicle]/raw/monsters/:id` | GET | A single raw monster record. |
+| `/api/[chronicle]/raw/monsters/:id/spawns` | GET | Spawn entries for a raw monster. |
 
 ## Metadata
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `/api/openapi.json` | GET | OpenAPI 3.0.3 specification (stub) |
+| `/api/[chronicle]/meta/item-grades` | GET | Item grades with counts. |
+| `/api/[chronicle]/meta/item-types` | GET | Item types with counts. |
+| `/api/[chronicle]/meta/npc-types` | GET | NPC types with counts and flags. |
+| `/api/openapi.json` | GET | OpenAPI 3.0.3 specification. |
 
-## Using the API
+## Next steps
 
-**Example: Fetch an item**
-```bash
-curl https://l2api.dev/api/interlude/items/57
-```
-
-**Example: List items with pagination**
-```bash
-curl 'https://l2api.dev/api/interlude/items?limit=10&offset=0'
-```
-
-See the **Response Format** page for envelope structure, pagination details, caching headers, and error codes.
-
-For detailed per-endpoint documentation and request/response schemas, see the **OpenAPI specification** at `https://l2api.dev/api/openapi.json`.
+- [Response Format](/response-format/) — envelope, pagination, errors, caching
+- [Core Concepts](/core-concepts/) — chronicles, public vs raw
+- **OpenAPI Spec** — `https://l2api.dev/api/openapi.json`

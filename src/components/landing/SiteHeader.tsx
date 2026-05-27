@@ -6,25 +6,26 @@ const pixel = { imageRendering: "pixelated" as const };
 
 export function SiteHeader() {
   return (
-    <header className="w-full border-b-2 border-[var(--border)] bg-[var(--bg)]">
+    <header className="relative w-full bg-[var(--bg)]">
       <div className="mx-auto flex h-[88px] w-full max-w-[1440px] items-center gap-6 px-6 sm:px-10 lg:px-16">
         <Link href="/" className="flex items-center gap-4">
-          <Image
-            src={`${ICON_BASE}/01_header_sword_logo.png`}
-            width={44}
-            height={44}
-            alt=""
-            style={pixel}
-            priority
-            unoptimized
-          />
-          <div className="flex flex-col leading-none">
+          <div className="relative flex w-[260px] shrink-0">
             <span
               className="font-display text-[28px] uppercase tracking-[0.04em]"
               style={{ color: "var(--ink)", lineHeight: "1" }}
             >
               LINEAGE 2 API
             </span>
+            <Image
+              src={`${ICON_BASE}/stormbringer.png`}
+              className="absolute left-[-60px] top-[28px] w-[250px] max-w-none"
+              width={200}
+              height={44}
+              alt=""
+              style={pixel}
+              priority
+              unoptimized
+            />
           </div>
         </Link>
 
@@ -57,6 +58,14 @@ export function SiteHeader() {
           />
         </a>
       </div>
+
+
+      <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-0">
+    <div className="mx-auto flex max-w-[1440px] px-6 sm:px-10 lg:px-16">
+      <div className="w-[210px]" />
+      <div className="h-[2px] flex-1 bg-[var(--border)]" />
+    </div>
+    </div>
     </header>
   );
 }

@@ -8,15 +8,42 @@ The architecture is chronicle-aware and designed to support additional chronicle
 
 The project is unofficial and not affiliated with NCSoft.
 
-The API will be hosted on Vercel.
+The API, landing page, and documentation site are deployed in production on Vercel.
 
 ---
 
-## Branch Contexts
+## Current Production Status
 
-### main
+- The API is live in production.
+- The landing page is live in production.
+- The documentation site (Astro / Starlight) is live in production.
+- The knowledge base / explorer example is live in production as a separate repo.
 
-The `main` branch is focused on the backend API only.
+Three production-facing surfaces:
+
+1. **API + landing** — this repo (`main`)
+2. **Astro / Starlight docs** — `apps/docs/` in this repo
+3. **Knowledge base / explorer example** — a separate repo, deployed independently
+
+The API remains the source of truth. The landing, docs, and knowledge base are adoption and distribution surfaces; they consume the public API contract, they do not redefine it.
+
+Public API contract is frozen unless a release-blocking issue is found.
+
+### Still in progress
+
+- Desktop design for the public-facing surfaces is mostly done.
+- Mobile design is not finished.
+- SEO is incomplete: metadata, titles, descriptions, Open Graph tags, favicon, and social-preview images.
+- Documentation exists but is still raw and needs more real examples.
+- Analytics are not installed yet.
+
+---
+
+## Repository Layout
+
+### main (this repo)
+
+`main` ships the backend API, the public landing page, and the documentation site.
 
 It is the canonical source for:
 
@@ -28,34 +55,27 @@ It is the canonical source for:
 - API contract documentation
 - snapshot tests
 - build-time enrichment
+- the public landing page (`src/app/page.tsx`, `src/app/about/page.tsx`)
+- the Starlight docs site (`apps/docs/`)
 
-The `main` branch should stay focused on serving external API consumers.
+`main` is what's deployed at the public API + landing URL and at the docs subdomain.
 
-Do not add database-explorer UI, user-facing wiki pages, comments, ratings, screenshots, or community features to `main`.
+Do not add database-explorer UI, user-facing wiki pages, comments, ratings, screenshots, or community features to this repo. Those belong in the separate knowledge-base / explorer repo described below.
 
-The goal of `main` is to provide a clean, stable, read-only Lineage 2 API that other clients can consume.
+### Knowledge base / explorer (separate repo)
 
-### ui-explorer
+A reference client and visual sandbox for the public API now lives in **its own deployed repo**, not in this one. The old `ui-explorer` branch has been moved out and is no longer the primary location for explorer work.
 
-The `ui-explorer` branch is focused on building a lightweight database-style UI explorer on top of the public Lineage 2 API.
+The knowledge base / explorer exists to:
 
-The explorer is a reference client and sandbox. It is not the source of truth.
-
-Its purpose is to:
-
-- dogfood public API endpoints
-- validate DTO ergonomics
+- dogfood the public API endpoints
 - expose missing or awkward API relations
 - demonstrate real player-facing use cases
-- help decide which DTOs or endpoints need improvement
+- inform API improvements via real consumer feedback
 
-The explorer should consume public API responses whenever possible.
+The knowledge base / explorer must not become the source of truth. The API is the source of truth.
 
-If a UI requirement needs heavy client-side workarounds, first consider whether the DTO should be improved instead.
-
-Explorer needs may inform API design, but should not force overly specific endpoints.
-
-API changes from this branch are allowed only when they improve real consumer-facing API use cases and remain useful beyond the explorer UI.
+If the explorer needs heavy client-side workarounds, first consider whether the DTO should be improved in this repo. Any API change motivated by explorer use should remain useful to other external consumers (see *API Changes from External Clients* below).
 
 ---
 
@@ -96,7 +116,7 @@ Prefer:
 
 ## Current Data Model
 
-The API ships the following domains (pre-v1):
+The API ships the following domains (v1 release candidate; public API contract is frozen unless a release-blocking issue is found):
 
 - Items
 - NPCs / Monsters (cleaned + raw layers)
@@ -228,32 +248,32 @@ Removing or renaming public DTO fields is a breaking change. Prefer adding optio
 
 ---
 
-## UI Explorer Guidelines
+## Knowledge Base / Explorer Guidelines
 
-These guidelines apply primarily to the `ui-explorer` branch.
+These guidelines apply to the knowledge base / explorer in its separate repo, and to any future API-consuming client built on the public Lineage 2 API.
 
-- Keep the explorer lightweight and API-driven
+- Keep the client lightweight and API-driven
 - Prefer simple, readable UI over complex app architecture
-- Do not duplicate API business logic in the UI unless necessary
+- Do not duplicate API business logic in the client unless necessary
 - Hide empty sections instead of rendering placeholder noise
 - Use DTO fields as-is when possible
-- If a page requires many extra client-side joins, consider improving the API response
+- If a page requires many extra client-side joins, consider improving the API response in this repo
 - Treat icons, screenshots, and visual polish as progressive enhancements
 - The explorer should validate real player-facing use cases, not invent abstract API needs
 
-The database-style explorer is allowed to be more player-friendly and wiki-like than the API, but it must not become the source of truth.
+A knowledge base or explorer is allowed to be more player-friendly and wiki-like than the API, but it must not become the source of truth.
 
 ---
 
-## API Changes from UI Explorer Work
+## API Changes from External Clients
 
-API changes discovered while working on the `ui-explorer` branch are allowed when they improve real explorer use cases, but they should remain:
+API changes discovered while building external clients (e.g., the knowledge base / explorer in its separate repo) are allowed when they improve real use cases, but they should remain:
 
 - additive
 - backward-compatible
 - documented
 - covered by snapshots
-- useful beyond this explorer UI
+- useful beyond a single client
 
 Before adding a new endpoint, check whether the existing item, NPC, monster, skill, recipe, or raw endpoints already expose enough data.
 
@@ -368,8 +388,8 @@ Before adding UI-only logic:
 - Do not introduce a database, auth, comments, moderation, or user-generated content layer
 - Do not add broad abstractions for hypothetical chronicles
 - Do not make raw endpoints more "friendly" by losing engine-like fidelity
-- Do not make the explorer the source of truth
-- Do not add explorer-specific UI/product features to `main`
+- Do not let the knowledge base / explorer become the source of truth — the API is the source of truth
+- Do not add explorer-specific or knowledge-base-specific UI/product features (wiki content, comments, ratings, user accounts) to this repo — they belong in the separate explorer / knowledge-base repo
 - Do not cache error responses; `jsonError` must keep `Cache-Control: no-store`
 - Do not introduce app-layer rate limiting (Redis/Upstash/in-memory/middleware counter) by default — platform/WAF is the v1 path
 - Do not grow `PRIMARY_LOCATION_OVERRIDES_BY_NPC_ID` opportunistically; new entries require audit evidence (anchor distances, proof of resolver mis-match) and a docs link
@@ -412,12 +432,79 @@ The following remain out of scope unless explicitly requested:
 
 ---
 
+## Product Roadmap
+
+### Phase 1 — Production Polish
+
+Focus: make all deployed surfaces feel production-ready before doing deeper architecture work.
+
+- Finish mobile design for all public-facing projects:
+  - API / landing
+  - documentation site
+  - knowledge base / explorer example
+- Improve SEO across all deployed surfaces:
+  - page titles
+  - descriptions
+  - Open Graph metadata
+  - favicon
+  - social preview images
+  - canonical URLs where needed
+- Gather feedback from friends and early users.
+- Improve documentation with real examples:
+  - practical recipes
+  - better endpoint examples
+  - real Lineage 2 use cases
+  - possible interactive request box inside docs
+  - possible textarea/code preview for example requests
+- Add analytics to each deployed project, likely Umami.
+- Keep analytics privacy-friendly, lightweight, and non-invasive.
+
+### Phase 2 — Community Launch / Distribution
+
+Focus: help Lineage 2 developers and server communities discover the API.
+
+- Reply to forum threads where people ask about Lineage 2 APIs, databases, drops, mobs, items, Interlude data, or tooling.
+- Reach out to Lineage 2 YouTube/blog creators where the API could be useful.
+- Publish a LinkedIn post about the project.
+- Publish a blog post on the personal site explaining why and how the Lineage 2 API was built.
+- Add more soul/personality to the project:
+  - small animation
+  - one tasteful Lineage 2-inspired art piece
+  - nostalgic but still clean presentation
+- Treat this as distribution, documentation, and product storytelling.
+- Do not add community features, accounts, comments, ratings, moderation, or user-generated content to the API repo.
+
+### Phase 3 — Architecture Split
+
+Focus: split the current implementation into cleaner dedicated projects only after product polish and validation.
+
+Future technical direction:
+
+- API: likely Hono or another lightweight API-first runtime.
+- Landing: likely Astro.
+- Knowledge base / example client: Next.js.
+- Keep generated data, DTO contract discipline, snapshot tests, cache behavior, and OpenAPI generation as first-class migration concerns.
+- Migration should be incremental and reversible.
+- Do not start this rewrite just because it is cleaner architecturally; do it when the current shape becomes a real maintenance or deployment problem.
+
+---
+
+## Roadmap Discipline
+
+- Do not start Phase 3 architecture migration before Phase 1 polish is done unless there is a real technical blocker.
+- Do not let landing, docs, or knowledge-base polish weaken the API contract.
+- Do not add database, auth, comments, ratings, moderation, or community submissions to this repo.
+- Treat community/distribution work as marketing and documentation work, not backend product scope.
+- Prefer small visible improvements over speculative rewrites.
+- Keep the API as the source of truth.
+- Landing, docs, and the knowledge-base example are adoption surfaces.
+
+---
+
 ## Goal
 
 Build a clean, trustworthy, developer-friendly Lineage 2 API that is also useful for players.
 
-The API is the product.
+The API is the product. Landing, docs, and the knowledge-base example are distribution and adoption surfaces.
 
-The `main` branch is the backend API for external consumers.
-
-The `ui-explorer` branch is the dogfooding client and visual sandbox.
+This repo (`main`) ships the API, the public landing page, and the documentation site. The knowledge base / explorer is a separate deployed client repo that consumes this API.

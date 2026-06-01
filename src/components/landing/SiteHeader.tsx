@@ -30,12 +30,12 @@ export function SiteHeader() {
         </Link>
 
         <nav className="flex flex-1 items-center justify-center gap-12 text-[15px] font-extrabold uppercase tracking-[0.1em]">
-          <a href="https://docs.l2api.dev/" className="hover:text-[var(--blue)]">
+          <a href="https://docs.l2api.dev/" className="hover:text-[var(--gold-ink)]">
             Docs
           </a>
           <Link
             href="/about"
-            className="inline-flex items-center gap-1.5 hover:text-[var(--blue)]"
+            className="inline-flex items-center gap-1.5 hover:text-[var(--gold-ink)]"
           >
             About
           </Link>

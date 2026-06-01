@@ -192,9 +192,8 @@ function BloodyOrchidCard() {
 
           <p
             className="mt-[14px] text-[15px] font-extrabold"
-            style={{ color: "var(--blue)" }}
           >
-            <span>GET</span> <span>/api/interlude/items/235</span>
+            <span style={{ color: "var(--gold-ink)" }}>GET</span> <span style={{ color: "var(--ink-soft)" }}>/api/interlude/items/235</span>
           </p>
         </div>
       </div>
@@ -203,7 +202,7 @@ function BloodyOrchidCard() {
 
       <a
         href="https://l2api.dev//api/interlude/items/235"
-        className="inline-flex items-center gap-2 text-[15px] font-extrabold uppercase tracking-[0.12em] text-[var(--blue)] hover:underline"
+        className="inline-flex items-center gap-2 text-[15px] font-extrabold uppercase tracking-[0.12em] text-[var(--gold-ink)] hover:underline"
       >
         Open JSON
         <ArrowRightIcon className="h-4 w-4" />

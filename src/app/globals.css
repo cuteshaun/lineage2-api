@@ -48,6 +48,11 @@
     --font-body: var(--font-departure-mono);
 }
 
+*:focus-visible {
+    outline: 3px solid var(--ink-soft);
+    outline-offset: 2px;
+}
+
 body {
     background: var(--bg);
     color: var(--ink);

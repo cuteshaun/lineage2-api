@@ -23,22 +23,31 @@ function Hero() {
   return (
     <section className="hero-grid pt-12 lg:pt-[72px]">
       <div className="flex flex-col">
-        <div className="chronicle-badge" aria-label="Current chronicle">
+        {/* badge chronicle <div className="chronicle-badge" aria-label="Current chronicle">
           <span className="chronicle-badge__label">Chronicle</span>
           <span className="chronicle-badge__value">Interlude</span>
-        </div>
+        </div> */}
+
+        <p
+  className="mt-7 text-[14px] font-extrabold uppercase tracking-[0.14em]"
+  style={{ color: "var(--gold-ink)" }}
+>
+  Stop parsing datapacks.
+</p>
 
         <h1
           className="font-display mt-8 uppercase lg:whitespace-nowrap"
           style={{
-            fontSize: "clamp(48px, 8.5vw, 100px)",
+            fontSize: "clamp(48px, 8.5vw, 72px)",
             lineHeight: "0.86",
             letterSpacing: "0.01em",
             color: "var(--ink)",
             marginBottom: "26px",
+            textWrap: "auto",
+            maxWidth: "500px"
           }}
         >
-          Lineage 2 API
+          Lineage 2 Interlude data as clean JSON.
         </h1>
 
         <div className="flex items-center gap-3">
@@ -65,14 +74,13 @@ function Hero() {
           className="mt-9 max-w-[590px] text-[18px] font-medium leading-[1.55]"
           style={{ color: "var(--ink-soft)" }}
         >
-          A clean HTTP API for Interlude game data: items, NPCs, monsters,
-          drops, quests, classes, locations, and more.
+          The boring part is done. Interlude items, NPCs, drops, and quests are parsed, normalized, and cross-linked.
         </p>
         <p
           className="mt-[22px] max-w-[590px] text-[18px] font-medium leading-[1.55]"
           style={{ color: "var(--ink-soft)" }}
         >
-          Built for tools, websites, bots, spreadsheets, and community projects.
+          You build the fun part.
         </p>
 
         <div className="mt-9 flex flex-wrap items-center gap-7">
@@ -91,15 +99,15 @@ function Hero() {
             Docs
           </a>
           <a href="https://explorer.l2api.dev/interlude" className="btn-brutal btn-brutal-secondary">
-            <Image
+            {/* <Image
               src={`${ICON_BASE}/04_knowledge_q_circle.png`}
               width={20}
               height={20}
               alt=""
               style={pixel}
               unoptimized
-            />
-            Knowledge Base
+            /> */}
+            Explore the data
           </a>
           {/* <a
             href="#download"

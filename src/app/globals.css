@@ -291,6 +291,7 @@ body {
     .card-content__image {
         margin-bottom: 20px;
         width: 300px;
+        height: 110px;
 
         img {
             width: 170px;

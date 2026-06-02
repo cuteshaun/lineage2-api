@@ -20,6 +20,17 @@ export const metadata: Metadata = {
   title: "Lineage 2 API",
   description:
     "A clean, read-only HTTP API for Lineage 2 Interlude game data: items, NPCs, monsters, drops, quests, classes, locations, and more.",
+  icons: {
+  icon: [
+      { url: "/favicon-48.png", type: "image/png", sizes: "48x48" },
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon.png", type: "image/png", sizes: "32x32" },
+      { url: "/favicon-16.png", type: "image/png", sizes: "16x16" },
+    ],
+  apple: [
+      { url: "/apple-icon.png", type: "image/png", sizes: "180x180" },
+    ],
+  },
 };
 
 export default function RootLayout({

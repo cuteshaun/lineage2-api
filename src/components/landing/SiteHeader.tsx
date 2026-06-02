@@ -9,13 +9,22 @@ export function SiteHeader() {
     <header className="relative w-full bg-[var(--bg)]">
       <div className="mx-auto flex h-[88px] w-full max-w-[1440px] items-center gap-6 px-6 sm:px-10 lg:px-16">
         <Link href="/" className="flex items-center gap-4">
-          <div className="relative flex w-[260px] shrink-0">
+          <div className="relative flex w-full md:w-[260px] shrink-0">
             <span
-              className="font-display text-[28px] uppercase tracking-[0.04em]"
+              className="logo-text font-display md:text-[28px] text-[22px] uppercase tracking-[0.04em]"
               style={{ color: "var(--ink)", lineHeight: "1" }}
             >
               LINEAGE 2 API
             </span>
+
+            <span
+              className="logo-text--mobile font-display md:text-[28px] text-[22px] uppercase tracking-[0.04em]"
+              style={{ color: "var(--ink)", lineHeight: "1" }}
+            >
+              L2 API
+            </span>
+
+
             <Image
               src={`${ICON_BASE}/stormbringer.png`}
               className="absolute left-[-60px] top-[28px] w-[250px] max-w-none"
@@ -47,7 +56,7 @@ export function SiteHeader() {
           rel="noreferrer"
           className="btn-sponsor"
         >
-          Sponsor
+          <span className="btn-sponsor__text">Sponsor</span>
           <Image
             src={`${ICON_BASE}/07_sponsor_heart.png`}
             width={16}
@@ -60,7 +69,7 @@ export function SiteHeader() {
       </div>
 
 
-      <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-0">
+      <div className="header-separator pointer-events-none absolute bottom-0 left-0 right-0 z-0">
     <div className="mx-auto flex max-w-[1440px] px-6 sm:px-10 lg:px-16">
       <div className="w-[210px]" />
       <div className="h-[2px] flex-1 bg-[var(--border)]" />

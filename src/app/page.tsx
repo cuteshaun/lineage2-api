@@ -1,19 +1,20 @@
 import Image from "next/image";
 import { SiteHeader } from "@/components/landing/SiteHeader";
+import './globals.css';
 
 const ICON_BASE = "/landing-icons";
 const pixel = { imageRendering: "pixelated" as const };
 
 export default function Home() {
   return (
-    <div className="flex flex-1 flex-col bg-[var(--bg)]">
+    <>
       <SiteHeader />
       <main className="mx-auto w-full max-w-[1440px] flex-1 px-6 pb-10 sm:px-10 lg:px-16">
         <Hero />
         <StatsRow />
         <Disclaimer />
       </main>
-    </div>
+    </>
   );
 }
 
@@ -36,16 +37,7 @@ function Hero() {
 </p>
 
         <h1
-          className="font-display mt-8 uppercase lg:whitespace-nowrap"
-          style={{
-            fontSize: "clamp(48px, 8.5vw, 72px)",
-            lineHeight: "0.86",
-            letterSpacing: "0.01em",
-            color: "var(--ink)",
-            marginBottom: "26px",
-            textWrap: "auto",
-            maxWidth: "500px"
-          }}
+          className="primary-title font-display mt-8 uppercase lg:whitespace-nowrap"
         >
           Lineage 2 Interlude data as clean JSON.
         </h1>
@@ -59,7 +51,7 @@ function Hero() {
             style={pixel}
             unoptimized
           />
-          <div className="h-[1.5px] w-[440px] max-w-full shrink-0 divider-dotted-gold" />
+          <div className="h-[1.5px] w-full max-w-full divider-dotted-gold" />
           <Image
             src={`${ICON_BASE}/02_interlude_sparkle.png`}
             width={14}
@@ -71,7 +63,7 @@ function Hero() {
         </div>
 
         <p
-          className="mt-9 max-w-[590px] text-[18px] font-medium leading-[1.55]"
+          className="primary-subtitle mt-9 max-w-[590px] text-[18px] font-medium leading-[1.55]"
           style={{ color: "var(--ink-soft)" }}
         >
           The boring part is done. Interlude items, NPCs, drops, and quests are parsed, normalized, and cross-linked.
@@ -83,7 +75,7 @@ function Hero() {
           You build the fun part.
         </p>
 
-        <div className="mt-9 flex flex-wrap items-center gap-7">
+        <div className="button-group mt-9 flex flex-wrap items-center gap-7">
           <a
             href="https://docs.l2api.dev/"
             className="btn-brutal btn-brutal-primary"
@@ -126,7 +118,7 @@ function Hero() {
         </div>
       </div>
 
-      <div className="w-full lg:w-[515px] lg:justify-self-end lg:ml-auto">
+      <div className="w-full md:w-[515px]">
         <BloodyOrchidCard />
       </div>
     </section>
@@ -138,23 +130,14 @@ function Hero() {
 function BloodyOrchidCard() {
   return (
     <article
-      className="relative border-[3px] mb-5 border-[var(--border)] bg-[var(--surface)] shadow-card-gold"
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        borderRadius: "var(--radius)",
-        padding: "28px 32px",
-        minHeight: "300px",
-      }}
+      className="card relative border-[3px] sm:py-7 sm:px-8 py-5 px-6 mb-5 border-[var(--border)] bg-[var(--surface)] shadow-card-gold"
     >
       <div
-        className="grid items-start"
-        style={{ gridTemplateColumns: "140px 1fr", gap: "28px" }}
+        className="card-content flex"
       >
         <div
-          className="flex shrink-0 items-center justify-center border-2 border-[var(--border-soft)] bg-[var(--bg)]"
-          style={{ width: "142px", height: "142px", borderRadius: "4px" }}
+          className="card-content__image flex shrink-0 items-center justify-center border-2 border-[var(--border-soft)] bg-[var(--bg)] mr-6 "
+          style={{ borderRadius: "4px" }}
         >
           <Image
             src={`${ICON_BASE}/bloody1-orchid.png`}
@@ -198,7 +181,7 @@ function BloodyOrchidCard() {
         </div>
       </div>
 
-      <div className="my-[26px] divider-dashed-soft" />
+      <div className="sm:my-[26px] my-[16px] divider-dashed-soft" />
 
       <a
         href="https://l2api.dev//api/interlude/items/235"
@@ -244,7 +227,7 @@ function StatsRow() {
         return (
           <div
             key={stat.label}
-            className={`flex flex-col items-center px-4 text-center ${
+            className={`icon-stats flex flex-col items-center px-4 text-center ${
               !isLastInRow ? "lg:stats-sep-right" : ""
             }`}
           >

@@ -53,6 +53,10 @@
     outline-offset: 2px;
 }
 
+* {
+    box-sizing: border-box;
+}
+
 body {
     background: var(--bg);
     color: var(--ink);
@@ -194,18 +198,120 @@ body {
 
 /* ----- Hero grid ----- */
 .hero-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    row-gap: 40px;
-    align-items: start;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
 }
 
-@media (min-width: 1024px) {
+.primary-title {
+    font-size: clamp(48px, 8.5vw, 72px);
+    line-height: 0.86;
+    letter-spacing: 0.01em;
+    color: var(--ink);
+    margin-bottom: 26px;
+    text-wrap: auto;
+    max-width: 500px;
+}
+
+.primary-subtitle {
+    max-width: 590px;
+}
+
+.logo-text--mobile {
+    display: none;
+}
+
+@media (max-width: 1232px) {
     .hero-grid {
-        grid-template-columns: minmax(0, 1fr) 515px;
-        column-gap: 48px;
-        row-gap: 0;
-        align-items: center;
+        align-items: flex-start;
+    }
+
+    .primary-title {
+        max-width: 800px;
+    }
+
+    .primary-subtitle {
+        max-width: 800px;
+    }
+
+    .button-group {
+        margin-bottom: 40px;
+    }
+}
+
+@media (max-width: 1023) {
+    .icon-stats:not(:last-child) {
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 700px) {
+    .header-separator {
+        display: none;
+    }
+
+    .btn-sponsor__text {
+        display: none;
+    }
+
+    .button-group {
+        justify-content: space-between;
+    }
+}
+
+@media (max-width: 500px) {
+    .logo-text {
+        display: none;
+    }
+
+    .logo-text--mobile {
+        display: block;
+    }
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-radius: var(--radius);
+    min-height: 300px;
+}
+
+.card-content__image {
+    width: 142px;
+    height: 142px;
+}
+
+@media (max-width: 536px) {
+    .card-content {
+        flex-direction: column;
+    }
+
+    .card-content__image {
+        margin-bottom: 20px;
+        width: 300px;
+
+        img {
+            width: 200px;
+            transform: translateY(-13px) rotate(40deg);
+        }
+    }
+}
+
+@media (max-width: 400px) {
+    .card-content {
+        flex-direction: column;
+    }
+
+    .card-content__image {
+        margin-bottom: 20px;
+        width: 200px;
+
+        img {
+            width: 132px;
+            transform: none;
+        }
     }
 }
 

@@ -184,7 +184,7 @@ function BloodyOrchidCard() {
       <div className="sm:my-[26px] my-[16px] divider-dashed-soft" />
 
       <a
-        href="https://l2api.dev//api/interlude/items/235"
+        href="https://l2api.dev/api/interlude/items/235"
         className="inline-flex items-center gap-2 text-[15px] font-extrabold uppercase tracking-[0.12em] text-[var(--gold-ink)] hover:underline"
       >
         Open JSON

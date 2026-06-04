@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Jersey_25 } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -44,6 +45,12 @@ export default function RootLayout({
       className={`${jersey25.variable} ${departureMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[var(--bg)] text-[var(--ink)]">
+        <Script
+          defer
+          src="https://cloud.umami.is/script.js"
+          data-website-id="fcbbfa3e-b709-4804-bf2c-f9fecdcccab9"
+          strategy="afterInteractive"
+        />
         {children}
       </body>
     </html>

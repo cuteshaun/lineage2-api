@@ -76,21 +76,8 @@ function Hero() {
         </p>
 
         <div className="button-group mt-9 flex flex-wrap items-center gap-7">
-          <a
-            href="https://docs.l2api.dev/"
-            className="btn-brutal btn-brutal-primary"
-          >
-            <Image
-              src={`${ICON_BASE}/03_docs_book.png`}
-              width={20}
-              height={20}
-              alt=""
-              style={pixel}
-              unoptimized
-            />
-            Docs
-          </a>
-          <a href="https://explorer.l2api.dev/interlude" className="btn-brutal btn-brutal-secondary">
+
+          <a href="https://explorer.l2api.dev/interlude" className="btn-brutal btn-brutal-primary">
             {/* <Image
               src={`${ICON_BASE}/04_knowledge_q_circle.png`}
               width={20}
@@ -99,8 +86,23 @@ function Hero() {
               style={pixel}
               unoptimized
             /> */}
-            Explore the data
+            Try the API Demo
           </a>
+          <a
+            href="https://docs.l2api.dev/"
+            className="btn-brutal btn-brutal-secondary"
+          >
+            Docs
+                        {/* <Image
+              src={`${ICON_BASE}/03_docs_book.png`}
+              width={20}
+              height={20}
+              alt=""
+              style={pixel}
+              unoptimized
+            /> */}
+          </a>
+
           {/* <a
             href="#download"
             className="inline-flex items-center gap-2.5 text-[15px] font-extrabold uppercase tracking-[0.1em] text-[var(--ink)]"
@@ -116,6 +118,10 @@ function Hero() {
             <span className="link-download">Download Datapack</span>
           </a> */}
         </div>
+
+              {/* <p className="mt-3  text-sm text-[var(--muted)]">
+            Explore the API Demo
+          </p>  */}
       </div>
 
       <div className="w-full md:w-[515px]">
@@ -281,12 +287,13 @@ function Disclaimer() {
             href="https://tsapko.me/"
             target="_blank"
             rel="noopener noreferrer"
+            style={{ color: "black" }}
           >
             cuteshaun
           </a>
         </p>
 
-        <p>Not affiliated with NCSoft</p>
+        <p className="text-[10px]">Not affiliated with NCSoft</p>
       </div>
     </footer>
   );

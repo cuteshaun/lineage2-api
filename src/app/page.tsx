@@ -209,18 +209,18 @@ type Stat = {
 };
 
 const STATS: Stat[] = [
-  { iconFile: "09_stats_sword.png", value: "9,206", label: "Items" },
-  { iconFile: "10_npc_person.png", value: "6,472", label: "NPCs" },
-  { iconFile: "11_monster_skull.png", value: "3,150", label: "Monsters" },
-  { iconFile: "12_droplet.png", value: "40,878", label: "Drops & Spoil" },
-  { iconFile: "13_scroll_document.png", value: "329", label: "Quests" },
-  // { iconFile: "14_chronicle_compass.png", value: "Interlude", label: "Chronicle" },
+  { iconFile: "forgotten-blade.png", value: "9,206", label: "Items" },
+  { iconFile: "gatekeeper.png", value: "6,472", label: "NPCs" },
+  { iconFile: "eye-monster.png", value: "3,150", label: "Monsters" },
+  { iconFile: "drops-spoil.png", value: "40,878", label: "Drops & Spoil" },
+  { iconFile: "quests.png", value: "329", label: "Quests" },
+  { iconFile: "compass-pixel.png", value: "209", label: "Locations" },
 ];
 
 function StatsRow() {
   return (
     <section
-      className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5"
+      className="flex justify-between"
       style={{
         marginTop: "44px",
         padding: "28px 0 30px",
@@ -239,8 +239,8 @@ function StatsRow() {
           >
             <Image
               src={`${ICON_BASE}/${stat.iconFile}`}
-              width={32}
-              height={32}
+              width={42}
+              height={42}
               alt=""
               style={pixel}
               unoptimized

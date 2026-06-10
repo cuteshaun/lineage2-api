@@ -1,51 +1,27 @@
 ---
 title: Scope
-description: Scope, source, and known gaps
+description: What this API covers, and what it doesn't
 ---
 
-What this API covers, and what it doesn't.
+This is an unofficial, community project — **not affiliated with or endorsed by NCSoft**. Lineage and Lineage 2 are trademarks of their respective owners.
 
-## Interlude only
+## Covered
 
-The chronicle is Interlude. Other chronicles aren't supported today, and earlier ones (C1, C2, etc.) aren't planned.
+- **Interlude** chronicle only
+- Read-only, public game data
+- items, NPCs, monsters, drops & spoil, quests, classes, hennas, locations, regions, armor sets
+- Generated JSON served over HTTP
+- Cleaned, cross-linked public DTOs (see [Response Format](/response-format/#public-vs-raw))
+- An [OpenAPI spec](/openapi/)
 
-## Unofficial project
+## Not covered
 
-Not affiliated with or endorsed by NCSoft. Lineage and Lineage 2 are trademarks of their respective owners.
+- Other chronicles, for now
+- Auth, accounts, comments, ratings, or moderation
+- Runtime game-server behavior
+- Full formula or damage simulation
+- AI scripts
+- Geodata or exact polygon location resolution — coordinates are nearest-anchor hints, not boundaries
+- Official NCSoft affiliation
 
-## aCis is the source
-
-Records come from the **aCis Interlude datapack**. If you see a difference vs L2Hub, PTS, L2Wiki, or another reference, that's a source difference — those projects may use different datapacks or apply their own corrections. The API doesn't synthesize, rescale, or reconcile values.
-
-## DAT files may be incomplete
-
-Selected client DAT files are pulled from the public game client when available. When they're not, DAT-sourced fields (icon filenames, descriptions) are `null`. The dataset still covers everything in the datapack itself.
-
-## Locations are anchor hints, not polygons
-
-A location's coordinates are the nearest spawn anchor point — a reference point you can use to find an NPC in the world. It is not a polygon, region boundary, or pathfinding model.
-
-## No walkthroughs or formulas
-
-The API serves data, not strategy. There are no quest guides, build recommendations, or damage formulas. Item bonuses and NPC stats are stored values from the datapack, not computed at request time.
-
-## Response shape may evolve
-
-Public response shapes are intended to be stable across deploys. Backwards-compatible additions (new optional fields, new sections) are possible. Always check for null and missing fields rather than relying on order.
-
-Raw endpoints are looser — see [Core Concepts](/core-concepts/) for the distinction.
-
-## No rate limits, no authentication
-
-The API is public. No keys, no rate limits. Fair use is expected. If you need guaranteed throughput or uptime, run a local copy — see [Local Development](/local-development/).
-
-## Known gaps
-
-- **Spawn lookups by location** aren't indexed yet.
-- **Item descriptions** sourced from DAT files are partial.
-- **NPC dialogue** and quest text aren't included.
-- **Client assets** (UI strings, skill animations, graphics) aren't served.
-
-## Feedback
-
-Issues and PRs welcome on [GitHub](https://github.com/cuteshaun/lineage2-api). The project is aCis-faithful by design and currently scoped to Interlude — keep that in mind when proposing changes.
+Records come from the aCis Interlude datapack. Differences from other references (L2Hub, PTS, L2Wiki) are source differences, not API bugs. Issues and PRs are welcome — see [How to Contribute](/local-development/).

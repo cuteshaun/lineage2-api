@@ -21,23 +21,16 @@ export default defineConfig({
           label: 'Getting Started',
           items: [
             { label: 'Overview', slug: '' },
-            { label: 'Response Format', slug: 'response-format' },
-          ],
-        },
-        { label: 'Recipes', slug: 'recipes' },
-        {
-          label: 'Reference',
-          items: [
             { label: 'Endpoints', slug: 'endpoints' },
-            { label: 'OpenAPI Spec', link: 'https://l2api.dev/api/openapi.json' },
-            { label: 'Core Concepts', slug: 'core-concepts' },
+            { label: 'Response Format', slug: 'response-format' },
+            { label: 'OpenAPI Spec', slug: 'openapi' },
           ],
         },
         {
           label: 'More Info',
           items: [
             { label: 'Scope', slug: 'limitations' },
-            { label: 'Local Development', slug: 'local-development' },
+            { label: 'How to Contribute', slug: 'local-development' },
           ],
         },
       ],

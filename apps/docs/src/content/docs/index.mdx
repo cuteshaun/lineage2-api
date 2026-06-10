@@ -3,7 +3,7 @@ title: Lineage 2 API
 description: A read-only HTTP API for Lineage 2 Interlude game data
 ---
 
-A public, read-only HTTP API for **Lineage 2 Interlude** game data — items, NPCs, monsters, drops, quests, classes, armor sets, locations, hennas, and more. Useful for wikis, guides, price checkers, loot tables, Discord bots, and exploration tools.
+A public, read-only HTTP API for **Lineage 2 Interlude** game data — items, NPCs, monsters, drops, quests, classes, and more. Useful for wikis, guides, price checkers, loot tables, Discord bots, and exploration tools.
 
 ## Base URL
 
@@ -12,65 +12,6 @@ https://l2api.dev/api/interlude
 ```
 
 Every route is scoped by **chronicle**. Today the only supported chronicle is `interlude`.
-
-## Your first request
-
-Fetch the Bloody Orchid (a Grade A dagger):
-
-```bash
-curl https://l2api.dev/api/interlude/items/235
-```
-
-```json
-{
-  "data": {
-    "id": 235,
-    "name": "Bloody Orchid",
-    "type": "weapon",
-    "grade": "a",
-    "weight": 960,
-    "price": 18300000,
-    "category": {
-      "bodypart": "One-handed",
-      "weaponType": "DAGGER"
-    },
-    "stats": {
-      "pAtk": 186,
-      "mAtk": 107,
-      "rCrit": 12
-    }
-  }
-}
-```
-
-The real response includes more fields (special abilities, crystal, PvP bonus, etc.). Browse the full shape with the [Endpoints](/endpoints/) reference or the OpenAPI spec.
-
-## A few more requests
-
-**Fetch a boss (Queen Ant):**
-```bash
-curl https://l2api.dev/api/interlude/npcs/29001
-```
-
-**List items, ten at a time:**
-```bash
-curl 'https://l2api.dev/api/interlude/items?limit=10&offset=0'
-```
-
-**Fetch a quest (Letters of Love):**
-```bash
-curl https://l2api.dev/api/interlude/quests/1
-```
-
-**List all armor sets in one response:**
-```bash
-curl https://l2api.dev/api/interlude/armor-sets
-```
-
-**Grab the OpenAPI spec:**
-```bash
-curl https://l2api.dev/api/openapi.json
-```
 
 ## Main resources
 
@@ -81,48 +22,38 @@ curl https://l2api.dev/api/openapi.json
 | **monsters** | Combat mobs: regular enemies, bosses, raid bosses |
 | **quests** | Quest catalog, objectives, rewards |
 | **classes** | Player classes and skill progression |
+| **hennas** | Dye and symbol items |
 | **armor-sets** | Armor set pieces and set bonuses |
 | **locations** | Hunting zones and map locations |
-| **hennas** | Dye and symbol items |
 | **regions** | Geographic regions and zone groupings |
 
-NPC-scoped sub-resources also expose drops, shops, and spawns — see [Endpoints](/endpoints/).
+See [Endpoints](/endpoints/) for the full route list.
 
-## Response format
+## Examples
 
-**Single resource:**
+```bash
+# An item (Bloody Orchid, a Grade A dagger)
+curl https://l2api.dev/api/interlude/items/235
+
+# A monster (Queen Ant)
+curl https://l2api.dev/api/interlude/monsters/29001
+
+# A quest (Letters of Love)
+curl https://l2api.dev/api/interlude/quests/1
+```
+
+## Response shape
+
 ```json
+// single resource
 { "data": { } }
+
+// list resource
+{ "data": [ ], "meta": { } }
 ```
 
-**List of resources:**
-```json
-{
-  "data": [ ],
-  "meta": { "total": 9206, "limit": 50, "offset": 0 }
-}
-```
+Always read from `data`. List endpoints accept `limit` and `offset` (default limit `50`, max `200`). See [Response Format](/response-format/) for the full envelope, errors, and caching.
 
-Always read from `data`. Use `limit` and `offset` to paginate. See [Response Format](/response-format/) for the full envelope, error shape, and caching headers.
+## No authentication
 
-## Public vs raw
-
-Two layers, side by side:
-
-- **Public endpoints** — cleaned, deduplicated, and cross-linked. Use these to build.
-- **Raw endpoints** — source-faithful records, useful for auditing or debugging.
-
-Example: `/api/interlude/npcs` (public) vs `/api/interlude/raw/npcs` (raw). More in [Core Concepts](/core-concepts/).
-
-## No authentication required
-
-The API is public. No keys, no credentials. CORS is enabled, so you can call it directly from a browser.
-
-## Next steps
-
-- [Recipes](/recipes/) — copy-paste examples for common tasks
-- [Response Format](/response-format/) — envelope, pagination, errors, caching
-- [Endpoints](/endpoints/) — full reference
-- [Core Concepts](/core-concepts/) — chronicles, public vs raw
-- **OpenAPI Spec** — `https://l2api.dev/api/openapi.json`
-- [Scope](/limitations/) — what's covered, what's not
+The API is public — no API keys, no credentials. It's read-only, and CORS is enabled, so you can call it directly from a browser.

@@ -1,73 +1,49 @@
 ---
-title: Local Development
-description: Run the API locally for development and testing
+title: How to Contribute
+description: Run the API locally and help improve the data
 ---
 
-The generated dataset is committed to the repository, so you can run the full API without needing a local datapack.
+Lineage 2 API is an open-source fan project, and contributions are welcome.
 
-## Clone and install
+## Good things to contribute
+
+- **Data correctness fixes** — wrong stats, names, drops, etc.
+- **Parser fixes** — improvements to how the datapack is read
+- **DTO improvements** that don't break existing responses
+- **Documentation improvements**
+- **Bug reports** with real Lineage 2 examples (an item id, an NPC, a drop)
+
+The generated JSON under `data/generated/interlude` is built from the datapack — **don't edit it by hand.** Fix the parser or source instead, then regenerate.
+
+## Local setup
 
 ```bash
-git clone https://github.com/cuteshaun/lineage2-api
-cd lineage2-api
 pnpm install
-```
-
-## Start the development server
-
-```bash
 pnpm dev
 ```
 
-The API will be available at **http://localhost:3000/api/interlude/...**.
-
-## Building for production
+The API runs at `http://localhost:3000`:
 
 ```bash
-pnpm build
-pnpm start
+curl http://localhost:3000/api/interlude/items/57
 ```
 
-## Regenerating the dataset
-
-The `data/generated/interlude/` JSON files are the source of truth the API serves. To regenerate them:
+## Regenerate the data
 
 ```bash
 pnpm build:data
 ```
 
-This command requires:
-- A local **aCis Interlude datapack** checkout configured in `scripts/chronicle-sources.ts`
-- Optionally, Lineage 2 client **DAT files** for enhanced data extraction (icon filenames, descriptions, etc.)
+This reads a local aCis Interlude datapack (configured in `scripts/chronicle-sources.ts`) and optional client DAT files. Neither is redistributed; after regenerating, the JSON diff is reviewed in the PR alongside any parser changes.
 
-The datapack and DAT files are not redistributed. After regeneration, the JSON diff is reviewed in the PR alongside any parser changes.
+## Checks
 
-## Running tests
-
-```bash
-pnpm test
-```
-
-Runs the full test suite, including snapshot tests covering the public response shapes.
-
-## Linting and type checking
+Before opening a PR:
 
 ```bash
 pnpm lint
 pnpm typecheck
+pnpm test
 ```
 
-## Project structure
-
-- `src/` — Next.js API routes and response shapes
-- `data/generated/` — Pre-built JSON dataset (committed to git)
-- `scripts/` — Datapack parsers and data generation
-- `tests/` — Snapshot and integration tests
-- `public/` — Static assets
-
-## Contributing
-
-Pull requests welcome.
-
-- Data changes are visible in git diffs because the JSON is committed.
-- Open a PR; CI runs lint, typecheck, and tests.
+PRs welcome on [GitHub](https://github.com/cuteshaun/lineage2-api).

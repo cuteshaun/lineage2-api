@@ -1,146 +1,99 @@
 ---
-title: Endpoints Overview
-description: Reference of every available API endpoint with copy-paste examples
+title: Endpoints
+description: The full list of public API routes, grouped by resource
 ---
 
-Every route is scoped by chronicle. Today the only supported chronicle is `interlude`.
-
-Most list endpoints support `limit` and `offset` for pagination. There are no other query filters at the moment. `armor-sets`, `locations`, and `regions` return all records in a single response — `limit` and `offset` are ignored on those.
-
-## Common requests
-
-Five tasks people typically want to do:
-
-**Get an item by ID**
-```bash
-curl https://l2api.dev/api/interlude/items/8689
-```
-
-**List items, ten at a time**
-```bash
-curl 'https://l2api.dev/api/interlude/items?limit=10&offset=0'
-```
-
-**Who drops this item?**
-```bash
-curl https://l2api.dev/api/interlude/items/8689/dropped-by
-```
-
-**Who spoils this item?**
-```bash
-curl https://l2api.dev/api/interlude/items/8689/spoiled-by
-```
-
-**What does this NPC drop, sell, and where does it spawn?**
-```bash
-curl https://l2api.dev/api/interlude/npcs/29001/drops
-curl https://l2api.dev/api/interlude/npcs/29001/shop
-curl https://l2api.dev/api/interlude/npcs/29001/spawns
-```
-
-**The OpenAPI spec**
-```bash
-curl https://l2api.dev/api/openapi.json
-```
+Every route is scoped by chronicle; today that's always `interlude`. List endpoints accept `limit` and `offset` for pagination. `armor-sets`, `locations`, and `regions` return every record in a single response and ignore pagination.
 
 ## Items
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/[chronicle]/items` | GET | List items. Supports `limit` and `offset`. |
-| `/api/[chronicle]/items/:id` | GET | Get a single item by ID. |
-| `/api/[chronicle]/items/:id/dropped-by` | GET | NPCs that drop this item, with rates. |
-| `/api/[chronicle]/items/:id/spoiled-by` | GET | NPCs that spoil this item, with rates. |
+```
+GET /api/interlude/items
+GET /api/interlude/items/{id}
+GET /api/interlude/items/{id}/dropped-by
+GET /api/interlude/items/{id}/spoiled-by
+```
 
 ## NPCs
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/[chronicle]/npcs` | GET | List NPCs. Supports `limit` and `offset`. |
-| `/api/[chronicle]/npcs/:id` | GET | Get a single NPC by ID. |
-| `/api/[chronicle]/npcs/:id/drops` | GET | Drop table for this NPC. |
-| `/api/[chronicle]/npcs/:id/shop` | GET | Items this NPC sells (if any). |
-| `/api/[chronicle]/npcs/:id/spawns` | GET | Where this NPC spawns. |
-| `/api/[chronicle]/drops/npc/:id` | GET | Alternative enriched drop view for an NPC. |
+```
+GET /api/interlude/npcs
+GET /api/interlude/npcs/{id}
+GET /api/interlude/npcs/{id}/drops
+GET /api/interlude/npcs/{id}/shop
+GET /api/interlude/npcs/{id}/spawns
+```
 
 ## Monsters
 
-A filtered view over NPCs.
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/[chronicle]/monsters` | GET | List monsters. Supports `limit` and `offset`. |
-| `/api/[chronicle]/monsters/:id` | GET | Get a single monster by ID. |
+```
+GET /api/interlude/monsters
+GET /api/interlude/monsters/{id}
+```
 
 ## Quests
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/[chronicle]/quests` | GET | List quests. Supports `limit` and `offset`. |
-| `/api/[chronicle]/quests/:id` | GET | Get a single quest by ID. |
+```
+GET /api/interlude/quests
+GET /api/interlude/quests/{id}
+```
 
 ## Classes
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/[chronicle]/classes` | GET | List classes. Supports `limit` and `offset`. |
-| `/api/[chronicle]/classes/:id` | GET | Get a single class by ID. |
+```
+GET /api/interlude/classes
+GET /api/interlude/classes/{id}
+```
 
 ## Hennas
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/[chronicle]/hennas` | GET | List hennas. Supports `limit` and `offset`. |
-| `/api/[chronicle]/hennas/:id` | GET | Get a single henna by ID. |
+```
+GET /api/interlude/hennas
+GET /api/interlude/hennas/{id}
+```
 
-## Armor Sets
+## Armor sets
 
-Returned as a single response — no detail route, no pagination.
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/[chronicle]/armor-sets` | GET | All armor sets in one response. |
+```
+GET /api/interlude/armor-sets
+```
 
 ## Locations
 
-Returned as a single response — no detail route, no pagination.
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/[chronicle]/locations` | GET | All locations in one response. |
+```
+GET /api/interlude/locations
+```
 
 ## Regions
 
-Returned as a single response — no detail route, no pagination.
+```
+GET /api/interlude/regions
+```
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/[chronicle]/regions` | GET | All regions in one response. |
+## Meta
 
-## Raw endpoints
+```
+GET /api/interlude/meta/item-grades
+GET /api/interlude/meta/item-types
+GET /api/interlude/meta/npc-types
+```
 
-Raw endpoints return source-faithful records without deduplication or grouping. Useful for auditing, debugging, or comparing against the upstream datapack.
+## Raw audit routes
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/[chronicle]/raw/npcs` | GET | All raw NPC records. |
-| `/api/[chronicle]/raw/npcs/:id` | GET | A single raw NPC record. |
-| `/api/[chronicle]/raw/monsters` | GET | All raw monster records. |
-| `/api/[chronicle]/raw/monsters/:id` | GET | A single raw monster record. |
-| `/api/[chronicle]/raw/monsters/:id/spawns` | GET | Spawn entries for a raw monster. |
+Source-faithful records, mainly for auditing and debugging — see [Response Format](/response-format/#public-vs-raw).
 
-## Metadata
+```
+GET /api/interlude/raw/npcs
+GET /api/interlude/raw/npcs/{id}
+GET /api/interlude/raw/monsters
+GET /api/interlude/raw/monsters/{id}
+GET /api/interlude/raw/monsters/{id}/spawns
+```
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/[chronicle]/meta/item-grades` | GET | Item grades with counts. |
-| `/api/[chronicle]/meta/item-types` | GET | Item types with counts. |
-| `/api/[chronicle]/meta/npc-types` | GET | NPC types with counts and flags. |
-| `/api/openapi.json` | GET | OpenAPI 3.0.3 specification. |
+## OpenAPI
 
-## Next steps
+```
+GET /api/openapi.json
+```
 
-- [Recipes](/recipes/) — task-shaped workflows with copy-paste examples
-- [Response Format](/response-format/) — envelope, pagination, errors, caching
-- [Core Concepts](/core-concepts/) — chronicles, public vs raw
-- **OpenAPI Spec** — `https://l2api.dev/api/openapi.json`
+Field-level details for every resource live in the [OpenAPI spec](/openapi/).

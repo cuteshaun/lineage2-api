@@ -8,10 +8,30 @@ const iaWriterQuattro = localFont({
   display: "swap",
 });
 
+const ABOUT_DESCRIPTION =
+  "About the Lineage 2 API project: its origins, motivation, and the community it was built for.";
+
 export const metadata: Metadata = {
-  title: "About — Lineage 2 API",
-  description:
-    "About the Lineage 2 API project: its origins, motivation, and the community it was built for.",
+  // Renders as "About — Lineage 2 API" via the root title template.
+  title: "About",
+  description: ABOUT_DESCRIPTION,
+  alternates: {
+    canonical: "/about",
+  },
+  openGraph: {
+    type: "website",
+    url: "https://l2api.dev/about",
+    title: "About — Lineage 2 API",
+    description: ABOUT_DESCRIPTION,
+    images: [
+      {
+        url: "/landing-icons/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Lineage 2 Interlude API",
+      },
+    ],
+  },
 };
 
 const bodyTextStyle = {

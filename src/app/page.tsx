@@ -220,7 +220,10 @@ const STATS: Stat[] = [
 function StatsRow() {
   return (
     <section
-      className="flex justify-between"
+      className="mt-11 grid grid-cols-2 gap-x-4 gap-y-8
+    border-y border-dashed py-7
+    sm:grid-cols-3
+    lg:flex lg:items-stretch lg:justify-between lg:gap-0"
       style={{
         marginTop: "44px",
         padding: "28px 0 30px",
@@ -233,7 +236,8 @@ function StatsRow() {
         return (
           <div
             key={stat.label}
-            className={`icon-stats flex flex-col items-center px-4 text-center ${
+            className={`  icon-stats flex flex-col items-center px-4 text-center
+    lg:flex-none ${
               !isLastInRow ? "lg:stats-sep-right" : ""
             }`}
           >

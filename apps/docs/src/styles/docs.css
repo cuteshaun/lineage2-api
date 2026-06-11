@@ -1,0 +1,7 @@
+/* Endpoints page: route-list code blocks are reference URLs, not copy-paste
+   snippets — copying the whole block (many URLs at once) is misleading. Hide
+   Expressive Code's block copy button for those blocks only. JSON, request, and
+   any other code examples (here and on other pages) keep their copy button. */
+.route-urls .copy {
+  display: none;
+}

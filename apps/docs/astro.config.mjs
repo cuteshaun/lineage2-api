@@ -33,7 +33,7 @@ export default defineConfig({
           ],
         },
       ],
-      customCss: [],
+      customCss: ['./src/styles/docs.css'],
       head: [],
     }),
   ],

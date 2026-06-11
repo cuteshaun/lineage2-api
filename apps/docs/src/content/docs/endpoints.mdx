@@ -5,97 +5,103 @@ description: The full list of public API routes, grouped by resource
 
 Every route is scoped by chronicle; today that's always `interlude`. List endpoints accept `limit` and `offset` for pagination. `armor-sets`, `locations`, and `regions` return every record in a single response and ignore pagination.
 
+Route lists use real example IDs so URLs can be opened directly.
+
+<div class="route-urls">
+
 ## Items
 
-```
-GET /api/interlude/items
-GET /api/interlude/items/{id}
-GET /api/interlude/items/{id}/dropped-by
-GET /api/interlude/items/{id}/spoiled-by
+```txt
+https://l2api.dev/api/interlude/items
+https://l2api.dev/api/interlude/items/57
+https://l2api.dev/api/interlude/items/57/dropped-by
+https://l2api.dev/api/interlude/items/57/spoiled-by
 ```
 
 ## NPCs
 
-```
-GET /api/interlude/npcs
-GET /api/interlude/npcs/{id}
-GET /api/interlude/npcs/{id}/drops
-GET /api/interlude/npcs/{id}/shop
-GET /api/interlude/npcs/{id}/spawns
+```txt
+https://l2api.dev/api/interlude/npcs
+https://l2api.dev/api/interlude/npcs/30048
+https://l2api.dev/api/interlude/npcs/30048/drops
+https://l2api.dev/api/interlude/npcs/30048/shop
+https://l2api.dev/api/interlude/npcs/30048/spawns
 ```
 
 ## Monsters
 
-```
-GET /api/interlude/monsters
-GET /api/interlude/monsters/{id}
+```txt
+https://l2api.dev/api/interlude/monsters
+https://l2api.dev/api/interlude/monsters/29001
 ```
 
 ## Quests
 
-```
-GET /api/interlude/quests
-GET /api/interlude/quests/{id}
+```txt
+https://l2api.dev/api/interlude/quests
+https://l2api.dev/api/interlude/quests/1
 ```
 
 ## Classes
 
-```
-GET /api/interlude/classes
-GET /api/interlude/classes/{id}
+```txt
+https://l2api.dev/api/interlude/classes
+https://l2api.dev/api/interlude/classes/2
 ```
 
 ## Hennas
 
-```
-GET /api/interlude/hennas
-GET /api/interlude/hennas/{id}
+```txt
+https://l2api.dev/api/interlude/hennas
+https://l2api.dev/api/interlude/hennas/1
 ```
 
 ## Armor sets
 
-```
-GET /api/interlude/armor-sets
+```txt
+https://l2api.dev/api/interlude/armor-sets
 ```
 
 ## Locations
 
-```
-GET /api/interlude/locations
+```txt
+https://l2api.dev/api/interlude/locations
 ```
 
 ## Regions
 
-```
-GET /api/interlude/regions
+```txt
+https://l2api.dev/api/interlude/regions
 ```
 
 ## Meta
 
-```
-GET /api/interlude/meta/item-grades
-GET /api/interlude/meta/item-types
-GET /api/interlude/meta/npc-types
+```txt
+https://l2api.dev/api/interlude/meta/item-grades
+https://l2api.dev/api/interlude/meta/item-types
+https://l2api.dev/api/interlude/meta/npc-types
 ```
 
 ## Raw audit routes
 
 Source-faithful records, mainly for auditing and debugging — see [Scope](/limitations/#public-vs-raw).
 
+```txt
+https://l2api.dev/api/interlude/raw/npcs
+https://l2api.dev/api/interlude/raw/npcs/30048
+https://l2api.dev/api/interlude/raw/monsters
+https://l2api.dev/api/interlude/raw/monsters/29001
+https://l2api.dev/api/interlude/raw/monsters/29001/spawns
 ```
-GET /api/interlude/raw/npcs
-GET /api/interlude/raw/npcs/{id}
-GET /api/interlude/raw/monsters
-GET /api/interlude/raw/monsters/{id}
-GET /api/interlude/raw/monsters/{id}/spawns
-```
+
+</div>
 
 ## Pagination
 
 List endpoints accept `limit` and `offset`:
 
-```
-GET /api/interlude/items?limit=10&offset=20
+```txt
+https://l2api.dev/api/interlude/items?limit=10&offset=20
 ```
 
 - `limit` — records per page. Default `50`, max `200`.

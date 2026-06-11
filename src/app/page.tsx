@@ -282,7 +282,7 @@ function Disclaimer() {
         }}
       />
       <div
-        className="flex justify-between w-full text-[14px] leading-[1.5]"
+        className="flex justify-between w-full max-[700px]:items-start items-center text-[14px] leading-[1.5] max-[700px]:flex-col max-[700px]:gap-2"
         style={{ color: "var(--muted)" }}
       >
         <p>
@@ -295,9 +295,21 @@ function Disclaimer() {
           >
             cuteshaun
           </a>
+          {/* The header sponsor button is hidden under 700px; this link
+              covers exactly those viewports, on its own line. */}
+          <span className="hidden max-[700px]:block mt-2">
+            <a
+              href="https://buymeacoffee.com/cuteshaun"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: "black" }}
+            >
+              Sponsor ♥
+            </a>
+          </span>
         </p>
 
-        <p className="text-[10px]">Not affiliated with NCSoft</p>
+        <p className="text-[10px] max-[700px]:mt-6">Not affiliated with NCSoft</p>
       </div>
     </footer>
   );

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "docs": "pnpm --filter @l2api/docs dev",
+    "dev:docs": "pnpm --filter ./apps/docs dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",

@@ -45,6 +45,10 @@ Regenerate data only when parsers change:
 pnpm build:data
 ```
 
+## Contributing
+
+Issues and PRs are welcome, especially bug reports with real Lineage 2 examples, data-correctness fixes, and parser improvements.
+
 ## Disclaimer
 
 Community project. Not affiliated with NCSoft.

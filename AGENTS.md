@@ -338,11 +338,13 @@ If unsure: skim the existing code in the repo first. If the project already uses
 - Successful responses ship the SWR `Cache-Control` header documented
   above; error responses ship `no-store`. Both are set centrally in
   `src/lib/api/responses.ts` — do not override per route.
-- Per-IP request-rate abuse should be handled at the platform layer
-  (Vercel Firewall / WAF), not in application code. Default plan for
-  the public deploy: rate-limit `/api/*` and apply a stricter rule to
-  `/api/*/raw/*`; treat `/api/openapi.json` as cacheable / generous.
-  Tune from real traffic, not from imagined traffic.
+- Per-IP request-rate abuse is handled at the platform layer
+  (Vercel Firewall / WAF), not in application code. Live rule:
+  `/api/*` is limited to 60 requests / 10 seconds per IP (see
+  `docs/deployment.md` for the verified record). The free plan
+  allows only one WAF rule, so a stricter dedicated rule for
+  `/api/*/raw/*` is deferred until a paid plan or a documented
+  abuse signal. Tune from real traffic, not from imagined traffic.
 - Do not introduce Redis, Upstash, or any external rate-limit store
   by default. Serverless in-memory counters are unreliable; the
   platform/WAF layer is the right tool.

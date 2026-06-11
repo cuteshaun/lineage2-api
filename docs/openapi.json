@@ -1,0 +1,3631 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Lineage 2 API",
+    "version": "1.0.0-rc.1",
+    "description": "Public read-only API over Lineage 2 Interlude datapack content. Every endpoint is documented with its parameters and response envelope. List/summary, drop, shop, and henna schemas are exact; the large detail schemas (ItemDetail, NpcDetail, QuestDetail, ClassDetail, ArmorSet, RawNpc) document the stable top-level fields and allow additional properties — field-level precision for those improves in a later phase of the Zod migration. See docs/api-contract.md for the full prose contract."
+  },
+  "servers": [
+    {
+      "url": "/api",
+      "description": "API root. All data paths are chronicle-scoped via the {chronicle} path parameter."
+    }
+  ],
+  "components": {
+    "schemas": {
+      "NpcRef": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ],
+        "description": "Compact NPC reference used in cross-link arrays. Resolves a numeric id to a player-readable name without forcing a second round-trip."
+      },
+      "ClassRef": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "professionLevel": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 3
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "professionLevel"
+        ],
+        "description": "Compact player-class reference. `professionLevel` is 0 (base) / 1 / 2 / 3 (no 4th profession in Interlude)."
+      },
+      "QuestRef": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "levelMin": {
+            "type": "integer",
+            "nullable": true
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "levelMin"
+        ],
+        "description": "Compact quest reference used by item / NPC cross-links. `roles?` is populated only on `NpcDetailDto.involvedInQuests[]` entries (one or more of 'talk' / 'kill')."
+      },
+      "RegionRef": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ],
+        "description": "Compact reference to a named L2 map region (e.g. 'Talking Island Village'). Region ids match the upstream engine's `mapRegions.xml` numbering. The table represents engine 'death-teleport' regions, not strict biome polygons — a coordinate's region is the in-game town it teleports to on death within that tile."
+      },
+      "EnrichedSpawn": {
+        "type": "object",
+        "properties": {
+          "npcId": {
+            "type": "integer"
+          },
+          "x": {
+            "type": "integer"
+          },
+          "y": {
+            "type": "integer"
+          },
+          "z": {
+            "type": "integer"
+          },
+          "heading": {
+            "type": "integer"
+          },
+          "respawnDelay": {
+            "type": "integer"
+          },
+          "respawnRandom": {
+            "type": "integer"
+          },
+          "periodOfDay": {
+            "type": "integer"
+          },
+          "region": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RegionRef"
+              },
+              {
+                "nullable": true
+              }
+            ]
+          },
+          "location": {
+            "$ref": "#/components/schemas/LocationRef"
+          }
+        },
+        "required": [
+          "npcId",
+          "x",
+          "y",
+          "z",
+          "heading",
+          "respawnDelay",
+          "respawnRandom",
+          "periodOfDay",
+          "region",
+          "location"
+        ],
+        "description": "One cleaned-layer spawn row with the resolved map region attached. `region` is `null` when the coordinate falls outside the upstream `mapRegions.xml` tile grid, or when the chronicle ships no regions XML. The raw spawn endpoints intentionally omit this field."
+      },
+      "LocationRef": {
+        "type": "object",
+        "nullable": true,
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "minLevel": {
+            "type": "integer",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "minLevel"
+        ],
+        "description": "Compact reference to a player-facing L2 hunting / map location (e.g. \"Cruma Tower\", \"Ant Nest\", \"Sea of Spores\"). Sourced from the L2 client's `huntingzone-e.dat` center anchors. Resolution against spawn coordinates is *nearest-anchor-with-threshold* (default 10000 game units, 2D) — NOT polygon containment. `minLevel` is the recommended player level (`null` for towns and non-combat areas). Complementary to `RegionRef`, not a replacement."
+      },
+      "QuestClientJournalEntry": {
+        "type": "object",
+        "properties": {
+          "stepIndex": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "completionNpc": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NpcRef"
+              },
+              {
+                "nullable": true
+              }
+            ]
+          }
+        },
+        "required": [
+          "stepIndex",
+          "title",
+          "description",
+          "completionNpc"
+        ],
+        "description": "One entry in the player's in-game quest log, sourced from the L2 client's `questname-e.dat`. Mirrors what the client actually displays — a short title, the prose journal text, and the completion NPC the player is meant to talk to next. NOT a mechanically-derived walkthrough."
+      },
+      "HennaSummary": {
+        "type": "object",
+        "properties": {
+          "symbolId": {
+            "type": "integer"
+          },
+          "displayName": {
+            "type": "string",
+            "nullable": true
+          },
+          "iconFile": {
+            "type": "string",
+            "nullable": true
+          },
+          "shortLabel": {
+            "type": "string",
+            "nullable": true
+          },
+          "statChanges": {
+            "type": "object",
+            "properties": {
+              "STR": {
+                "type": "integer"
+              },
+              "CON": {
+                "type": "integer"
+              },
+              "DEX": {
+                "type": "integer"
+              },
+              "INT": {
+                "type": "integer"
+              },
+              "MEN": {
+                "type": "integer"
+              },
+              "WIT": {
+                "type": "integer"
+              }
+            }
+          },
+          "engravePrice": {
+            "type": "integer"
+          },
+          "dyeItem": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "name": {
+                "type": "string"
+              },
+              "iconFile": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "iconFile"
+            ]
+          }
+        },
+        "required": [
+          "symbolId",
+          "displayName",
+          "iconFile",
+          "shortLabel",
+          "statChanges",
+          "engravePrice",
+          "dyeItem"
+        ],
+        "description": "Compact henna symbol — the engraving a player buys at a Symbol Maker (a stat-altering dye, not a cosmetic tattoo). Mechanical fields (`statChanges`, `engravePrice`, `dyeItem`) come from `hennas.xml` and are always populated. `engravePrice` is the Adena cost the Symbol Maker charges to engrave the symbol — distinct from the dye item's own vendor price. Display fields (`displayName`, `iconFile`, `shortLabel`) come from the L2 client's `hennagrp-e.dat` and are honestly `null` for the 9 +/- 4 'Greater II' tier symbols (Interlude `symbolId` 172–180), whose DAT records use a shared-prefix encoding the parser does not decode."
+      },
+      "ApiError": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "error",
+          "status"
+        ],
+        "description": "Error envelope returned by every 4xx/5xx response. Error responses always carry `Cache-Control: no-store` (success responses are CDN-cacheable)."
+      },
+      "ListMeta": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "offset": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "total",
+          "limit",
+          "offset"
+        ],
+        "description": "Pagination metadata for list responses. Catalog endpoints that return everything in one page (quests, classes, armor-sets, locations, regions, hennas) set `limit = total` and `offset = 0`."
+      },
+      "ItemSummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "grade": {
+            "type": "string"
+          },
+          "weight": {
+            "type": "number",
+            "nullable": true
+          },
+          "price": {
+            "type": "number",
+            "nullable": true
+          },
+          "iconFile": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "type",
+          "grade",
+          "weight",
+          "price",
+          "iconFile"
+        ],
+        "description": "One row of the paginated `/items` list."
+      },
+      "NpcSummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "level": {
+            "type": "number",
+            "nullable": true
+          },
+          "npcType": {
+            "type": "string",
+            "nullable": true
+          },
+          "hp": {
+            "type": "number",
+            "nullable": true
+          },
+          "isAggressive": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "title",
+          "level",
+          "npcType",
+          "hp",
+          "isAggressive"
+        ],
+        "description": "One row of the paginated `/npcs` or `/monsters` list (cleaned layer — one record per unique NPC name+level)."
+      },
+      "QuestSummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "levelMin": {
+            "type": "integer",
+            "nullable": true
+          },
+          "repeatable": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "raceRestrictions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "classRestrictions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClassRef"
+            }
+          },
+          "startNpc": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NpcRef"
+              },
+              {
+                "nullable": true
+              }
+            ]
+          },
+          "rewardsPreview": {
+            "type": "object",
+            "properties": {
+              "adena": {
+                "type": "number",
+                "nullable": true
+              },
+              "exp": {
+                "type": "number",
+                "nullable": true
+              },
+              "sp": {
+                "type": "number",
+                "nullable": true
+              },
+              "itemCount": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "adena",
+              "exp",
+              "sp",
+              "itemCount"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "levelMin",
+          "repeatable",
+          "raceRestrictions",
+          "classRestrictions",
+          "startNpc",
+          "rewardsPreview"
+        ],
+        "description": "One row of the `/quests` catalog. `rewardsPreview.itemCount` is the length of the detail-level `rewards.items[]`."
+      },
+      "ClassSummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "race": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "professionLevel": {
+            "type": "integer"
+          },
+          "parentClassId": {
+            "type": "integer",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "race",
+          "type",
+          "professionLevel",
+          "parentClassId"
+        ],
+        "description": "One row of the `/classes` catalog. Class ids start at 0 (Human Fighter)."
+      },
+      "Drop": {
+        "type": "object",
+        "properties": {
+          "itemId": {
+            "type": "integer"
+          },
+          "itemName": {
+            "type": "string",
+            "nullable": true
+          },
+          "qty": {
+            "type": "string"
+          },
+          "chance": {
+            "type": "number",
+            "nullable": true
+          },
+          "chanceDisplay": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "spoil",
+              "adena",
+              "regular"
+            ]
+          },
+          "rollCount": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "itemId",
+          "itemName",
+          "qty",
+          "chance",
+          "chanceDisplay",
+          "type"
+        ],
+        "description": "One deduplicated drop/spoil row. `chance` is a percentage (already divided by the engine's 10000 base). Exact duplicate rows are collapsed; `rollCount` (>1) carries the original multiplicity. Adena (itemId 57) always has `type: \"adena\"`."
+      },
+      "NpcDrops": {
+        "type": "object",
+        "properties": {
+          "npcId": {
+            "type": "integer"
+          },
+          "npcName": {
+            "type": "string"
+          },
+          "drops": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Drop"
+            }
+          }
+        },
+        "required": [
+          "npcId",
+          "npcName",
+          "drops"
+        ],
+        "description": "All drops and spoil for one cleaned NPC, sorted adena → regular → spoil, then by chance descending."
+      },
+      "ItemSourceNpc": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "level": {
+            "type": "number",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "type",
+          "level"
+        ],
+        "description": "Compact NPC reference inside dropped-by / spoiled-by rows."
+      },
+      "ItemSourceEntry": {
+        "type": "object",
+        "properties": {
+          "npc": {
+            "$ref": "#/components/schemas/ItemSourceNpc"
+          },
+          "qty": {
+            "type": "string"
+          },
+          "chance": {
+            "type": "number",
+            "nullable": true
+          },
+          "chanceDisplay": {
+            "type": "string",
+            "nullable": true
+          },
+          "rollCount": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "npc",
+          "qty",
+          "chance",
+          "chanceDisplay"
+        ],
+        "description": "One source NPC for an item (reverse lookup row of `/items/{id}/dropped-by` and `/items/{id}/spoiled-by`)."
+      },
+      "ItemQuantity": {
+        "type": "object",
+        "properties": {
+          "itemId": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "iconFile": {
+            "type": "string",
+            "nullable": true
+          },
+          "count": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "itemId",
+          "name",
+          "iconFile",
+          "count"
+        ],
+        "description": "An item id + display name with a quantity."
+      },
+      "ShopProduct": {
+        "type": "object",
+        "properties": {
+          "itemId": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "iconFile": {
+            "type": "string",
+            "nullable": true
+          },
+          "price": {
+            "type": "integer"
+          },
+          "buyListId": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "itemId",
+          "name",
+          "iconFile",
+          "price",
+          "buyListId"
+        ],
+        "description": "One merchant buy-list row, sorted by price ascending."
+      },
+      "ExchangeOption": {
+        "type": "object",
+        "properties": {
+          "multisellId": {
+            "type": "integer"
+          },
+          "maintainEnchantment": {
+            "type": "boolean"
+          },
+          "npcs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NpcRef"
+            }
+          },
+          "required": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ItemQuantity"
+            }
+          },
+          "produces": {
+            "$ref": "#/components/schemas/ItemQuantity"
+          }
+        },
+        "required": [
+          "multisellId",
+          "maintainEnchantment",
+          "npcs",
+          "required",
+          "produces"
+        ],
+        "description": "One fully-resolved multisell exchange row."
+      },
+      "ShopView": {
+        "type": "object",
+        "properties": {
+          "npc": {
+            "$ref": "#/components/schemas/NpcRef"
+          },
+          "buyList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShopProduct"
+            }
+          },
+          "exchanges": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExchangeOption"
+            }
+          }
+        },
+        "required": [
+          "npc"
+        ],
+        "description": "Everything one NPC sells or exchanges. `buyList` and `exchanges` are omitted (not empty arrays) when the NPC has none of that kind."
+      },
+      "HennaDetail": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/HennaSummary"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "allowedClasses": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ClassRef"
+                }
+              }
+            },
+            "required": [
+              "allowedClasses"
+            ]
+          }
+        ],
+        "description": "Henna symbol detail — the catalog fields plus the resolved `allowedClasses` (sorted by class id)."
+      },
+      "NameCount": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "name",
+          "count"
+        ],
+        "description": "Introspection row: one distinct value with its record count. Computed from the actual dataset, not a hardcoded enum."
+      },
+      "NpcTypeCount": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "isMonster": {
+            "type": "boolean"
+          },
+          "count": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "name",
+          "isMonster",
+          "count"
+        ],
+        "description": "Introspection row for one `npcType` value. `isMonster` marks the types included in the `/monsters` subset."
+      },
+      "RawSpawn": {
+        "type": "object",
+        "properties": {
+          "npcId": {
+            "type": "integer"
+          },
+          "x": {
+            "type": "integer"
+          },
+          "y": {
+            "type": "integer"
+          },
+          "z": {
+            "type": "integer"
+          },
+          "heading": {
+            "type": "integer"
+          },
+          "respawnDelay": {
+            "type": "integer"
+          },
+          "respawnRandom": {
+            "type": "integer"
+          },
+          "periodOfDay": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "npcId",
+          "x",
+          "y",
+          "z",
+          "heading",
+          "respawnDelay",
+          "respawnRandom",
+          "periodOfDay"
+        ],
+        "description": "One source-faithful spawn row (no region/location enrichment — that lives on the cleaned `/npcs/{id}/spawns` endpoint)."
+      },
+      "ItemDetail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "grade": {
+            "type": "string"
+          },
+          "weight": {
+            "type": "number",
+            "nullable": true
+          },
+          "price": {
+            "type": "number",
+            "nullable": true
+          },
+          "material": {
+            "type": "string",
+            "nullable": true
+          },
+          "iconFile": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "type",
+          "grade",
+          "weight",
+          "price",
+          "material",
+          "iconFile"
+        ],
+        "additionalProperties": true,
+        "description": "Full item detail with cross-links (category/stats groups, armor sets, recipes, exchanges, quests, shops, spellbook, henna). Only the stable top-level fields are listed; the response carries additional documented properties (see docs/api-contract.md). Field-level schema precision improves in a later phase of the Zod migration."
+      },
+      "NpcDetail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "level": {
+            "type": "number",
+            "nullable": true
+          },
+          "npcType": {
+            "type": "string",
+            "nullable": true
+          },
+          "isAggressive": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "level",
+          "npcType",
+          "isAggressive"
+        ],
+        "additionalProperties": true,
+        "description": "Full cleaned NPC/monster detail (stats, baseStats, optional behavior group, skills, quests, drops/spawn cross-links). The `{id}` parameter accepts the canonical id or any merged raw id. Only the stable top-level fields are listed; the response carries additional documented properties (see docs/api-contract.md). Field-level schema precision improves in a later phase of the Zod migration."
+      },
+      "QuestDetail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "levelMin": {
+            "type": "integer",
+            "nullable": true
+          },
+          "repeatable": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "levelMin",
+          "repeatable"
+        ],
+        "additionalProperties": true,
+        "description": "Full quest detail (restrictions, NPCs, quest items, rewards, optional client journal entries). Only the stable top-level fields are listed; the response carries additional documented properties (see docs/api-contract.md). Field-level schema precision improves in a later phase of the Zod migration."
+      },
+      "ClassDetail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "race": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "professionLevel": {
+            "type": "integer"
+          },
+          "parentClassId": {
+            "type": "integer",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "race",
+          "type",
+          "professionLevel",
+          "parentClassId"
+        ],
+        "additionalProperties": true,
+        "description": "Full class detail with the skill-learn table and spellbook references. Only the stable top-level fields are listed; the response carries additional documented properties (see docs/api-contract.md). Field-level schema precision improves in a later phase of the Zod migration."
+      },
+      "ArmorSet": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ],
+        "additionalProperties": true,
+        "description": "One armor set with its pieces and bonus skills. The same shape is embedded into every piece's `ItemDetail.partOfSets[]`. Only the stable top-level fields are listed; the response carries additional documented properties (see docs/api-contract.md). Field-level schema precision improves in a later phase of the Zod migration."
+      },
+      "RawNpc": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "level": {
+            "type": "number",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "level"
+        ],
+        "additionalProperties": true,
+        "description": "Source-faithful parsed NPC record, engine-shaped. Every raw row carries `mergedIds=[id]` and `mergedCount=1` for shape parity with the cleaned layer. Only the stable top-level fields are listed; the response carries additional documented properties (see docs/api-contract.md). Field-level schema precision improves in a later phase of the Zod migration."
+      }
+    },
+    "parameters": {}
+  },
+  "paths": {
+    "/{chronicle}/items": {
+      "get": {
+        "tags": [
+          "Items"
+        ],
+        "summary": "List items",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "interlude"
+              ],
+              "description": "Game chronicle. Only `interlude` is currently supported.",
+              "example": "interlude"
+            },
+            "required": true,
+            "description": "Game chronicle. Only `interlude` is currently supported.",
+            "name": "chronicle",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "description": "Page size. Default 50. Values above 200 are clamped to 200."
+            },
+            "required": false,
+            "description": "Page size. Default 50. Values above 200 are clamped to 200.",
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Number of rows to skip. Default 0."
+            },
+            "required": false,
+            "description": "Number of rows to skip. Default 0.",
+            "name": "offset",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "description": "Case-insensitive substring match on the name."
+            },
+            "required": false,
+            "description": "Case-insensitive substring match on the name.",
+            "name": "q",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "weapon",
+                "armor",
+                "etcitem"
+              ],
+              "description": "Filter by item type (case-insensitive)."
+            },
+            "required": false,
+            "description": "Filter by item type (case-insensitive).",
+            "name": "type",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "none",
+                "d",
+                "c",
+                "b",
+                "a",
+                "s"
+              ],
+              "description": "Filter by crystal grade (case-insensitive)."
+            },
+            "required": false,
+            "description": "Filter by crystal grade (case-insensitive).",
+            "name": "grade",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "-id",
+                "name",
+                "-name",
+                "grade",
+                "-grade"
+              ],
+              "description": "Sort field; prefix with `-` for descending. Default: dataset order (by id)."
+            },
+            "required": false,
+            "description": "Sort field; prefix with `-` for descending. Default: dataset order (by id).",
+            "name": "sort",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated item list.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ItemSummary"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/ListMeta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter (malformed id, bad pagination, unknown enum value, …).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown chronicle, or no entity with this id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{chronicle}/items/{id}": {
+      "get": {
+        "tags": [
+          "Items"
+        ],
+        "summary": "Item detail",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "interlude"
+              ],
+              "description": "Game chronicle. Only `interlude` is currently supported.",
+              "example": "interlude"
+            },
+            "required": true,
+            "description": "Game chronicle. Only `interlude` is currently supported.",
+            "name": "chronicle",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Item id.",
+              "example": 57
+            },
+            "required": true,
+            "description": "Item id.",
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Full item detail with cross-links.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ItemDetail"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter (malformed id, bad pagination, unknown enum value, …).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown chronicle, or no entity with this id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{chronicle}/items/{id}/dropped-by": {
+      "get": {
+        "tags": [
+          "Items"
+        ],
+        "summary": "NPCs that drop this item",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "interlude"
+              ],
+              "description": "Game chronicle. Only `interlude` is currently supported.",
+              "example": "interlude"
+            },
+            "required": true,
+            "description": "Game chronicle. Only `interlude` is currently supported.",
+            "name": "chronicle",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Item id.",
+              "example": 57
+            },
+            "required": true,
+            "description": "Item id.",
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "description": "Page size. Default 25. Values above 200 are clamped to 200."
+            },
+            "required": false,
+            "description": "Page size. Default 25. Values above 200 are clamped to 200.",
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Number of rows to skip. Default 0."
+            },
+            "required": false,
+            "description": "Number of rows to skip. Default 0.",
+            "name": "offset",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated reverse lookup: which NPCs drop this item.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ItemSourceEntry"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/ListMeta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter (malformed id, bad pagination, unknown enum value, …).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown chronicle, or no entity with this id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{chronicle}/items/{id}/spoiled-by": {
+      "get": {
+        "tags": [
+          "Items"
+        ],
+        "summary": "NPCs that spoil this item",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "interlude"
+              ],
+              "description": "Game chronicle. Only `interlude` is currently supported.",
+              "example": "interlude"
+            },
+            "required": true,
+            "description": "Game chronicle. Only `interlude` is currently supported.",
+            "name": "chronicle",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Item id.",
+              "example": 1864
+            },
+            "required": true,
+            "description": "Item id.",
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "description": "Page size. Default 25. Values above 200 are clamped to 200."
+            },
+            "required": false,
+            "description": "Page size. Default 25. Values above 200 are clamped to 200.",
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Number of rows to skip. Default 0."
+            },
+            "required": false,
+            "description": "Number of rows to skip. Default 0.",
+            "name": "offset",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated reverse lookup: which NPCs spoil this item.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ItemSourceEntry"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/ListMeta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter (malformed id, bad pagination, unknown enum value, …).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown chronicle, or no entity with this id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{chronicle}/npcs": {
+      "get": {
+        "tags": [
+          "NPCs"
+        ],
+        "summary": "List NPCs (cleaned)",
+        "description": "Cleaned layer — one record per unique NPC name+level; merged raw ids are listed on the detail's `mergedIds`. For the source-faithful list see `/{chronicle}/raw/npcs`.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "interlude"
+              ],
+              "description": "Game chronicle. Only `interlude` is currently supported.",
+              "example": "interlude"
+            },
+            "required": true,
+            "description": "Game chronicle. Only `interlude` is currently supported.",
+            "name": "chronicle",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "description": "Page size. Default 50. Values above 200 are clamped to 200."
+            },
+            "required": false,
+            "description": "Page size. Default 50. Values above 200 are clamped to 200.",
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Number of rows to skip. Default 0."
+            },
+            "required": false,
+            "description": "Number of rows to skip. Default 0.",
+            "name": "offset",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "description": "Case-insensitive substring match on the name."
+            },
+            "required": false,
+            "description": "Case-insensitive substring match on the name.",
+            "name": "q",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "description": "Minimum NPC level (inclusive). Must be <= levelMax when both are set."
+            },
+            "required": false,
+            "description": "Minimum NPC level (inclusive). Must be <= levelMax when both are set.",
+            "name": "levelMin",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "description": "Maximum NPC level (inclusive)."
+            },
+            "required": false,
+            "description": "Maximum NPC level (inclusive).",
+            "name": "levelMax",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "description": "Filter by engine npcType (case-insensitive). Allowed values are dataset-derived — list them via `/{chronicle}/meta/npc-types`."
+            },
+            "required": false,
+            "description": "Filter by engine npcType (case-insensitive). Allowed values are dataset-derived — list them via `/{chronicle}/meta/npc-types`.",
+            "name": "npcType",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "-id",
+                "name",
+                "-name",
+                "level",
+                "-level"
+              ],
+              "description": "Sort field; prefix with `-` for descending. Default: dataset order (by id)."
+            },
+            "required": false,
+            "description": "Sort field; prefix with `-` for descending. Default: dataset order (by id).",
+            "name": "sort",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated NPC list.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/NpcSummary"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/ListMeta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter (malformed id, bad pagination, unknown enum value, …).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown chronicle, or no entity with this id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{chronicle}/npcs/{id}": {
+      "get": {
+        "tags": [
+          "NPCs"
+        ],
+        "summary": "NPC detail (cleaned)",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "interlude"
+              ],
+              "description": "Game chronicle. Only `interlude` is currently supported.",
+              "example": "interlude"
+            },
+            "required": true,
+            "description": "Game chronicle. Only `interlude` is currently supported.",
+            "name": "chronicle",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Canonical NPC id, or any merged raw id.",
+              "example": 30048
+            },
+            "required": true,
+            "description": "Canonical NPC id, or any merged raw id.",
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Full cleaned NPC detail.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/NpcDetail"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter (malformed id, bad pagination, unknown enum value, …).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown chronicle, or no entity with this id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{chronicle}/npcs/{id}/spawns": {
+      "get": {
+        "tags": [
+          "NPCs"
+        ],
+        "summary": "NPC spawn points (enriched)",
+        "description": "Cleaned spawn rows enriched with resolved `region` and `location`. Returns `{ data: [] }` when the NPC exists but has no spawns; 404 only when the id is unknown.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "interlude"
+              ],
+              "description": "Game chronicle. Only `interlude` is currently supported.",
+              "example": "interlude"
+            },
+            "required": true,
+            "description": "Game chronicle. Only `interlude` is currently supported.",
+            "name": "chronicle",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Canonical NPC id, or any merged raw id.",
+              "example": 20001
+            },
+            "required": true,
+            "description": "Canonical NPC id, or any merged raw id.",
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Enriched spawn rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/EnrichedSpawn"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter (malformed id, bad pagination, unknown enum value, …).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown chronicle, or no entity with this id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{chronicle}/npcs/{id}/drops": {
+      "get": {
+        "tags": [
+          "NPCs",
+          "Drops"
+        ],
+        "summary": "NPC drops and spoil",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "interlude"
+              ],
+              "description": "Game chronicle. Only `interlude` is currently supported.",
+              "example": "interlude"
+            },
+            "required": true,
+            "description": "Game chronicle. Only `interlude` is currently supported.",
+            "name": "chronicle",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Canonical NPC id, or any merged raw id.",
+              "example": 20001
+            },
+            "required": true,
+            "description": "Canonical NPC id, or any merged raw id.",
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All drops and spoil for this NPC. 404 when the NPC has no drops.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/NpcDrops"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter (malformed id, bad pagination, unknown enum value, …).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown chronicle, or no entity with this id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{chronicle}/npcs/{id}/shop": {
+      "get": {
+        "tags": [
+          "NPCs",
+          "Shops"
+        ],
+        "summary": "NPC shop view",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "interlude"
+              ],
+              "description": "Game chronicle. Only `interlude` is currently supported.",
+              "example": "interlude"
+            },
+            "required": true,
+            "description": "Game chronicle. Only `interlude` is currently supported.",
+            "name": "chronicle",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "NPC id.",
+              "example": 30001
+            },
+            "required": true,
+            "description": "NPC id.",
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Merchant buy-list rows and/or curated multisell exchanges for this NPC.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ShopView"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter (malformed id, bad pagination, unknown enum value, …).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown chronicle, or no entity with this id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{chronicle}/monsters": {
+      "get": {
+        "tags": [
+          "Monsters"
+        ],
+        "summary": "List monsters (cleaned)",
+        "description": "The monster subset of the cleaned NPC list. For the source-faithful list see `/{chronicle}/raw/monsters`.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "interlude"
+              ],
+              "description": "Game chronicle. Only `interlude` is currently supported.",
+              "example": "interlude"
+            },
+            "required": true,
+            "description": "Game chronicle. Only `interlude` is currently supported.",
+            "name": "chronicle",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "description": "Page size. Default 50. Values above 200 are clamped to 200."
+            },
+            "required": false,
+            "description": "Page size. Default 50. Values above 200 are clamped to 200.",
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Number of rows to skip. Default 0."
+            },
+            "required": false,
+            "description": "Number of rows to skip. Default 0.",
+            "name": "offset",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "description": "Case-insensitive substring match on the name."
+            },
+            "required": false,
+            "description": "Case-insensitive substring match on the name.",
+            "name": "q",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "description": "Minimum NPC level (inclusive). Must be <= levelMax when both are set."
+            },
+            "required": false,
+            "description": "Minimum NPC level (inclusive). Must be <= levelMax when both are set.",
+            "name": "levelMin",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "description": "Maximum NPC level (inclusive)."
+            },
+            "required": false,
+            "description": "Maximum NPC level (inclusive).",
+            "name": "levelMax",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "description": "Filter by engine npcType (case-insensitive). Allowed values are dataset-derived — list them via `/{chronicle}/meta/npc-types`. Restricted to the monster subset on this endpoint."
+            },
+            "required": false,
+            "description": "Filter by engine npcType (case-insensitive). Allowed values are dataset-derived — list them via `/{chronicle}/meta/npc-types`. Restricted to the monster subset on this endpoint.",
+            "name": "npcType",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "-id",
+                "name",
+                "-name",
+                "level",
+                "-level"
+              ],
+              "description": "Sort field; prefix with `-` for descending. Default: dataset order (by id)."
+            },
+            "required": false,
+            "description": "Sort field; prefix with `-` for descending. Default: dataset order (by id).",
+            "name": "sort",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated monster list.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/NpcSummary"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/ListMeta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter (malformed id, bad pagination, unknown enum value, …).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown chronicle, or no entity with this id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{chronicle}/monsters/{id}": {
+      "get": {
+        "tags": [
+          "Monsters"
+        ],
+        "summary": "Monster detail (cleaned)",
+        "description": "Same shape as NPC detail. Non-monster NPC ids return 404 — this endpoint mirrors the monster-type gate of the list.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "interlude"
+              ],
+              "description": "Game chronicle. Only `interlude` is currently supported.",
+              "example": "interlude"
+            },
+            "required": true,
+            "description": "Game chronicle. Only `interlude` is currently supported.",
+            "name": "chronicle",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Canonical monster id, or any merged raw id.",
+              "example": 20001
+            },
+            "required": true,
+            "description": "Canonical monster id, or any merged raw id.",
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Full cleaned monster detail.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/NpcDetail"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter (malformed id, bad pagination, unknown enum value, …).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown chronicle, or no entity with this id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{chronicle}/drops/npc/{id}": {
+      "get": {
+        "tags": [
+          "Drops"
+        ],
+        "summary": "NPC drops and spoil (alias)",
+        "description": "Alias of `/{chronicle}/npcs/{id}/drops` — identical response.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "interlude"
+              ],
+              "description": "Game chronicle. Only `interlude` is currently supported.",
+              "example": "interlude"
+            },
+            "required": true,
+            "description": "Game chronicle. Only `interlude` is currently supported.",
+            "name": "chronicle",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Canonical NPC id, or any merged raw id.",
+              "example": 20001
+            },
+            "required": true,
+            "description": "Canonical NPC id, or any merged raw id.",
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All drops and spoil for this NPC. 404 when the NPC has no drops.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/NpcDrops"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter (malformed id, bad pagination, unknown enum value, …).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown chronicle, or no entity with this id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{chronicle}/quests": {
+      "get": {
+        "tags": [
+          "Quests"
+        ],
+        "summary": "List all quests",
+        "description": "Single-page catalog (no pagination params): `meta.limit = total`.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "interlude"
+              ],
+              "description": "Game chronicle. Only `interlude` is currently supported.",
+              "example": "interlude"
+            },
+            "required": true,
+            "description": "Game chronicle. Only `interlude` is currently supported.",
+            "name": "chronicle",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All quests.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/QuestSummary"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/ListMeta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter (malformed id, bad pagination, unknown enum value, …).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown chronicle, or no entity with this id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{chronicle}/quests/{id}": {
+      "get": {
+        "tags": [
+          "Quests"
+        ],
+        "summary": "Quest detail",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "interlude"
+              ],
+              "description": "Game chronicle. Only `interlude` is currently supported.",
+              "example": "interlude"
+            },
+            "required": true,
+            "description": "Game chronicle. Only `interlude` is currently supported.",
+            "name": "chronicle",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Quest id.",
+              "example": 1
+            },
+            "required": true,
+            "description": "Quest id.",
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Full quest detail.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/QuestDetail"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter (malformed id, bad pagination, unknown enum value, …).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown chronicle, or no entity with this id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{chronicle}/classes": {
+      "get": {
+        "tags": [
+          "Classes"
+        ],
+        "summary": "List all classes",
+        "description": "Single-page catalog (no pagination params): `meta.limit = total`.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "interlude"
+              ],
+              "description": "Game chronicle. Only `interlude` is currently supported.",
+              "example": "interlude"
+            },
+            "required": true,
+            "description": "Game chronicle. Only `interlude` is currently supported.",
+            "name": "chronicle",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All player classes.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ClassSummary"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/ListMeta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter (malformed id, bad pagination, unknown enum value, …).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown chronicle, or no entity with this id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{chronicle}/classes/{id}": {
+      "get": {
+        "tags": [
+          "Classes"
+        ],
+        "summary": "Class detail",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "interlude"
+              ],
+              "description": "Game chronicle. Only `interlude` is currently supported.",
+              "example": "interlude"
+            },
+            "required": true,
+            "description": "Game chronicle. Only `interlude` is currently supported.",
+            "name": "chronicle",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Class id. Ids start at 0 (Human Fighter).",
+              "example": 0
+            },
+            "required": true,
+            "description": "Class id. Ids start at 0 (Human Fighter).",
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Full class detail with skill-learn table.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ClassDetail"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter (malformed id, bad pagination, unknown enum value, …).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown chronicle, or no entity with this id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{chronicle}/armor-sets": {
+      "get": {
+        "tags": [
+          "Armor Sets"
+        ],
+        "summary": "List all armor sets",
+        "description": "Single-page rich catalog (no pagination params, no per-id detail endpoint by design). The same per-set shape is embedded into every piece's `ItemDetail.partOfSets[]`.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "interlude"
+              ],
+              "description": "Game chronicle. Only `interlude` is currently supported.",
+              "example": "interlude"
+            },
+            "required": true,
+            "description": "Game chronicle. Only `interlude` is currently supported.",
+            "name": "chronicle",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All armor sets.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ArmorSet"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/ListMeta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter (malformed id, bad pagination, unknown enum value, …).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown chronicle, or no entity with this id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{chronicle}/hennas": {
+      "get": {
+        "tags": [
+          "Hennas"
+        ],
+        "summary": "List all henna symbols",
+        "description": "Single-page catalog (no pagination params): `meta.limit = total`.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "interlude"
+              ],
+              "description": "Game chronicle. Only `interlude` is currently supported.",
+              "example": "interlude"
+            },
+            "required": true,
+            "description": "Game chronicle. Only `interlude` is currently supported.",
+            "name": "chronicle",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All henna symbols.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/HennaSummary"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/ListMeta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter (malformed id, bad pagination, unknown enum value, …).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown chronicle, or no entity with this id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{chronicle}/hennas/{id}": {
+      "get": {
+        "tags": [
+          "Hennas"
+        ],
+        "summary": "Henna detail",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "interlude"
+              ],
+              "description": "Game chronicle. Only `interlude` is currently supported.",
+              "example": "interlude"
+            },
+            "required": true,
+            "description": "Game chronicle. Only `interlude` is currently supported.",
+            "name": "chronicle",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Henna symbolId (source XML id, 1..N).",
+              "example": 1
+            },
+            "required": true,
+            "description": "Henna symbolId (source XML id, 1..N).",
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Henna symbol with resolved allowed classes.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/HennaDetail"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter (malformed id, bad pagination, unknown enum value, …).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown chronicle, or no entity with this id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{chronicle}/locations": {
+      "get": {
+        "tags": [
+          "Locations"
+        ],
+        "summary": "List all locations",
+        "description": "Single-page catalog of player-facing hunting/map locations (center anchors from `huntingzone-e.dat`, not polygons).",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "interlude"
+              ],
+              "description": "Game chronicle. Only `interlude` is currently supported.",
+              "example": "interlude"
+            },
+            "required": true,
+            "description": "Game chronicle. Only `interlude` is currently supported.",
+            "name": "chronicle",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All locations.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/LocationRef"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/ListMeta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter (malformed id, bad pagination, unknown enum value, …).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown chronicle, or no entity with this id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{chronicle}/regions": {
+      "get": {
+        "tags": [
+          "Regions"
+        ],
+        "summary": "List all regions",
+        "description": "Single-page catalog of named engine map regions (`mapRegions.xml` death-teleport regions).",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "interlude"
+              ],
+              "description": "Game chronicle. Only `interlude` is currently supported.",
+              "example": "interlude"
+            },
+            "required": true,
+            "description": "Game chronicle. Only `interlude` is currently supported.",
+            "name": "chronicle",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All regions.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/RegionRef"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/ListMeta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter (malformed id, bad pagination, unknown enum value, …).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown chronicle, or no entity with this id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{chronicle}/meta/item-grades": {
+      "get": {
+        "tags": [
+          "Meta"
+        ],
+        "summary": "Item grade values with counts",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "interlude"
+              ],
+              "description": "Game chronicle. Only `interlude` is currently supported.",
+              "example": "interlude"
+            },
+            "required": true,
+            "description": "Game chronicle. Only `interlude` is currently supported.",
+            "name": "chronicle",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All item grade values.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/NameCount"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter (malformed id, bad pagination, unknown enum value, …).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown chronicle, or no entity with this id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{chronicle}/meta/item-types": {
+      "get": {
+        "tags": [
+          "Meta"
+        ],
+        "summary": "Item type values with counts",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "interlude"
+              ],
+              "description": "Game chronicle. Only `interlude` is currently supported.",
+              "example": "interlude"
+            },
+            "required": true,
+            "description": "Game chronicle. Only `interlude` is currently supported.",
+            "name": "chronicle",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All item type values.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/NameCount"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter (malformed id, bad pagination, unknown enum value, …).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown chronicle, or no entity with this id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{chronicle}/meta/npc-types": {
+      "get": {
+        "tags": [
+          "Meta"
+        ],
+        "summary": "NPC type values with counts",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "interlude"
+              ],
+              "description": "Game chronicle. Only `interlude` is currently supported.",
+              "example": "interlude"
+            },
+            "required": true,
+            "description": "Game chronicle. Only `interlude` is currently supported.",
+            "name": "chronicle",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All npcType values.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/NpcTypeCount"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter (malformed id, bad pagination, unknown enum value, …).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown chronicle, or no entity with this id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{chronicle}/raw/npcs": {
+      "get": {
+        "tags": [
+          "Raw"
+        ],
+        "summary": "List NPCs (raw)",
+        "description": "Source-faithful list preserving every raw entry (no name dedup). Same filters as the cleaned list.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "interlude"
+              ],
+              "description": "Game chronicle. Only `interlude` is currently supported.",
+              "example": "interlude"
+            },
+            "required": true,
+            "description": "Game chronicle. Only `interlude` is currently supported.",
+            "name": "chronicle",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "description": "Page size. Default 50. Values above 200 are clamped to 200."
+            },
+            "required": false,
+            "description": "Page size. Default 50. Values above 200 are clamped to 200.",
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Number of rows to skip. Default 0."
+            },
+            "required": false,
+            "description": "Number of rows to skip. Default 0.",
+            "name": "offset",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "description": "Case-insensitive substring match on the name."
+            },
+            "required": false,
+            "description": "Case-insensitive substring match on the name.",
+            "name": "q",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "description": "Minimum NPC level (inclusive). Must be <= levelMax when both are set."
+            },
+            "required": false,
+            "description": "Minimum NPC level (inclusive). Must be <= levelMax when both are set.",
+            "name": "levelMin",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "description": "Maximum NPC level (inclusive)."
+            },
+            "required": false,
+            "description": "Maximum NPC level (inclusive).",
+            "name": "levelMax",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "description": "Filter by engine npcType (case-insensitive). Allowed values are dataset-derived — list them via `/{chronicle}/meta/npc-types`."
+            },
+            "required": false,
+            "description": "Filter by engine npcType (case-insensitive). Allowed values are dataset-derived — list them via `/{chronicle}/meta/npc-types`.",
+            "name": "npcType",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "-id",
+                "name",
+                "-name",
+                "level",
+                "-level"
+              ],
+              "description": "Sort field; prefix with `-` for descending. Default: dataset order (by id)."
+            },
+            "required": false,
+            "description": "Sort field; prefix with `-` for descending. Default: dataset order (by id).",
+            "name": "sort",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated raw NPC list.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/RawNpc"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/ListMeta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter (malformed id, bad pagination, unknown enum value, …).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown chronicle, or no entity with this id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{chronicle}/raw/npcs/{id}": {
+      "get": {
+        "tags": [
+          "Raw"
+        ],
+        "summary": "NPC detail (raw)",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "interlude"
+              ],
+              "description": "Game chronicle. Only `interlude` is currently supported.",
+              "example": "interlude"
+            },
+            "required": true,
+            "description": "Game chronicle. Only `interlude` is currently supported.",
+            "name": "chronicle",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Source-faithful raw NPC id.",
+              "example": 30048
+            },
+            "required": true,
+            "description": "Source-faithful raw NPC id.",
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "One raw NPC record.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/RawNpc"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter (malformed id, bad pagination, unknown enum value, …).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown chronicle, or no entity with this id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{chronicle}/raw/monsters": {
+      "get": {
+        "tags": [
+          "Raw"
+        ],
+        "summary": "List monsters (raw)",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "interlude"
+              ],
+              "description": "Game chronicle. Only `interlude` is currently supported.",
+              "example": "interlude"
+            },
+            "required": true,
+            "description": "Game chronicle. Only `interlude` is currently supported.",
+            "name": "chronicle",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "description": "Page size. Default 50. Values above 200 are clamped to 200."
+            },
+            "required": false,
+            "description": "Page size. Default 50. Values above 200 are clamped to 200.",
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Number of rows to skip. Default 0."
+            },
+            "required": false,
+            "description": "Number of rows to skip. Default 0.",
+            "name": "offset",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "description": "Case-insensitive substring match on the name."
+            },
+            "required": false,
+            "description": "Case-insensitive substring match on the name.",
+            "name": "q",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "description": "Minimum NPC level (inclusive). Must be <= levelMax when both are set."
+            },
+            "required": false,
+            "description": "Minimum NPC level (inclusive). Must be <= levelMax when both are set.",
+            "name": "levelMin",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "description": "Maximum NPC level (inclusive)."
+            },
+            "required": false,
+            "description": "Maximum NPC level (inclusive).",
+            "name": "levelMax",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "description": "Filter by engine npcType (case-insensitive). Allowed values are dataset-derived — list them via `/{chronicle}/meta/npc-types`. Restricted to the monster subset on this endpoint."
+            },
+            "required": false,
+            "description": "Filter by engine npcType (case-insensitive). Allowed values are dataset-derived — list them via `/{chronicle}/meta/npc-types`. Restricted to the monster subset on this endpoint.",
+            "name": "npcType",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "-id",
+                "name",
+                "-name",
+                "level",
+                "-level"
+              ],
+              "description": "Sort field; prefix with `-` for descending. Default: dataset order (by id)."
+            },
+            "required": false,
+            "description": "Sort field; prefix with `-` for descending. Default: dataset order (by id).",
+            "name": "sort",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated raw monster list.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/RawNpc"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/ListMeta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter (malformed id, bad pagination, unknown enum value, …).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown chronicle, or no entity with this id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{chronicle}/raw/monsters/{id}": {
+      "get": {
+        "tags": [
+          "Raw"
+        ],
+        "summary": "Monster detail (raw)",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "interlude"
+              ],
+              "description": "Game chronicle. Only `interlude` is currently supported.",
+              "example": "interlude"
+            },
+            "required": true,
+            "description": "Game chronicle. Only `interlude` is currently supported.",
+            "name": "chronicle",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Source-faithful raw monster id.",
+              "example": 20001
+            },
+            "required": true,
+            "description": "Source-faithful raw monster id.",
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "One raw monster record.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/RawNpc"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter (malformed id, bad pagination, unknown enum value, …).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown chronicle, or no entity with this id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{chronicle}/raw/monsters/{id}/spawns": {
+      "get": {
+        "tags": [
+          "Raw"
+        ],
+        "summary": "Monster spawn points (raw)",
+        "description": "Source-faithful spawn rows — intentionally no region/location enrichment. Returns `{ data: [] }` when the monster exists but has no spawns.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "interlude"
+              ],
+              "description": "Game chronicle. Only `interlude` is currently supported.",
+              "example": "interlude"
+            },
+            "required": true,
+            "description": "Game chronicle. Only `interlude` is currently supported.",
+            "name": "chronicle",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Source-faithful raw monster id.",
+              "example": 20001
+            },
+            "required": true,
+            "description": "Source-faithful raw monster id.",
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Raw spawn rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/RawSpawn"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter (malformed id, bad pagination, unknown enum value, …).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown chronicle, or no entity with this id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

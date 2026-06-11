@@ -3,8 +3,10 @@ title: OpenAPI Spec
 description: Machine-readable OpenAPI schema for the API
 ---
 
-The full OpenAPI schema describes every endpoint, parameter, and response shape. Use it with code generators, Swagger/Redoc viewers, or Postman.
+The OpenAPI 3.0.3 document describes every endpoint with its parameters, response envelopes, and error shape. Use it with code generators, Swagger/Redoc viewers, or Postman.
 
 ```
 https://l2api.dev/api/openapi.json
 ```
+
+List rows, drops, shops, hennas, and meta endpoints carry exact schemas. The large detail responses (item, NPC, quest, class, armor set, raw NPC) currently document their stable top-level fields and allow additional properties — full field-level precision for those is planned. The prose contract in the repo's `docs/api-contract.md` remains the authoritative field reference.

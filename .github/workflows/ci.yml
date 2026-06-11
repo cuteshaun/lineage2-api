@@ -54,13 +54,13 @@ jobs:
         run: pnpm test
 
       - name: OpenAPI drift gate
-        # Regenerates the stub from the Zod schemas and fails if it
-        # differs from the committed artefact at
-        # `docs/openapi.stub.json`. Forces every DTO change to land
-        # together with its spec update.
+        # Regenerates the spec from the Zod schemas and route
+        # definitions and fails if it differs from the committed
+        # artefact at `docs/openapi.json`. Forces every DTO or route
+        # change to land together with its spec update.
         run: |
           pnpm openapi
-          git diff --exit-code docs/openapi.stub.json
+          git diff --exit-code docs/openapi.json
 
       - name: Next.js build
         run: pnpm build

@@ -133,7 +133,7 @@ The same `HennaSummary` shape appears as a cross-link from item detail (`ItemDet
 
 | Method | Path | Description |
 |---|---|---|
-| GET | `/api/openapi.json` | OpenAPI 3.0 document for the API. Chronicle-agnostic — the document describes `/api/{chronicle}/...` as a parameterised path, with `{chronicle}` exposed as a server-template variable. Phase A: `components.schemas` is populated for the small reusable cross-link DTOs (`NpcRef`, `ClassRef`, `QuestRef`, `RegionRef`, `LocationRef`, `EnrichedSpawn`, `QuestClientJournalEntry`, `HennaSummary`); `paths` is intentionally empty pending Phase C per-route generation (see `docs/api-contract.md`). The document is the committed `docs/openapi.stub.json` build artifact, served as a convenience without an envelope. |
+| GET | `/api/openapi.json` | OpenAPI 3.0.3 document for the API. Chronicle-agnostic — every data path carries an explicit `{chronicle}` path parameter against the `/api` server root. `paths` covers every public route with its parameters and response envelopes; list/summary, drop, shop, meta, and henna schemas are exact, while the large detail schemas (`ItemDetail`, `NpcDetail`, `QuestDetail`, `ClassDetail`, `ArmorSet`, `RawNpc`) document stable top-level fields and allow additional properties pending the Phase B Zod migration (see `docs/api-contract.md`). The document is the committed `docs/openapi.json` build artifact, served as a convenience without an envelope. |
 
 ## Response shapes
 

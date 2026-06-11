@@ -51,3 +51,5 @@ next-env.d.ts
 /data/datapack/*/item-icons-grp.audit.json
 
 /docs/api-response-audit.md
+
+*.playwright-mcp/

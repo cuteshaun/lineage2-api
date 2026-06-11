@@ -1,0 +1,421 @@
+---
+// TryIt.astro — a small, dependency-free mini "API console" for the docs.
+// Pick a preset endpoint, then "Try" it (live fetch + highlighted JSON) or
+// "Copy URL". The response panel is always visible and shows a baked, real
+// (trimmed) sample by default — no network call on load. Live fetching relies
+// on the API's permissive CORS header (Access-Control-Allow-Origin: *),
+// verified present in production. No UI framework, no packages — just markup,
+// scoped styles, and one inline script.
+---
+
+<section class="try-it not-content" data-try-it aria-label="Try an example endpoint">
+  <div class="try-it__tabs" role="tablist" aria-label="Choose an example">
+    <button type="button" class="try-it__tab" role="tab" data-preset data-path="/api/interlude/items/235" aria-selected="true">Item</button>
+    <button type="button" class="try-it__tab" role="tab" data-preset data-path="/api/interlude/monsters/29001" aria-selected="false">Monster</button>
+    <button type="button" class="try-it__tab" role="tab" data-preset data-path="/api/interlude/quests/1" aria-selected="false">Quest</button>
+  </div>
+
+  <div class="try-it__bar">
+    <a class="try-it__url" data-url href="https://l2api.dev/api/interlude/items/235" target="_blank" rel="noopener"><code>https://l2api.dev/api/interlude/items/235</code></a>
+    <span class="try-it__actions">
+      <button type="button" class="try-it__btn try-it__btn--primary" data-try>Try</button>
+      <button type="button" class="try-it__btn" data-copy>Copy URL</button>
+    </span>
+  </div>
+
+  <div class="try-it__panel" data-result aria-live="polite" aria-busy="false">
+    <div class="try-it__panel-head">
+      <span class="try-it__status" data-status data-state="sample">
+        <span class="try-it__dot" aria-hidden="true"></span>
+        <span data-status-text>Sample response</span>
+      </span>
+      <button type="button" class="try-it__copyjson" data-copy-json>Copy JSON</button>
+    </div>
+    <pre class="try-it__pre"><code data-output></code></pre>
+  </div>
+</section>
+
+<script>
+  const API_BASE = "https://l2api.dev";
+  const TIMEOUT_MS = 10000;
+
+  // Real, trimmed sample responses shown by default (no fetch on load).
+  const DEFAULTS = {
+    "/api/interlude/items/235": `{
+  "data": {
+    "id": 235,
+    "name": "Bloody Orchid",
+    "type": "weapon",
+    "grade": "a",
+    "weight": 960,
+    "price": 18300000,
+    "category": { "bodypart": "One-handed", "weaponType": "DAGGER" },
+    "stats": { "pAtk": 186, "mAtk": 107, "rCrit": 12 }
+  }
+}`,
+    "/api/interlude/monsters/29001": `{
+  "data": {
+    "id": 29001,
+    "name": "Queen Ant",
+    "level": 40,
+    "npcType": "GrandBoss",
+    "isAggressive": false,
+    "stats": { "hp": 96596, "mp": 301, "exp": 2179535, "sp": 140740 }
+  }
+}`,
+    "/api/interlude/quests/1": `{
+  "data": {
+    "id": 1,
+    "name": "Letters of Love",
+    "levelMin": 2,
+    "repeatable": false,
+    "startNpcs": [{ "id": 30048, "name": "Darin" }]
+  }
+}`,
+  };
+
+  function escapeHtml(s) {
+    return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  // Lightweight, XSS-safe JSON highlighter: escape first, then tokenize.
+  function highlight(json) {
+    return escapeHtml(json).replace(
+      /("(?:\\u[a-fA-F0-9]{4}|\\[^u]|[^\\"])*"\s*:?)|\b(true|false|null)\b|(-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)/g,
+      (m, str, kw) => {
+        let cls;
+        if (str) cls = /:\s*$/.test(str) ? "tk-key" : "tk-str";
+        else if (kw) cls = kw === "null" ? "tk-null" : "tk-bool";
+        else cls = "tk-num";
+        return `<span class="${cls}">${m}</span>`;
+      }
+    );
+  }
+
+  for (const root of document.querySelectorAll("[data-try-it]")) {
+    const tabs = Array.from(root.querySelectorAll("[data-preset]"));
+    const urlLink = root.querySelector("[data-url]");
+    const urlCode = urlLink?.querySelector("code");
+    const tryBtn = root.querySelector("[data-try]");
+    const copyBtn = root.querySelector("[data-copy]");
+    const copyJsonBtn = root.querySelector("[data-copy-json]");
+    const result = root.querySelector("[data-result]");
+    const output = root.querySelector("[data-output]");
+    const status = root.querySelector("[data-status]");
+    const statusText = root.querySelector("[data-status-text]");
+    if (!tabs.length || !urlLink || !urlCode || !tryBtn || !copyBtn || !copyJsonBtn || !result || !output || !status || !statusText) continue;
+
+    let path = tabs[0].dataset.path ?? "";
+    let active = null; // in-flight AbortController, if any
+    let copyTimer = null;
+    let copyJsonTimer = null;
+    let currentJson = ""; // raw JSON currently shown (for Copy JSON)
+
+    const fullUrl = () => API_BASE + path;
+
+    function setStatus(state, text) {
+      status.dataset.state = state;
+      statusText.textContent = text;
+    }
+
+    function renderJson(jsonStr) {
+      currentJson = jsonStr;
+      output.classList.remove("is-message");
+      output.innerHTML = highlight(jsonStr)
+        .split("\n")
+        .map((line, i) => `<span class="tk-ln">${i + 1}</span><span class="tk-line">${line.length ? line : " "}</span>`)
+        .join("");
+    }
+
+    function renderMessage(msg) {
+      currentJson = "";
+      output.classList.add("is-message");
+      output.textContent = msg;
+    }
+
+    function selectTab(btn) {
+      path = btn.dataset.path ?? "";
+      tabs.forEach((t) => t.setAttribute("aria-selected", String(t === btn)));
+      urlLink.href = fullUrl();
+      urlCode.textContent = fullUrl();
+      setStatus("sample", "Sample response");
+      renderJson(DEFAULTS[path] ?? "{}");
+    }
+    tabs.forEach((btn) => btn.addEventListener("click", () => selectTab(btn)));
+
+    copyBtn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(fullUrl());
+        copyBtn.textContent = "URL Copied";
+      } catch {
+        copyBtn.textContent = "Copy failed";
+      }
+      clearTimeout(copyTimer);
+      copyTimer = setTimeout(() => { copyBtn.textContent = "Copy URL"; }, 1500);
+    });
+
+    copyJsonBtn.addEventListener("click", async () => {
+      if (!currentJson) return;
+      try {
+        await navigator.clipboard.writeText(currentJson);
+        copyJsonBtn.textContent = "Copied";
+      } catch {
+        copyJsonBtn.textContent = "Copy failed";
+      }
+      clearTimeout(copyJsonTimer);
+      copyJsonTimer = setTimeout(() => { copyJsonBtn.textContent = "Copy JSON"; }, 1500);
+    });
+
+    tryBtn.addEventListener("click", async () => {
+      // Supersede any in-flight request; its AbortError is then ignored.
+      if (active) {
+        active.superseded = true;
+        active.abort();
+      }
+      const controller = new AbortController();
+      active = controller;
+
+      result.setAttribute("aria-busy", "true");
+      tryBtn.disabled = true;
+      setStatus("loading", "Loading…");
+      renderMessage("Fetching…");
+
+      const timer = setTimeout(() => {
+        controller.timedOut = true;
+        controller.abort();
+      }, TIMEOUT_MS);
+
+      try {
+        const res = await fetch(fullUrl(), { signal: controller.signal });
+        const text = await res.text();
+        let pretty;
+        try {
+          pretty = JSON.stringify(JSON.parse(text), null, 2);
+        } catch {
+          pretty = text; // non-JSON (unexpected) — show as-is
+        }
+        setStatus(res.ok ? "ok" : "error", `Live response · HTTP ${res.status}`);
+        renderJson(pretty);
+      } catch (err) {
+        if (controller.superseded) return; // a newer request took over — say nothing
+        setStatus("error", "Live response · Error");
+        renderMessage(
+          controller.timedOut
+            ? "Request timed out. Open the URL directly instead."
+            : "Couldn’t reach the API. Open the URL directly instead."
+        );
+      } finally {
+        clearTimeout(timer);
+        if (active === controller) {
+          active = null;
+          result.setAttribute("aria-busy", "false");
+          tryBtn.disabled = false;
+        }
+      }
+    });
+
+    // Initial paint: default sample for the first tab (no network call).
+    selectTab(tabs[0]);
+  }
+</script>
+
+<style>
+  .try-it {
+    --tryit-gold: #f6d77a;
+    /* syntax-highlight palette (dark theme) */
+    --tk-key: #f6d77a;
+    --tk-str: #9ece6a;
+    --tk-num: #e0a458;
+    --tk-bool: #c4a7f5;
+    --tk-null: #8b93a7;
+
+    margin: 1.5rem 0;
+    padding: 1.15rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.6rem;
+    background: var(--sl-color-bg-nav);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+  }
+
+  /* Tabs */
+  .try-it__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    margin-bottom: 0.75rem;
+  }
+  .try-it__tab {
+    padding: 0.3rem 0.75rem;
+    font: inherit;
+    font-size: var(--sl-text-sm);
+    color: var(--sl-color-gray-3);
+    background: transparent;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.4rem;
+    cursor: pointer;
+  }
+  /* Active tab: subtle muted-gold selected state — feels selected, not a CTA. */
+  .try-it__tab[aria-selected="true"] {
+    color: var(--tryit-gold);
+    background: rgba(246, 215, 122, 0.12);
+    border-color: rgba(246, 215, 122, 0.5);
+    font-weight: 600;
+  }
+
+  /* Request row */
+  .try-it__bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .try-it__url {
+    flex: 1 1 16rem;
+    min-width: 0;
+    font-size: var(--sl-text-sm);
+    padding: 0.4rem 0.65rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.4rem;
+    background: var(--sl-color-black);
+    color: var(--sl-color-text);
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .try-it__url:hover {
+    border-color: var(--sl-color-gray-4);
+  }
+  .try-it__actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .try-it__btn {
+    padding: 0.4rem 0.95rem;
+    font: inherit;
+    font-size: var(--sl-text-sm);
+    color: var(--sl-color-gray-2);
+    background: transparent;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.4rem;
+    cursor: pointer;
+  }
+  .try-it__btn:hover {
+    border-color: var(--sl-color-gray-4);
+  }
+  /* Try: the single strong primary action — filled muted gold, dark text. */
+  .try-it__btn--primary {
+    color: #17181c;
+    background: var(--tryit-gold);
+    border-color: var(--tryit-gold);
+    font-weight: 700;
+  }
+  .try-it__btn--primary:hover {
+    background: #f8df93;
+    border-color: #f8df93;
+  }
+  .try-it__btn--primary:disabled {
+    opacity: 0.65;
+    cursor: default;
+  }
+
+  /* Response panel */
+  .try-it__panel {
+    margin-top: 0.9rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--sl-color-gray-5);
+  }
+  .try-it__panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+  }
+  .try-it__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: var(--sl-text-sm);
+    font-family: var(--__sl-font-mono, ui-monospace, monospace);
+    color: var(--sl-color-gray-2);
+  }
+  .try-it__dot {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    background: #4ade80;
+  }
+  .try-it__status[data-state="sample"] .try-it__dot { background: var(--sl-color-gray-3); }
+  .try-it__status[data-state="loading"] .try-it__dot { background: var(--tryit-gold); }
+  .try-it__status[data-state="error"] .try-it__dot { background: #f7768e; }
+  .try-it__status[data-state="error"] { color: #f7768e; }
+  .try-it__copyjson {
+    padding: 0.15rem 0.5rem;
+    font: inherit;
+    font-size: var(--sl-text-xs);
+    color: var(--sl-color-gray-3);
+    background: transparent;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.35rem;
+    cursor: pointer;
+  }
+  .try-it__copyjson:hover {
+    color: var(--sl-color-gray-2);
+    border-color: var(--sl-color-gray-4);
+  }
+
+  .try-it__pre {
+    margin: 0;
+    max-height: 24rem;
+    overflow: auto;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.4rem;
+    background: var(--sl-color-black);
+  }
+  .try-it__pre code {
+    display: grid;
+    grid-template-columns: 2.25em 1fr;
+    column-gap: 1em;
+    font-size: var(--sl-text-code, 0.875rem);
+    line-height: 1.5;
+  }
+  .try-it__pre code.is-message {
+    display: block;
+    white-space: pre-wrap;
+    color: var(--sl-color-gray-2);
+  }
+  .tk-ln {
+    text-align: right;
+    color: var(--sl-color-gray-4);
+    user-select: none;
+  }
+  .tk-line {
+    white-space: pre;
+    min-width: 0;
+  }
+  .tk-key { color: var(--tk-key); }
+  .tk-str { color: var(--tk-str); }
+  .tk-num { color: var(--tk-num); }
+  .tk-bool { color: var(--tk-bool); }
+  .tk-null { color: var(--tk-null); }
+
+  /* Visible focus for keyboard users */
+  .try-it__tab:focus-visible,
+  .try-it__btn:focus-visible,
+  .try-it__copyjson:focus-visible,
+  .try-it__url:focus-visible {
+    outline: 2px solid var(--tryit-gold);
+    outline-offset: 2px;
+  }
+
+  /* Light theme: keep readable (dark theme is the priority). */
+  :global([data-theme="light"]) .try-it {
+    --tk-key: #8a6d1f;
+    --tk-str: #3d7a2e;
+    --tk-num: #9a5a12;
+    --tk-bool: #6a3fa0;
+    --tk-null: #6b7280;
+  }
+</style>

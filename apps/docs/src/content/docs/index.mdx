@@ -3,7 +3,9 @@ title: Lineage 2 API
 description: A read-only HTTP API for Lineage 2 Interlude game data
 ---
 
-A public, read-only HTTP API for **Lineage 2 Interlude** game data — items, NPCs, monsters, drops, quests, classes, and more. Useful for wikis, guides, price checkers, loot tables, Discord bots, and exploration tools.
+import TryIt from '../../components/TryIt.astro';
+
+A public, read-only HTTP API for **Lineage 2 Interlude** game data.
 
 ## Base URL
 
@@ -15,32 +17,24 @@ Every route is scoped by **chronicle**. Today the only supported chronicle is `i
 
 ## Main resources
 
-| Resource | What's there |
-|----------|--------------|
-| **items** | Weapons, armor, consumables, quest items, spellbooks, recipes |
-| **npcs** | Non-player characters: merchants, guards, quest givers |
-| **monsters** | Combat mobs: regular enemies, bosses, raid bosses |
-| **quests** | Quest catalog, objectives, rewards |
-| **classes** | Player classes and skill progression |
-| **hennas** | Dye and symbol items |
-| **armor-sets** | Armor set pieces and set bonuses |
-| **locations** | Hunting zones and map locations |
-| **regions** | Geographic regions and zone groupings |
+| Resource | URL | What's there |
+|----------|-----|--------------|
+| **items** | [`/api/interlude/items?limit=10`](https://l2api.dev/api/interlude/items?limit=10) | Weapons, armor, consumables, quest items, spellbooks, recipes |
+| **npcs** | [`/api/interlude/npcs?limit=10`](https://l2api.dev/api/interlude/npcs?limit=10) | Non-player characters: merchants, guards, quest givers |
+| **monsters** | [`/api/interlude/monsters?limit=10`](https://l2api.dev/api/interlude/monsters?limit=10) | Combat mobs: regular enemies, bosses, raid bosses |
+| **quests** | [`/api/interlude/quests?limit=10`](https://l2api.dev/api/interlude/quests?limit=10) | Quest catalog, objectives, rewards |
+| **classes** | [`/api/interlude/classes?limit=10`](https://l2api.dev/api/interlude/classes?limit=10) | Player classes and skill progression |
+| **hennas** | [`/api/interlude/hennas?limit=10`](https://l2api.dev/api/interlude/hennas?limit=10) | Dye and symbol items |
+| **armor-sets** | [`/api/interlude/armor-sets`](https://l2api.dev/api/interlude/armor-sets) | Armor set pieces and set bonuses |
+| **locations** | [`/api/interlude/locations`](https://l2api.dev/api/interlude/locations) | Hunting zones and map locations |
 
-See [Endpoints](/endpoints/) for the full route list.
+Table links use `?limit=10` to keep examples short. URLs are relative to the base `https://l2api.dev`.
 
-## Examples
+## Try it
 
-```bash
-# An item (Bloody Orchid, a Grade A dagger)
-curl https://l2api.dev/api/interlude/items/235
+Pick an example, then **Try** it to see the live JSON, or **Copy** the URL.
 
-# A monster (Queen Ant)
-curl https://l2api.dev/api/interlude/monsters/29001
-
-# A quest (Letters of Love)
-curl https://l2api.dev/api/interlude/quests/1
-```
+<TryIt />
 
 ## Response shape
 
@@ -52,8 +46,8 @@ curl https://l2api.dev/api/interlude/quests/1
 { "data": [ ], "meta": { } }
 ```
 
-Always read from `data`. List endpoints accept `limit` and `offset` (default limit `50`, max `200`). See [Response Format](/response-format/) for the full envelope, errors, and caching.
+Always read from `data`. List endpoints support `limit` and `offset`, see [Endpoints](/endpoints/) for pagination and errors.
 
 ## No authentication
 
-The API is public — no API keys, no credentials. It's read-only, and CORS is enabled, so you can call it directly from a browser.
+No API keys. CORS is enabled, so browser apps can call the API directly.

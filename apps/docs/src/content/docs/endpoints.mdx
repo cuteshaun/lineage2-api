@@ -80,7 +80,7 @@ GET /api/interlude/meta/npc-types
 
 ## Raw audit routes
 
-Source-faithful records, mainly for auditing and debugging — see [Response Format](/response-format/#public-vs-raw).
+Source-faithful records, mainly for auditing and debugging — see [Scope](/limitations/#public-vs-raw).
 
 ```
 GET /api/interlude/raw/npcs
@@ -90,10 +90,26 @@ GET /api/interlude/raw/monsters/{id}
 GET /api/interlude/raw/monsters/{id}/spawns
 ```
 
-## OpenAPI
+## Pagination
+
+List endpoints accept `limit` and `offset`:
 
 ```
-GET /api/openapi.json
+GET /api/interlude/items?limit=10&offset=20
 ```
 
-Field-level details for every resource live in the [OpenAPI spec](/openapi/).
+- `limit` — records per page. Default `50`, max `200`.
+- `offset` — records to skip. Default `0`.
+
+`armor-sets`, `locations`, and `regions` return everything in one response and ignore these parameters.
+
+## Errors
+
+Failed requests return a flat `error` message and a `status` code:
+
+```json
+{
+  "error": "Invalid id: abc",
+  "status": 400
+}
+```

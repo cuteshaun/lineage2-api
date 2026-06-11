@@ -3,15 +3,14 @@ title: Scope
 description: What this API covers, and what it doesn't
 ---
 
-This is an unofficial, community project — **not affiliated with or endorsed by NCSoft**. Lineage and Lineage 2 are trademarks of their respective owners.
+Lineage 2 API exposes cleaned, read-only JSON data for the **Interlude** chronicle. It is meant for tools, wikis, guides, price checkers, loot tables, and exploration. Raw data can be useful for server builders.
 
 ## Covered
 
 - **Interlude** chronicle only
-- Read-only, public game data
-- items, NPCs, monsters, drops & spoil, quests, classes, hennas, locations, regions, armor sets
-- Generated JSON served over HTTP
-- Cleaned, cross-linked public DTOs (see [Response Format](/response-format/#public-vs-raw))
+- Built from aCis Interlude client P746
+- Items, NPCs, monsters, drops & spoil, quests, classes, hennas, locations, regions, armor sets
+- Cleaned, cross-linked JSON data
 - An [OpenAPI spec](/openapi/)
 
 ## Not covered
@@ -20,8 +19,38 @@ This is an unofficial, community project — **not affiliated with or endorsed b
 - Auth, accounts, comments, ratings, or moderation
 - Runtime game-server behavior
 - Full formula or damage simulation
-- AI scripts
-- Geodata or exact polygon location resolution — coordinates are nearest-anchor hints, not boundaries
-- Official NCSoft affiliation
 
-Records come from the aCis Interlude datapack. Differences from other references (L2Hub, PTS, L2Wiki) are source differences, not API bugs. Issues and PRs are welcome — see [How to Contribute](/local-development/).
+Differences from L2Hub, PTS, L2Wiki, or other references usually come from source-data differences. Issues and PRs are welcome; see [How to Contribute](/local-development/).
+
+## Public vs raw
+
+The API exposes two layers:
+
+- **Public endpoints** (`/api/interlude/npcs`, …) are cleaned, normalized, deduplicated, and cross-linked. Use these by default.
+- **Raw endpoints** (`/api/interlude/raw/npcs`, …) return raw parsed data as-is, without cleanup or enrichment.
+
+## Caching
+
+Successful responses are CDN-cacheable; data is immutable per deploy.
+
+```
+Cache-Control: public, max-age=300, s-maxage=86400, stale-while-revalidate=604800
+```
+
+Error responses are never cached:
+
+```
+Cache-Control: no-store
+```
+
+## CORS & browser usage
+
+CORS is open (`Access-Control-Allow-Origin: *`) and no authentication is required, so the API works directly from a browser — no keys, no proxy.
+
+## Rate limits
+
+API routes are rate-limited by IP: **60 requests per 10 seconds**. Normal browser usage won't hit this, but high-volume scraping may receive `429 Too Many Requests`.
+
+
+
+Community project. Not affiliated with NCSoft.

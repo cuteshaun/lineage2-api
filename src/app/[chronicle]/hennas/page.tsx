@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isChronicle } from "@/lib/chronicles";
@@ -35,6 +36,22 @@ import type {
  * only — `displayName/iconFile/shortLabel` are honestly null. They
  * render with a placeholder name and a dashed icon slot.
  */
+// Parameterized views (?classId= / ?symbolId=) stay out of the search
+// index — crawlers may still follow links to other (cheap, cached) pages.
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    classId?: string | string[];
+    symbolId?: string | string[];
+  }>;
+}): Promise<Metadata> {
+  const sp = await searchParams;
+  return Object.keys(sp).length > 0
+    ? { robots: { index: false, follow: true } }
+    : {};
+}
+
 export default async function HennasPage({
   params,
   searchParams,
@@ -96,8 +113,10 @@ async function CatalogMode({
   let invalidClassId = false;
 
   if (classId != null) {
+    // Bounded key space (≤119 classes reachable via real links) — cache.
     const result = await apiFetch<ClassDetailDto>(
-      `/api/${chronicle}/classes/${classId}`
+      `/api/${chronicle}/classes/${classId}`,
+      { revalidate: 3600 }
     );
     if (!result.ok) {
       if (result.status === 404) {
@@ -114,7 +133,8 @@ async function CatalogMode({
     }
   } else {
     const result = await apiFetchList<HennaSummaryDto>(
-      `/api/${chronicle}/hennas`
+      `/api/${chronicle}/hennas`,
+      { revalidate: 3600 }
     );
     if (!result.ok) {
       errorMessage = result.error;
@@ -203,9 +223,14 @@ async function SymbolDetailMode({
   chronicle: string;
   symbolId: number;
 }) {
+  // Bounded key space (≤180 symbols reachable via real links) — cache.
   const [hennaResult, classListResult] = await Promise.all([
-    apiFetch<HennaDetailDto>(`/api/${chronicle}/hennas/${symbolId}`),
-    apiFetchList<ClassListDto>(`/api/${chronicle}/classes`),
+    apiFetch<HennaDetailDto>(`/api/${chronicle}/hennas/${symbolId}`, {
+      revalidate: 3600,
+    }),
+    apiFetchList<ClassListDto>(`/api/${chronicle}/classes`, {
+      revalidate: 3600,
+    }),
   ]);
 
   if (!hennaResult.ok) {

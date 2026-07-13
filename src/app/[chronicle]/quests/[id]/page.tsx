@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isChronicle } from "@/lib/chronicles";
-import { apiFetch } from "@/lib/api/client";
+import { apiErrorMessage, apiFetch } from "@/lib/api/client";
 import { ItemIcon } from "@/components/explorer/ItemIcon";
 import type {
   ItemQuantityDto,
@@ -11,6 +11,13 @@ import type {
   QuestClientJournalEntryDto,
   QuestDetailDto,
 } from "@/lib/api/dto/quest";
+
+// On-demand ISR: no ids prerendered at build (pages dogfood the HTTP
+// API, unreachable at build time — see lib/api/client.ts); each id is
+// generated on first request and cached until the next deploy.
+export async function generateStaticParams() {
+  return [];
+}
 
 export default async function QuestDetailPage({
   params,
@@ -28,11 +35,9 @@ export default async function QuestDetailPage({
   );
   if (!result.ok) {
     if (result.status === 404) notFound();
-    return (
-      <div className="rounded border border-red-300 bg-red-50 p-4 text-sm text-red-900 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
-        {(result as { error?: string }).error ?? "Failed to load quest"}
-      </div>
-    );
+    // Throw on failure: under ISR a rendered error block would be cached
+    // until the next deploy; a failed generation is not cached and retried.
+    throw new Error(apiErrorMessage(result, "Failed to load quest"));
   }
 
   const q = result.data;

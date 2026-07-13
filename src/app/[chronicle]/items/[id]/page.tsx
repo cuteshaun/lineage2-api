@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isChronicle } from "@/lib/chronicles";
-import { apiFetch, apiFetchList } from "@/lib/api/client";
+import { apiErrorMessage, apiFetch, apiFetchList } from "@/lib/api/client";
 import { ItemIcon } from "@/components/explorer/ItemIcon";
 import { ArmorSetCard } from "@/components/explorer/ArmorSetCard";
 import { ExchangeCard } from "@/components/explorer/ExchangeCard";
@@ -98,6 +98,13 @@ function formatSharedEffects(shared: SkillEffect[]): string[] {
   return Array.from(new Set(out));
 }
 
+// On-demand ISR: no ids prerendered at build (pages dogfood the HTTP
+// API, unreachable at build time — see lib/api/client.ts); each id is
+// generated on first request and cached until the next deploy.
+export async function generateStaticParams() {
+  return [];
+}
+
 export default async function ItemDetailsPage({
   params,
 }: {
@@ -123,18 +130,21 @@ export default async function ItemDetailsPage({
 
   if (!itemResult.ok) {
     if (itemResult.status === 404) notFound();
-    return (
-      <div className="rounded border border-red-300 bg-red-50 p-4 text-sm text-red-900 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
-        {(itemResult as { error?: string }).error ?? "Failed to load item"}
-      </div>
-    );
+    // Throw on failure: under ISR a rendered error block would be cached
+    // until the next deploy; a failed generation is not cached and retried.
+    throw new Error(apiErrorMessage(itemResult, "Failed to load item"));
   }
 
+  // Source lists are `200 + []` for items nothing drops/spoils; a failure
+  // here would cache permanently empty sections, so throw instead.
+  if (!droppedByResult.ok) throw new Error(droppedByResult.error);
+  if (!spoiledByResult.ok) throw new Error(spoiledByResult.error);
+
   const item = itemResult.data;
-  const droppedBy = droppedByResult.ok ? droppedByResult.data : [];
-  const droppedByTotal = droppedByResult.ok ? droppedByResult.meta.total : 0;
-  const spoiledBy = spoiledByResult.ok ? spoiledByResult.data : [];
-  const spoiledByTotal = spoiledByResult.ok ? spoiledByResult.meta.total : 0;
+  const droppedBy = droppedByResult.data;
+  const droppedByTotal = droppedByResult.meta.total;
+  const spoiledBy = spoiledByResult.data;
+  const spoiledByTotal = spoiledByResult.meta.total;
 
   // Second-stage fetch only for dye items: HennaDetailDto carries
   // the allowed-class count so the embedded section can render the
@@ -146,6 +156,12 @@ export default async function ItemDetailsPage({
           `/api/${chronicle}/hennas/${item.henna.symbolId}`
         )
       : null;
+  // A 404 means the cross-linked henna record is absent (tolerated as
+  // "count unavailable"); other failures throw instead of caching a
+  // degraded render.
+  if (hennaDetail && !hennaDetail.ok && hennaDetail.status !== 404) {
+    throw new Error(apiErrorMessage(hennaDetail, "Failed to load henna"));
+  }
   const hennaAllowedCount =
     hennaDetail && hennaDetail.ok ? hennaDetail.data.allowedClasses.length : null;
 

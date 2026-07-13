@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { isChronicle } from "@/lib/chronicles";
 import { apiFetchList } from "@/lib/api/client";
@@ -37,6 +38,20 @@ function buildApiPath(
   return `/api/${chronicle}/monsters?${qs.toString()}`;
 }
 
+// Parameterized views (filters/pagination/search) stay out of the search
+// index — crawlers may still follow links to the cheap ISR-cached detail
+// pages.
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>;
+}): Promise<Metadata> {
+  const sp = await searchParams;
+  return Object.keys(sp).length > 0
+    ? { robots: { index: false, follow: true } }
+    : {};
+}
+
 export default async function MonstersPage({
   params,
   searchParams,
@@ -51,9 +66,17 @@ export default async function MonstersPage({
   const limit = DEFAULT_LIMIT;
   const offset = Math.max(0, parseInt(getOne(sp, "offset", "0"), 10) || 0);
 
+  // Bounded-key fetches go through the Data Cache; free-text `q` searches
+  // have an unbounded URL key space and stay uncached.
+  const listOpts = getOne(sp, "q") ? undefined : { revalidate: 3600 };
   const [monsters, npcTypes] = await Promise.all([
-    apiFetchList<NpcListDto>(buildApiPath(chronicle, sp, limit, offset)),
-    apiFetchList<NpcTypeSummary>(`/api/${chronicle}/meta/npc-types`),
+    apiFetchList<NpcListDto>(
+      buildApiPath(chronicle, sp, limit, offset),
+      listOpts
+    ),
+    apiFetchList<NpcTypeSummary>(`/api/${chronicle}/meta/npc-types`, {
+      revalidate: 3600,
+    }),
   ]);
 
   const basePath = `/${chronicle}/monsters`;

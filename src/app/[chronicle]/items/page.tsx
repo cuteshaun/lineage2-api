@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isChronicle } from "@/lib/chronicles";
@@ -38,6 +39,20 @@ function buildApiPath(
   return `/api/${chronicle}/items?${qs.toString()}`;
 }
 
+// Parameterized views (filters/pagination/search) stay out of the search
+// index — crawlers may still follow links to the cheap ISR-cached detail
+// pages.
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>;
+}): Promise<Metadata> {
+  const sp = await searchParams;
+  return Object.keys(sp).length > 0
+    ? { robots: { index: false, follow: true } }
+    : {};
+}
+
 export default async function ItemsPage({
   params,
   searchParams,
@@ -52,10 +67,20 @@ export default async function ItemsPage({
   const limit = DEFAULT_LIMIT;
   const offset = Math.max(0, parseInt(getOne(sp, "offset", "0"), 10) || 0);
 
+  // Bounded-key fetches go through the Data Cache; free-text `q` searches
+  // have an unbounded URL key space and stay uncached.
+  const listOpts = getOne(sp, "q") ? undefined : { revalidate: 3600 };
   const [items, itemTypes, itemGrades] = await Promise.all([
-    apiFetchList<ItemListDto>(buildApiPath(chronicle, sp, limit, offset)),
-    apiFetchList<NameCount>(`/api/${chronicle}/meta/item-types`),
-    apiFetchList<NameCount>(`/api/${chronicle}/meta/item-grades`),
+    apiFetchList<ItemListDto>(
+      buildApiPath(chronicle, sp, limit, offset),
+      listOpts
+    ),
+    apiFetchList<NameCount>(`/api/${chronicle}/meta/item-types`, {
+      revalidate: 3600,
+    }),
+    apiFetchList<NameCount>(`/api/${chronicle}/meta/item-grades`, {
+      revalidate: 3600,
+    }),
   ]);
 
   const basePath = `/${chronicle}/items`;

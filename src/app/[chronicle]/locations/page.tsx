@@ -3,6 +3,12 @@ import { isChronicle } from "@/lib/chronicles";
 import { apiFetchList } from "@/lib/api/client";
 import type { LocationRefDto } from "@/lib/api/dto/location";
 
+// On-demand ISR: generated on first request, cached until the next
+// deploy (see lib/api/client.ts).
+export async function generateStaticParams() {
+  return [];
+}
+
 export default async function LocationsPage({
   params,
 }: {
@@ -14,18 +20,19 @@ export default async function LocationsPage({
   const locations = await apiFetchList<LocationRefDto>(
     `/api/${chronicle}/locations`
   );
+  // Throw on failure: under ISR a rendered error block would be cached
+  // until the next deploy; a failed generation is not cached and retried.
+  if (!locations.ok) throw new Error(locations.error);
 
   // Sort by minLevel ascending (nulls last — towns / non-combat
   // areas), then by name. Browsable as "what can I hunt at level N".
-  const sorted = locations.ok
-    ? [...locations.data].sort((a, b) => {
-        if (a.minLevel == null && b.minLevel == null)
-          return a.name.localeCompare(b.name);
-        if (a.minLevel == null) return 1;
-        if (b.minLevel == null) return -1;
-        return a.minLevel - b.minLevel || a.name.localeCompare(b.name);
-      })
-    : [];
+  const sorted = [...locations.data].sort((a, b) => {
+    if (a.minLevel == null && b.minLevel == null)
+      return a.name.localeCompare(b.name);
+    if (a.minLevel == null) return 1;
+    if (b.minLevel == null) return -1;
+    return a.minLevel - b.minLevel || a.name.localeCompare(b.name);
+  });
 
   return (
     <div className="flex flex-col gap-6">
@@ -34,11 +41,9 @@ export default async function LocationsPage({
           <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
             Locations
           </h1>
-          {locations.ok && (
-            <span className="font-mono text-xs text-zinc-500 dark:text-zinc-400">
-              {locations.meta.total.toLocaleString()} total
-            </span>
-          )}
+          <span className="font-mono text-xs text-zinc-500 dark:text-zinc-400">
+            {locations.meta.total.toLocaleString()} total
+          </span>
         </div>
         <p className="max-w-prose text-sm text-zinc-600 dark:text-zinc-400">
           Player-facing hunting / map locations from the L2 client&apos;s{" "}
@@ -52,9 +57,7 @@ export default async function LocationsPage({
         </p>
       </header>
 
-      {!locations.ok ? (
-        <ErrorBlock message={locations.error} />
-      ) : sorted.length === 0 ? (
+      {sorted.length === 0 ? (
         <EmptyBlock />
       ) : (
         <ul className="grid grid-cols-1 gap-1 rounded border border-zinc-200 bg-white p-2 sm:grid-cols-2 lg:grid-cols-3 dark:border-zinc-800 dark:bg-zinc-950">
@@ -81,14 +84,6 @@ function EmptyBlock() {
   return (
     <div className="rounded border border-dashed border-zinc-300 bg-zinc-50 p-8 text-center text-sm text-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-400">
       No locations available for this chronicle.
-    </div>
-  );
-}
-
-function ErrorBlock({ message }: { message: string }) {
-  return (
-    <div className="rounded border border-red-300 bg-red-50 p-4 text-sm text-red-900 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
-      {message}
     </div>
   );
 }

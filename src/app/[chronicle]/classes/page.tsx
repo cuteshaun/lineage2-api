@@ -11,6 +11,12 @@ import type { ClassListDto } from "@/lib/api/dto/class";
  */
 const RACE_ORDER = ["Human", "Elf", "Dark Elf", "Orc", "Dwarf"] as const;
 
+// On-demand ISR: generated on first request, cached until the next
+// deploy (see lib/api/client.ts).
+export async function generateStaticParams() {
+  return [];
+}
+
 export default async function ClassesPage({
   params,
 }: {
@@ -20,6 +26,9 @@ export default async function ClassesPage({
   if (!isChronicle(chronicle)) notFound();
 
   const result = await apiFetchList<ClassListDto>(`/api/${chronicle}/classes`);
+  // Throw on failure: under ISR a rendered error block would be cached
+  // until the next deploy; a failed generation is not cached and retried.
+  if (!result.ok) throw new Error(result.error);
 
   return (
     <div className="flex flex-col gap-6">
@@ -27,18 +36,12 @@ export default async function ClassesPage({
         <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
           Classes
         </h1>
-        {result.ok && (
-          <span className="font-mono text-xs text-zinc-500 dark:text-zinc-400">
-            {result.meta.total.toLocaleString()} total
-          </span>
-        )}
+        <span className="font-mono text-xs text-zinc-500 dark:text-zinc-400">
+          {result.meta.total.toLocaleString()} total
+        </span>
       </header>
 
-      {!result.ok ? (
-        <ErrorBlock message={result.error} />
-      ) : (
-        <Tree chronicle={chronicle} classes={result.data} />
-      )}
+      <Tree chronicle={chronicle} classes={result.data} />
     </div>
   );
 }
@@ -217,13 +220,5 @@ function ClassLink({
     <Link href={`/${chronicle}/classes/${cls.id}`} className={className}>
       {cls.name}
     </Link>
-  );
-}
-
-function ErrorBlock({ message }: { message: string }) {
-  return (
-    <div className="rounded border border-red-300 bg-red-50 p-4 text-sm text-red-900 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
-      {message}
-    </div>
   );
 }

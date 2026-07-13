@@ -4,6 +4,12 @@ import { isChronicle } from "@/lib/chronicles";
 import { apiFetchList } from "@/lib/api/client";
 import type { QuestListDto } from "@/lib/api/dto/quest";
 
+// On-demand ISR: generated on first request, cached until the next
+// deploy (see lib/api/client.ts).
+export async function generateStaticParams() {
+  return [];
+}
+
 export default async function QuestsPage({
   params,
 }: {
@@ -13,6 +19,9 @@ export default async function QuestsPage({
   if (!isChronicle(chronicle)) notFound();
 
   const result = await apiFetchList<QuestListDto>(`/api/${chronicle}/quests`);
+  // Throw on failure: under ISR a rendered error block would be cached
+  // until the next deploy; a failed generation is not cached and retried.
+  if (!result.ok) throw new Error(result.error);
 
   return (
     <div className="flex flex-col gap-6">
@@ -20,17 +29,12 @@ export default async function QuestsPage({
         <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
           Quests
         </h1>
-        {result.ok && (
-          <span className="font-mono text-xs text-zinc-500 dark:text-zinc-400">
-            {result.meta.total.toLocaleString()} total
-          </span>
-        )}
+        <span className="font-mono text-xs text-zinc-500 dark:text-zinc-400">
+          {result.meta.total.toLocaleString()} total
+        </span>
       </header>
 
-      {!result.ok ? (
-        <ErrorBlock message={result.error} />
-      ) : (
-        <div className="overflow-x-auto rounded border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
+      <div className="overflow-x-auto rounded border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
           <table className="w-full text-sm">
             <thead className="bg-zinc-50 text-left font-mono text-[10px] uppercase tracking-wide text-zinc-500 dark:bg-zinc-900 dark:text-zinc-400">
               <tr>
@@ -106,8 +110,7 @@ export default async function QuestsPage({
               ))}
             </tbody>
           </table>
-        </div>
-      )}
+      </div>
     </div>
   );
 }
@@ -131,13 +134,5 @@ function RewardsPreview({
     <span className="font-mono text-[11px] text-zinc-700 dark:text-zinc-300">
       {parts.join(" · ")}
     </span>
-  );
-}
-
-function ErrorBlock({ message }: { message: string }) {
-  return (
-    <div className="rounded border border-red-300 bg-red-50 p-4 text-sm text-red-900 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
-      {message}
-    </div>
   );
 }

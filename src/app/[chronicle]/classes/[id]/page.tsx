@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isChronicle } from "@/lib/chronicles";
-import { apiFetch, apiFetchList } from "@/lib/api/client";
+import { apiErrorMessage, apiFetch, apiFetchList } from "@/lib/api/client";
 import { ItemIcon } from "@/components/explorer/ItemIcon";
 import type {
   ClassDetailDto,
@@ -19,6 +19,13 @@ const PROFESSION_LABELS = [
   "2nd profession",
   "3rd profession",
 ] as const;
+
+// On-demand ISR: no ids prerendered at build (pages dogfood the HTTP
+// API, unreachable at build time — see lib/api/client.ts); each id is
+// generated on first request and cached until the next deploy.
+export async function generateStaticParams() {
+  return [];
+}
 
 export default async function ClassDetailPage({
   params,
@@ -41,16 +48,17 @@ export default async function ClassDetailPage({
 
   if (!detail.ok) {
     if (detail.status === 404) notFound();
-    return (
-      <ErrorBlock
-        message={(detail as { error?: string }).error ?? "Failed to load class"}
-      />
-    );
+    // Throw on failure: under ISR a rendered error block would be cached
+    // until the next deploy; a failed generation is not cached and retried.
+    throw new Error(apiErrorMessage(detail, "Failed to load class"));
   }
+  // The list resolves parent/child names — a silent failure would cache
+  // a degraded page until the next deploy, so throw instead.
+  if (!list.ok) throw new Error(list.error);
 
   const cls = detail.data;
   const byId = new Map<number, ClassListDto>(
-    list.ok ? list.data.map((c) => [c.id, c]) : []
+    list.data.map((c) => [c.id, c])
   );
 
   const profLabel =
@@ -334,13 +342,5 @@ function Section({
       </h2>
       {children}
     </section>
-  );
-}
-
-function ErrorBlock({ message }: { message: string }) {
-  return (
-    <div className="rounded border border-red-300 bg-red-50 p-4 text-sm text-red-900 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
-      {message}
-    </div>
   );
 }

@@ -1,5 +1,3 @@
-import { headers } from "next/headers";
-
 /**
  * Server-side fetch helper for calling our own API from server components.
  *
@@ -7,9 +5,18 @@ import { headers } from "next/headers";
  * than importing the data layer directly) so that every page exercises the
  * public endpoint contract end-to-end.
  *
- * In Next.js App Router, fetch to the same origin requires an absolute URL
- * in server components, so we reconstruct the base URL from the incoming
- * request's `host` / `x-forwarded-proto` headers.
+ * The base URL is derived from environment variables — NOT from the
+ * incoming request's `host` header. Reading request headers (via
+ * `next/headers`) would opt every page out of static rendering, forcing
+ * per-request SSR with `Cache-Control: no-store` — the CDN could never
+ * cache a single page. Env-based resolution keeps pages statically
+ * renderable (on-demand ISR).
+ *
+ * IMPORTANT: never populate `generateStaticParams` with real params on
+ * pages that fetch through this client. At build time the production URL
+ * still serves the *previous* deployment (stale data), and local builds
+ * have no server at all. On-demand ISR (empty `generateStaticParams`)
+ * generates pages at request time against the current deployment.
  */
 export interface ApiSuccess<T> {
   ok: true;
@@ -29,25 +36,76 @@ export interface ApiError {
 
 export type ApiResult<T> = ApiSuccess<T> | ApiNotFound | ApiError;
 
-async function resolveBaseUrl(): Promise<string> {
-  const h = await headers();
-  const host = h.get("host") ?? "localhost:3000";
-  const proto =
-    h.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
-  return `${proto}://${host}`;
+/**
+ * Human-readable message from a failed `apiFetch` result. 404 results
+ * carry no message (`ApiNotFound`), so callers supply a fallback.
+ * (`status` can't act as a TS discriminant here — `ApiError.status` is
+ * a plain `number` — hence the `in` narrowing.)
+ */
+export function apiErrorMessage(
+  result: ApiNotFound | ApiError,
+  fallback: string
+): string {
+  return "error" in result ? result.error : fallback;
+}
+
+/**
+ * Optional per-fetch cache configuration.
+ *
+ * - Omitted: plain fetch. On ISR/static pages it runs once at page
+ *   generation; on dynamic pages it runs per request, uncached. Use for
+ *   unbounded key spaces (e.g. `?q=` searches) and for all fetches on
+ *   ISR pages.
+ * - `{ revalidate: N }`: response is stored in the Vercel Data Cache for
+ *   N seconds (persists across deployments — keep TTLs bounded). Use on
+ *   dynamic pages for fetches with a bounded URL key space.
+ */
+export interface ApiFetchOptions {
+  revalidate?: number;
+}
+
+function resolveBaseUrl(): string {
+  // Explicit override — escape hatch for previews behind Vercel
+  // Authentication (loop-back fetches would otherwise 401) or local
+  // setups on a non-default port.
+  if (process.env.EXPLORER_API_BASE_URL) {
+    return process.env.EXPLORER_API_BASE_URL;
+  }
+  // Production: the stable production domain, not the deployment-unique
+  // URL (which can sit behind deployment protection).
+  if (
+    process.env.VERCEL_ENV === "production" &&
+    process.env.VERCEL_PROJECT_PRODUCTION_URL
+  ) {
+    return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+  }
+  // Previews: branch alias when available, else the deployment URL.
+  const vercelUrl = process.env.VERCEL_BRANCH_URL ?? process.env.VERCEL_URL;
+  if (vercelUrl) {
+    return `https://${vercelUrl}`;
+  }
+  return `http://localhost:${process.env.PORT ?? 3000}`;
+}
+
+function toFetchInit(opts?: ApiFetchOptions): RequestInit | undefined {
+  return opts?.revalidate != null
+    ? { next: { revalidate: opts.revalidate } }
+    : undefined;
 }
 
 /**
  * Fetch an API endpoint. Returns a tagged result so callers can cleanly
  * branch on 404 / other errors without throwing.
  */
-export async function apiFetch<T>(path: string): Promise<ApiResult<T>> {
-  const base = await resolveBaseUrl();
-  const url = `${base}${path}`;
+export async function apiFetch<T>(
+  path: string,
+  opts?: ApiFetchOptions
+): Promise<ApiResult<T>> {
+  const url = `${resolveBaseUrl()}${path}`;
 
   let res: Response;
   try {
-    res = await fetch(url, { cache: "no-store" });
+    res = await fetch(url, toFetchInit(opts));
   } catch (e) {
     return {
       ok: false,
@@ -83,17 +141,17 @@ export interface ListResponse<T> {
 }
 
 export async function apiFetchList<T>(
-  path: string
+  path: string,
+  opts?: ApiFetchOptions
 ): Promise<
   | { ok: true; data: T[]; meta: ListResponse<T>["meta"] }
   | { ok: false; status: number; error: string }
 > {
-  const base = await resolveBaseUrl();
-  const url = `${base}${path}`;
+  const url = `${resolveBaseUrl()}${path}`;
 
   let res: Response;
   try {
-    res = await fetch(url, { cache: "no-store" });
+    res = await fetch(url, toFetchInit(opts));
   } catch (e) {
     return {
       ok: false,

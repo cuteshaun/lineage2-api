@@ -4,6 +4,13 @@ import { isChronicle } from "@/lib/chronicles";
 import { apiFetchList } from "@/lib/api/client";
 import type { NameCount, NpcTypeSummary } from "@/lib/data/indexes";
 
+// On-demand ISR: no params prerendered at build (pages dogfood the HTTP
+// API, unreachable at build time — see lib/api/client.ts); each path is
+// generated on first request and cached until the next deploy.
+export async function generateStaticParams() {
+  return [];
+}
+
 export default async function ChronicleHome({
   params,
 }: {
@@ -18,17 +25,16 @@ export default async function ChronicleHome({
     apiFetchList<NpcTypeSummary>(`/api/${chronicle}/meta/npc-types`),
   ]);
 
-  const itemCount = itemTypes.ok
-    ? itemTypes.data.reduce((sum, t) => sum + t.count, 0)
-    : null;
-  const npcCount = npcTypes.ok
-    ? npcTypes.data.reduce((sum, t) => sum + t.count, 0)
-    : null;
-  const monsterCount = npcTypes.ok
-    ? npcTypes.data
-        .filter((t) => t.isMonster)
-        .reduce((sum, t) => sum + t.count, 0)
-    : null;
+  // Throw on failure: under ISR a degraded render would be cached until
+  // the next deploy; a failed generation is not cached and is retried.
+  if (!itemTypes.ok) throw new Error(itemTypes.error);
+  if (!npcTypes.ok) throw new Error(npcTypes.error);
+
+  const itemCount = itemTypes.data.reduce((sum, t) => sum + t.count, 0);
+  const npcCount = npcTypes.data.reduce((sum, t) => sum + t.count, 0);
+  const monsterCount = npcTypes.data
+    .filter((t) => t.isMonster)
+    .reduce((sum, t) => sum + t.count, 0);
 
   const cards = [
     {

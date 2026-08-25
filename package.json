@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "dev:docs": "pnpm --filter ./apps/docs dev",
+    "build:docs": "pnpm --filter ./apps/docs build",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",

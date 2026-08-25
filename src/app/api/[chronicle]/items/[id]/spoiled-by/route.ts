@@ -1,7 +1,8 @@
-import { getItemSpoiledBy } from "@/lib/data/indexes";
+import { getItemById, getItemSpoiledBy } from "@/lib/data/indexes";
 import { toItemSourcesPageDto } from "@/lib/api/dto/drops";
 import {
   handleCorsOptions,
+  jsonError,
   jsonList,
   parseEntityParams,
   parsePagination,
@@ -9,12 +10,18 @@ import {
 
 const DEFAULT_LIMIT = 25;
 
+// Existence contract: unknown item → 404 (same check as `/items/[id]`);
+// known item with no spoil sources → 200 with an empty page.
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ chronicle: string; id: string }> }
 ) {
   const parsed = parseEntityParams(await params);
   if (!parsed.ok) return parsed.response;
+
+  if (!getItemById(parsed.chronicle, parsed.id)) {
+    return jsonError(`Item ${parsed.id} not found`, 404);
+  }
 
   const url = new URL(request.url);
   const pagination = parsePagination(url.searchParams);

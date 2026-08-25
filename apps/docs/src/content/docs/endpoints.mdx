@@ -3,7 +3,12 @@ title: Endpoints
 description: The full list of public API routes, grouped by resource
 ---
 
-Every route is scoped by chronicle; today that's always `interlude`. List endpoints accept `limit` and `offset` for pagination. `armor-sets`, `locations`, and `regions` return every record in a single response and ignore pagination.
+Every route is scoped by chronicle; today that's always `interlude`.
+
+There are two kinds of list endpoints:
+
+- **Paginated, searchable lists** — `items`, `npcs`, `monsters`, `items/{id}/dropped-by`, `items/{id}/spoiled-by`. They accept `limit` / `offset`, and the three main lists also accept `q`, `sort` and filters. See [Query parameters](#query-parameters).
+- **Catalogs** — `quests`, `classes`, `hennas`, `armor-sets`, `locations`, `regions`, `meta/*`. They return the whole collection in one response and **ignore** `limit` / `offset`.
 
 Route lists use real example IDs so URLs can be opened directly.
 
@@ -30,7 +35,7 @@ https://l2api.dev/api/interlude/npcs/30048/spawns
 https://l2api.dev/api/interlude/npcs/22001/drops
 ```
 
-`/npcs/{id}/drops` returns 404 for NPCs without a drop table (e.g. merchants like `30048`). `/drops/npc/{id}` is an alias with the identical response.
+`/npcs/{id}/drops` returns `drops: []` for NPCs that exist but have no drop table (e.g. merchants like `30048`), and 404 only for unknown ids. `/drops/npc/{id}` is an alias with the identical response.
 
 ## Monsters
 
@@ -103,18 +108,86 @@ https://l2api.dev/api/interlude/raw/monsters/29001/spawns
 
 </div>
 
-## Pagination
+## Query parameters
 
-List endpoints accept `limit` and `offset`:
+Only the parameters listed here are supported. Unknown parameters are ignored; invalid values return `400` with the list of allowed values.
+
+### Search — `q`
+
+`items`, `npcs` and `monsters` support `q`: a case-insensitive substring match on `name`.
 
 ```txt
-https://l2api.dev/api/interlude/items?limit=10&offset=20
+https://l2api.dev/api/interlude/items?q=sword
+https://l2api.dev/api/interlude/monsters?q=wolf
+https://l2api.dev/api/interlude/npcs?q=gatekeeper
 ```
 
-- `limit` — records per page. Default `50`, max `200`.
+### Item filters — `type`, `grade`
+
+| Param | Allowed values |
+|-------|----------------|
+| `type` | `weapon`, `armor`, `etcitem` |
+| `grade` | `none`, `d`, `c`, `b`, `a`, `s` |
+
+```txt
+https://l2api.dev/api/interlude/items?type=weapon&grade=d&q=sword
+https://l2api.dev/api/interlude/items?type=armor&grade=s
+```
+
+### NPC / monster filters — `levelMin`, `levelMax`, `npcType`
+
+| Param | Notes |
+|-------|-------|
+| `levelMin` | Integer. Keeps records with `level >= levelMin`. |
+| `levelMax` | Integer. Keeps records with `level <= levelMax`. `levelMin > levelMax` is a `400`. |
+| `npcType` | Case-insensitive. On `/monsters` only monster types are accepted (`Monster`, `RaidBoss`, `GrandBoss`, …); on `/npcs` any type from [`/meta/npc-types`](https://l2api.dev/api/interlude/meta/npc-types) (`Merchant`, `Guard`, `Gatekeeper`, …). |
+
+```txt
+https://l2api.dev/api/interlude/monsters?levelMin=20&levelMax=30
+https://l2api.dev/api/interlude/monsters?npcType=RaidBoss&levelMin=40&levelMax=50
+https://l2api.dev/api/interlude/npcs?npcType=Merchant&q=weapon
+```
+
+### Sorting — `sort`
+
+`sort=<field>` sorts ascending, `sort=-<field>` descending. Ties fall back to `id` ascending, so pages never overlap.
+
+| Endpoint | Fields |
+|----------|--------|
+| `items` | `id`, `name`, `grade` |
+| `npcs`, `monsters` | `id`, `name`, `level` |
+
+```txt
+https://l2api.dev/api/interlude/monsters?npcType=RaidBoss&sort=-level&limit=5
+https://l2api.dev/api/interlude/items?type=weapon&grade=a&sort=name
+```
+
+### Pagination — `limit`, `offset`
+
+Paginated lists accept `limit` and `offset`. Filters apply first, then sort, then pagination; `meta.total` is the count after filtering.
+
+```txt
+https://l2api.dev/api/interlude/items?q=sword&limit=10&offset=20
+```
+
+- `limit` — records per page. Default `50` (`25` on `dropped-by` / `spoiled-by`), max `200` (larger values are clamped, not rejected).
 - `offset` — records to skip. Default `0`.
 
-`armor-sets`, `locations`, and `regions` return everything in one response and ignore these parameters.
+```json
+{
+  "data": [ ],
+  "meta": { "total": 431, "limit": 10, "offset": 20 }
+}
+```
+
+Catalog endpoints (`quests`, `classes`, `hennas`, `armor-sets`, `locations`, `regions`, `meta/*`) return everything in one response and ignore `limit` / `offset`; their `meta.limit` equals `meta.total`.
+
+## Existence rules for relation endpoints
+
+For `items/{id}/dropped-by`, `items/{id}/spoiled-by`, `npcs/{id}/drops`, `monsters/{id}/drops` and `drops/npc/{id}`:
+
+- The parent item / NPC / monster does not exist → `404`.
+- The parent exists but the relation is empty → `200` with an empty `data` list (or `drops: []`).
 
 ## Errors
 

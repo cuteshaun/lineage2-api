@@ -40,8 +40,12 @@ test("npc drops — invalid id returns 404", async () => {
   expect(await callDrops(999999)).toMatchSnapshot();
 });
 
-test("npc drops — non-monster NPC without a drop table (Darin, 30048) returns 404", async () => {
-  expect(await callDrops(30048)).toMatchSnapshot();
+test("npc drops — existing NPC without a drop table (Darin, 30048) returns 200 empty", async () => {
+  const result = await callDrops(30048);
+  expect(result.status).toBe(200);
+  expect(result.body).toEqual({
+    data: { npcId: 30048, npcName: "Darin", drops: [] },
+  });
 });
 
 async function callDropsAlias(id: number) {

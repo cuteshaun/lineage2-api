@@ -97,17 +97,7 @@ exports[`npc drops — Grim Wolf (22001) 1`] = `
 exports[`npc drops — invalid id returns 404 1`] = `
 {
   "body": {
-    "error": "No drops found for NPC 999999",
-    "status": 404,
-  },
-  "status": 404,
-}
-`;
-
-exports[`npc drops — non-monster NPC without a drop table (Darin, 30048) returns 404 1`] = `
-{
-  "body": {
-    "error": "No drops found for NPC 30048",
+    "error": "NPC 999999 not found",
     "status": 404,
   },
   "status": 404,

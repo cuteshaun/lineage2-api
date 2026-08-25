@@ -6,6 +6,11 @@
 # lint, typecheck (runtime + build-time parsers), unit tests +
 # snapshots, OpenAPI drift gate, and the Next.js build.
 #
+# The Starlight docs site (`apps/docs/`) is validated in its own job
+# with a production `astro build`, so broken MDX, links, or Starlight
+# config fail here rather than on the Vercel deploy. Root and docs
+# checks are intentionally separate jobs.
+#
 # `pnpm build:data` does NOT run in CI: it requires a local aCis
 # datapack and (optionally) L2 client DAT files, neither of which
 # is vendored or available as a CI secret. PR authors regenerate
@@ -64,3 +69,30 @@ jobs:
 
       - name: Next.js build
         run: pnpm build
+
+  docs:
+    name: Docs site build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Astro production build
+        # `astro build` type-checks frontmatter/content collections and
+        # fails on broken MDX. `astro check` is not wired up because
+        # `@astrojs/check` isn't a dependency of the docs workspace.
+        run: pnpm build:docs

@@ -22,6 +22,7 @@ export default defineConfig({
           items: [
             { label: 'Overview', slug: '' },
             { label: 'Endpoints', slug: 'endpoints' },
+            { label: 'Code examples', slug: 'examples' },
             { label: 'OpenAPI Spec', slug: 'openapi' },
           ],
         },

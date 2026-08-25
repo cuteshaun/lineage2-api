@@ -7,8 +7,12 @@
   },
   "servers": [
     {
+      "url": "https://l2api.dev/api",
+      "description": "Production API root. All data paths are chronicle-scoped via the {chronicle} path parameter."
+    },
+    {
       "url": "/api",
-      "description": "API root. All data paths are chronicle-scoped via the {chronicle} path parameter."
+      "description": "Same-origin relative root (local development or a self-hosted deployment)."
     }
   ],
   "components": {
@@ -1306,7 +1310,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Paginated reverse lookup: which NPCs drop this item.",
+            "description": "Paginated reverse lookup: which NPCs drop this item. Empty page when the item exists but nothing drops it; 404 when the item id is unknown.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1412,7 +1416,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Paginated reverse lookup: which NPCs spoil this item.",
+            "description": "Paginated reverse lookup: which NPCs spoil this item. Empty page when the item exists but nothing spoils it; 404 when the item id is unknown.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1805,7 +1809,7 @@
         ],
         "responses": {
           "200": {
-            "description": "All drops and spoil for this NPC. 404 when the NPC has no drops.",
+            "description": "All drops and spoil for this NPC. `drops` is empty when the NPC exists but has no drop table; 404 only when the NPC id is unknown.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2190,7 +2194,7 @@
         ],
         "responses": {
           "200": {
-            "description": "All drops and spoil for this monster. 404 when the id is not a monster or the monster has no drops.",
+            "description": "All drops and spoil for this monster. `drops` is empty when the monster exists but has no drop table; 404 when the id is unknown or not a monster.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2267,7 +2271,7 @@
         ],
         "responses": {
           "200": {
-            "description": "All drops and spoil for this NPC. 404 when the NPC has no drops.",
+            "description": "All drops and spoil for this NPC. `drops` is empty when the NPC exists but has no drop table; 404 only when the NPC id is unknown.",
             "content": {
               "application/json": {
                 "schema": {

@@ -46,3 +46,36 @@ test("dropped-by — Small Shield (19), full small list", async () => {
 test("spoiled-by — Theca Leather Armor Pattern (1984), limit=5", async () => {
   expect(await callSpoiled(1984, "?limit=5")).toMatchSnapshot();
 });
+
+/**
+ * Existence contract for relation endpoints:
+ *  - parent item does not exist → 404 (same as `/items/[id]`)
+ *  - parent exists but relation is empty → 200 with an empty page
+ *
+ * Fixture: **Dagger (10)** — a starter weapon that no NPC drops or spoils.
+ */
+test("dropped-by — unknown item returns 404", async () => {
+  expect(await callDropped(999999)).toMatchSnapshot();
+});
+
+test("spoiled-by — unknown item returns 404", async () => {
+  expect(await callSpoiled(999999)).toMatchSnapshot();
+});
+
+test("dropped-by — Dagger (10), existing item with no sources returns 200 empty", async () => {
+  const result = await callDropped(10);
+  expect(result.status).toBe(200);
+  expect(result.body).toEqual({
+    data: [],
+    meta: { total: 0, limit: 25, offset: 0 },
+  });
+});
+
+test("spoiled-by — Dagger (10), existing item with no sources returns 200 empty", async () => {
+  const result = await callSpoiled(10);
+  expect(result.status).toBe(200);
+  expect(result.body).toEqual({
+    data: [],
+    meta: { total: 0, limit: 25, offset: 0 },
+  });
+});

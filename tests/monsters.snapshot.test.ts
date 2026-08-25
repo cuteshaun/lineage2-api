@@ -99,3 +99,11 @@ test("monster drops — non-monster NPC (Darin, 30048) returns 404", async () =>
 test("monster drops — invalid id returns 404", async () => {
   expect(await callMonsterDrops(999999)).toMatchSnapshot();
 });
+
+test("monster drops — existing monster without a drop table (Young Squash, 12774) returns 200 empty", async () => {
+  const result = await callMonsterDrops(12774);
+  expect(result.status).toBe(200);
+  expect(result.body).toEqual({
+    data: { npcId: 12774, npcName: "Young Squash", drops: [] },
+  });
+});

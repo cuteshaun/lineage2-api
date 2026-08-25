@@ -22,13 +22,13 @@ Every route is scoped by **chronicle**. Today the only supported chronicle is `i
 | **items** | [`/api/interlude/items?limit=10`](https://l2api.dev/api/interlude/items?limit=10) | Weapons, armor, consumables, quest items, spellbooks, recipes |
 | **npcs** | [`/api/interlude/npcs?limit=10`](https://l2api.dev/api/interlude/npcs?limit=10) | Non-player characters: merchants, guards, quest givers |
 | **monsters** | [`/api/interlude/monsters?limit=10`](https://l2api.dev/api/interlude/monsters?limit=10) | Combat mobs: regular enemies, bosses, raid bosses |
-| **quests** | [`/api/interlude/quests?limit=10`](https://l2api.dev/api/interlude/quests?limit=10) | Quest catalog, objectives, rewards |
-| **classes** | [`/api/interlude/classes?limit=10`](https://l2api.dev/api/interlude/classes?limit=10) | Player classes and skill progression |
-| **hennas** | [`/api/interlude/hennas?limit=10`](https://l2api.dev/api/interlude/hennas?limit=10) | Dye and symbol items |
+| **quests** | [`/api/interlude/quests`](https://l2api.dev/api/interlude/quests) | Quest catalog, objectives, rewards |
+| **classes** | [`/api/interlude/classes`](https://l2api.dev/api/interlude/classes) | Player classes and skill progression |
+| **hennas** | [`/api/interlude/hennas`](https://l2api.dev/api/interlude/hennas) | Dye and symbol items |
 | **armor-sets** | [`/api/interlude/armor-sets`](https://l2api.dev/api/interlude/armor-sets) | Armor set pieces and set bonuses |
 | **locations** | [`/api/interlude/locations`](https://l2api.dev/api/interlude/locations) | Hunting zones and map locations |
 
-Table links use `?limit=10` to keep examples short. URLs are relative to the base `https://l2api.dev`.
+`items`, `npcs`, and `monsters` are paginated and searchable (`?q=wolf`, `?limit=10`, see [Query parameters](/endpoints/#query-parameters)). `quests`, `classes`, `hennas`, `armor-sets`, and `locations` are small catalogs returned in full in one response. URLs are relative to the base `https://l2api.dev`.
 
 ## Try it
 
@@ -46,7 +46,7 @@ Pick an example, then **Try** it to see the live JSON, or **Copy** the URL.
 { "data": [ ], "meta": { } }
 ```
 
-Always read from `data`. List endpoints support `limit` and `offset`, see [Endpoints](/endpoints/) for pagination and errors.
+Always read from `data`. See [Endpoints](/endpoints/) for query parameters, pagination and errors, and [Code examples](/examples/) for ready-to-run `fetch` snippets.
 
 ## No authentication
 

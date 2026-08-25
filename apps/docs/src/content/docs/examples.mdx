@@ -1,0 +1,112 @@
+---
+title: Code examples
+description: Dependency-free fetch snippets for the most common requests
+---
+
+All examples use the native `fetch` API and work unchanged in browsers, Node.js 18+, Deno and Bun. No API key, no SDK, no dependencies. Every response is wrapped in `{ data }` (single resource) or `{ data, meta }` (list) — see [Endpoints](/endpoints/) for the full parameter reference.
+
+```js
+const API = "https://l2api.dev/api/interlude";
+```
+
+## Fetch an item by id
+
+```js
+const res = await fetch(`${API}/items/57`);
+if (!res.ok) throw new Error(`HTTP ${res.status}`); // 404 for an unknown id
+const { data: item } = await res.json();
+
+console.log(item.name, item.grade); // "Adena" "none"
+```
+
+## Search items by name
+
+`q` is a case-insensitive substring match; combine it with `type` / `grade` filters and `sort`.
+
+```js
+const params = new URLSearchParams({
+  q: "sword",
+  type: "weapon",
+  grade: "d",
+  sort: "name",
+  limit: "10",
+});
+const { data, meta } = await fetch(`${API}/items?${params}`).then((r) => r.json());
+
+console.log(`${meta.total} matches, showing ${data.length}`);
+for (const item of data) console.log(item.id, item.name);
+```
+
+## Find monsters by level range and type
+
+```js
+const params = new URLSearchParams({
+  npcType: "RaidBoss",
+  levelMin: "40",
+  levelMax: "50",
+  sort: "-level",
+});
+const { data: bosses } = await fetch(`${API}/monsters?${params}`).then((r) => r.json());
+
+for (const boss of bosses) console.log(`Lv ${boss.level} ${boss.name}`);
+```
+
+## Monster → drops, and item → who drops it
+
+```js
+// What does Grim Wolf drop?
+const { data: table } = await fetch(`${API}/monsters/22001/drops`).then((r) => r.json());
+for (const drop of table.drops) {
+  console.log(`${drop.itemName} ×${drop.qty} — ${drop.chanceDisplay} (${drop.type})`);
+}
+
+// Which monsters drop Animal Bone? (paginated, default limit 25)
+const { data: sources, meta } = await fetch(`${API}/items/1872/dropped-by`).then((r) => r.json());
+console.log(`${meta.total} monsters drop it`);
+for (const src of sources) console.log(`Lv ${src.npc.level} ${src.npc.name} — ${src.chanceDisplay}`);
+```
+
+A monster that exists but has no drop table returns `drops: []`; an unknown id returns `404`.
+
+## Walk through every page
+
+```js
+async function* paginate(path, pageSize = 200) {
+  let offset = 0;
+  while (true) {
+    const url = `${API}${path}${path.includes("?") ? "&" : "?"}limit=${pageSize}&offset=${offset}`;
+    const { data, meta } = await fetch(url).then((r) => r.json());
+    yield* data;
+    offset += data.length;
+    if (data.length === 0 || offset >= meta.total) break;
+  }
+}
+
+let count = 0;
+for await (const monster of paginate("/monsters?levelMin=70")) count++;
+console.log(`${count} monsters at level 70+`);
+```
+
+## TypeScript
+
+The API ships an [OpenAPI 3 spec](/openapi/) with an absolute production server URL, so any OpenAPI-to-TypeScript generator can produce types for it. Until you set that up, a minimal typed helper is enough:
+
+```ts
+const API = "https://l2api.dev/api/interlude";
+
+type Envelope<T> = { data: T; meta?: { total: number; limit: number; offset: number } };
+
+async function get<T>(path: string): Promise<Envelope<T>> {
+  const res = await fetch(`${API}${path}`);
+  if (!res.ok) throw new Error(`${res.status} ${path}`);
+  return res.json() as Promise<Envelope<T>>;
+}
+
+interface ItemListEntry { id: number; name: string; type: string; grade: string }
+
+const { data } = await get<ItemListEntry[]>("/items?q=dagger&type=weapon");
+```
+
+## Caching and rate limits
+
+Responses are cacheable (`Cache-Control: public, max-age=300`) and CORS is open, so browser apps can call the API directly. There is a per-IP rate limit on `/api/*` — see [Scope](/limitations/) — so cache results client-side instead of re-fetching the same URL in a loop.

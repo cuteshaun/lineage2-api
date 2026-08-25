@@ -66,6 +66,7 @@ Requesting an unknown chronicle returns **404**.
 | GET | `/api/[chronicle]/npcs/[id]/shop` | Merchant's direct-buy products + curated multisell exchanges |
 | GET | `/api/[chronicle]/monsters` | List monsters (cleaned NPC subset) |
 | GET | `/api/[chronicle]/monsters/[id]` | Single monster by cleaned id |
+| GET | `/api/[chronicle]/monsters/[id]/drops` | Aggregated drops for a monster (same shape as `/npcs/[id]/drops`; 404 for non-monster ids) |
 | GET | `/api/[chronicle]/drops/npc/[id]` | Aggregated drops (alternate path, identical response) |
 
 ### NPCs / monsters (raw layer — source-faithful)
@@ -273,7 +274,7 @@ The NPC dataset is exposed in two parallel layers:
 
 | Layer | Routes | Behavior |
 |---|---|---|
-| **cleaned** (default) | `/npcs`, `/npcs/[id]`, `/npcs/[id]/drops`, `/npcs/[id]/spawns`, `/monsters`, `/monsters/[id]` | One record per unique name. Drops + spawns aggregated across every merged raw id, deduped on `(category, itemId, min, max, chance)` for drops and on the full position tuple for spawns. `[id]` accepts either the canonical id or any merged raw id. |
+| **cleaned** (default) | `/npcs`, `/npcs/[id]`, `/npcs/[id]/drops`, `/npcs/[id]/spawns`, `/monsters`, `/monsters/[id]`, `/monsters/[id]/drops` | One record per unique name. Drops + spawns aggregated across every merged raw id, deduped on `(category, itemId, min, max, chance)` for drops and on the full position tuple for spawns. `[id]` accepts either the canonical id or any merged raw id. |
 | **raw** (`/raw/...`) | `/raw/npcs`, `/raw/npcs/[id]`, `/raw/monsters`, `/raw/monsters/[id]`, `/raw/monsters/[id]/spawns` | Source-faithful. Every raw row preserved. No name dedup, no aggregation. Each row carries `mergedIds=[id]` and `mergedCount=1` for shape uniformity with the cleaned layer. |
 
 Use the cleaned layer for player-facing browsing (no duplicate "Grim Wolf"
@@ -282,14 +283,15 @@ debugging spawn or drop differences across NPC variants that share a name.
 
 ## Drops endpoints
 
-`GET /api/[chronicle]/drops/npc/[id]` and
-`GET /api/[chronicle]/npcs/[id]/drops` currently return the **same enriched
-response**. Both routes are kept so that:
+`GET /api/[chronicle]/npcs/[id]/drops`, `GET /api/[chronicle]/drops/npc/[id]`
+and `GET /api/[chronicle]/monsters/[id]/drops` return the **same enriched
+response** and share one handler (`handleNpcDropsRequest` in
+`src/lib/api/drops.ts`):
 
+- `/npcs/[id]/drops` is the REST-y nested form
 - `/drops/npc/[id]` reads naturally as "give me the drops table for NPC N"
-- `/npcs/[id]/drops` is the more REST-y nested form
-
-Pick whichever fits your client. Both routes share one implementation.
+- `/monsters/[id]/drops` is scoped to the monster subset — non-monster NPC
+  ids return **404**, mirroring `/monsters/[id]`
 
 ### Enriched drop entry
 
@@ -300,40 +302,32 @@ Pick whichever fits your client. Both routes share one implementation.
     "npcName": "Grim Wolf",
     "drops": [
       {
-        "itemId":   391,
-        "itemName": "Puma Skin Shirt",
-        "min":      1,
-        "max":      1,
-        "chance":   166,
-        "category": 1,
-        "type":     "regular"
-      },
-      {
-        "itemId":   1806,
-        "itemName": "Animal Skin",
-        "min":      1,
-        "max":      2,
-        "chance":   250000,
-        "category": -1,
-        "type":     "spoil"
-      },
-      {
-        "itemId":   57,
+        "itemId": 57,
         "itemName": "Adena",
-        "min":      136,
-        "max":      255,
-        "chance":   700000,
-        "category": 0,
-        "type":     "adena"
+        "qty": "136–255",
+        "chance": 70,
+        "chanceDisplay": "70%",
+        "type": "adena"
+      },
+      {
+        "itemId": 1872,
+        "itemName": "Animal Bone",
+        "qty": "1",
+        "chance": 5.8824,
+        "chanceDisplay": "5.88%",
+        "type": "regular"
       }
     ]
   }
 }
 ```
 
-`type` is derived from the source category id:
+Entries are sorted `adena` → `regular` → `spoil`, then by chance descending.
+`chance` is a percentage; `chanceDisplay` is the human form (`1/X` below
+0.01%). `rollCount` is present only when the same tuple appears in more than
+one source category. `type` is derived from the source category id:
 
-| `category` | `type` |
+| source category | `type` |
 |---|---|
 | `-1` | `spoil` |
 | `0` | `adena` |
@@ -342,7 +336,8 @@ Pick whichever fits your client. Both routes share one implementation.
 `itemName` is joined from the items dataset at request time and is `null` if
 the referenced item id has been removed from the chronicle.
 
-If the requested NPC has no drops table at all, both endpoints return **404**.
+Existence contract: an unknown NPC id returns **404**; an NPC that exists but
+has no drop table returns **200** with `"drops": []`.
 
 ### Reverse lookups (`/items/[id]/dropped-by`, `/items/[id]/spoiled-by`)
 
@@ -359,17 +354,22 @@ categories contributed.
 {
   "data": [
     {
-      "npc": { "id": 22001, "name": "Grim Wolf", "type": "Monster", "level": 19 },
-      "entry": { "min": 1, "max": 1, "chance": 166, "category": 1 },
-      "rollCount": 1
+      "npc": { "id": 25077, "name": "Captain Dogun", "type": "Monster", "level": 24 },
+      "qty": "1",
+      "chance": 22.5319,
+      "chanceDisplay": "22.53%"
     }
   ],
-  "meta": { "total": 12, "limit": 25, "offset": 0 }
+  "meta": { "total": 10, "limit": 25, "offset": 0 }
 }
 ```
 
 Both endpoints accept the standard `limit` / `offset` pagination params
 (default `limit` is **25**, not 50).
+
+Existence contract: an unknown item id returns **404** (same check as
+`/items/[id]`); a known item with no sources returns **200** with an empty
+`data` page and `meta.total = 0`.
 
 ## Spawn endpoints
 

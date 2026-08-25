@@ -33,9 +33,9 @@ Public API contract is frozen unless a release-blocking issue is found.
 
 - Desktop design for the public-facing surfaces is mostly done.
 - Mobile design is not finished.
-- SEO is incomplete: metadata, titles, descriptions, Open Graph tags, favicon, and social-preview images.
-- Documentation exists but is still raw and needs more real examples.
-- Analytics are not installed yet.
+- SEO basics are in place on the landing (metadata, Open Graph/Twitter tags, favicon, `og-image.jpg`, `robots.ts`, `sitemap.ts`); remaining work is polish and the other surfaces.
+- Documentation covers endpoints, query parameters, and `fetch` examples (`apps/docs`); still wants more real-world recipes.
+- Analytics (Umami) is installed on the landing (`src/app/layout.tsx`).
 
 ---
 
@@ -444,21 +444,10 @@ Focus: make all deployed surfaces feel production-ready before doing deeper arch
   - API / landing
   - documentation site
   - knowledge base / explorer example
-- Improve SEO across all deployed surfaces:
-  - page titles
-  - descriptions
-  - Open Graph metadata
-  - favicon
-  - social preview images
-  - canonical URLs where needed
+- Improve SEO across all deployed surfaces (landing done: titles, descriptions, Open Graph, favicon, social preview image; docs/KB and canonical URLs still open).
 - Gather feedback from friends and early users.
-- Improve documentation with real examples:
-  - practical recipes
-  - better endpoint examples
-  - real Lineage 2 use cases
-  - possible interactive request box inside docs
-  - possible textarea/code preview for example requests
-- Add analytics to each deployed project, likely Umami.
+- Improve documentation with real examples (endpoint examples, query-parameter reference, `fetch` snippets and the TryIt box are done; practical recipes and more real Lineage 2 use cases still open).
+- Add analytics to each deployed project, likely Umami (landing done).
 - Keep analytics privacy-friendly, lightweight, and non-invasive.
 
 ### Phase 2 — Community Launch / Distribution

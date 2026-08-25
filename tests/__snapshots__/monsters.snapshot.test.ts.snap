@@ -1,5 +1,119 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`monster drops — Grim Wolf (22001) 1`] = `
+{
+  "body": {
+    "data": {
+      "drops": [
+        {
+          "chance": 70,
+          "chanceDisplay": "70%",
+          "itemId": 57,
+          "itemName": "Adena",
+          "qty": "136–255",
+          "type": "adena",
+        },
+        {
+          "chance": 5.8824,
+          "chanceDisplay": "5.88%",
+          "itemId": 1872,
+          "itemName": "Animal Bone",
+          "qty": "1",
+          "type": "regular",
+        },
+        {
+          "chance": 5.8824,
+          "chanceDisplay": "5.88%",
+          "itemId": 1867,
+          "itemName": "Animal Skin",
+          "qty": "1",
+          "type": "regular",
+        },
+        {
+          "chance": 1.1364,
+          "chanceDisplay": "1.14%",
+          "itemId": 1882,
+          "itemName": "Leather",
+          "qty": "1",
+          "type": "regular",
+        },
+        {
+          "chance": 0.7937,
+          "chanceDisplay": "0.79%",
+          "itemId": 2152,
+          "itemName": "Recipe: Enchanted Necklace",
+          "qty": "1",
+          "type": "regular",
+        },
+        {
+          "chance": 0.0483,
+          "chanceDisplay": "0.05%",
+          "itemId": 413,
+          "itemName": "Puma Skin Gaiters",
+          "qty": "1",
+          "type": "regular",
+        },
+        {
+          "chance": 0.0166,
+          "chanceDisplay": "0.02%",
+          "itemId": 391,
+          "itemName": "Puma Skin Shirt",
+          "qty": "1",
+          "type": "regular",
+        },
+        {
+          "chance": 25,
+          "chanceDisplay": "25%",
+          "itemId": 1867,
+          "itemName": "Animal Skin",
+          "qty": "1–2",
+          "type": "spoil",
+        },
+        {
+          "chance": 2.5,
+          "chanceDisplay": "2.5%",
+          "itemId": 1899,
+          "itemName": "Necklace of Devotion Chain",
+          "qty": "1",
+          "type": "spoil",
+        },
+        {
+          "chance": 0.65,
+          "chanceDisplay": "0.65%",
+          "itemId": 2152,
+          "itemName": "Recipe: Enchanted Necklace",
+          "qty": "1",
+          "type": "spoil",
+        },
+      ],
+      "npcId": 22001,
+      "npcName": "Grim Wolf",
+    },
+  },
+  "status": 200,
+}
+`;
+
+exports[`monster drops — invalid id returns 404 1`] = `
+{
+  "body": {
+    "error": "Monster 999999 not found",
+    "status": 404,
+  },
+  "status": 404,
+}
+`;
+
+exports[`monster drops — non-monster NPC (Darin, 30048) returns 404 1`] = `
+{
+  "body": {
+    "error": "Monster 30048 not found",
+    "status": 404,
+  },
+  "status": 404,
+}
+`;
+
 exports[`monsters detail — Grim Wolf (22001) 1`] = `
 {
   "body": {

@@ -1,5 +1,11 @@
-import { getDropsByNpcId, getItemById } from "@/lib/data/indexes";
+import {
+  getDropsByNpcId,
+  getItemById,
+  getMonsterById,
+} from "@/lib/data/indexes";
 import type { Chronicle } from "@/lib/chronicles";
+import { toNpcDropsDto } from "@/lib/api/dto/drops";
+import { jsonError, jsonOk, parseEntityParams } from "@/lib/api/responses";
 
 export type DropType = "spoil" | "adena" | "regular";
 
@@ -63,4 +69,41 @@ export function getEnrichedNpcDrops(
     npcName: npcDrops.npcName,
     drops,
   };
+}
+
+export interface NpcDropsRouteOptions {
+  /**
+   * When `true`, the id must resolve to a monster (see `MONSTER_NPC_TYPES`
+   * via {@link getMonsterById}); non-monster NPC ids return 404 so the
+   * route mirrors the gate applied by `/monsters/[id]`.
+   */
+  requireMonster?: boolean;
+}
+
+/**
+ * Shared GET handler for every "drops of one NPC" route:
+ *   - `/api/[chronicle]/npcs/[id]/drops`
+ *   - `/api/[chronicle]/drops/npc/[id]` (alias)
+ *   - `/api/[chronicle]/monsters/[id]/drops` (`requireMonster: true`)
+ *
+ * All three return the same `NpcDropsDto` shape. Route files stay thin so
+ * the alias and the monster variant can never drift from the canonical route.
+ */
+export async function handleNpcDropsRequest(
+  params: Promise<{ chronicle: string; id: string }>,
+  options: NpcDropsRouteOptions = {}
+): Promise<Response> {
+  const parsed = parseEntityParams(await params);
+  if (!parsed.ok) return parsed.response;
+
+  if (options.requireMonster && !getMonsterById(parsed.chronicle, parsed.id)) {
+    return jsonError(`Monster ${parsed.id} not found`, 404);
+  }
+
+  const enriched = getEnrichedNpcDrops(parsed.chronicle, parsed.id);
+  if (!enriched) {
+    return jsonError(`No drops found for NPC ${parsed.id}`, 404);
+  }
+
+  return jsonOk(toNpcDropsDto(enriched));
 }

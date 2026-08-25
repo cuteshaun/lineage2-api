@@ -67,6 +67,7 @@ const EXPECTED_PATHS = [
   "/{chronicle}/meta/npc-types",
   "/{chronicle}/monsters",
   "/{chronicle}/monsters/{id}",
+  "/{chronicle}/monsters/{id}/drops",
   "/{chronicle}/npcs",
   "/{chronicle}/npcs/{id}",
   "/{chronicle}/npcs/{id}/drops",

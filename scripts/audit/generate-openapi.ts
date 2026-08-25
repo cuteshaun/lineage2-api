@@ -809,6 +809,25 @@ route({
   responses: detailResponses(NpcDetailSchema, "Full cleaned monster detail."),
 });
 
+route({
+  method: "get",
+  path: "/{chronicle}/monsters/{id}/drops",
+  tags: ["Monsters", "Drops"],
+  summary: "Monster drops and spoil",
+  description:
+    "Same response shape as `/{chronicle}/npcs/{id}/drops`, scoped to the monster subset. Non-monster NPC ids return 404 — this endpoint mirrors the monster-type gate of `/{chronicle}/monsters/{id}`.",
+  request: {
+    params: z.object({
+      chronicle: chronicleParam,
+      id: idParam("Canonical monster id, or any merged raw id.", 22001),
+    }),
+  },
+  responses: detailResponses(
+    NpcDropsSchema,
+    "All drops and spoil for this monster. 404 when the id is not a monster or the monster has no drops."
+  ),
+});
+
 // ── Drops alias ──
 
 route({

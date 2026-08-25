@@ -18,22 +18,29 @@ https://l2api.dev/api/interlude/items/57/dropped-by
 https://l2api.dev/api/interlude/items/57/spoiled-by
 ```
 
+`dropped-by` and `spoiled-by` list the monsters that drop or spoil an item (paginated). For the full drop table of one monster see `/monsters/{id}/drops` below.
+
 ## NPCs
 
 ```txt
 https://l2api.dev/api/interlude/npcs
 https://l2api.dev/api/interlude/npcs/30048
-https://l2api.dev/api/interlude/npcs/30048/drops
 https://l2api.dev/api/interlude/npcs/30048/shop
 https://l2api.dev/api/interlude/npcs/30048/spawns
+https://l2api.dev/api/interlude/npcs/22001/drops
 ```
+
+`/npcs/{id}/drops` returns 404 for NPCs without a drop table (e.g. merchants like `30048`). `/drops/npc/{id}` is an alias with the identical response.
 
 ## Monsters
 
 ```txt
 https://l2api.dev/api/interlude/monsters
-https://l2api.dev/api/interlude/monsters/29001
+https://l2api.dev/api/interlude/monsters/22001
+https://l2api.dev/api/interlude/monsters/22001/drops
 ```
+
+Monster detail does not embed the drop table — fetch it from `/monsters/{id}/drops`. To go the other way (which monsters drop or spoil an item), use `/items/{id}/dropped-by` and `/items/{id}/spoiled-by` above.
 
 ## Quests
 

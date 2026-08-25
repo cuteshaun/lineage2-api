@@ -1,5 +1,6 @@
 import { expect, test } from "vitest";
 import { GET as dropsGET } from "@/app/api/[chronicle]/npcs/[id]/drops/route";
+import { GET as dropsAliasGET } from "@/app/api/[chronicle]/drops/npc/[id]/route";
 import { GET as spawnsGET } from "@/app/api/[chronicle]/npcs/[id]/spawns/route";
 
 /**
@@ -37,6 +38,24 @@ test("npc drops — Grim Wolf (22001)", async () => {
 
 test("npc drops — invalid id returns 404", async () => {
   expect(await callDrops(999999)).toMatchSnapshot();
+});
+
+test("npc drops — non-monster NPC without a drop table (Darin, 30048) returns 404", async () => {
+  expect(await callDrops(30048)).toMatchSnapshot();
+});
+
+async function callDropsAlias(id: number) {
+  const response = await dropsAliasGET(
+    new Request(`http://test/api/interlude/drops/npc/${id}`),
+    { params: Promise.resolve({ chronicle: "interlude", id: String(id) }) }
+  );
+  return { status: response.status, body: await response.json() };
+}
+
+test("npc drops — /drops/npc/{id} alias returns the same result as /npcs/{id}/drops", async () => {
+  for (const id of [22001, 30048, 999999]) {
+    expect(await callDropsAlias(id)).toEqual(await callDrops(id));
+  }
 });
 
 test("npc spawns — Grim Wolf (22001), 8 spawns", async () => {

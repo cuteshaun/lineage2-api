@@ -1,24 +1,14 @@
-import { getEnrichedNpcDrops } from "@/lib/api/drops";
-import { toNpcDropsDto } from "@/lib/api/dto/drops";
-import {
-  handleCorsOptions,
-  jsonError, jsonOk, parseEntityParams
-} from "@/lib/api/responses";
+import { handleNpcDropsRequest } from "@/lib/api/drops";
+import { handleCorsOptions } from "@/lib/api/responses";
 
+// Alias of `/api/[chronicle]/npcs/[id]/drops` — identical response.
 export async function GET(
   _request: Request,
   { params }: { params: Promise<{ chronicle: string; id: string }> }
 ) {
-  const parsed = parseEntityParams(await params);
-  if (!parsed.ok) return parsed.response;
-
-  const enriched = getEnrichedNpcDrops(parsed.chronicle, parsed.id);
-  if (!enriched) {
-    return jsonError(`No drops found for NPC ${parsed.id}`, 404);
-  }
-
-  return jsonOk(toNpcDropsDto(enriched));
+  return handleNpcDropsRequest(params);
 }
+
 export async function OPTIONS(): Promise<Response> {
   return handleCorsOptions();
 }

@@ -2152,6 +2152,84 @@
         }
       }
     },
+    "/{chronicle}/monsters/{id}/drops": {
+      "get": {
+        "tags": [
+          "Monsters",
+          "Drops"
+        ],
+        "summary": "Monster drops and spoil",
+        "description": "Same response shape as `/{chronicle}/npcs/{id}/drops`, scoped to the monster subset. Non-monster NPC ids return 404 — this endpoint mirrors the monster-type gate of `/{chronicle}/monsters/{id}`.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "interlude"
+              ],
+              "description": "Game chronicle. Only `interlude` is currently supported.",
+              "example": "interlude"
+            },
+            "required": true,
+            "description": "Game chronicle. Only `interlude` is currently supported.",
+            "name": "chronicle",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Canonical monster id, or any merged raw id.",
+              "example": 22001
+            },
+            "required": true,
+            "description": "Canonical monster id, or any merged raw id.",
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All drops and spoil for this monster. 404 when the id is not a monster or the monster has no drops.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/NpcDrops"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter (malformed id, bad pagination, unknown enum value, …).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown chronicle, or no entity with this id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/{chronicle}/drops/npc/{id}": {
       "get": {
         "tags": [
